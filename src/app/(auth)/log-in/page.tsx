@@ -24,6 +24,8 @@ import { Input } from "@/components/ui/input";
 
 import { cn } from "@/lib/utils";
 
+import { authApi } from "../authApi";
+
 const loginSchema = z.object({
     email: z
         .string()
@@ -41,6 +43,9 @@ const loginSchema = z.object({
 type LoginSchema = z.infer<typeof loginSchema>;
 
 export default function LogIn() {
+    const { useLoginMutation } = authApi;
+    const [login] = useLoginMutation();
+
     const form = useForm<LoginSchema>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -50,7 +55,7 @@ export default function LogIn() {
     });
 
     function onSubmit(values: LoginSchema) {
-        console.log(values);
+        login(values);
     }
 
     return (
