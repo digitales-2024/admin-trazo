@@ -48,6 +48,7 @@
         "linebreak-style": ["error", "unix"],
         "quotes": ["error", "double"],
         "semi": ["error", "always"],
+        "@next/next/no-img-element": "off",
         "react/jsx-pascal-case": "error",
         "react/jsx-closing-bracket-location": "error",
         "react/jsx-closing-tag-location": "error",

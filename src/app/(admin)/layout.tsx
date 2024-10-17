@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-
 import { cn } from "@/lib/utils";
 
 export default function AdminLayout({
@@ -15,7 +13,7 @@ export default function AdminLayout({
                 className={cn("fixed left-0 top-0 z-20 h-screen w-40 -translate-x-full border-r-[1px] border-slate-100 transition-[width] duration-300 ease-in-out lg:translate-x-0")}
             >
                 <div className="bg-black p-4">
-                    <Image
+                    <img
                         className="inline-block"
                         src="https://www.trazoarq.com/wp-content/uploads/2021/05/logo-30.svg"
                         alt="Logo Trazo"
