@@ -32,6 +32,12 @@
         ],
         "react/react-in-jsx-scope": "off",
         "@typescript-eslint/no-unused-vars": "error",
+        "@typescript-eslint/no-empty-object-type": [
+            "error",
+            {
+                "allowInterfaces": "with-single-extends"
+            }
+        ],
         "indent": [
             "error",
             4,
