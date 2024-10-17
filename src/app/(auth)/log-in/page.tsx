@@ -25,6 +25,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 import { authApi } from "../authApi";
+import { useRouter } from "next/navigation";
 
 const loginSchema = z.object({
     email: z
@@ -45,6 +46,7 @@ type LoginSchema = z.infer<typeof loginSchema>;
 export default function LogIn() {
     const { useLoginMutation } = authApi;
     const [login, { error, isError }] = useLoginMutation();
+    const router = useRouter();
 
     const form = useForm<LoginSchema>({
         resolver: zodResolver(loginSchema),
@@ -59,6 +61,7 @@ export default function LogIn() {
         const userRoles = loginResponse.roles;
         console.log(`Logged in, redirecting to landing page for ${JSON.stringify(userRoles)}`);
         // redirect to a different page, depending on the user role
+        router.replace("/account");
     }
 
     return (

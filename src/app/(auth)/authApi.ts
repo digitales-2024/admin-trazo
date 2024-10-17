@@ -1,4 +1,5 @@
 import baseQueryWithReauth from "@/redux/baseQuery";
+import { adminApi } from "@/redux/services/adminApi";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 import { UserLoginOutput, UserLoginInput } from "./types";
@@ -14,14 +15,12 @@ export const authApi = createApi({
                 method: "POST",
                 body,
             }),
-            async onQueryStarted(_args, { /*dispatch,*/ queryFulfilled }) {
+            async onQueryStarted(_args, { dispatch, queryFulfilled }) {
                 try {
                     await queryFulfilled;
-                    /*
                     dispatch(adminApi.endpoints.profile.initiate(undefined, {
                         forceRefetch: true,
                     }));
-                    */
                 } catch (error) {
                     console.error(error);
                 }
@@ -29,11 +28,10 @@ export const authApi = createApi({
             invalidatesTags: ["Auth"],
         }),
 
-        logout: build.mutation<{ message: string; statusCode: number }, null>({
+        logout: build.mutation<{ message: string; statusCode: number }, void>({
             query: () => ({
                 url: "/auth/logout",
                 method: "POST",
-                credentials: "include",
             }),
             invalidatesTags: ["Auth"],
         }),
