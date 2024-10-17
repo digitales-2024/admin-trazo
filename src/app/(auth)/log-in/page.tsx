@@ -44,7 +44,7 @@ type LoginSchema = z.infer<typeof loginSchema>;
 
 export default function LogIn() {
     const { useLoginMutation } = authApi;
-    const [login] = useLoginMutation();
+    const [login, { error, isError }] = useLoginMutation();
 
     const form = useForm<LoginSchema>({
         resolver: zodResolver(loginSchema),
@@ -54,8 +54,11 @@ export default function LogIn() {
         },
     });
 
-    function onSubmit(values: LoginSchema) {
-        login(values);
+    async function onSubmit(values: LoginSchema) {
+        const loginResponse = await login(values).unwrap();
+        const userRoles = loginResponse.roles;
+        console.log(`Logged in, redirecting to landing page for ${JSON.stringify(userRoles)}`);
+        // redirect to a different page, depending on the user role
     }
 
     return (
@@ -114,6 +117,12 @@ export default function LogIn() {
                             <Button type="submit">Iniciar sesión</Button>
                         </form>
                     </Form>
+
+                    {isError && (
+                        <div className="my-2 rounded-md border border-red-700 bg-red-200 p-2 text-red-700">
+                            {(error as Error)?.message}
+                        </div>
+                    )}
                 </CardContent>
             </Card>
         </div>
