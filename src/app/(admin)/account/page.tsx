@@ -36,8 +36,7 @@ const profileUpdateSchema = z.object({
     password: z.string().min(1, {
         message: "Ingrese su contraseña",
     }),
-    telephone: z.number().int()
-        .positive(),
+    telephone: z.number().int().positive(),
 });
 
 type ProfileUpdateSchema = z.infer<typeof profileUpdateSchema>;
