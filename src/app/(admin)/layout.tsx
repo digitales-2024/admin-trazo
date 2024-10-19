@@ -1,5 +1,7 @@
 "use client";
 
+import { adminApi } from "@/redux/services/adminApi";
+
 import { cn } from "@/lib/utils";
 
 export default function AdminLayout({
@@ -7,6 +9,13 @@ export default function AdminLayout({
 }: {
     children: React.ReactNode;
 }) {
+    const { useProfileQuery } = adminApi;
+    const data = useProfileQuery();
+
+    // TODO: This is here to manually trigger the user profile query.
+    // Remove once the profile is used elsewhere
+    console.log("data from useProfileQuery:", data);
+
     return (
         <div>
             <aside
