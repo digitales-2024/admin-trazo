@@ -15,7 +15,7 @@ export default function AdminLayout({
 
     // TODO: This is here to manually trigger the user profile query.
     // Remove once the profile is used elsewhere
-    console.log("data from useProfileQuery:", data);
+    console.log("useProfileQuery ran:", typeof data);
 
     const links = [
         ["Usuarios", "/users"],
