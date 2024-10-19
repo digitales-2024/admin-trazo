@@ -1,6 +1,8 @@
 "use client";
 
+import { adminApi } from "@/redux/services/adminApi";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -36,21 +38,33 @@ const profileUpdateSchema = z.object({
     password: z.string().min(1, {
         message: "Ingrese su contraseña",
     }),
-    telephone: z.number().int()
-        .positive(),
+    telephone: z.string().min(6),
 });
 
 type ProfileUpdateSchema = z.infer<typeof profileUpdateSchema>;
 
 export default function Account() {
+    const { useProfileQuery } = adminApi;
+    const profileQuery = useProfileQuery();
+
     const form = useForm<ProfileUpdateSchema>({
         resolver: zodResolver(profileUpdateSchema),
         defaultValues: {
-            email: "usuario@trazo.com",
-            password: "········",
-            telephone: 999999999,
+            email: profileQuery.data?.email ?? "",
+            password: "",
+            telephone: profileQuery.data?.phone ?? "",
         },
     });
+
+    // When the user profile loads, prepopulate the form data.
+    // TRAZ-19
+    useEffect(() => {
+        if (profileQuery.isSuccess) {
+            const profile = profileQuery.data;
+            form.setValue("email", profile.email);
+            form.setValue("telephone", profile.phone);
+        }
+    }, [form, profileQuery]);
 
     return (
         <div>
@@ -73,7 +87,12 @@ export default function Account() {
                     </CardHeader>
                     <CardContent>
                         <Form {...form}>
-                            <form className="space-y-4">
+                            <form
+                                className={cn(
+                                    "space-y-4",
+                                    profileQuery.isLoading && "animate-pulse",
+                                )}
+                            >
                                 <FormField
                                     control={form.control}
                                     name="email"
@@ -82,9 +101,12 @@ export default function Account() {
                                             <FormLabel>Email</FormLabel>
                                             <FormControl>
                                                 <Input
-                                                    placeholder="Email"
+                                                    placeholder="Cargando..."
                                                     required
                                                     type="email"
+                                                    disabled={
+                                                        profileQuery.isLoading
+                                                    }
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -100,9 +122,12 @@ export default function Account() {
                                             <FormLabel>Contraseña</FormLabel>
                                             <FormControl>
                                                 <Input
-                                                    placeholder="Contraseña"
+                                                    placeholder="········"
                                                     type="password"
                                                     required
+                                                    disabled={
+                                                        profileQuery.isLoading
+                                                    }
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -120,8 +145,11 @@ export default function Account() {
                                             </FormLabel>
                                             <FormControl>
                                                 <Input
-                                                    placeholder="Celular"
+                                                    placeholder="Cargando..."
                                                     required
+                                                    disabled={
+                                                        profileQuery.isLoading
+                                                    }
                                                     {...field}
                                                 />
                                             </FormControl>
