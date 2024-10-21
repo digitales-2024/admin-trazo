@@ -57,7 +57,6 @@ export default function Account() {
     });
 
     // When the user profile loads, prepopulate the form data.
-    // TRAZ-19
     useEffect(() => {
         if (profileQuery.isSuccess) {
             const profile = profileQuery.data;
