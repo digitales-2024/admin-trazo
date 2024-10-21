@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -25,7 +26,6 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 import { authApi } from "../authApi";
-import { useRouter } from "next/navigation";
 
 const loginSchema = z.object({
     email: z
