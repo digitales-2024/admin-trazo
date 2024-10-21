@@ -109,6 +109,16 @@ export const usersApi = createApi({
             }),
             invalidatesTags: ["Users"],
         }),
+
+        //Reactivar a un usuario
+        reactivateUser: build.mutation<User, string>({
+            query: (id) => ({
+                url: `users/reactivate/${id}`,
+                method: "PATCH",
+                credentials: "include",
+            }),
+            invalidatesTags: ["Users"],
+        }),
     }),
 });
 
@@ -121,4 +131,5 @@ export const {
     useDeleteUsersMutation,
     useReactivateUsersMutation,
     useSendNewPasswordMutation,
+    useReactivateUserMutation,
 } = usersApi;

@@ -35,6 +35,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { UsersTable } from "@/components/users/UsersTable";
 import {
     Table,
     TableBody,
@@ -71,6 +72,8 @@ export default function UsersPage() {
                             </DialogContent>
                         </Dialog>
                     </div>
+
+                    <UsersTable />
                     <Table>
                         <TableHeader>
                             <TableRow>
@@ -230,6 +233,15 @@ function CreateUser() {
                                     </FormControl>
                                     <SelectContent>
                                         <SelectGroup>
+                                            {[{ id: "-1", name: "TODO" }].map((rol) => (
+                                                <SelectItem
+                                                    key={rol.id}
+                                                    value={rol.id}
+                                                    className="capitalize"
+                                                >
+                                                    {rol.name}
+                                                </SelectItem>
+                                            ))}
                                             {[{ id: "-1", name: "TODO" }].map((rol) => (
                                                 <SelectItem
                                                     key={rol.id}
