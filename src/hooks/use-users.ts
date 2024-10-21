@@ -3,8 +3,6 @@ import {
     useDeleteUserMutation,
     useReactivateUserMutation,
 } from "@/redux/services/usersApi";
-import { CustomErrorData } from "@/types";
-import { translateError } from "@/utils/translateError";
 import { toast } from "sonner";
 
 export const useUsers = () => {
@@ -21,23 +19,7 @@ export const useUsers = () => {
     const [reactivateUser, { isSuccess: isSuccessReactivateUser }] =
         useReactivateUserMutation();
     const onDesactivateUser = async(id: string) => {
-        const promise = async() => {
-            try {
-                const result = await deleteUser(id).unwrap();
-                return result;
-            } catch (error) {
-                if (
-                    typeof error === "object" &&
-                    error !== null &&
-                    "data" in error
-                ) {
-                    const customError = error.data as CustomErrorData;
-                    const message = translateError(customError.message);
-                    throw new Error(message);
-                }
-                throw new Error("Ocurrió un error inesperado, por favor intenta de nuevo");
-            }
-        };
+        const promise = async() => await deleteUser(id).unwrap();
 
         toast.promise(promise(), {
             loading: "Desactivando usuario...",
@@ -47,23 +29,7 @@ export const useUsers = () => {
     };
 
     const onReactivateUser = async(id: string) => {
-        const promise = async() => {
-            try {
-                const result = await reactivateUser(id).unwrap();
-                return result;
-            } catch (error) {
-                if (
-                    typeof error === "object" &&
-                    error !== null &&
-                    "data" in error
-                ) {
-                    const customError = error.data as CustomErrorData;
-                    const message = translateError(customError.message);
-                    throw new Error(message);
-                }
-                throw new Error("Ocurrió un error inesperado, por favor intenta de nuevo");
-            }
-        };
+        const promise = async() => await reactivateUser(id).unwrap();
 
         toast.promise(promise(), {
             loading: "Desactivando usuario...",

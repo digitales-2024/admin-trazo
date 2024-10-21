@@ -8,8 +8,8 @@ import { FormUpdateSecurityProps } from "@/types/form";
 import { User } from "@/types/user";
 import { toast } from "sonner";
 
-import { useAuth } from "./useAuth";
-import { useLogout } from "./useLogout";
+import { useAuth } from "./use-auth";
+import { useLogout } from "./use-logout";
 
 export const useProfile = () => {
     const { setUser } = useAuth();
