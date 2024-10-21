@@ -1,22 +1,19 @@
 "use client";
 
-import { adminApi } from "@/redux/services/adminApi";
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
+
+import { Navbar } from "./_components/Navbar";
 
 export default function AdminLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    const { useProfileQuery } = adminApi;
-    const profileQuery = useProfileQuery();
-
     const links = [
         ["Usuarios", "/users"],
         ["Registros", "/logging"],
-        ["Mi Cuenta", "/account"],
     ];
 
     const linksElements = links.map(([name, href]) => (
@@ -43,17 +40,12 @@ export default function AdminLayout({
                 </div>
 
                 {linksElements}
-
-                <div className="absolute bottom-0 p-4 text-sm opacity-75">
-                    {profileQuery.isLoading && "Iniciando sesión.."}
-                    {profileQuery.isSuccess &&
-                        `Sesión iniciada como ${profileQuery.data?.name}`}
-                </div>
             </aside>
 
             <main
                 className={cn("min-h-screen bg-zinc-50 pl-40 transition-[margin-left] duration-300 ease-in-out dark:bg-zinc-900")}
             >
+                <Navbar />
                 <div className="container mx-auto px-4 pb-8 pt-8 sm:px-8">
                     {children}
                 </div>

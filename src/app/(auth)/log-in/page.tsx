@@ -60,7 +60,7 @@ export default function LogIn() {
         await login(values).unwrap();
 
         // TODO: redirect to a different page, depending on the user role
-        router.replace("/account");
+        router.replace("/");
     }
 
     return (

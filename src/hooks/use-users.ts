@@ -5,7 +5,7 @@ import {
 } from "@/redux/services/usersApi";
 import { CustomErrorData } from "@/types";
 import { translateError } from "@/utils/translateError";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 
 export const useUsers = () => {
     const {
