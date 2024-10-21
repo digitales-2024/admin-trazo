@@ -35,7 +35,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { UsersTable } from "@/components/users/UsersTable";
 import {
     Table,
     TableBody,
@@ -44,6 +43,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import { UsersTable } from "@/components/users/UsersTable";
 
 export default function UsersPage() {
     return (
