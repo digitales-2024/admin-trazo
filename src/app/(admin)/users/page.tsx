@@ -35,7 +35,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { UsersTable } from "@/components/users/UsersTable";
 import {
     Table,
     TableBody,
@@ -44,6 +43,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import { UsersTable } from "@/components/users/UsersTable";
 
 export default function UsersPage() {
     return (
@@ -107,8 +107,6 @@ export default function UsersPage() {
 }
 
 const userCreateSchema = z.object({
-    name: z.string().min(2).max(50),
-    username: z.string().min(2).max(50),
     name: z.string().min(2)
         .max(50),
     username: z.string().min(2)
@@ -224,8 +222,6 @@ function CreateUser() {
                             <FormItem>
                                 <FormLabel htmlFor="rol">Rol</FormLabel>
                                 <Select
-                                    onValueChange={(value) =>
-                                        field.onChange([value])
                                     onValueChange={(value) => field.onChange([value])
                                     }
                                     defaultValue={field?.value?.[0] ?? ""}
@@ -237,17 +233,15 @@ function CreateUser() {
                                     </FormControl>
                                     <SelectContent>
                                         <SelectGroup>
-                                            {[{ id: "-1", name: "TODO" }].map(
-                                                (rol) => (
-                                                    <SelectItem
-                                                        key={rol.id}
-                                                        value={rol.id}
-                                                        className="capitalize"
-                                                    >
-                                                        {rol.name}
-                                                    </SelectItem>
-                                                ),
-                                            )}
+                                            {[{ id: "-1", name: "TODO" }].map((rol) => (
+                                                <SelectItem
+                                                    key={rol.id}
+                                                    value={rol.id}
+                                                    className="capitalize"
+                                                >
+                                                    {rol.name}
+                                                </SelectItem>
+                                            ))}
                                             {[{ id: "-1", name: "TODO" }].map((rol) => (
                                                 <SelectItem
                                                     key={rol.id}

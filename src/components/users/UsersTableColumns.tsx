@@ -1,12 +1,12 @@
 import { User, Role } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
-import { useState } from "react";
+//import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+//import { Button } from "@/components/ui/button";
 
-import { DesactivateUserDialog } from "./DesactivateUserDialog";
-import { ReactivateUserDialog } from "./ReactivateUserDialog";
+//import { DesactivateUserDialog } from "./DesactivateUserDialog";
+//import { ReactivateUserDialog } from "./ReactivateUserDialog";
 
 export const columns: ColumnDef<User>[] = [
     {
@@ -35,7 +35,7 @@ export const columns: ColumnDef<User>[] = [
         cell: ({ row }) => {
             const isActive = row.getValue("isActive");
             return (
-                <Badge variant={isActive ? "success" : "destructive"}>
+                <Badge variant={isActive ? "default" : "destructive"}>
                     {isActive ? "Active" : "Inactive"}
                 </Badge>
             );
@@ -67,55 +67,55 @@ export const columns: ColumnDef<User>[] = [
             ) : null;
         },
     },
-    {
-        id: "actions", // Nueva columna para las acciones
-        header: "Actions",
-        cell: ({ row }) => {
-            const user = row.original as User;
-            const [isDeactivateDialogOpen, setIsDeactivateDialogOpen] =
-                useState(false);
-            const [isReactivateDialogOpen, setIsReactivateDialogOpen] =
-                useState(false);
-
-            return (
-                <div className="flex space-x-2">
-                    {user.isActive ? (
-                        <>
-                            <Button
-                                variant="destructive"
-                                onClick={() => setIsDeactivateDialogOpen(true)}
-                            >
-                                Desactivar
-                            </Button>
-                            <DesactivateUserDialog
-                                user={user}
-                                isOpen={isDeactivateDialogOpen}
-                                onOpenChange={setIsDeactivateDialogOpen}
-                                onSuccess={() => {
-                                    // Lógica para manejar la desactivación exitosa
-                                }}
-                            />
-                        </>
-                    ) : (
-                        <>
-                            <Button
-                                variant="secondary"
-                                onClick={() => setIsReactivateDialogOpen(true)}
-                            >
-                                Reactivar
-                            </Button>
-                            <ReactivateUserDialog
-                                user={user}
-                                isOpen={isReactivateDialogOpen}
-                                onOpenChange={setIsReactivateDialogOpen}
-                                onSuccess={() => {
-                                    // Lógica para manejar la reactivación exitosa
-                                }}
-                            />
-                        </>
-                    )}
-                </div>
-            );
-        },
-    },
+    //{
+    //    id: "actions", // Nueva columna para las acciones
+    //    header: "Actions",
+    //    cell: ({ row }) => {
+    //        const user = row.original as User;
+    //        const [isDeactivateDialogOpen, setIsDeactivateDialogOpen] =
+    //            useState(false);
+    //        const [isReactivateDialogOpen, setIsReactivateDialogOpen] =
+    //            useState(false);
+    //
+    //        return (
+    //            <div className="flex space-x-2">
+    //                {user.isActive ? (
+    //                    <>
+    //                        <Button
+    //                            variant="destructive"
+    //                            onClick={() => setIsDeactivateDialogOpen(true)}
+    //                        >
+    //                            Desactivar
+    //                        </Button>
+    //                        <DesactivateUserDialog
+    //                            user={user}
+    //                            isOpen={isDeactivateDialogOpen}
+    //                            onOpenChange={setIsDeactivateDialogOpen}
+    //                            onSuccess={() => {
+    //                                // Lógica para manejar la desactivación exitosa
+    //                            }}
+    //                        />
+    //                    </>
+    //                ) : (
+    //                    <>
+    //                        <Button
+    //                            variant="secondary"
+    //                            onClick={() => setIsReactivateDialogOpen(true)}
+    //                        >
+    //                            Reactivar
+    //                        </Button>
+    //                        <ReactivateUserDialog
+    //                            user={user}
+    //                            isOpen={isReactivateDialogOpen}
+    //                            onOpenChange={setIsReactivateDialogOpen}
+    //                            onSuccess={() => {
+    //                                // Lógica para manejar la reactivación exitosa
+    //                            }}
+    //                        />
+    //                    </>
+    //                )}
+    //            </div>
+    //        );
+    //    },
+    //},
 ];

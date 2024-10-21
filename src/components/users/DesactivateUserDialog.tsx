@@ -28,7 +28,7 @@ export const DesactivateUserDialog = ({
 }: DesactivateUserDialogProps) => {
     const { onDesactivateUser } = useUsers();
 
-    const handleDesactivate = async () => {
+    const handleDesactivate = async() => {
         onDesactivateUser(user.id);
         onSuccess?.();
         onOpenChange(false); // Se cierra el Dialog después de la acción

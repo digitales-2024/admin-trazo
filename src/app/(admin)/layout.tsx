@@ -11,11 +11,7 @@ export default function AdminLayout({
     children: React.ReactNode;
 }) {
     const { useProfileQuery } = adminApi;
-    const data = useProfileQuery();
-
-    // TODO: This is here to manually trigger the user profile query.
-    // Remove once the profile is used elsewhere
-    console.log("useProfileQuery ran:", typeof data);
+    const profileQuery = useProfileQuery();
 
     const links = [
         ["Usuarios", "/users"],
@@ -47,6 +43,12 @@ export default function AdminLayout({
                 </div>
 
                 {linksElements}
+
+                <div className="absolute bottom-0 p-4 text-sm opacity-75">
+                    {profileQuery.isLoading && "Iniciando sesión.."}
+                    {profileQuery.isSuccess &&
+                        `Sesión iniciada como ${profileQuery.data?.name}`}
+                </div>
             </aside>
 
             <main

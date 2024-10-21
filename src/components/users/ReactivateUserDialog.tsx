@@ -28,7 +28,7 @@ export const ReactivateUserDialog = ({
 }: ReactivateUserDialogProps) => {
     const { onReactivateUser } = useUsers();
 
-    const handleReactivate = async () => {
+    const handleReactivate = async() => {
         onReactivateUser(user.id);
         onSuccess?.();
         onOpenChange(false); // Se cierra el Dialog después de la acción

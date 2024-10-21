@@ -11,7 +11,13 @@ const baseQuery: BaseQueryFn = fetchBaseQuery({
     credentials: "include", // Enviar cookies HttpOnly en cada solicitud
 });
 
-const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
+export type QueryError = {
+    name: string;
+    message: string;
+    stack: string;
+};
+
+const baseQueryWithReauth: BaseQueryFn = async(args, api, extraOptions) => {
     let result = await baseQuery(args, api, extraOptions);
 
     // Si obtenemos un 401 Unauthorized, intentamos refrescar el token
@@ -49,9 +55,7 @@ const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
         throw new Error(message);
     }
     if (result.error) {
-        throw new Error(
-            "Ocurrió un error inesperado, por favor intenta de nuevo",
-        );
+        throw new Error("Ocurrió un error inesperado, por favor intenta de nuevo");
     }
 
     return result;
