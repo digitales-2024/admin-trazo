@@ -1,8 +1,8 @@
-import { authApi } from "@/app/(auth)/authApi";
 import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
 import { adminApi } from "./services/adminApi";
+import { authApi } from "./services/authApi";
 import { usersApi } from "./services/usersApi";
 
 export const store = configureStore({

@@ -1,12 +1,9 @@
 "use client";
 
-import { QueryError } from "@/redux/baseQuery";
-import { adminApi } from "@/redux/services/adminApi";
-import { usersApi } from "@/redux/services/usersApi";
+import { useProfile } from "@/hooks/useProfile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -40,35 +37,24 @@ const profileUpdateSchema = z.object({
 type ProfileUpdateSchema = z.infer<typeof profileUpdateSchema>;
 
 export default function Account() {
-    const profileQuery = adminApi.useProfileQuery();
-    const user = profileQuery.data;
-    const [updateUser, { isLoading }] = usersApi.useUpdateUserMutation();
+    const { user, onUpdate, isLoading, isSuccess, refetch } = useProfile();
 
     const form = useForm<ProfileUpdateSchema>({
         resolver: zodResolver(profileUpdateSchema),
         defaultValues: {
-            name: profileQuery.data?.email ?? "",
+            name: user?.email ?? "",
             password: "",
-            telephone: profileQuery.data?.phone ?? "",
+            telephone: user?.phone ?? "",
         },
     });
 
     // When the user profile loads, prepopulate the form data.
     useEffect(() => {
-        if (profileQuery.isSuccess) {
-            const profile = profileQuery.data;
-            form.setValue("name", profile.name);
-            form.setValue("telephone", profile.phone);
+        if (user !== undefined) {
+            form.setValue("name", user?.name ?? "");
+            form.setValue("telephone", user?.phone ?? "");
         }
-    }, [form, profileQuery]);
-
-    // If the user profile fails to load, show a notification
-    useEffect(() => {
-        if (profileQuery.isError) {
-            const error = profileQuery.error as QueryError;
-            toast.error(error.message);
-        }
-    }, [profileQuery]);
+    }, [form, user, isSuccess]);
 
     const submitForm = (data: ProfileUpdateSchema) => {
         const updateData = {
@@ -77,9 +63,7 @@ export default function Account() {
             name: data.name ?? "",
             phone: data?.telephone ?? "",
         };
-        updateUser(updateData).then(() => {
-            profileQuery.refetch();
-        });
+        onUpdate(updateData).then(() => refetch());
     };
 
     return (
@@ -106,7 +90,7 @@ export default function Account() {
                             <form
                                 className={cn(
                                     "space-y-4",
-                                    profileQuery.isLoading && "animate-pulse",
+                                    isLoading && "animate-pulse",
                                 )}
                                 onSubmit={form.handleSubmit(submitForm)}
                             >
@@ -119,9 +103,7 @@ export default function Account() {
                                             <FormControl>
                                                 <Input
                                                     placeholder="Cargando..."
-                                                    disabled={
-                                                        profileQuery.isLoading
-                                                    }
+                                                    disabled={isLoading}
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -139,9 +121,7 @@ export default function Account() {
                                                 <Input
                                                     placeholder="········"
                                                     type="password"
-                                                    disabled={
-                                                        profileQuery.isLoading
-                                                    }
+                                                    disabled={isLoading}
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -160,9 +140,7 @@ export default function Account() {
                                             <FormControl>
                                                 <Input
                                                     placeholder="Cargando..."
-                                                    disabled={
-                                                        profileQuery.isLoading
-                                                    }
+                                                    disabled={isLoading}
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -172,8 +150,7 @@ export default function Account() {
                                 />
                                 <Button
                                     disabled={
-                                        profileQuery.isLoading ||
-                                        !form.formState.isDirty
+                                        isLoading || !form.formState.isDirty
                                     }
                                     type="submit"
                                 >

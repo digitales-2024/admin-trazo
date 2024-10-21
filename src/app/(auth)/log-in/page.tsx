@@ -1,5 +1,6 @@
 "use client";
 
+import { authApi } from "@/redux/services/authApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleX } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -25,8 +26,6 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { cn } from "@/lib/utils";
-
-import { authApi } from "../authApi";
 
 const loginSchema = z.object({
     email: z
