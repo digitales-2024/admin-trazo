@@ -1,6 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { CircleX } from "lucide-react";
+
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -25,7 +28,6 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 import { authApi } from "../authApi";
-import { useRouter } from "next/navigation";
 
 const loginSchema = z.object({
     email: z
@@ -45,7 +47,7 @@ type LoginSchema = z.infer<typeof loginSchema>;
 
 export default function LogIn() {
     const { useLoginMutation } = authApi;
-    const [login, { error, isError }] = useLoginMutation();
+    const [login, { isLoading, error, isError, reset }] = useLoginMutation();
     const router = useRouter();
 
     const form = useForm<LoginSchema>({
@@ -57,10 +59,9 @@ export default function LogIn() {
     });
 
     async function onSubmit(values: LoginSchema) {
-        const loginResponse = await login(values).unwrap();
-        const userRoles = loginResponse.roles;
-        console.log(`Logged in, redirecting to landing page for ${JSON.stringify(userRoles)}`);
-        // redirect to a different page, depending on the user role
+        await login(values).unwrap();
+
+        // TODO: redirect to a different page, depending on the user role
         router.replace("/account");
     }
 
@@ -89,9 +90,10 @@ export default function LogIn() {
                                         <FormLabel>Email</FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="usuario@trazo.com"
+                                                placeholder="usuario@trazoarq.com"
                                                 type="email"
                                                 required
+                                                disabled={isLoading}
                                                 {...field}
                                             />
                                         </FormControl>
@@ -110,6 +112,7 @@ export default function LogIn() {
                                                 placeholder="········"
                                                 type="password"
                                                 required
+                                                disabled={isLoading}
                                                 {...field}
                                             />
                                         </FormControl>
@@ -117,13 +120,22 @@ export default function LogIn() {
                                     </FormItem>
                                 )}
                             />
-                            <Button type="submit">Iniciar sesión</Button>
+                            <Button
+                                type="submit"
+                                disabled={isLoading}
+                                className={cn(isLoading && "animate-pulse")}
+                            >
+                                Iniciar sesión
+                            </Button>
                         </form>
                     </Form>
 
                     {isError && (
-                        <div className="my-2 rounded-md border border-red-700 bg-red-200 p-2 text-red-700">
-                            {(error as Error)?.message}
+                        <div className="my-2 grid grid-cols-[auto_3rem] gap-2 rounded-md border border-red-700 bg-red-200 p-2 text-red-700">
+                            <span>{(error as Error)?.message}</span>
+                            <button className="text-center" onClick={reset}>
+                                <CircleX className="inline-block" />
+                            </button>
                         </div>
                     )}
                 </CardContent>

@@ -36,6 +36,14 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { UsersTable } from "@/components/users/UsersTable";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
 
 export default function UsersPage() {
     return (
@@ -64,7 +72,34 @@ export default function UsersPage() {
                             </DialogContent>
                         </Dialog>
                     </div>
+
                     <UsersTable />
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead className="w-[100px]">
+                                    Nombre
+                                </TableHead>
+                                <TableHead>Correo</TableHead>
+                                <TableHead>Teléfono</TableHead>
+                                <TableHead className="text-right">
+                                    Rol
+                                </TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell className="font-medium">
+                                    INV001
+                                </TableCell>
+                                <TableCell>Paid</TableCell>
+                                <TableCell>Credit Card</TableCell>
+                                <TableCell className="text-right">
+                                    $250.00
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
                 </CardContent>
             </Card>
         </div>
@@ -74,6 +109,10 @@ export default function UsersPage() {
 const userCreateSchema = z.object({
     name: z.string().min(2).max(50),
     username: z.string().min(2).max(50),
+    name: z.string().min(2)
+        .max(50),
+    username: z.string().min(2)
+        .max(50),
     email: z
         .string()
         .min(1, {
@@ -187,6 +226,7 @@ function CreateUser() {
                                 <Select
                                     onValueChange={(value) =>
                                         field.onChange([value])
+                                    onValueChange={(value) => field.onChange([value])
                                     }
                                     defaultValue={field?.value?.[0] ?? ""}
                                 >
@@ -208,6 +248,15 @@ function CreateUser() {
                                                     </SelectItem>
                                                 ),
                                             )}
+                                            {[{ id: "-1", name: "TODO" }].map((rol) => (
+                                                <SelectItem
+                                                    key={rol.id}
+                                                    value={rol.id}
+                                                    className="capitalize"
+                                                >
+                                                    {rol.name}
+                                                </SelectItem>
+                                            ))}
                                         </SelectGroup>
                                     </SelectContent>
                                 </Select>
