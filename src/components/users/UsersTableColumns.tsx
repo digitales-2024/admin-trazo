@@ -1,7 +1,13 @@
-import { Role, User } from "@/types";
+import { User, Role } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
+import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+
+import { DesactivateUserDialog } from "./DesactivateUserDialog";
+import { ReactivateUserDialog } from "./ReactivateUserDialog";
+
 export const columns: ColumnDef<User>[] = [
     {
         accessorKey: "name",
@@ -59,6 +65,57 @@ export const columns: ColumnDef<User>[] = [
             return isSuperAdmin ? (
                 <Badge variant="default">Super Admin</Badge>
             ) : null;
+        },
+    },
+    {
+        id: "actions", // Nueva columna para las acciones
+        header: "Actions",
+        cell: ({ row }) => {
+            const user = row.original as User;
+            const [isDeactivateDialogOpen, setIsDeactivateDialogOpen] =
+                useState(false);
+            const [isReactivateDialogOpen, setIsReactivateDialogOpen] =
+                useState(false);
+
+            return (
+                <div className="flex space-x-2">
+                    {user.isActive ? (
+                        <>
+                            <Button
+                                variant="destructive"
+                                onClick={() => setIsDeactivateDialogOpen(true)}
+                            >
+                                Desactivar
+                            </Button>
+                            <DesactivateUserDialog
+                                user={user}
+                                isOpen={isDeactivateDialogOpen}
+                                onOpenChange={setIsDeactivateDialogOpen}
+                                onSuccess={() => {
+                                    // Lógica para manejar la desactivación exitosa
+                                }}
+                            />
+                        </>
+                    ) : (
+                        <>
+                            <Button
+                                variant="secondary"
+                                onClick={() => setIsReactivateDialogOpen(true)}
+                            >
+                                Reactivar
+                            </Button>
+                            <ReactivateUserDialog
+                                user={user}
+                                isOpen={isReactivateDialogOpen}
+                                onOpenChange={setIsReactivateDialogOpen}
+                                onSuccess={() => {
+                                    // Lógica para manejar la reactivación exitosa
+                                }}
+                            />
+                        </>
+                    )}
+                </div>
+            );
         },
     },
 ];
