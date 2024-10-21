@@ -1,11 +1,13 @@
 "use client";
 
+import { QueryError } from "@/redux/baseQuery";
 import { adminApi } from "@/redux/services/adminApi";
+import { usersApi } from "@/redux/services/usersApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { toast } from "sonner";
+import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -26,33 +28,26 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { cn } from "@/lib/utils";
-import { QueryError } from "@/redux/baseQuery";
 
 const profileUpdateSchema = z.object({
-    email: z
-        .string()
-        .min(1, {
-            message: "Ingrese su email",
-        })
-        .email({
-            message: "Email no válido",
-        }),
-    password: z.string().min(1, {
-        message: "Ingrese su contraseña",
+    name: z.string().min(1, {
+        message: "Ingrese su nuevo nombre",
     }),
+    password: z.string(),
     telephone: z.string().min(6),
 });
 
 type ProfileUpdateSchema = z.infer<typeof profileUpdateSchema>;
 
 export default function Account() {
-    const { useProfileQuery } = adminApi;
-    const profileQuery = useProfileQuery();
+    const profileQuery = adminApi.useProfileQuery();
+    const user = profileQuery.data;
+    const [updateUser, { isLoading }] = usersApi.useUpdateUserMutation();
 
     const form = useForm<ProfileUpdateSchema>({
         resolver: zodResolver(profileUpdateSchema),
         defaultValues: {
-            email: profileQuery.data?.email ?? "",
+            name: profileQuery.data?.email ?? "",
             password: "",
             telephone: profileQuery.data?.phone ?? "",
         },
@@ -62,7 +57,7 @@ export default function Account() {
     useEffect(() => {
         if (profileQuery.isSuccess) {
             const profile = profileQuery.data;
-            form.setValue("email", profile.email);
+            form.setValue("name", profile.name);
             form.setValue("telephone", profile.phone);
         }
     }, [form, profileQuery]);
@@ -74,6 +69,18 @@ export default function Account() {
             toast.error(error.message);
         }
     }, [profileQuery]);
+
+    const submitForm = (data: ProfileUpdateSchema) => {
+        const updateData = {
+            id: user?.id ?? "",
+            roles: user?.roles.map((role) => role.id) ?? [],
+            name: data.name ?? "",
+            phone: data?.telephone ?? "",
+        };
+        updateUser(updateData).then(() => {
+            profileQuery.refetch();
+        });
+    };
 
     return (
         <div>
@@ -101,18 +108,17 @@ export default function Account() {
                                     "space-y-4",
                                     profileQuery.isLoading && "animate-pulse",
                                 )}
+                                onSubmit={form.handleSubmit(submitForm)}
                             >
                                 <FormField
                                     control={form.control}
-                                    name="email"
+                                    name="name"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Email</FormLabel>
+                                            <FormLabel>Nombre</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     placeholder="Cargando..."
-                                                    required
-                                                    type="email"
                                                     disabled={
                                                         profileQuery.isLoading
                                                     }
@@ -133,7 +139,6 @@ export default function Account() {
                                                 <Input
                                                     placeholder="········"
                                                     type="password"
-                                                    required
                                                     disabled={
                                                         profileQuery.isLoading
                                                     }
@@ -155,7 +160,6 @@ export default function Account() {
                                             <FormControl>
                                                 <Input
                                                     placeholder="Cargando..."
-                                                    required
                                                     disabled={
                                                         profileQuery.isLoading
                                                     }
@@ -166,8 +170,16 @@ export default function Account() {
                                         </FormItem>
                                     )}
                                 />
-                                <Button disabled type="submit">
-                                    Actualizar
+                                <Button
+                                    disabled={
+                                        profileQuery.isLoading ||
+                                        !form.formState.isDirty
+                                    }
+                                    type="submit"
+                                >
+                                    {isLoading
+                                        ? "Actualizando..."
+                                        : "Actualizar información"}
                                 </Button>
                             </form>
                         </Form>
