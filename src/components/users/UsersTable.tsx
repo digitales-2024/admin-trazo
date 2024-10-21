@@ -1,6 +1,7 @@
 "use client";
 
 import { useUsers } from "@/hooks/use-users";
+import { QueryError } from "@/redux/baseQuery";
 import {
     ColumnFiltersState,
     SortingState,
@@ -52,7 +53,7 @@ export function UsersTable() {
     });
 
     if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error.message}</div>;
+    if (error as QueryError) return <div>Error: {(error as QueryError).message}</div>;
 
     return (
         <div className="w-full">
