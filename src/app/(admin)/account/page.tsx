@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +26,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { cn } from "@/lib/utils";
+import { QueryError } from "@/redux/baseQuery";
 
 const profileUpdateSchema = z.object({
     email: z
@@ -64,6 +66,14 @@ export default function Account() {
             form.setValue("telephone", profile.phone);
         }
     }, [form, profileQuery]);
+
+    // If the user profile fails to load, show a notification
+    useEffect(() => {
+        if (profileQuery.isError) {
+            const error = profileQuery.error as QueryError;
+            toast.error(error.message);
+        }
+    }, [profileQuery]);
 
     return (
         <div>

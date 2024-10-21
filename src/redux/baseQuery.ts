@@ -11,6 +11,12 @@ const baseQuery: BaseQueryFn = fetchBaseQuery({
     credentials: "include", // Enviar cookies HttpOnly en cada solicitud
 });
 
+export type QueryError = {
+    name: string;
+    message: string;
+    stack: string;
+};
+
 const baseQueryWithReauth: BaseQueryFn = async(args, api, extraOptions) => {
     let result = await baseQuery(args, api, extraOptions);
 
