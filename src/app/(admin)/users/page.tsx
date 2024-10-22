@@ -1,7 +1,10 @@
 "use client";
 import { useRol } from "@/hooks/use-rol";
+import { useUsers } from "@/hooks/use-users";
 import { CreateUsersSchema, usersSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { RefreshCcw } from "lucide-react";
+import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -37,9 +40,6 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { UsersTable } from "@/components/users/UsersTable";
-import { useEffect, useState, useTransition } from "react";
-import { useUsers } from "@/hooks/use-users";
-import { RefreshCcw } from "lucide-react";
 
 export default function UsersPage() {
     return (

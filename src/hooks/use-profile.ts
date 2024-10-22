@@ -4,14 +4,14 @@ import {
 } from "@/redux/services/adminApi";
 import { useUpdateUserMutation } from "@/redux/services/usersApi";
 import { UpdateUsersSchema } from "@/schemas";
+import { CustomErrorData } from "@/types";
 import { FormUpdateSecurityProps } from "@/types/form";
 import { User } from "@/types/user";
+import { translateError } from "@/utils/translateError";
 import { toast } from "sonner";
 
 import { useAuth } from "./use-auth";
 import { useLogout } from "./use-logout";
-import { CustomErrorData } from "@/types";
-import { translateError } from "@/utils/translateError";
 
 export const useProfile = () => {
     const { setUser } = useAuth();

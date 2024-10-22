@@ -6,6 +6,8 @@ import {
     useDeleteUsersMutation,
     useReactivateUsersMutation,
     useSendNewPasswordMutation,
+    useDeleteUserMutation,
+    useReactivateUserMutation,
 } from "@/redux/services/usersApi";
 import { CreateUsersSchema, UpdateUsersSchema } from "@/schemas";
 import { SendNewPasswordSchema } from "@/schemas/users/sendNewPasswordSchema";
@@ -15,6 +17,8 @@ import { toast } from "sonner";
 
 export const useUsers = () => {
     const { data, error, isLoading } = useGetUsersQuery();
+    const [deleteUser] = useDeleteUserMutation();
+    const [reactivateUser] = useReactivateUserMutation();
     const [generatePassword, { data: password }] =
         useGeneratePasswordMutation();
     const [createUser, { isSuccess: isSuccessCreateUser }] =
@@ -25,6 +29,26 @@ export const useUsers = () => {
     ] = useUpdateUserMutation();
     const [deleteUsers, { isSuccess: isSuccessDeleteUsers }] =
         useDeleteUsersMutation();
+    const onDesactivateUser = async(id: string) => {
+        const promise = async() => await deleteUser(id).unwrap();
+
+        toast.promise(promise(), {
+            loading: "Desactivando usuario...",
+            success: "Usuario desactivado exitosamente",
+            error: (error) => error.message,
+        });
+    };
+
+    const onReactivateUser = async(id: string) => {
+        const promise = async() => await reactivateUser(id).unwrap();
+
+        toast.promise(promise(), {
+            loading: "Desactivando usuario...",
+            success: "Usuario desactivado exitosamente",
+            error: (error) => error.message,
+        });
+    };
+
     const [
         reactivateUsers,
         {
@@ -239,9 +263,11 @@ export const useUsers = () => {
         password,
         onCreateUser,
         isSuccessCreateUser,
+        onDesactivateUser,
         onDeleteUsers,
         isSuccessDeleteUsers,
         onReactivateUsers,
+        onReactivateUser,
         isSuccessReactivateUsers,
         isLoadingReactivateUsers,
         onUpdateUser,
