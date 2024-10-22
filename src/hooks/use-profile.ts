@@ -3,13 +3,15 @@ import {
     useUpdatePasswordMutation,
 } from "@/redux/services/adminApi";
 import { useUpdateUserMutation } from "@/redux/services/usersApi";
-import { UpdateUsersSchema } from "@/schemas/createUsersSchema";
+import { UpdateUsersSchema } from "@/schemas";
 import { FormUpdateSecurityProps } from "@/types/form";
 import { User } from "@/types/user";
 import { toast } from "sonner";
 
 import { useAuth } from "./use-auth";
 import { useLogout } from "./use-logout";
+import { CustomErrorData } from "@/types";
+import { translateError } from "@/utils/translateError";
 
 export const useProfile = () => {
     const { setUser } = useAuth();
@@ -18,7 +20,7 @@ export const useProfile = () => {
     const { data: user, refetch } = useProfileQuery();
     const [updateUser, { isLoading, isSuccess }] = useUpdateUserMutation();
 
-    const onUpdate = (dataForm: UpdateUsersSchema) => {
+    const onUpdate = async(dataForm: UpdateUsersSchema) => {
         const promise = () => new Promise(async(resolve, reject) => {
             try {
                 if (!user) {
@@ -28,6 +30,16 @@ export const useProfile = () => {
                     id: user.id,
                     ...dataForm,
                 });
+                if (
+                    result.error &&
+                        typeof result.error === "object" &&
+                        "data" in result.error
+                ) {
+                    const error = (result.error.data as CustomErrorData)
+                        .message;
+                    const message = translateError(error as string);
+                    reject(new Error(message));
+                }
                 resolve(result);
                 setUser(result?.data?.data as User);
             } catch (error) {
@@ -35,15 +47,11 @@ export const useProfile = () => {
             }
         });
 
-        const result = promise();
-
-        toast.promise(result, {
+        toast.promise(promise(), {
             loading: "Actualizando información...",
             success: "información actualizado correctamente",
             error: (error) => error.message,
         });
-
-        return result;
     };
 
     const [updatePassword, { isLoading: isLoadingUpdatePassword }] =
@@ -53,6 +61,17 @@ export const useProfile = () => {
         const promise = () => new Promise(async(resolve, reject) => {
             try {
                 const result = await updatePassword(data);
+                if (
+                    result.error &&
+                        typeof result.error === "object" &&
+                        "data" in result.error
+                ) {
+                    const error = (result.error.data as CustomErrorData)
+                        .message;
+
+                    const message = translateError(error as string);
+                    reject(new Error(message));
+                }
                 resolve(result);
                 signOut();
             } catch (error) {
