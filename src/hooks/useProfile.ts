@@ -18,7 +18,7 @@ export const useProfile = () => {
     const { data: user, refetch } = useProfileQuery();
     const [updateUser, { isLoading, isSuccess }] = useUpdateUserMutation();
 
-    const onUpdate = async(dataForm: UpdateUsersSchema) => {
+    const onUpdate = (dataForm: UpdateUsersSchema) => {
         const promise = () => new Promise(async(resolve, reject) => {
             try {
                 if (!user) {
@@ -35,11 +35,15 @@ export const useProfile = () => {
             }
         });
 
-        toast.promise(promise(), {
+        const result = promise();
+
+        toast.promise(result, {
             loading: "Actualizando información...",
             success: "información actualizado correctamente",
             error: (error) => error.message,
         });
+
+        return result;
     };
 
     const [updatePassword, { isLoading: isLoadingUpdatePassword }] =
