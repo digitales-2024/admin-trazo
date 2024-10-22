@@ -1,5 +1,3 @@
-import { CustomErrorData } from "@/types/error";
-import { translateError } from "@/utils/translateError";
 import { BaseQueryFn } from "@reduxjs/toolkit/query";
 import {
     fetchBaseQuery,
@@ -41,21 +39,6 @@ const baseQueryWithReauth: BaseQueryFn = async(args, api, extraOptions) => {
 
             window.location.href = "/log-in";
         }
-    }
-
-    // If the response has an error field, it must not be in the 2xx range.
-    // Make those throw an error
-    if (
-        result.error &&
-        typeof result.error === "object" &&
-        "data" in result.error
-    ) {
-        const error = (result.error.data as CustomErrorData).message;
-        const message = translateError(error as string);
-        throw new Error(message);
-    }
-    if (result.error) {
-        throw new Error("Ocurrió un error inesperado, por favor intenta de nuevo");
     }
 
     return result;

@@ -33,10 +33,10 @@ export function UsersTable() {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
-    const { users, isLoading, error } = useUsers();
+    const { data, isLoading, error } = useUsers();
 
     const table = useReactTable({
-        data: users,
+        data: data ?? [],
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
