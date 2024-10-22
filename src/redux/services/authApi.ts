@@ -1,8 +1,7 @@
 import baseQueryWithReauth from "@/redux/baseQuery";
 import { adminApi } from "@/redux/services/adminApi";
+import { UserLoginOutput, UserLoginInput } from "@/types/user";
 import { createApi } from "@reduxjs/toolkit/query/react";
-
-import { UserLoginOutput, UserLoginInput } from "./types";
 
 export const authApi = createApi({
     reducerPath: "authApi",

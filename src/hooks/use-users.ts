@@ -20,8 +20,8 @@ export const useUsers = () => {
         useDeleteUserMutation();
     const [reactivateUser, { isSuccess: isSuccessReactivateUser }] =
         useReactivateUserMutation();
-    const onDesactivateUser = async (id: string) => {
-        const promise = async () => {
+    const onDesactivateUser = async(id: string) => {
+        const promise = async() => {
             try {
                 const result = await deleteUser(id).unwrap();
                 return result;
@@ -35,9 +35,7 @@ export const useUsers = () => {
                     const message = translateError(customError.message);
                     throw new Error(message);
                 }
-                throw new Error(
-                    "Ocurrió un error inesperado, por favor intenta de nuevo",
-                );
+                throw new Error("Ocurrió un error inesperado, por favor intenta de nuevo");
             }
         };
 
@@ -48,8 +46,8 @@ export const useUsers = () => {
         });
     };
 
-    const onReactivateUser = async (id: string) => {
-        const promise = async () => {
+    const onReactivateUser = async(id: string) => {
+        const promise = async() => {
             try {
                 const result = await reactivateUser(id).unwrap();
                 return result;
@@ -63,9 +61,7 @@ export const useUsers = () => {
                     const message = translateError(customError.message);
                     throw new Error(message);
                 }
-                throw new Error(
-                    "Ocurrió un error inesperado, por favor intenta de nuevo",
-                );
+                throw new Error("Ocurrió un error inesperado, por favor intenta de nuevo");
             }
         };
 

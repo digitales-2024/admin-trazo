@@ -1,6 +1,8 @@
 "use client";
 
+import { useProfile } from "@/hooks/useProfile";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -25,32 +27,44 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 const profileUpdateSchema = z.object({
-    email: z
-        .string()
-        .min(1, {
-            message: "Ingrese su email",
-        })
-        .email({
-            message: "Email no válido",
-        }),
-    password: z.string().min(1, {
-        message: "Ingrese su contraseña",
+    name: z.string().min(1, {
+        message: "Ingrese su nuevo nombre",
     }),
-    telephone: z.number().int()
-        .positive(),
+    password: z.string(),
+    telephone: z.string().min(6),
 });
 
 type ProfileUpdateSchema = z.infer<typeof profileUpdateSchema>;
 
 export default function Account() {
+    const { user, onUpdate, isLoading, isSuccess, refetch } = useProfile();
+
     const form = useForm<ProfileUpdateSchema>({
         resolver: zodResolver(profileUpdateSchema),
         defaultValues: {
-            email: "usuario@trazo.com",
-            password: "········",
-            telephone: 999999999,
+            name: user?.email ?? "",
+            password: "",
+            telephone: user?.phone ?? "",
         },
     });
+
+    // When the user profile loads, prepopulate the form data.
+    useEffect(() => {
+        if (user !== undefined) {
+            form.setValue("name", user?.name ?? "");
+            form.setValue("telephone", user?.phone ?? "");
+        }
+    }, [form, user, isSuccess]);
+
+    const submitForm = (data: ProfileUpdateSchema) => {
+        const updateData = {
+            id: user?.id ?? "",
+            roles: user?.roles.map((role) => role.id) ?? [],
+            name: data.name ?? "",
+            phone: data?.telephone ?? "",
+        };
+        onUpdate(updateData).then(() => refetch());
+    };
 
     return (
         <div>
@@ -73,18 +87,23 @@ export default function Account() {
                     </CardHeader>
                     <CardContent>
                         <Form {...form}>
-                            <form className="space-y-4">
+                            <form
+                                className={cn(
+                                    "space-y-4",
+                                    isLoading && "animate-pulse",
+                                )}
+                                onSubmit={form.handleSubmit(submitForm)}
+                            >
                                 <FormField
                                     control={form.control}
-                                    name="email"
+                                    name="name"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Email</FormLabel>
+                                            <FormLabel>Nombre</FormLabel>
                                             <FormControl>
                                                 <Input
-                                                    placeholder="Email"
-                                                    required
-                                                    type="email"
+                                                    placeholder="Cargando..."
+                                                    disabled={isLoading}
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -100,9 +119,9 @@ export default function Account() {
                                             <FormLabel>Contraseña</FormLabel>
                                             <FormControl>
                                                 <Input
-                                                    placeholder="Contraseña"
+                                                    placeholder="········"
                                                     type="password"
-                                                    required
+                                                    disabled={isLoading}
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -120,8 +139,8 @@ export default function Account() {
                                             </FormLabel>
                                             <FormControl>
                                                 <Input
-                                                    placeholder="Celular"
-                                                    required
+                                                    placeholder="Cargando..."
+                                                    disabled={isLoading}
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -129,8 +148,15 @@ export default function Account() {
                                         </FormItem>
                                     )}
                                 />
-                                <Button disabled type="submit">
-                                    Actualizar
+                                <Button
+                                    disabled={
+                                        isLoading || !form.formState.isDirty
+                                    }
+                                    type="submit"
+                                >
+                                    {isLoading
+                                        ? "Actualizando..."
+                                        : "Actualizar información"}
                                 </Button>
                             </form>
                         </Form>

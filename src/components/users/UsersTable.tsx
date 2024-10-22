@@ -1,6 +1,7 @@
 "use client";
 
 import { useUsers } from "@/hooks/use-users";
+import { QueryError } from "@/redux/baseQuery";
 import {
     ColumnFiltersState,
     SortingState,
@@ -30,9 +31,7 @@ import { columns } from "./UsersTableColumns";
 export function UsersTable() {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
-        {},
-    );
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
     const { users, isLoading, error } = useUsers();
 
@@ -54,7 +53,7 @@ export function UsersTable() {
     });
 
     if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error.message}</div>;
+    if (error as QueryError) return <div>Error: {(error as QueryError).message}</div>;
 
     return (
         <div className="w-full">
@@ -66,10 +65,9 @@ export function UsersTable() {
                             .getColumn("email")
                             ?.getFilterValue() as string) ?? ""
                     }
-                    onChange={(event) =>
-                        table
-                            .getColumn("email")
-                            ?.setFilterValue(event.target.value)
+                    onChange={(event) => table
+                        .getColumn("email")
+                        ?.setFilterValue(event.target.value)
                     }
                     className="max-w-sm"
                 />
@@ -84,10 +82,10 @@ export function UsersTable() {
                                         {header.isPlaceholder
                                             ? null
                                             : flexRender(
-                                                  header.column.columnDef
-                                                      .header,
-                                                  header.getContext(),
-                                              )}
+                                                header.column.columnDef
+                                                    .header,
+                                                header.getContext(),
+                                            )}
                                     </TableHead>
                                 ))}
                             </TableRow>

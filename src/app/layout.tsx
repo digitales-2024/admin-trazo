@@ -1,8 +1,9 @@
 import { Providers } from "@/redux/providers";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Toaster } from "sonner";
+
 import "./globals.css";
-import { Toaster } from "react-hot-toast";
 
 const geistSans = localFont({
     src: "./fonts/GeistVF.woff",
@@ -32,6 +33,17 @@ export default function RootLayout({
             >
                 <Toaster />
                 <Providers>{children}</Providers>
+                <Toaster
+                    richColors
+                    position="top-center"
+                    toastOptions={{
+                        style: {
+                            background: "#fff",
+                            borderBlockColor: "#e2e8f0",
+                        },
+                    }}
+                    closeButton
+                />
             </body>
         </html>
     );

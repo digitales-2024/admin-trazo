@@ -1,8 +1,8 @@
-import { authApi } from "@/app/(auth)/authApi";
 import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
 import { adminApi } from "./services/adminApi";
+import { authApi } from "./services/authApi";
 import { usersApi } from "./services/usersApi";
 
 export const store = configureStore({
@@ -11,11 +11,10 @@ export const store = configureStore({
         [adminApi.reducerPath]: adminApi.reducer,
         [usersApi.reducerPath]: usersApi.reducer,
     },
-    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware()
-            .concat(authApi.middleware)
-            .concat(adminApi.middleware)
-            .concat(usersApi.middleware),
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware()
+        .concat(authApi.middleware)
+        .concat(adminApi.middleware)
+        .concat(usersApi.middleware),
 });
 setupListeners(store.dispatch);
 
