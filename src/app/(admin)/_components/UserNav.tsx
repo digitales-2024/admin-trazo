@@ -1,7 +1,7 @@
 "use client";
 
-import { useLogout } from "@/hooks/useLogout";
-import { useProfile } from "@/hooks/useProfile";
+import { useLogout } from "@/hooks/use-logout";
+import { useProfile } from "@/hooks/use-profile";
 import { getFirstLetter } from "@/utils";
 import { LayoutGrid, LogOut, User } from "lucide-react";
 import Link from "next/link";

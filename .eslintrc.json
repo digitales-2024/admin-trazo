@@ -11,7 +11,7 @@
         "ecmaVersion": 2021,
         "sourceType": "module"
     },
-    "ignorePatterns": ["/*.config.*"],
+    "ignorePatterns": ["/*.config.*", "src/components/ui/"],
     "rules": {
         "import-helpers/order-imports": [
             "warn",

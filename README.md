@@ -1,4 +1,4 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+[![Build Status](https://jenkins.araozu.dev/buildStatus/icon?job=admin-trazo_feature-users)](http://jenkins.araozu.dev/view/acide/job/admin-trazo_feature-users/)
 
 ## Getting Started
 

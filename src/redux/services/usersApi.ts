@@ -1,7 +1,4 @@
-import {
-    CreateUsersSchema,
-    UpdateUsersSchema,
-} from "@/schemas/createUsersSchema";
+import { CreateUsersSchema, UpdateUsersSchema } from "@/schemas";
 import { SendNewPasswordSchema } from "@/schemas/users/sendNewPasswordSchema";
 import { User } from "@/types/user";
 import { createApi } from "@reduxjs/toolkit/query/react";
