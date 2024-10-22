@@ -1,7 +1,8 @@
 "use client";
+import { useRol } from "@/hooks/use-rol";
+import { CreateUsersSchema, usersSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -72,39 +73,20 @@ export default function UsersPage() {
     );
 }
 
-const userCreateSchema = z.object({
-    name: z.string().min(2)
-        .max(50),
-    username: z.string().min(2)
-        .max(50),
-    email: z
-        .string()
-        .min(1, {
-            message: "Ingrese su email",
-        })
-        .email({
-            message: "Email no válido",
-        }),
-    telephone: z.string().min(6),
-    password: z.string().min(1, {
-        message: "Ingrese su contraseña",
-    }),
-    roles: z.array(z.string()),
-});
-type UserCreateSchema = z.infer<typeof userCreateSchema>;
-
 function CreateUser() {
-    const form = useForm<UserCreateSchema>({
-        resolver: zodResolver(userCreateSchema),
+    const { dataRoles } = useRol();
+    const form = useForm<CreateUsersSchema>({
+        resolver: zodResolver(usersSchema),
         defaultValues: {
             name: "",
             email: "",
-            telephone: "",
+            phone: "",
             password: "",
+            roles: [],
         },
     });
 
-    function onSubmit(values: UserCreateSchema) {
+    function onSubmit(values: CreateUsersSchema) {
         console.log(values);
     }
 
@@ -154,7 +136,7 @@ function CreateUser() {
                     />
                     <FormField
                         control={form.control}
-                        name="telephone"
+                        name="phone"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Teléfono</FormLabel>
@@ -199,16 +181,7 @@ function CreateUser() {
                                     </FormControl>
                                     <SelectContent>
                                         <SelectGroup>
-                                            {[{ id: "-1", name: "TODO" }].map((rol) => (
-                                                <SelectItem
-                                                    key={rol.id}
-                                                    value={rol.id}
-                                                    className="capitalize"
-                                                >
-                                                    {rol.name}
-                                                </SelectItem>
-                                            ))}
-                                            {[{ id: "-1", name: "TODO" }].map((rol) => (
+                                            {dataRoles?.map((rol) => (
                                                 <SelectItem
                                                     key={rol.id}
                                                     value={rol.id}
