@@ -1,4 +1,4 @@
-import { ScrollText, User } from "lucide-react";
+import { BriefcaseBusiness, ScrollText, User } from "lucide-react";
 
 import {
     Sidebar,
@@ -14,6 +14,11 @@ import {
 
 export function AppSidebar() {
     const items = [
+        {
+            title: "Negocio",
+            url: "/business",
+            icon: BriefcaseBusiness,
+        },
         {
             title: "Usuarios",
             url: "/users",
