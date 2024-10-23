@@ -153,7 +153,8 @@ export function UpdateUserSheet({ user, ...props }: UpdateUserSheetProps) {
                                     <FormItem>
                                         <FormLabel htmlFor="rol">Rol</FormLabel>
                                         <Select
-                                            onValueChange={(value) => field.onChange([value])
+                                            onValueChange={(value) =>
+                                                field.onChange([value])
                                             }
                                             defaultValue={field.value[0] || ""}
                                             disabled={user.isSuperAdmin}

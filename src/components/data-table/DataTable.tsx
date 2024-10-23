@@ -46,7 +46,9 @@ export function DataTable<TData, TValue>({
     viewOptions,
 }: DataTableProps<TData, TValue>) {
     const [rowSelection, setRowSelection] = useState({});
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
+        {},
+    );
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [sorting, setSorting] = useState<SortingState>([]);
     const [globalFilter, setGlobalFilter] = useState("");
@@ -122,16 +124,18 @@ export function DataTable<TData, TValue>({
                                             key={header.id}
                                             colSpan={header.colSpan}
                                             style={{
-                                                ...getCommonPinningStyles(column),
+                                                ...getCommonPinningStyles(
+                                                    column,
+                                                ),
                                             }}
                                         >
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
-                                                    header.column.columnDef
-                                                        .header,
-                                                    header.getContext(),
-                                                )}
+                                                      header.column.columnDef
+                                                          .header,
+                                                      header.getContext(),
+                                                  )}
                                         </TableHead>
                                     );
                                 })}
@@ -155,7 +159,9 @@ export function DataTable<TData, TValue>({
                                                 key={cell.id}
                                                 className="text-slate-600"
                                                 style={{
-                                                    ...getCommonPinningStyles(column),
+                                                    ...getCommonPinningStyles(
+                                                        column,
+                                                    ),
                                                 }}
                                             >
                                                 {flexRender(

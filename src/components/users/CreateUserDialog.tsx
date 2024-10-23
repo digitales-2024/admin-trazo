@@ -50,8 +50,8 @@ export function CreateUsersDialog() {
         },
     });
 
-    const onSubmit = async(input: CreateUsersSchema) => {
-        startCreateTransition(async() => {
+    const onSubmit = async (input: CreateUsersSchema) => {
+        startCreateTransition(async () => {
             await onCreateUser(input);
         });
     };
@@ -154,7 +154,8 @@ export function CreateUsersDialog() {
                                     <FormItem>
                                         <FormLabel htmlFor="rol">Rol</FormLabel>
                                         <Select
-                                            onValueChange={(value) => field.onChange([value])
+                                            onValueChange={(value) =>
+                                                field.onChange([value])
                                             }
                                             defaultValue={
                                                 field?.value?.[0] ?? ""

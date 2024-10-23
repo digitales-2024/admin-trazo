@@ -46,28 +46,33 @@ export const useRol = (options: UseRolProps = {}) => {
     const [reactivateRoles, { isLoading: isLoadingReactivateRoles }] =
         useReactivateRolesMutation();
 
-    const onCreateRole = async(input: CreateRolesSchema) => {
-        const promise = () => new Promise(async(resolve, reject) => {
-            try {
-                const result = await createRole(input);
-                if (
-                    result.error &&
+    const onCreateRole = async (input: CreateRolesSchema) => {
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                try {
+                    const result = await createRole(input);
+                    if (
+                        result.error &&
                         typeof result.error === "object" &&
                         "data" in result.error
-                ) {
-                    const error = (result.error.data as CustomErrorData)
-                        .message;
-                    const message = translateError(error as string);
-                    reject(new Error(message));
+                    ) {
+                        const error = (result.error.data as CustomErrorData)
+                            .message;
+                        const message = translateError(error as string);
+                        reject(new Error(message));
+                    }
+                    if (result.error) {
+                        reject(
+                            new Error(
+                                "Ocurrió un error inesperado, por favor intenta de nuevo",
+                            ),
+                        );
+                    }
+                    resolve(result);
+                } catch (error) {
+                    reject(error);
                 }
-                if (result.error) {
-                    reject(new Error("Ocurrió un error inesperado, por favor intenta de nuevo"));
-                }
-                resolve(result);
-            } catch (error) {
-                reject(error);
-            }
-        });
+            });
 
         return toast.promise(promise(), {
             loading: "Creando rol...",
@@ -76,30 +81,35 @@ export const useRol = (options: UseRolProps = {}) => {
         });
     };
 
-    const onDeleteRoles = async(roles: Role[]) => {
+    const onDeleteRoles = async (roles: Role[]) => {
         const ids = roles.map((role) => role.id);
 
-        const promise = () => new Promise(async(resolve, reject) => {
-            try {
-                const result = await deleteRoles({ ids });
-                if (
-                    result.error &&
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                try {
+                    const result = await deleteRoles({ ids });
+                    if (
+                        result.error &&
                         typeof result.error === "object" &&
                         "data" in result.error
-                ) {
-                    const error = (result.error.data as CustomErrorData)
-                        .message;
-                    const message = translateError(error as string);
-                    reject(new Error(message));
+                    ) {
+                        const error = (result.error.data as CustomErrorData)
+                            .message;
+                        const message = translateError(error as string);
+                        reject(new Error(message));
+                    }
+                    if (result.error) {
+                        reject(
+                            new Error(
+                                "Ocurrió un error inesperado, por favor intenta de nuevo",
+                            ),
+                        );
+                    }
+                    resolve(result);
+                } catch (error) {
+                    reject(error);
                 }
-                if (result.error) {
-                    reject(new Error("Ocurrió un error inesperado, por favor intenta de nuevo"));
-                }
-                resolve(result);
-            } catch (error) {
-                reject(error);
-            }
-        });
+            });
 
         toast.promise(promise(), {
             loading: "Eliminando roles...",
@@ -108,30 +118,35 @@ export const useRol = (options: UseRolProps = {}) => {
         });
     };
 
-    const onReactivateRoles = async(roles: Role[]) => {
+    const onReactivateRoles = async (roles: Role[]) => {
         const ids = roles.map((role) => role.id);
 
-        const promise = () => new Promise(async(resolve, reject) => {
-            try {
-                const result = await reactivateRoles({ ids });
-                if (
-                    result.error &&
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                try {
+                    const result = await reactivateRoles({ ids });
+                    if (
+                        result.error &&
                         typeof result.error === "object" &&
                         "data" in result.error
-                ) {
-                    const error = (result.error.data as CustomErrorData)
-                        .message;
-                    const message = translateError(error as string);
-                    reject(new Error(message));
+                    ) {
+                        const error = (result.error.data as CustomErrorData)
+                            .message;
+                        const message = translateError(error as string);
+                        reject(new Error(message));
+                    }
+                    if (result.error) {
+                        reject(
+                            new Error(
+                                "Ocurrió un error inesperado, por favor intenta de nuevo",
+                            ),
+                        );
+                    }
+                    resolve(result);
+                } catch (error) {
+                    reject(error);
                 }
-                if (result.error) {
-                    reject(new Error("Ocurrió un error inesperado, por favor intenta de nuevo"));
-                }
-                resolve(result);
-            } catch (error) {
-                reject(error);
-            }
-        });
+            });
 
         toast.promise(promise(), {
             loading: "Reactivando roles...",
@@ -140,28 +155,33 @@ export const useRol = (options: UseRolProps = {}) => {
         });
     };
 
-    const onUpdateRole = async(input: UpdateRoleSchema) => {
-        const promise = () => new Promise(async(resolve, reject) => {
-            try {
-                const result = await updateRole(input);
-                if (
-                    result.error &&
+    const onUpdateRole = async (input: UpdateRoleSchema) => {
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                try {
+                    const result = await updateRole(input);
+                    if (
+                        result.error &&
                         typeof result.error === "object" &&
                         "data" in result.error
-                ) {
-                    const error = (result.error.data as CustomErrorData)
-                        .message;
-                    const message = translateError(error as string);
-                    reject(new Error(message));
+                    ) {
+                        const error = (result.error.data as CustomErrorData)
+                            .message;
+                        const message = translateError(error as string);
+                        reject(new Error(message));
+                    }
+                    if (result.error) {
+                        reject(
+                            new Error(
+                                "Ocurrió un error inesperado, por favor intenta de nuevo",
+                            ),
+                        );
+                    }
+                    resolve(result);
+                } catch (error) {
+                    reject(error);
                 }
-                if (result.error) {
-                    reject(new Error("Ocurrió un error inesperado, por favor intenta de nuevo"));
-                }
-                resolve(result);
-            } catch (error) {
-                reject(error);
-            }
-        });
+            });
 
         toast.promise(promise(), {
             loading: "Actualizando...",

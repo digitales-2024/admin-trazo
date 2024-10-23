@@ -45,7 +45,8 @@ export const usersColumns = (isSuperAdmin: boolean): ColumnDef<User>[] => [
                         table.getIsAllPageRowsSelected() ||
                         (table.getIsSomePageRowsSelected() && "indeterminate")
                     }
-                    onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)
+                    onCheckedChange={(value) =>
+                        table.toggleAllPageRowsSelected(!!value)
                     }
                     aria-label="Select all"
                     className="translate-y-0.5"
@@ -245,7 +246,8 @@ export const usersColumns = (isSuperAdmin: boolean): ColumnDef<User>[] => [
                             <DropdownMenuSeparator />
                             {isSuperAdmin && (
                                 <DropdownMenuItem
-                                    onSelect={() => setShowReactivateDialog(true)
+                                    onSelect={() =>
+                                        setShowReactivateDialog(true)
                                     }
                                     disabled={isActive}
                                 >

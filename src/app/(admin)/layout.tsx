@@ -18,7 +18,9 @@ export default function AdminLayout({
                 <AppSidebar />
 
                 <main
-                    className={cn("w-full bg-zinc-50 transition-[margin-left] duration-300 ease-in-out dark:bg-zinc-900")}
+                    className={cn(
+                        "w-full bg-zinc-50 transition-[margin-left] duration-300 ease-in-out dark:bg-zinc-900",
+                    )}
                 >
                     <Navbar />
                     <div className="container mx-auto px-4 pb-8 pt-8 sm:px-8">

@@ -33,7 +33,8 @@ export function DataTableToolbar<TData>({
                 <Input
                     placeholder={placeholder}
                     value={(table.getState().globalFilter as string) ?? ""}
-                    onChange={(event) => table.setGlobalFilter(event.target.value)
+                    onChange={(event) =>
+                        table.setGlobalFilter(event.target.value)
                     }
                     className="w-full outline-none focus:outline-none sm:w-[250px]"
                 />

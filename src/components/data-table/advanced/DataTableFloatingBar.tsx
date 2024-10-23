@@ -54,7 +54,8 @@ export const DataTableFloatingBar = <TData,>({
                                         variant="ghost"
                                         size="icon"
                                         className="size-5 hover:border"
-                                        onClick={() => table.toggleAllRowsSelected(false)
+                                        onClick={() =>
+                                            table.toggleAllRowsSelected(false)
                                         }
                                     >
                                         <X

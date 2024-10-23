@@ -37,7 +37,8 @@ export const rolesTableColumns = (): ColumnDef<Role>[] => [
                         table.getIsAllPageRowsSelected() ||
                         (table.getIsSomePageRowsSelected() && "indeterminate")
                     }
-                    onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)
+                    onCheckedChange={(value) =>
+                        table.toggleAllPageRowsSelected(!!value)
                     }
                     aria-label="Select all"
                     className="translate-y-0.5"
@@ -116,16 +117,17 @@ export const rolesTableColumns = (): ColumnDef<Role>[] => [
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Permisos" />
         ),
-        cell: ({ row }) => (row.getCanExpand() ? (
-            <Button
-                variant="ghost"
-                {...{
-                    onClick: row.getToggleExpandedHandler(),
-                }}
-            >
-                {row.getIsExpanded() ? <ChevronUp /> : <ChevronDown />}
-            </Button>
-        ) : null),
+        cell: ({ row }) =>
+            row.getCanExpand() ? (
+                <Button
+                    variant="ghost"
+                    {...{
+                        onClick: row.getToggleExpandedHandler(),
+                    }}
+                >
+                    {row.getIsExpanded() ? <ChevronUp /> : <ChevronDown />}
+                </Button>
+            ) : null,
         enableSorting: false,
         enableHiding: false,
         enablePinning: true,
@@ -190,7 +192,8 @@ export const rolesTableColumns = (): ColumnDef<Role>[] => [
                             <DropdownMenuSeparator />
                             {user?.isSuperAdmin && (
                                 <DropdownMenuItem
-                                    onSelect={() => setShowReactivateDialog(true)
+                                    onSelect={() =>
+                                        setShowReactivateDialog(true)
                                     }
                                     disabled={row.original.isActive}
                                 >
