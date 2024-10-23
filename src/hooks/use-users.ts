@@ -29,8 +29,8 @@ export const useUsers = () => {
     ] = useUpdateUserMutation();
     const [deleteUsers, { isSuccess: isSuccessDeleteUsers }] =
         useDeleteUsersMutation();
-    const onDesactivateUser = async(id: string) => {
-        const promise = async() => await deleteUser(id).unwrap();
+    const onDesactivateUser = async (id: string) => {
+        const promise = async () => await deleteUser(id).unwrap();
 
         toast.promise(promise(), {
             loading: "Desactivando usuario...",
@@ -39,8 +39,8 @@ export const useUsers = () => {
         });
     };
 
-    const onReactivateUser = async(id: string) => {
-        const promise = async() => await reactivateUser(id).unwrap();
+    const onReactivateUser = async (id: string) => {
+        const promise = async () => await reactivateUser(id).unwrap();
 
         toast.promise(promise(), {
             loading: "Desactivando usuario...",
@@ -66,28 +66,33 @@ export const useUsers = () => {
         },
     ] = useSendNewPasswordMutation();
 
-    const handleGeneratePassword = async() => {
-        const promise = () => new Promise(async(resolve, reject) => {
-            try {
-                const result = await generatePassword(null);
-                if (
-                    result.error &&
+    const handleGeneratePassword = async () => {
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                try {
+                    const result = await generatePassword(null);
+                    if (
+                        result.error &&
                         typeof result.error === "object" &&
                         "data" in result.error
-                ) {
-                    const error = (result.error.data as CustomErrorData)
-                        .message;
-                    const message = translateError(error as string);
-                    reject(new Error(message));
+                    ) {
+                        const error = (result.error.data as CustomErrorData)
+                            .message;
+                        const message = translateError(error as string);
+                        reject(new Error(message));
+                    }
+                    if (result.error) {
+                        reject(
+                            new Error(
+                                "Ocurrió un error inesperado, por favor intenta de nuevo",
+                            ),
+                        );
+                    }
+                    resolve(result);
+                } catch (error) {
+                    reject(error);
                 }
-                if (result.error) {
-                    reject(new Error("Ocurrió un error inesperado, por favor intenta de nuevo"));
-                }
-                resolve(result);
-            } catch (error) {
-                reject(error);
-            }
-        });
+            });
 
         toast.promise(promise(), {
             loading: "Generando...",
@@ -96,28 +101,33 @@ export const useUsers = () => {
         });
     };
 
-    const onCreateUser = async(input: CreateUsersSchema) => {
-        const promise = () => new Promise(async(resolve, reject) => {
-            try {
-                const result = await createUser(input);
-                if (
-                    result.error &&
+    const onCreateUser = async (input: CreateUsersSchema) => {
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                try {
+                    const result = await createUser(input);
+                    if (
+                        result.error &&
                         typeof result.error === "object" &&
                         "data" in result.error
-                ) {
-                    const error = (result.error.data as CustomErrorData)
-                        .message;
-                    const message = translateError(error as string);
-                    reject(new Error(message));
+                    ) {
+                        const error = (result.error.data as CustomErrorData)
+                            .message;
+                        const message = translateError(error as string);
+                        reject(new Error(message));
+                    }
+                    if (result.error) {
+                        reject(
+                            new Error(
+                                "Ocurrió un error inesperado, por favor intenta de nuevo",
+                            ),
+                        );
+                    }
+                    resolve(result);
+                } catch (error) {
+                    reject(error);
                 }
-                if (result.error) {
-                    reject(new Error("Ocurrió un error inesperado, por favor intenta de nuevo"));
-                }
-                resolve(result);
-            } catch (error) {
-                reject(error);
-            }
-        });
+            });
 
         toast.promise(promise(), {
             loading: "Creando y Enviando correo...",
@@ -126,28 +136,33 @@ export const useUsers = () => {
         });
     };
 
-    const onUpdateUser = async(input: UpdateUsersSchema & { id: string }) => {
-        const promise = () => new Promise(async(resolve, reject) => {
-            try {
-                const result = await updateUser(input);
-                if (
-                    result.error &&
+    const onUpdateUser = async (input: UpdateUsersSchema & { id: string }) => {
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                try {
+                    const result = await updateUser(input);
+                    if (
+                        result.error &&
                         typeof result.error === "object" &&
                         "data" in result.error
-                ) {
-                    const error = (result.error.data as CustomErrorData)
-                        .message;
-                    const message = translateError(error as string);
-                    reject(new Error(message));
+                    ) {
+                        const error = (result.error.data as CustomErrorData)
+                            .message;
+                        const message = translateError(error as string);
+                        reject(new Error(message));
+                    }
+                    if (result.error) {
+                        reject(
+                            new Error(
+                                "Ocurrió un error inesperado, por favor intenta de nuevo",
+                            ),
+                        );
+                    }
+                    resolve(result);
+                } catch (error) {
+                    reject(error);
                 }
-                if (result.error) {
-                    reject(new Error("Ocurrió un error inesperado, por favor intenta de nuevo"));
-                }
-                resolve(result);
-            } catch (error) {
-                reject(error);
-            }
-        });
+            });
 
         toast.promise(promise(), {
             loading: "Actualizando...",
@@ -156,32 +171,37 @@ export const useUsers = () => {
         });
     };
 
-    const onDeleteUsers = async(ids: User[]) => {
+    const onDeleteUsers = async (ids: User[]) => {
         const onlyIds = ids.map((user) => user.id);
         const idsString = {
             ids: onlyIds,
         };
-        const promise = () => new Promise(async(resolve, reject) => {
-            try {
-                const result = await deleteUsers(idsString);
-                if (
-                    result.error &&
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                try {
+                    const result = await deleteUsers(idsString);
+                    if (
+                        result.error &&
                         typeof result.error === "object" &&
                         "data" in result.error
-                ) {
-                    const error = (result.error.data as CustomErrorData)
-                        .message;
-                    const message = translateError(error as string);
-                    reject(new Error(message));
+                    ) {
+                        const error = (result.error.data as CustomErrorData)
+                            .message;
+                        const message = translateError(error as string);
+                        reject(new Error(message));
+                    }
+                    if (result.error) {
+                        reject(
+                            new Error(
+                                "Ocurrió un error inesperado, por favor intenta de nuevo",
+                            ),
+                        );
+                    }
+                    resolve(result);
+                } catch (error) {
+                    reject(error);
                 }
-                if (result.error) {
-                    reject(new Error("Ocurrió un error inesperado, por favor intenta de nuevo"));
-                }
-                resolve(result);
-            } catch (error) {
-                reject(error);
-            }
-        });
+            });
 
         toast.promise(promise(), {
             loading: "Eliminando...",
@@ -190,32 +210,37 @@ export const useUsers = () => {
         });
     };
 
-    const onReactivateUsers = async(ids: User[]) => {
+    const onReactivateUsers = async (ids: User[]) => {
         const onlyIds = ids.map((user) => user.id);
         const idsString = {
             ids: onlyIds,
         };
-        const promise = () => new Promise(async(resolve, reject) => {
-            try {
-                const result = await reactivateUsers(idsString);
-                if (
-                    result.error &&
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                try {
+                    const result = await reactivateUsers(idsString);
+                    if (
+                        result.error &&
                         typeof result.error === "object" &&
                         "data" in result.error
-                ) {
-                    const error = (result.error.data as CustomErrorData)
-                        .message;
-                    const message = translateError(error as string);
-                    reject(new Error(message));
+                    ) {
+                        const error = (result.error.data as CustomErrorData)
+                            .message;
+                        const message = translateError(error as string);
+                        reject(new Error(message));
+                    }
+                    if (result.error) {
+                        reject(
+                            new Error(
+                                "Ocurrió un error inesperado, por favor intenta de nuevo",
+                            ),
+                        );
+                    }
+                    resolve(result);
+                } catch (error) {
+                    reject(error);
                 }
-                if (result.error) {
-                    reject(new Error("Ocurrió un error inesperado, por favor intenta de nuevo"));
-                }
-                resolve(result);
-            } catch (error) {
-                reject(error);
-            }
-        });
+            });
 
         toast.promise(promise(), {
             loading: "Reactivando...",
@@ -224,29 +249,36 @@ export const useUsers = () => {
         });
     };
 
-    const onSendNewPassword = async(data: SendNewPasswordSchema & { email: string }) => {
-        const promise = () => new Promise(async(resolve, reject) => {
-            try {
-                const result = await sendNewPassword(data);
-                if (
-                    result.error &&
+    const onSendNewPassword = async (
+        data: SendNewPasswordSchema & { email: string },
+    ) => {
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                try {
+                    const result = await sendNewPassword(data);
+                    if (
+                        result.error &&
                         typeof result.error === "object" &&
                         "data" in result.error
-                ) {
-                    const error = (result.error.data as CustomErrorData)
-                        .message;
-                    const message = translateError(error as string);
-                    reject(new Error(message));
-                }
-                if (result.error) {
-                    reject(new Error("Ocurrió un error inesperado, por favor intenta de nuevo"));
-                }
+                    ) {
+                        const error = (result.error.data as CustomErrorData)
+                            .message;
+                        const message = translateError(error as string);
+                        reject(new Error(message));
+                    }
+                    if (result.error) {
+                        reject(
+                            new Error(
+                                "Ocurrió un error inesperado, por favor intenta de nuevo",
+                            ),
+                        );
+                    }
 
-                resolve(result);
-            } catch (error) {
-                reject(error);
-            }
-        });
+                    resolve(result);
+                } catch (error) {
+                    reject(error);
+                }
+            });
 
         toast.promise(promise(), {
             loading: "Enviando correo...",
