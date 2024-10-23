@@ -20,32 +20,33 @@ export const useProfile = () => {
     const { data: user, refetch } = useProfileQuery();
     const [updateUser, { isLoading, isSuccess }] = useUpdateUserMutation();
 
-    const onUpdate = async(dataForm: UpdateUsersSchema) => {
-        const promise = () => new Promise(async(resolve, reject) => {
-            try {
-                if (!user) {
-                    return reject(new Error("No se encontró el usuario"));
-                }
-                const result = await updateUser({
-                    id: user.id,
-                    ...dataForm,
-                });
-                if (
-                    result.error &&
+    const onUpdate = async (dataForm: UpdateUsersSchema) => {
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                try {
+                    if (!user) {
+                        return reject(new Error("No se encontró el usuario"));
+                    }
+                    const result = await updateUser({
+                        id: user.id,
+                        ...dataForm,
+                    });
+                    if (
+                        result.error &&
                         typeof result.error === "object" &&
                         "data" in result.error
-                ) {
-                    const error = (result.error.data as CustomErrorData)
-                        .message;
-                    const message = translateError(error as string);
-                    reject(new Error(message));
+                    ) {
+                        const error = (result.error.data as CustomErrorData)
+                            .message;
+                        const message = translateError(error as string);
+                        reject(new Error(message));
+                    }
+                    resolve(result);
+                    setUser(result?.data?.data as User);
+                } catch (error) {
+                    reject(error);
                 }
-                resolve(result);
-                setUser(result?.data?.data as User);
-            } catch (error) {
-                reject(error);
-            }
-        });
+            });
 
         toast.promise(promise(), {
             loading: "Actualizando información...",
@@ -57,27 +58,28 @@ export const useProfile = () => {
     const [updatePassword, { isLoading: isLoadingUpdatePassword }] =
         useUpdatePasswordMutation();
 
-    const onUpdatePassword = async(data: FormUpdateSecurityProps) => {
-        const promise = () => new Promise(async(resolve, reject) => {
-            try {
-                const result = await updatePassword(data);
-                if (
-                    result.error &&
+    const onUpdatePassword = async (data: FormUpdateSecurityProps) => {
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                try {
+                    const result = await updatePassword(data);
+                    if (
+                        result.error &&
                         typeof result.error === "object" &&
                         "data" in result.error
-                ) {
-                    const error = (result.error.data as CustomErrorData)
-                        .message;
+                    ) {
+                        const error = (result.error.data as CustomErrorData)
+                            .message;
 
-                    const message = translateError(error as string);
-                    reject(new Error(message));
+                        const message = translateError(error as string);
+                        reject(new Error(message));
+                    }
+                    resolve(result);
+                    signOut();
+                } catch (error) {
+                    reject(error);
                 }
-                resolve(result);
-                signOut();
-            } catch (error) {
-                reject(error);
-            }
-        });
+            });
 
         toast.promise(promise(), {
             loading: "Actualizando contraseña...",
