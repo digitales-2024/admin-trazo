@@ -11,6 +11,7 @@ import {
 
 import { Button } from "../ui/button";
 import { Menu } from "./Menu";
+import { LogoTrazoTriangule } from "@/assets/icons/LogoTrazoTriangule";
 
 export const SheetMenu = () => {
     return (
@@ -26,11 +27,12 @@ export const SheetMenu = () => {
             >
                 <SheetHeader>
                     <Button
-                        className="flex items-center justify-center bg-transparent pb-2 pt-1 hover:bg-transparent"
+                        className="flex items-center justify-center bg-black pb-2 pt-1 hover:bg-transparent"
                         asChild
                     >
                         <Link href="/" className="flex items-center gap-2">
-                            <SheetTitle className="whitespace-nowrap text-lg font-bold uppercase">
+                            <LogoTrazoTriangule />
+                            <SheetTitle className="whitespace-nowrap text-lg font-bold uppercase text-white">
                                 Trazo
                             </SheetTitle>
                         </Link>
