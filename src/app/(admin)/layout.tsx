@@ -1,11 +1,6 @@
-"use client";
-
-import { SidebarProvider } from "@/components/ui/sidebar";
-
-import { cn } from "@/lib/utils";
-
-import { Navbar } from "./_components/Navbar";
-import { AppSidebar } from "./_components/Sidebar";
+import { Shell } from "@/components/common/Shell";
+import AdminPanelLayout from "@/components/layouts/AdminPanelLayout";
+import { Card } from "@/components/ui/card";
 
 export default function AdminLayout({
     children,
@@ -13,21 +8,10 @@ export default function AdminLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div>
-            <SidebarProvider>
-                <AppSidebar />
-
-                <main
-                    className={cn(
-                        "w-full bg-zinc-50 transition-[margin-left] duration-300 ease-in-out dark:bg-zinc-900",
-                    )}
-                >
-                    <Navbar />
-                    <div className="container mx-auto px-4 pb-8 pt-8 sm:px-8">
-                        {children}
-                    </div>
-                </main>
-            </SidebarProvider>
-        </div>
+        <AdminPanelLayout>
+            <Card className="border-none">
+                <Shell>{children}</Shell>
+            </Card>
+        </AdminPanelLayout>
     );
 }
