@@ -5,6 +5,7 @@ import {
     ScrollText,
     User,
 } from "lucide-react";
+import Image from "next/image";
 
 import {
     Sidebar,
@@ -52,7 +53,7 @@ export function AppSidebar() {
             <SidebarHeader className="px-8 py-4">
                 <div className="rounded bg-black p-2">
                     <a href="/">
-                        <img
+                        <Image
                             className="inline-block"
                             src="https://www.trazoarq.com/wp-content/uploads/2021/05/logo-30.svg"
                             alt="Logo Trazo"

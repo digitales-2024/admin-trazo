@@ -54,8 +54,8 @@ export function CreateRolesDialog() {
             rolPermissions: [],
         },
     });
-    const onSubmit = async(input: CreateRolesSchema) => {
-        startCreateTransition(async() => {
+    const onSubmit = async (input: CreateRolesSchema) => {
+        startCreateTransition(async () => {
             await onCreateRole(input);
         });
     };
@@ -70,57 +70,58 @@ export function CreateRolesDialog() {
         form.reset();
     };
 
-    if (isDesktop) return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <Button variant="outline" size="sm">
-                    <Plus className="mr-2 size-4" aria-hidden="true" />
-                    {dataForm.button}
-                </Button>
-            </DialogTrigger>
-            <DialogContent
-                className="max-h-[95vh] overflow-auto"
-                tabIndex={undefined}
-            >
-                <ScrollArea className="max-h-[95vh]">
-                    <DialogHeader>
-                        <DialogTitle>{dataForm.title}</DialogTitle>
-                        <DialogDescription>
-                            {dataForm.description}
-                        </DialogDescription>
-                    </DialogHeader>
-                    <CreateRolesForm form={form} onSubmit={onSubmit}>
-                        <DialogFooter className="gap-2 sm:space-x-0">
-                            <div className="inline-flex w-full flex-row-reverse gap-2">
-                                <Button
-                                    disabled={isCreatePending}
-                                    className="w-full"
-                                >
-                                    {isCreatePending && (
-                                        <RefreshCcw
-                                            className="mr-2 size-4 animate-spin"
-                                            aria-hidden="true"
-                                        />
-                                    )}
-                                        Registrar
-                                </Button>
-                                <DialogClose asChild>
+    if (isDesktop)
+        return (
+            <Dialog open={open} onOpenChange={setOpen}>
+                <DialogTrigger asChild>
+                    <Button variant="outline" size="sm">
+                        <Plus className="mr-2 size-4" aria-hidden="true" />
+                        {dataForm.button}
+                    </Button>
+                </DialogTrigger>
+                <DialogContent
+                    className="max-h-[95vh] overflow-auto"
+                    tabIndex={undefined}
+                >
+                    <ScrollArea className="max-h-[95vh]">
+                        <DialogHeader>
+                            <DialogTitle>{dataForm.title}</DialogTitle>
+                            <DialogDescription>
+                                {dataForm.description}
+                            </DialogDescription>
+                        </DialogHeader>
+                        <CreateRolesForm form={form} onSubmit={onSubmit}>
+                            <DialogFooter className="gap-2 sm:space-x-0">
+                                <div className="inline-flex w-full flex-row-reverse gap-2">
                                     <Button
-                                        onClick={handleClose}
-                                        type="button"
-                                        variant="outline"
+                                        disabled={isCreatePending}
                                         className="w-full"
                                     >
-                                            Cancelar
+                                        {isCreatePending && (
+                                            <RefreshCcw
+                                                className="mr-2 size-4 animate-spin"
+                                                aria-hidden="true"
+                                            />
+                                        )}
+                                        Registrar
                                     </Button>
-                                </DialogClose>
-                            </div>
-                        </DialogFooter>
-                    </CreateRolesForm>
-                </ScrollArea>
-            </DialogContent>
-        </Dialog>
-    );
+                                    <DialogClose asChild>
+                                        <Button
+                                            onClick={handleClose}
+                                            type="button"
+                                            variant="outline"
+                                            className="w-full"
+                                        >
+                                            Cancelar
+                                        </Button>
+                                    </DialogClose>
+                                </div>
+                            </DialogFooter>
+                        </CreateRolesForm>
+                    </ScrollArea>
+                </DialogContent>
+            </Dialog>
+        );
 
     return (
         <Drawer open={open} onOpenChange={setOpen}>

@@ -15,7 +15,7 @@ export type QueryError = {
     stack: string;
 };
 
-const baseQueryWithReauth: BaseQueryFn = async(args, api, extraOptions) => {
+const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
     let result = await baseQuery(args, api, extraOptions);
 
     // Si obtenemos un 401 Unauthorized, intentamos refrescar el token

@@ -30,21 +30,23 @@ export interface KbdProps
     abbrTitle?: string;
 }
 
-const Kbd = React.forwardRef<HTMLUnknownElement, KbdProps>(({ abbrTitle, children, className, variant, ...props }, ref) => (
-    <kbd
-        className={cn(kbdVariants({ variant, className }))}
-        ref={ref}
-        {...props}
-    >
-        {abbrTitle ? (
-            <abbr title={abbrTitle} className="no-underline">
-                {children}
-            </abbr>
-        ) : (
-            children
-        )}
-    </kbd>
-));
+const Kbd = React.forwardRef<HTMLUnknownElement, KbdProps>(
+    ({ abbrTitle, children, className, variant, ...props }, ref) => (
+        <kbd
+            className={cn(kbdVariants({ variant, className }))}
+            ref={ref}
+            {...props}
+        >
+            {abbrTitle ? (
+                <abbr title={abbrTitle} className="no-underline">
+                    {children}
+                </abbr>
+            ) : (
+                children
+            )}
+        </kbd>
+    ),
+);
 Kbd.displayName = "Kbd";
 
 export { Kbd };

@@ -9,29 +9,31 @@ type UserState = {
     clearUser: () => void;
 };
 
-export const useAuth = create<UserState>()(persist(
-    immer((set) => ({
-        user: null,
-        setUser: (user: UserLogin) => {
-            set((state) => {
-                state.user = user;
-            });
+export const useAuth = create<UserState>()(
+    persist(
+        immer((set) => ({
+            user: null,
+            setUser: (user: UserLogin) => {
+                set((state) => {
+                    state.user = user;
+                });
+            },
+            clearUser: () => {
+                set((state) => {
+                    state.user = null;
+                });
+            },
+        })),
+        {
+            name: "user",
+            storage: createJSONStorage(() => sessionStorage),
+            onRehydrateStorage() {
+                return (state, error) => {
+                    if (error) {
+                        (state as UserState).clearUser();
+                    }
+                };
+            },
         },
-        clearUser: () => {
-            set((state) => {
-                state.user = null;
-            });
-        },
-    })),
-    {
-        name: "user",
-        storage: createJSONStorage(() => sessionStorage),
-        onRehydrateStorage() {
-            return (state, error) => {
-                if (error) {
-                    (state as UserState).clearUser();
-                }
-            };
-        },
-    },
-));
+    ),
+);

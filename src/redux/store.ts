@@ -13,11 +13,12 @@ export const store = configureStore({
         [usersApi.reducerPath]: usersApi.reducer,
         [rolesApi.reducerPath]: rolesApi.reducer,
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware()
-        .concat(authApi.middleware)
-        .concat(adminApi.middleware)
-        .concat(rolesApi.middleware)
-        .concat(usersApi.middleware),
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware()
+            .concat(authApi.middleware)
+            .concat(adminApi.middleware)
+            .concat(rolesApi.middleware)
+            .concat(usersApi.middleware),
 });
 setupListeners(store.dispatch);
 

@@ -78,9 +78,10 @@ const testData: UserSession[] = [
 export default function UserActivityLogger() {
     const [sessions] = useState<UserSession[]>(testData);
 
-    const formatDate = (dateString: string) => new Date(dateString).toLocaleString("es-ES", {
-        timeZone: "America/Bogota",
-    });
+    const formatDate = (dateString: string) =>
+        new Date(dateString).toLocaleString("es-ES", {
+            timeZone: "America/Bogota",
+        });
 
     return (
         <div>
@@ -117,45 +118,53 @@ export default function UserActivityLogger() {
                                                 {session.userName}
                                             </TableCell>
                                             <TableCell>
-                                                {formatDate(session.sessionStart)}
+                                                {formatDate(
+                                                    session.sessionStart,
+                                                )}
                                             </TableCell>
                                             <TableCell>
                                                 {session.sessionEnd
-                                                    ? formatDate(session.sessionEnd)
+                                                    ? formatDate(
+                                                          session.sessionEnd,
+                                                      )
                                                     : "Activa"}
                                             </TableCell>
                                             <TableCell>
-                                                {session.actions.map((action, actionIndex) => (
-                                                    <div
-                                                        key={actionIndex}
-                                                        className="mb-2"
-                                                    >
-                                                        <div className="font-semibold">
-                                                            {formatDate(action.timestamp)}
-                                                        </div>
-                                                        <div>
-                                                            {
-                                                                action.actionType
-                                                            }
-                                                        </div>
-                                                        {action.contractId && (
+                                                {session.actions.map(
+                                                    (action, actionIndex) => (
+                                                        <div
+                                                            key={actionIndex}
+                                                            className="mb-2"
+                                                        >
+                                                            <div className="font-semibold">
+                                                                {formatDate(
+                                                                    action.timestamp,
+                                                                )}
+                                                            </div>
                                                             <div>
+                                                                {
+                                                                    action.actionType
+                                                                }
+                                                            </div>
+                                                            {action.contractId && (
+                                                                <div>
                                                                     Contrato:{" "}
-                                                                {
-                                                                    action.contractId
-                                                                }
-                                                            </div>
-                                                        )}
-                                                        {action.documentId && (
-                                                            <div>
+                                                                    {
+                                                                        action.contractId
+                                                                    }
+                                                                </div>
+                                                            )}
+                                                            {action.documentId && (
+                                                                <div>
                                                                     Documento:{" "}
-                                                                {
-                                                                    action.documentId
-                                                                }
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                ))}
+                                                                    {
+                                                                        action.documentId
+                                                                    }
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    ),
+                                                )}
                                             </TableCell>
                                         </TableRow>
                                     ))}

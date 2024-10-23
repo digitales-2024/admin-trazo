@@ -25,18 +25,20 @@ type FormFieldContextValue<
     name: TName;
 };
 
-const FormFieldContext = React.createContext<FormFieldContextValue>({} as FormFieldContextValue);
+const FormFieldContext = React.createContext<FormFieldContextValue>(
+    {} as FormFieldContextValue,
+);
 
 const FormField = <
     TFieldValues extends FieldValues = FieldValues,
     TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
-        ...props
-    }: ControllerProps<TFieldValues, TName>) => (
-        <FormFieldContext.Provider value={{ name: props.name }}>
-            <Controller {...props} />
-        </FormFieldContext.Provider>
-    );
+    ...props
+}: ControllerProps<TFieldValues, TName>) => (
+    <FormFieldContext.Provider value={{ name: props.name }}>
+        <Controller {...props} />
+    </FormFieldContext.Provider>
+);
 
 const useFormField = () => {
     const fieldContext = React.useContext(FormFieldContext);
@@ -65,7 +67,9 @@ type FormItemContextValue = {
     id: string;
 };
 
-const FormItemContext = React.createContext<FormItemContextValue>({} as FormItemContextValue);
+const FormItemContext = React.createContext<FormItemContextValue>(
+    {} as FormItemContextValue,
+);
 
 const FormItem = React.forwardRef<
     HTMLDivElement,

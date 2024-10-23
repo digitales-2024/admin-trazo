@@ -17,9 +17,11 @@ export const authApi = createApi({
             async onQueryStarted(_args, { dispatch, queryFulfilled }) {
                 try {
                     await queryFulfilled;
-                    dispatch(adminApi.endpoints.profile.initiate(undefined, {
-                        forceRefetch: true,
-                    }));
+                    dispatch(
+                        adminApi.endpoints.profile.initiate(undefined, {
+                            forceRefetch: true,
+                        }),
+                    );
                 } catch (error) {
                     console.error(error);
                 }

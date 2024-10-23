@@ -54,7 +54,9 @@ export function DataTableExpanded<TData, TValue>({
     customExcelExport,
 }: DataTableExpandedProps<TData, TValue>) {
     const [rowSelection, setRowSelection] = useState({});
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
+        {},
+    );
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [sorting, setSorting] = useState<SortingState>([]);
     const [globalFilter, setGlobalFilter] = useState("");
@@ -131,16 +133,18 @@ export function DataTableExpanded<TData, TValue>({
                                             key={header.id}
                                             colSpan={header.colSpan}
                                             style={{
-                                                ...getCommonPinningStyles(column),
+                                                ...getCommonPinningStyles(
+                                                    column,
+                                                ),
                                             }}
                                         >
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
-                                                    header.column.columnDef
-                                                        .header,
-                                                    header.getContext(),
-                                                )}
+                                                      header.column.columnDef
+                                                          .header,
+                                                      header.getContext(),
+                                                  )}
                                         </TableHead>
                                     );
                                 })}
@@ -169,7 +173,9 @@ export function DataTableExpanded<TData, TValue>({
                                                     key={cell.id}
                                                     className="text-slate-600"
                                                     style={{
-                                                        ...getCommonPinningStyles(column),
+                                                        ...getCommonPinningStyles(
+                                                            column,
+                                                        ),
                                                     }}
                                                 >
                                                     {flexRender(
@@ -185,7 +191,9 @@ export function DataTableExpanded<TData, TValue>({
                                         <TableRow key={row.id}>
                                             <TableCell colSpan={columns.length}>
                                                 {renderExpandedRow
-                                                    ? renderExpandedRow(row.original) // Renderizado dinámico
+                                                    ? renderExpandedRow(
+                                                          row.original,
+                                                      ) // Renderizado dinámico
                                                     : "No expanded content"}
                                             </TableCell>
                                         </TableRow>

@@ -101,20 +101,24 @@ export const DataTableSkeleton = (props: DataTableSkeletonProps) => {
             <div className="flex w-full items-center justify-between space-x-2 overflow-auto p-1">
                 <div className="flex flex-1 items-center space-x-2">
                     {searchableColumnCount > 0
-                        ? Array.from({ length: searchableColumnCount }).map((_, i) => (
-                            <Skeleton
-                                key={i}
-                                className="h-7 w-40 lg:w-60"
-                            />
-                        ))
+                        ? Array.from({ length: searchableColumnCount }).map(
+                              (_, i) => (
+                                  <Skeleton
+                                      key={i}
+                                      className="h-7 w-40 lg:w-60"
+                                  />
+                              ),
+                          )
                         : null}
                     {filterableColumnCount > 0
-                        ? Array.from({ length: filterableColumnCount }).map((_, i) => (
-                            <Skeleton
-                                key={i}
-                                className="h-7 w-[4.5rem] border-dashed"
-                            />
-                        ))
+                        ? Array.from({ length: filterableColumnCount }).map(
+                              (_, i) => (
+                                  <Skeleton
+                                      key={i}
+                                      className="h-7 w-[4.5rem] border-dashed"
+                                  />
+                              ),
+                          )
                         : null}
                 </div>
                 {toolbarActions ? (
@@ -134,35 +138,35 @@ export const DataTableSkeleton = (props: DataTableSkeletonProps) => {
                             <TableRow key={i} className="hover:bg-transparent">
                                 {columnCount < 10
                                     ? Array.from({
-                                        length: isDesktop ? columnCount : 2,
-                                    }).map((_, j) => (
-                                        <TableHead
-                                            key={j}
-                                            style={{
-                                                width: cellWidths[j],
-                                                minWidth: shrinkZero
-                                                    ? cellWidths[j]
-                                                    : "auto",
-                                            }}
-                                        >
-                                            <Skeleton className="h-6 w-full" />
-                                        </TableHead>
-                                    ))
+                                          length: isDesktop ? columnCount : 2,
+                                      }).map((_, j) => (
+                                          <TableHead
+                                              key={j}
+                                              style={{
+                                                  width: cellWidths[j],
+                                                  minWidth: shrinkZero
+                                                      ? cellWidths[j]
+                                                      : "auto",
+                                              }}
+                                          >
+                                              <Skeleton className="h-6 w-full" />
+                                          </TableHead>
+                                      ))
                                     : Array.from({
-                                        length: isDesktop ? 6 : 2,
-                                    }).map((_, j) => (
-                                        <TableHead
-                                            key={j}
-                                            style={{
-                                                width: cellWidths[j],
-                                                minWidth: shrinkZero
-                                                    ? cellWidths[j]
-                                                    : "auto",
-                                            }}
-                                        >
-                                            <Skeleton className="h-6 w-full" />
-                                        </TableHead>
-                                    ))}
+                                          length: isDesktop ? 6 : 2,
+                                      }).map((_, j) => (
+                                          <TableHead
+                                              key={j}
+                                              style={{
+                                                  width: cellWidths[j],
+                                                  minWidth: shrinkZero
+                                                      ? cellWidths[j]
+                                                      : "auto",
+                                              }}
+                                          >
+                                              <Skeleton className="h-6 w-full" />
+                                          </TableHead>
+                                      ))}
                             </TableRow>
                         ))}
                     </TableHeader>
@@ -171,35 +175,35 @@ export const DataTableSkeleton = (props: DataTableSkeletonProps) => {
                             <TableRow key={i} className="hover:bg-transparent">
                                 {columnCount < 10
                                     ? Array.from({
-                                        length: isDesktop ? columnCount : 2,
-                                    }).map((_, j) => (
-                                        <TableHead
-                                            key={j}
-                                            style={{
-                                                width: cellWidths[j],
-                                                minWidth: shrinkZero
-                                                    ? cellWidths[j]
-                                                    : "auto",
-                                            }}
-                                        >
-                                            <Skeleton className="h-6 w-full" />
-                                        </TableHead>
-                                    ))
+                                          length: isDesktop ? columnCount : 2,
+                                      }).map((_, j) => (
+                                          <TableHead
+                                              key={j}
+                                              style={{
+                                                  width: cellWidths[j],
+                                                  minWidth: shrinkZero
+                                                      ? cellWidths[j]
+                                                      : "auto",
+                                              }}
+                                          >
+                                              <Skeleton className="h-6 w-full" />
+                                          </TableHead>
+                                      ))
                                     : Array.from({
-                                        length: isDesktop ? 6 : 2,
-                                    }).map((_, j) => (
-                                        <TableHead
-                                            key={j}
-                                            style={{
-                                                width: cellWidths[j],
-                                                minWidth: shrinkZero
-                                                    ? cellWidths[j]
-                                                    : "auto",
-                                            }}
-                                        >
-                                            <Skeleton className="h-6 w-full" />
-                                        </TableHead>
-                                    ))}
+                                          length: isDesktop ? 6 : 2,
+                                      }).map((_, j) => (
+                                          <TableHead
+                                              key={j}
+                                              style={{
+                                                  width: cellWidths[j],
+                                                  minWidth: shrinkZero
+                                                      ? cellWidths[j]
+                                                      : "auto",
+                                              }}
+                                          >
+                                              <Skeleton className="h-6 w-full" />
+                                          </TableHead>
+                                      ))}
                             </TableRow>
                         ))}
                     </TableBody>

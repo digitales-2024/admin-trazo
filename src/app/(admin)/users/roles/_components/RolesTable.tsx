@@ -58,38 +58,45 @@ const RolePermissions = ({ row }: { row: Role }) => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {rolPermissions?.map(({
-                        module,
-                        permissions,
-                    }: {
+                    {rolPermissions?.map(
+                        ({
+                            module,
+                            permissions,
+                        }: {
                             module: Module;
                             permissions: Permission[];
                         }) => (
-                        <TableRow key={module.id}>
-                            <TableCell className="font-medium uppercase">
-                                {module.name}
-                            </TableCell>
-                            {uniquePermissions?.map((permission: Permission) => (
-                                <TableCell key={permission.cod}>
-                                    {permissions?.some((perm) => perm.cod === permission.cod) ? (
-                                        <Badge
-                                            variant="default"
-                                            className="bg-green-500 hover:bg-green-600"
-                                        >
-                                                    ✓
-                                        </Badge>
-                                    ) : (
-                                        <Badge
-                                            variant="outline"
-                                            className="text-gray-400"
-                                        >
-                                                    -
-                                        </Badge>
-                                    )}
+                            <TableRow key={module.id}>
+                                <TableCell className="font-medium uppercase">
+                                    {module.name}
                                 </TableCell>
-                            ))}
-                        </TableRow>
-                    ))}
+                                {uniquePermissions?.map(
+                                    (permission: Permission) => (
+                                        <TableCell key={permission.cod}>
+                                            {permissions?.some(
+                                                (perm) =>
+                                                    perm.cod === permission.cod,
+                                            ) ? (
+                                                <Badge
+                                                    variant="default"
+                                                    className="bg-green-500 hover:bg-green-600"
+                                                >
+                                                    ✓
+                                                </Badge>
+                                            ) : (
+                                                <Badge
+                                                    variant="outline"
+                                                    className="text-gray-400"
+                                                >
+                                                    -
+                                                </Badge>
+                                            )}
+                                        </TableCell>
+                                    ),
+                                )}
+                            </TableRow>
+                        ),
+                    )}
                 </TableBody>
             </Table>
         </div>
