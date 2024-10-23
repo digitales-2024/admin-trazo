@@ -83,77 +83,88 @@ export default function UserActivityLogger() {
     });
 
     return (
-        <Card className="mx-auto w-full max-w-4xl">
-            <CardHeader>
-                <CardTitle>Registro de Actividad de los usuarios</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div className="space-y-4">
-                    <div className="max-h-96 overflow-y-auto rounded-md border p-4">
-                        <h3 className="mb-2 font-semibold">
-                            Sesiones de Usuario:
-                        </h3>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Usuario</TableHead>
-                                    <TableHead>Inicio de Sesión</TableHead>
-                                    <TableHead>Fin de Sesión</TableHead>
-                                    <TableHead>Acciones</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {sessions.map((session, index) => (
-                                    <TableRow key={index}>
-                                        <TableCell>
-                                            {session.userName}
-                                        </TableCell>
-                                        <TableCell>
-                                            {formatDate(session.sessionStart)}
-                                        </TableCell>
-                                        <TableCell>
-                                            {session.sessionEnd
-                                                ? formatDate(session.sessionEnd)
-                                                : "Activa"}
-                                        </TableCell>
-                                        <TableCell>
-                                            {session.actions.map((action, actionIndex) => (
-                                                <div
-                                                    key={actionIndex}
-                                                    className="mb-2"
-                                                >
-                                                    <div className="font-semibold">
-                                                        {formatDate(action.timestamp)}
-                                                    </div>
-                                                    <div>
-                                                        {action.actionType}
-                                                    </div>
-                                                    {action.contractId && (
-                                                        <div>
-                                                                Contrato:{" "}
-                                                            {
-                                                                action.contractId
-                                                            }
-                                                        </div>
-                                                    )}
-                                                    {action.documentId && (
-                                                        <div>
-                                                                Documento:{" "}
-                                                            {
-                                                                action.documentId
-                                                            }
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            ))}
-                                        </TableCell>
+        <div>
+            <div className="pb-8 pt-16">
+                <h2 className="pb-2 text-4xl font-black">Registros</h2>
+                <p className="text-sm text-muted-foreground">
+                    Registro de las acciones realizadas en la aplicación
+                </p>
+            </div>
+
+            <Card>
+                <CardHeader>
+                    <CardTitle>Registro de Actividad de los usuarios</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="space-y-4">
+                        <div className="max-h-96 overflow-y-auto rounded-md border p-4">
+                            <h3 className="mb-2 font-semibold">
+                                Sesiones de Usuario:
+                            </h3>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Usuario</TableHead>
+                                        <TableHead>Inicio de Sesión</TableHead>
+                                        <TableHead>Fin de Sesión</TableHead>
+                                        <TableHead>Acciones</TableHead>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                                </TableHeader>
+                                <TableBody>
+                                    {sessions.map((session, index) => (
+                                        <TableRow key={index}>
+                                            <TableCell>
+                                                {session.userName}
+                                            </TableCell>
+                                            <TableCell>
+                                                {formatDate(session.sessionStart)}
+                                            </TableCell>
+                                            <TableCell>
+                                                {session.sessionEnd
+                                                    ? formatDate(session.sessionEnd)
+                                                    : "Activa"}
+                                            </TableCell>
+                                            <TableCell>
+                                                {session.actions.map((action, actionIndex) => (
+                                                    <div
+                                                        key={actionIndex}
+                                                        className="mb-2"
+                                                    >
+                                                        <div className="font-semibold">
+                                                            {formatDate(action.timestamp)}
+                                                        </div>
+                                                        <div>
+                                                            {
+                                                                action.actionType
+                                                            }
+                                                        </div>
+                                                        {action.contractId && (
+                                                            <div>
+                                                                    Contrato:{" "}
+                                                                {
+                                                                    action.contractId
+                                                                }
+                                                            </div>
+                                                        )}
+                                                        {action.documentId && (
+                                                            <div>
+                                                                    Documento:{" "}
+                                                                {
+                                                                    action.documentId
+                                                                }
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                ))}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
                     </div>
-                </div>
-            </CardContent>
-        </Card>
+                </CardContent>
+            </Card>
+        </div>
     );
 }

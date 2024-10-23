@@ -1,22 +1,23 @@
 "use client";
 
-import { useUsers } from "@/hooks/use-users";
+import { useRol } from "@/hooks/use-rol";
 
 import { ErrorPage } from "@/components/common/ErrorPage";
 import { DataTableSkeleton } from "@/components/data-table/DataTableSkeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { UsersTable } from "@/components/users/UsersTable";
 
-export default function UsersPage() {
-    const { data, isLoading } = useUsers();
+import { RolesTable } from "./_components/RolesTable";
 
-    if (isLoading) {
+export default function RolesPages() {
+    const { dataRoles, isLoadingRoles } = useRol();
+
+    if (isLoadingRoles) {
         return (
             <div>
                 <div className="pb-8 pt-16">
-                    <h2 className="pb-2 text-4xl font-black">Usuarios</h2>
+                    <h2 className="pb-2 text-4xl font-black">Roles</h2>
                     <p className="text-sm text-muted-foreground">
-                        Gestiona los usuarios con acceso a la aplicación
+                        Gestiona los roles de los usuarios de la aplicación
                     </p>
                 </div>
 
@@ -24,11 +25,8 @@ export default function UsersPage() {
                     <CardHeader />
                     <CardContent>
                         <DataTableSkeleton
-                            columnCount={3}
+                            columnCount={5}
                             searchableColumnCount={1}
-                            filterableColumnCount={0}
-                            cellWidths={["1rem", "15rem", "12rem"]}
-                            shrinkZero
                         />
                     </CardContent>
                 </Card>
@@ -36,13 +34,13 @@ export default function UsersPage() {
         );
     }
 
-    if (!data) {
+    if (!dataRoles) {
         return (
             <div>
                 <div className="pb-8 pt-16">
-                    <h2 className="pb-2 text-4xl font-black">Usuarios</h2>
+                    <h2 className="pb-2 text-4xl font-black">Roles</h2>
                     <p className="text-sm text-muted-foreground">
-                        Gestiona los usuarios con acceso a la aplicación
+                        Gestiona los roles de los usuarios de la aplicación
                     </p>
                 </div>
 
@@ -59,16 +57,15 @@ export default function UsersPage() {
     return (
         <div>
             <div className="pb-8 pt-16">
-                <h2 className="pb-2 text-4xl font-black">Usuarios</h2>
+                <h2 className="pb-2 text-4xl font-black">Roles</h2>
                 <p className="text-sm text-muted-foreground">
-                    Gestiona los usuarios con acceso a la aplicación
+                    Gestiona los roles de los usuarios de la aplicación
                 </p>
             </div>
-
             <Card>
                 <CardHeader />
                 <CardContent>
-                    <UsersTable data={data} />
+                    <RolesTable data={dataRoles} />
                 </CardContent>
             </Card>
         </div>
