@@ -6,6 +6,7 @@ import {
     User,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 import {
     Sidebar,
@@ -57,6 +58,8 @@ export function AppSidebar() {
                             className="inline-block"
                             src="https://www.trazoarq.com/wp-content/uploads/2021/05/logo-30.svg"
                             alt="Logo Trazo"
+                            width={175}
+                            height={35}
                         />
                     </a>
                 </div>
@@ -70,10 +73,10 @@ export function AppSidebar() {
                             {items.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
-                                        <a href={item.url}>
+                                        <Link href={item.url}>
                                             <item.icon />
                                             <span>{item.title}</span>
-                                        </a>
+                                        </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
                             ))}

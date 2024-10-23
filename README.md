@@ -1,4 +1,4 @@
-[![Build Status](https://jenkins.araozu.dev/buildStatus/icon?job=admin-trazo_feature-users)](http://jenkins.araozu.dev/view/acide/job/admin-trazo_feature-users/)
+[![Build Status](https://jenkins.araozu.dev/buildStatus/icon?job=admin-trazo%2Fdevelop)](#)
 
 ## Getting Started
 
