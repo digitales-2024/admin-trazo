@@ -5,6 +5,7 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 
 import baseQueryWithReauth from "../baseQuery";
 
+//  Interfaz de usuario actualizado
 interface UserUpdate {
     data: User;
     message: string;
