@@ -1,12 +1,12 @@
+import { useSidebarToggle } from "@/hooks/use-sidebar-toggle";
 import { useStore } from "@/hooks/use-store";
 import React from "react";
 
 import { cn } from "@/lib/utils";
 
 import { Menu } from "./Menu";
-import { SidebarToggle } from "./SidebarToggle";
-import { useSidebarToggle } from "@/hooks/use-sidebar-toggle";
 import { SidebarHeader } from "./SidebarHeader";
+import { SidebarToggle } from "./SidebarToggle";
 
 export default function Sidebar() {
     const sidebar = useStore(useSidebarToggle, (state) => state);

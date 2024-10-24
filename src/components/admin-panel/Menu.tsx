@@ -4,6 +4,7 @@ import { Ellipsis, LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { getMenuList } from "@/lib/menu-list";
 import { cn } from "@/lib/utils";
 
 import { Button } from "../ui/button";
@@ -15,7 +16,6 @@ import {
     TooltipTrigger,
 } from "../ui/tooltip";
 import { CollapseMenuButton } from "./CollapseMenuButton";
-import { getMenuList } from "@/lib/menu-list";
 
 interface MenuProps {
     isOpen: boolean | undefined;

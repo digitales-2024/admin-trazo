@@ -1,3 +1,4 @@
+import { LogoTrazoTriangule } from "@/assets/icons/LogoTrazoTriangule";
 import { MenuIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -11,7 +12,6 @@ import {
 
 import { Button } from "../ui/button";
 import { Menu } from "./Menu";
-import { LogoTrazoTriangule } from "@/assets/icons/LogoTrazoTriangule";
 
 export const SheetMenu = () => {
     return (
