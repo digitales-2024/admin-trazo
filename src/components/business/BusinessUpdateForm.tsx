@@ -70,6 +70,7 @@ export function BusinessUpdateForm() {
                             <FormLabel>Nombre del negocio</FormLabel>
                             <FormControl>
                                 <Input
+                                    className="capitalize"
                                     placeholder="Ejm: ACME Inc"
                                     disabled={isLoading}
                                     {...field}
@@ -91,6 +92,7 @@ export function BusinessUpdateForm() {
                             <FormLabel>RUC del negocio</FormLabel>
                             <FormControl>
                                 <Input
+                                    className="capitalize"
                                     placeholder="Ejm: 11122233344"
                                     disabled={isLoading}
                                     {...field}
@@ -112,6 +114,7 @@ export function BusinessUpdateForm() {
                             <FormLabel>Dirección</FormLabel>
                             <FormControl>
                                 <Input
+                                    className="capitalize"
                                     placeholder="Ejm: Av. Las Palmeras 123"
                                     disabled={isLoading}
                                     {...field}
@@ -135,6 +138,7 @@ export function BusinessUpdateForm() {
                             </FormLabel>
                             <FormControl>
                                 <Input
+                                    className="capitalize"
                                     placeholder="Ejm: Juan Perez"
                                     disabled={isLoading}
                                     {...field}
@@ -152,6 +156,7 @@ export function BusinessUpdateForm() {
                             <FormLabel>DNI del representante legal</FormLabel>
                             <FormControl>
                                 <Input
+                                    className="capitalize"
                                     placeholder="Ejm: 77665544"
                                     disabled={isLoading}
                                     {...field}
