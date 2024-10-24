@@ -19,5 +19,5 @@ export const createBusinessSchema = z.object({
 
 export type CreateBusinessSchema = z.infer<typeof createBusinessSchema>;
 
-export const updateBusinessScheama = createBusinessSchema.omit({});
-export type UpdateBusinessSchema = z.infer<typeof updateBusinessScheama>;
+export const updateBusinessSchema = createBusinessSchema.omit({});
+export type UpdateBusinessSchema = z.infer<typeof updateBusinessSchema>;

@@ -3,7 +3,7 @@ import {
     UpdateBusinessSchema,
 } from "@/schemas/business/CreateBusinessSchema";
 import { Business } from "@/types/business";
-import { createApi } from "@reduxjs/toolkit/query";
+import { createApi } from "@reduxjs/toolkit/query/react";
 
 import baseQueryWithReauth from "../baseQuery";
 
@@ -13,7 +13,7 @@ export const businessApi = createApi({
     tagTypes: ["Business"],
     endpoints: (build) => ({
         // Crear un nuevo usuario
-        createUser: build.mutation<void, CreateBusinessSchema>({
+        createBusiness: build.mutation<void, CreateBusinessSchema>({
             query: (body) => ({
                 url: "business",
                 method: "POST",
@@ -44,3 +44,9 @@ export const businessApi = createApi({
         }),
     }),
 });
+
+export const {
+    useCreateBusinessMutation,
+    useGetBusinessQuery,
+    useUpdateBusinessMutation,
+} = businessApi;
