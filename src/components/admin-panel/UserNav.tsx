@@ -2,6 +2,7 @@
 
 import { useLogout } from "@/hooks/use-logout";
 import { useProfile } from "@/hooks/use-profile";
+import { getFirstLetter } from "@/utils/getFirstLetter";
 import { LayoutGrid, LogOut, User } from "lucide-react";
 import Link from "next/link";
 
@@ -22,7 +23,6 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "../ui/tooltip";
-import { getFirstLetter } from "@/utils/getFirstLetter";
 
 export const UserNav = () => {
     const { user } = useProfile();

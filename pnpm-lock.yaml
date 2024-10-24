@@ -4017,89 +4017,6 @@ snapshots:
 
   '@xtuc/long@4.2.2': {}
 
-<<<<<<< HEAD
-=======
-  '@webassemblyjs/ast@1.12.1':
-    dependencies:
-      '@webassemblyjs/helper-numbers': 1.11.6
-      '@webassemblyjs/helper-wasm-bytecode': 1.11.6
-
-  '@webassemblyjs/floating-point-hex-parser@1.11.6': {}
-
-  '@webassemblyjs/helper-api-error@1.11.6': {}
-
-  '@webassemblyjs/helper-buffer@1.12.1': {}
-
-  '@webassemblyjs/helper-numbers@1.11.6':
-    dependencies:
-      '@webassemblyjs/floating-point-hex-parser': 1.11.6
-      '@webassemblyjs/helper-api-error': 1.11.6
-      '@xtuc/long': 4.2.2
-
-  '@webassemblyjs/helper-wasm-bytecode@1.11.6': {}
-
-  '@webassemblyjs/helper-wasm-section@1.12.1':
-    dependencies:
-      '@webassemblyjs/ast': 1.12.1
-      '@webassemblyjs/helper-buffer': 1.12.1
-      '@webassemblyjs/helper-wasm-bytecode': 1.11.6
-      '@webassemblyjs/wasm-gen': 1.12.1
-
-  '@webassemblyjs/ieee754@1.11.6':
-    dependencies:
-      '@xtuc/ieee754': 1.2.0
-
-  '@webassemblyjs/leb128@1.11.6':
-    dependencies:
-      '@xtuc/long': 4.2.2
-
-  '@webassemblyjs/utf8@1.11.6': {}
-
-  '@webassemblyjs/wasm-edit@1.12.1':
-    dependencies:
-      '@webassemblyjs/ast': 1.12.1
-      '@webassemblyjs/helper-buffer': 1.12.1
-      '@webassemblyjs/helper-wasm-bytecode': 1.11.6
-      '@webassemblyjs/helper-wasm-section': 1.12.1
-      '@webassemblyjs/wasm-gen': 1.12.1
-      '@webassemblyjs/wasm-opt': 1.12.1
-      '@webassemblyjs/wasm-parser': 1.12.1
-      '@webassemblyjs/wast-printer': 1.12.1
-
-  '@webassemblyjs/wasm-gen@1.12.1':
-    dependencies:
-      '@webassemblyjs/ast': 1.12.1
-      '@webassemblyjs/helper-wasm-bytecode': 1.11.6
-      '@webassemblyjs/ieee754': 1.11.6
-      '@webassemblyjs/leb128': 1.11.6
-      '@webassemblyjs/utf8': 1.11.6
-
-  '@webassemblyjs/wasm-opt@1.12.1':
-    dependencies:
-      '@webassemblyjs/ast': 1.12.1
-      '@webassemblyjs/helper-buffer': 1.12.1
-      '@webassemblyjs/wasm-gen': 1.12.1
-      '@webassemblyjs/wasm-parser': 1.12.1
-
-  '@webassemblyjs/wasm-parser@1.12.1':
-    dependencies:
-      '@webassemblyjs/ast': 1.12.1
-      '@webassemblyjs/helper-api-error': 1.11.6
-      '@webassemblyjs/helper-wasm-bytecode': 1.11.6
-      '@webassemblyjs/ieee754': 1.11.6
-      '@webassemblyjs/leb128': 1.11.6
-      '@webassemblyjs/utf8': 1.11.6
-
-  '@webassemblyjs/wast-printer@1.12.1':
-    dependencies:
-      '@webassemblyjs/ast': 1.12.1
-      '@xtuc/long': 4.2.2
-
-  '@xtuc/ieee754@1.2.0': {}
-
-  '@xtuc/long@4.2.2': {}
-
->>>>>>> 78513ffde107a57a5166f230b489dbc3dddf02f2
   JSONStream@1.3.5:
     dependencies:
       jsonparse: 1.3.1
@@ -4302,11 +4219,6 @@ snapshots:
 
   caniuse-lite@1.0.30001669: {}
 
-<<<<<<< HEAD
-=======
-  caniuse-lite@1.0.30001669: {}
-
->>>>>>> 78513ffde107a57a5166f230b489dbc3dddf02f2
   chalk@2.4.2:
     dependencies:
       ansi-styles: 3.2.1
@@ -4377,11 +4289,6 @@ snapshots:
 
   commander@2.20.3: {}
 
-<<<<<<< HEAD
-=======
-  commander@2.20.3: {}
-
->>>>>>> 78513ffde107a57a5166f230b489dbc3dddf02f2
   commander@4.1.1: {}
 
   compare-func@2.0.0:
@@ -4521,11 +4428,6 @@ snapshots:
 
   electron-to-chromium@1.5.43: {}
 
-<<<<<<< HEAD
-=======
-  electron-to-chromium@1.5.43: {}
-
->>>>>>> 78513ffde107a57a5166f230b489dbc3dddf02f2
   emoji-regex@10.4.0: {}
 
   emoji-regex@8.0.0: {}
@@ -4886,11 +4788,6 @@ snapshots:
 
   events@3.3.0: {}
 
-<<<<<<< HEAD
-=======
-  events@3.3.0: {}
-
->>>>>>> 78513ffde107a57a5166f230b489dbc3dddf02f2
   execa@8.0.1:
     dependencies:
       cross-spawn: 7.0.3
@@ -5454,11 +5351,6 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-<<<<<<< HEAD
-=======
-  neo-async@2.6.2: {}
-
->>>>>>> 78513ffde107a57a5166f230b489dbc3dddf02f2
   next@14.2.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@next/env': 14.2.15
@@ -5905,16 +5797,6 @@ snapshots:
 
   source-map@0.6.1: {}
 
-<<<<<<< HEAD
-=======
-  source-map-support@0.5.21:
-    dependencies:
-      buffer-from: 1.1.2
-      source-map: 0.6.1
-
-  source-map@0.6.1: {}
-
->>>>>>> 78513ffde107a57a5166f230b489dbc3dddf02f2
   split2@4.2.0: {}
 
   stop-iteration-iterator@1.0.0:
