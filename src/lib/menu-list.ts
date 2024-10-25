@@ -14,6 +14,7 @@ import {
     FileChartColumnIncreasing,
     BrickWall,
     HousePlusIcon,
+    GalleryHorizontalEnd,
 } from "lucide-react";
 
 type Submenu = {
@@ -110,6 +111,13 @@ export function getMenuList(pathname: string): Group[] {
                     label: "Clientes",
                     active: pathname.includes("/clients"),
                     icon: BookUser,
+                    submenus: [],
+                },
+                {
+                    href: "/spaces",
+                    label: "Ambientes",
+                    active: pathname.includes("/spaces"),
+                    icon: GalleryHorizontalEnd,
                     submenus: [],
                 },
                 {
