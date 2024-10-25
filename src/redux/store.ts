@@ -6,6 +6,7 @@ import { authApi } from "./services/authApi";
 import { businessApi } from "./services/businessApi";
 import { rolesApi } from "./services/rolesApi";
 import { usersApi } from "./services/usersApi";
+import { spacesApi } from "./services/spaceApi";
 
 export const store = configureStore({
     reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
         [businessApi.reducerPath]: businessApi.reducer,
         [usersApi.reducerPath]: usersApi.reducer,
         [rolesApi.reducerPath]: rolesApi.reducer,
+        [spacesApi.reducerPath]: spacesApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()
@@ -21,7 +23,8 @@ export const store = configureStore({
             .concat(adminApi.middleware)
             .concat(businessApi.middleware)
             .concat(rolesApi.middleware)
-            .concat(usersApi.middleware),
+            .concat(usersApi.middleware)
+            .concat(spacesApi.middleware),
 });
 setupListeners(store.dispatch);
 
