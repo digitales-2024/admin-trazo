@@ -7,3 +7,4 @@ export type {
     Permission,
     ModulePermissions,
 } from "./roles";
+export type { Spaces } from "./spaces";
