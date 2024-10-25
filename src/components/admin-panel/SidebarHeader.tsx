@@ -12,9 +12,11 @@ export const SidebarHeader = ({ isOpen }: SidebarHeaderProps) => {
             <div
                 className={` ${isOpen ? "open px-8 py-3" : "closed items-center justify-center py-2"} flex items-center justify-center`}
             >
-                <div className="inline-flex items-center justify-center justify-items-center rounded bg-black p-2">
+                <div
+                    className={`inline-flex items-center justify-center justify-items-center rounded bg-black p-2 ${isOpen ? "w-full" : ""}`}
+                >
                     {isOpen ? (
-                        <LogoTrazo className="h-10" />
+                        <LogoTrazo />
                     ) : (
                         <LogoTrazoTriangule className="hover:animate-bounce" />
                     )}
