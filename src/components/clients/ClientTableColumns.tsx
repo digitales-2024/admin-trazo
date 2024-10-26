@@ -19,7 +19,7 @@ import {
 import { DataTableColumnHeader } from "../data-table/DataTableColumnHeader";
 import { Badge } from "../ui/badge";
 import { DeleteProductsDialog } from "./DeleteClientDialog";
-import { ReactivateProductsDialog } from "./ReactivateClientsDialog";
+import { ReactivateClientsDialog } from "./ReactivateClientsDialog";
 import { UpdateProductSheet } from "./UpdateClientsSheet";
 
 export const clientsColumns = (isSuperAdmin: boolean): ColumnDef<Client>[] => {
@@ -124,10 +124,10 @@ export const clientsColumns = (isSuperAdmin: boolean): ColumnDef<Client>[] => {
                                     row.toggleSelected(false);
                                 }}
                             />
-                            <ReactivateProductsDialog
+                            <ReactivateClientsDialog
                                 open={showReactivateDialog}
                                 onOpenChange={setShowReactivateDialog}
-                                products={[row?.original]}
+                                clients={[row?.original]}
                                 showTrigger={false}
                                 onSuccess={() => {
                                     row.toggleSelected(false);

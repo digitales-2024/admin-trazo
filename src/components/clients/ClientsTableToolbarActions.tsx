@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 
 import { CreateClientDialog } from "./CreateClientDialog";
 import { DeleteProductsDialog } from "./DeleteClientDialog";
-import { ReactivateProductsDialog } from "./ReactivateClientsDialog";
+import { ReactivateClientsDialog } from "./ReactivateClientsDialog";
 
 export interface ClientsTableToolbarActionsProps {
     table?: Table<Client>;
@@ -32,8 +32,8 @@ export function ClientTableToolbarActions({
                         onSuccess={() => table.toggleAllRowsSelected(false)}
                     />
                     {user?.isSuperAdmin && (
-                        <ReactivateProductsDialog
-                            products={table
+                        <ReactivateClientsDialog
+                            clients={table
                                 .getFilteredSelectedRowModel()
                                 .rows.map((row) => row.original)}
                             onSuccess={() => table.toggleAllRowsSelected(false)}
