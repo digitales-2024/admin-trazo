@@ -68,7 +68,7 @@ export const useSpaces = () => {
         return toast.promise(promise(), {
             loading: "Creando Ambiente...",
             success: "Ambiente creado exitosamente",
-            error: "No se pudo crear el Ambiente",
+            error: (err) => err.message,
         });
     };
 
@@ -103,7 +103,7 @@ export const useSpaces = () => {
         toast.promise(promise(), {
             loading: "Actualizando Ambiente...",
             success: "Ambiente actualizado exitosamente",
-            error: "No se pudo actualizar el Ambiente",
+            error: (err) => err.message,
         });
     };
 
