@@ -167,7 +167,7 @@ export const CreateClientsForm = ({
                         name="province"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel htmlFor="city">Ciudad</FormLabel>
+                                <FormLabel htmlFor="city">Provincia</FormLabel>
                                 <Select
                                     onValueChange={field.onChange}
                                     value={field.value}
@@ -175,7 +175,7 @@ export const CreateClientsForm = ({
                                 >
                                     <FormControl>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Seleccione una ciudad" />
+                                            <SelectValue placeholder="Seleccione una provincia" />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
