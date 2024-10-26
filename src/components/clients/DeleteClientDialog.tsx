@@ -31,26 +31,26 @@ import {
     AlertDialogTrigger,
 } from "../ui/alert-dialog";
 
-interface DeleteProductsDialogProps
+interface DeleteClientsDialogProps
     extends ComponentPropsWithoutRef<typeof AlertDialog> {
-    products: Row<Client>["original"][];
+    clients: Row<Client>["original"][];
     showTrigger?: boolean;
     onSuccess?: () => void;
 }
 
-export function DeleteProductsDialog({
-    products,
+export function DeleteClientsDialog({
+    clients,
     showTrigger = true,
     onSuccess,
     ...props
-}: DeleteProductsDialogProps) {
+}: DeleteClientsDialogProps) {
     const [isDeletePending] = useTransition();
     const isDesktop = useMediaQuery("(min-width: 640px)");
 
     const { onDeleteClients } = useClients();
 
-    const onDeleteProductsHandler = () => {
-        onDeleteClients(products);
+    const onDeleteClientsHandler = () => {
+        onDeleteClients(clients);
         props.onOpenChange?.(false);
         onSuccess?.();
     };
@@ -62,7 +62,7 @@ export function DeleteProductsDialog({
                     <AlertDialogTrigger asChild>
                         <Button variant="outline" size="sm">
                             <Trash className="mr-2 size-4" aria-hidden="true" />
-                            Eliminar ({products.length})
+                            Eliminar ({clients.length})
                         </Button>
                     </AlertDialogTrigger>
                 ) : null}
@@ -75,9 +75,9 @@ export function DeleteProductsDialog({
                             Esta acción eliminará a
                             <span className="font-medium">
                                 {" "}
-                                {products.length}
+                                {clients.length}
                             </span>
-                            {products.length === 1 ? " producto" : " productos"}
+                            {clients.length === 1 ? " cliente" : " clientes"}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter className="gap-2 sm:space-x-0">
@@ -86,7 +86,7 @@ export function DeleteProductsDialog({
                         </AlertDialogCancel>
                         <AlertDialogAction
                             aria-label="Delete selected rows"
-                            onClick={onDeleteProductsHandler}
+                            onClick={onDeleteClientsHandler}
                             disabled={isDeletePending}
                         >
                             {isDeletePending && (
@@ -109,7 +109,7 @@ export function DeleteProductsDialog({
                 <DrawerTrigger asChild>
                     <Button variant="outline" size="sm">
                         <Trash className="mr-2 size-4" aria-hidden="true" />
-                        Eliminar ({products.length})
+                        Eliminar ({clients.length})
                     </Button>
                 </DrawerTrigger>
             ) : null}
@@ -118,14 +118,14 @@ export function DeleteProductsDialog({
                     <DrawerTitle>¿Estás absolutamente seguro?</DrawerTitle>
                     <DrawerDescription>
                         Esta acción eliminará a
-                        <span className="font-medium">{products.length}</span>
-                        {products.length === 1 ? " producto" : " productos"}
+                        <span className="font-medium">{clients.length}</span>
+                        {clients.length === 1 ? " cliente" : " clientes"}
                     </DrawerDescription>
                 </DrawerHeader>
                 <DrawerFooter className="gap-2 sm:space-x-0">
                     <Button
                         aria-label="Delete selected rows"
-                        onClick={onDeleteProductsHandler}
+                        onClick={onDeleteClientsHandler}
                         disabled={isDeletePending}
                     >
                         {isDeletePending && (
