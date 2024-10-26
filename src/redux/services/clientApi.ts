@@ -49,7 +49,7 @@ export const clientsApi = createApi({
         //Eliminar clientes
         deleteClients: build.mutation<void, { ids: string[] }>({
             query: (ids) => ({
-                url: `/clients`,
+                url: `/clients/remove/all`,
                 method: "DELETE",
                 body: ids,
                 credentials: "include",
