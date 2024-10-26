@@ -18,7 +18,7 @@ import {
 
 import { DataTableColumnHeader } from "../data-table/DataTableColumnHeader";
 import { Badge } from "../ui/badge";
-import { DeleteProductsDialog } from "./DeleteClientDialog";
+import { DeleteClientsDialog } from "./DeleteClientDialog";
 import { ReactivateClientsDialog } from "./ReactivateClientsDialog";
 import { UpdateProductSheet } from "./UpdateClientsSheet";
 
@@ -115,10 +115,10 @@ export const clientsColumns = (isSuperAdmin: boolean): ColumnDef<Client>[] => {
                                 onOpenChange={setShowEditDialog}
                                 product={row?.original}
                             />
-                            <DeleteProductsDialog
+                            <DeleteClientsDialog
                                 open={showDeleteDialog}
                                 onOpenChange={setShowDeleteDialog}
-                                products={[row?.original]}
+                                clients={[row?.original]}
                                 showTrigger={false}
                                 onSuccess={() => {
                                     row.toggleSelected(false);

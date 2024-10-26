@@ -8,7 +8,7 @@ import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import { CreateClientDialog } from "./CreateClientDialog";
-import { DeleteProductsDialog } from "./DeleteClientDialog";
+import { DeleteClientsDialog } from "./DeleteClientDialog";
 import { ReactivateClientsDialog } from "./ReactivateClientsDialog";
 
 export interface ClientsTableToolbarActionsProps {
@@ -25,8 +25,8 @@ export function ClientTableToolbarActions({
         <div className="flex w-fit flex-wrap items-center gap-2">
             {table && table.getFilteredSelectedRowModel().rows.length > 0 ? (
                 <>
-                    <DeleteProductsDialog
-                        products={table
+                    <DeleteClientsDialog
+                        clients={table
                             .getFilteredSelectedRowModel()
                             .rows.map((row) => row.original)}
                         onSuccess={() => table.toggleAllRowsSelected(false)}
