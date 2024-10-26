@@ -69,6 +69,8 @@ const errorTranslations = {
         "Esta categoría está inactiva, contacta al superadmin para reactivarla",
     "Category assigned to active products":
         "No se puede eliminar la categoría porque está asignada a productos activos",
+    "This client is inactive, contact the superadmin to reactivate it":
+        "Este cliente está inactivo, contacta al superadmin para reactivarlo",
 };
 
 export default errorTranslations;

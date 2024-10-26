@@ -7,4 +7,6 @@ export type {
     Permission,
     ModulePermissions,
 } from "./roles";
+export type { Client } from "./client";
+export type { City } from "./city";
 export type { Spaces } from "./spaces";
