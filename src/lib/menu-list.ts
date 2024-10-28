@@ -77,13 +77,13 @@ export function getMenuList(pathname: string): Group[] {
                 {
                     href: "",
                     label: "Proyecto en Ejecución",
-                    active: pathname.includes("/design-project"),
+                    active: pathname.includes("/execution-project"),
                     icon: Hammer,
                     submenus: [
                         {
-                            href: "/design-project/quotation",
+                            href: "/design-project/budgets",
                             label: "Presupuestos",
-                            active: pathname.includes("/quotation"),
+                            active: pathname.includes("/budgets"),
                             icon: FileChartColumnIncreasing,
                         },
                         {
