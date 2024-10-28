@@ -30,13 +30,13 @@ import {
 
 interface ReactivateSpacesDialogProps
     extends ComponentPropsWithoutRef<typeof AlertDialog> {
-    products: Row<Spaces>["original"][];
+    spaces: Row<Spaces>["original"][];
     showTrigger?: boolean;
     onSuccess?: () => void;
 }
 
 export const ReactivateSpacessDialog = ({
-    products,
+    spaces,
     showTrigger = true,
     onSuccess,
     ...props
@@ -45,8 +45,8 @@ export const ReactivateSpacessDialog = ({
 
     const { onReactivateSpaces, isLoadingReactivateSpaces } = useSpaces();
 
-    const onReactivateProductsHandler = () => {
-        onReactivateSpaces(products);
+    const onReactivateSpacesHandler = () => {
+        onReactivateSpaces(spaces);
         props.onOpenChange?.(false);
         onSuccess?.();
     };
@@ -61,7 +61,7 @@ export const ReactivateSpacessDialog = ({
                                 className="mr-2 size-4"
                                 aria-hidden="true"
                             />
-                            Reactivar ({products.length})
+                            Reactivar ({spaces.length})
                         </Button>
                     </AlertDialogTrigger>
                 ) : null}
@@ -74,9 +74,9 @@ export const ReactivateSpacessDialog = ({
                             Esta acción reactivará a{" "}
                             <span className="font-medium">
                                 {" "}
-                                {products.length}
+                                {spaces.length}
                             </span>
-                            {products.length === 1 ? " ambiente" : " ambientes"}
+                            {spaces.length === 1 ? " ambiente" : " ambientes"}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter className="gap-2 sm:space-x-0">
@@ -85,7 +85,7 @@ export const ReactivateSpacessDialog = ({
                         </AlertDialogCancel>
                         <AlertDialogAction
                             aria-label="Reactivate selected rows"
-                            onClick={onReactivateProductsHandler}
+                            onClick={onReactivateSpacesHandler}
                             disabled={isLoadingReactivateSpaces}
                         >
                             {isLoadingReactivateSpaces && (
@@ -110,7 +110,7 @@ export const ReactivateSpacessDialog = ({
                             className="mr-2 size-4"
                             aria-hidden="true"
                         />
-                        Reactivar ({products.length})
+                        Reactivar ({spaces.length})
                     </Button>
                 </DrawerTrigger>
             ) : null}
@@ -119,14 +119,14 @@ export const ReactivateSpacessDialog = ({
                     <DrawerTitle>¿Estás absolutamente seguro?</DrawerTitle>
                     <DrawerDescription>
                         Esta acción reactivará a
-                        <span className="font-medium">{products.length}</span>
-                        {products.length === 1 ? " ambiente" : " ambientes"}
+                        <span className="font-medium">{spaces.length}</span>
+                        {spaces.length === 1 ? " ambiente" : " ambientes"}
                     </DrawerDescription>
                 </DrawerHeader>
                 <DrawerFooter className="gap-2 sm:space-x-0">
                     <Button
                         aria-label="Reactivate selected rows"
-                        onClick={onReactivateProductsHandler}
+                        onClick={onReactivateSpacesHandler}
                         disabled={isLoadingReactivateSpaces}
                     >
                         {isLoadingReactivateSpaces && (
