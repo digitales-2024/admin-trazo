@@ -6,7 +6,9 @@ import {
     ChevronDown,
     ChevronUp,
     Ellipsis,
+    MapPin,
     RefreshCcwDot,
+    SquareUser,
     Trash,
 } from "lucide-react";
 import { useState } from "react";
@@ -21,6 +23,8 @@ import {
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+import { cn } from "@/lib/utils";
 
 import { DataTableColumnHeader } from "../data-table/DataTableColumnHeader";
 import { Badge } from "../ui/badge";
@@ -73,13 +77,21 @@ export const clientsColumns = (
                 <DataTableColumnHeader column={column} title="Documento" />
             ),
             cell: ({ row }) => (
-                <div className="min-w-40 truncate capitalize">
-                    <span className="text-sm text-slate-500">
-                        {row.getValue("Documento") as string}
-                    </span>
+                <div className="flex min-w-40 items-center truncate capitalize">
+                    <Badge className="text-xs font-light" variant={"outline"}>
+                        <SquareUser
+                            size={14}
+                            className="mr-2"
+                            strokeWidth={1.5}
+                        />
+                        <span className="text-xs">
+                            {row.getValue("Documento") as string}
+                        </span>
+                    </Badge>
                 </div>
             ),
         },
+
         {
             id: "nombre",
             accessorKey: "name",
@@ -88,7 +100,7 @@ export const clientsColumns = (
             ),
             cell: ({ row }) => (
                 <div className="min-w-40 truncate capitalize">
-                    <span className="text-sm text-slate-500">
+                    <span className="text-xs">
                         {row.getValue("nombre") as string}
                     </span>
                 </div>
@@ -101,13 +113,41 @@ export const clientsColumns = (
             header: ({ column }) => (
                 <DataTableColumnHeader column={column} title="Dirección" />
             ),
-            cell: ({ row }) => (
-                <div className="min-w-40 truncate lowercase">
-                    <span className="text-sm capitalize text-slate-500">
-                        {row.getValue("Dirección") as string}
-                    </span>
-                </div>
-            ),
+            cell: function Cell({ row }) {
+                const address = row.getValue("Dirección") as string;
+                const [expandido, setExpandido] = useState(false);
+
+                const handleToggle = () => {
+                    setExpandido(!expandido);
+                };
+
+                return (
+                    <div
+                        className={cn(
+                            "w-72 truncate",
+                            expandido
+                                ? "whitespace-normal"
+                                : "whitespace-nowrap",
+                        )}
+                        onClick={handleToggle}
+                    >
+                        {address ? (
+                            <div className="flex font-normal">
+                                <MapPin
+                                    size={14}
+                                    className="mr-2"
+                                    strokeWidth={1.5}
+                                />
+                                <span className="text-xs">{address}</span>
+                            </div>
+                        ) : (
+                            <span className="text-xs text-slate-300">
+                                Sin dirección
+                            </span>
+                        )}
+                    </div>
+                );
+            },
         },
 
         {
