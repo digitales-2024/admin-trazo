@@ -33,13 +33,13 @@ import {
 
 interface DeleteSapcesDialogProps
     extends ComponentPropsWithoutRef<typeof AlertDialog> {
-    products: Row<Spaces>["original"][];
+    spaces: Row<Spaces>["original"][];
     showTrigger?: boolean;
     onSuccess?: () => void;
 }
 
 export function DeleteSpacesDialog({
-    products,
+    spaces,
     showTrigger = true,
     onSuccess,
     ...props
@@ -49,8 +49,8 @@ export function DeleteSpacesDialog({
 
     const { onDesactivateSpaces } = useSpaces();
 
-    const onDeleteProductsHandler = () => {
-        onDesactivateSpaces(products);
+    const onDeleteSpacesHandler = () => {
+        onDesactivateSpaces(spaces);
         props.onOpenChange?.(false);
         onSuccess?.();
     };
@@ -62,7 +62,7 @@ export function DeleteSpacesDialog({
                     <AlertDialogTrigger asChild>
                         <Button variant="outline" size="sm">
                             <Trash className="mr-2 size-4" aria-hidden="true" />
-                            Eliminar ({products.length})
+                            Eliminar ({spaces.length})
                         </Button>
                     </AlertDialogTrigger>
                 ) : null}
@@ -75,9 +75,9 @@ export function DeleteSpacesDialog({
                             Esta acción eliminará a
                             <span className="font-medium">
                                 {" "}
-                                {products.length}
+                                {spaces.length}
                             </span>
-                            {products.length === 1 ? " ambiente" : " ambientes"}
+                            {spaces.length === 1 ? " ambiente" : " ambientes"}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter className="gap-2 sm:space-x-0">
@@ -86,7 +86,7 @@ export function DeleteSpacesDialog({
                         </AlertDialogCancel>
                         <AlertDialogAction
                             aria-label="Delete selected rows"
-                            onClick={onDeleteProductsHandler}
+                            onClick={onDeleteSpacesHandler}
                             disabled={isDeletePending}
                         >
                             {isDeletePending && (
@@ -109,7 +109,7 @@ export function DeleteSpacesDialog({
                 <DrawerTrigger asChild>
                     <Button variant="outline" size="sm">
                         <Trash className="mr-2 size-4" aria-hidden="true" />
-                        Eliminar ({products.length})
+                        Eliminar ({spaces.length})
                     </Button>
                 </DrawerTrigger>
             ) : null}
@@ -118,14 +118,14 @@ export function DeleteSpacesDialog({
                     <DrawerTitle>¿Estás absolutamente seguro?</DrawerTitle>
                     <DrawerDescription>
                         Esta acción eliminará a
-                        <span className="font-medium">{products.length}</span>
-                        {products.length === 1 ? " ambiente" : " ambientes"}
+                        <span className="font-medium">{spaces.length}</span>
+                        {spaces.length === 1 ? " ambiente" : " ambientes"}
                     </DrawerDescription>
                 </DrawerHeader>
                 <DrawerFooter className="gap-2 sm:space-x-0">
                     <Button
                         aria-label="Delete selected rows"
-                        onClick={onDeleteProductsHandler}
+                        onClick={onDeleteSpacesHandler}
                         disabled={isDeletePending}
                     >
                         {isDeletePending && (
