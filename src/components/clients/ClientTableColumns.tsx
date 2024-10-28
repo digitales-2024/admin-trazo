@@ -182,7 +182,6 @@ export const clientsColumns = (
             size: 10,
             accessorKey: "description",
             header: ({ column }) => {
-                console.log("Column data:", column);
                 return (
                     <DataTableColumnHeader
                         column={column}
@@ -191,9 +190,6 @@ export const clientsColumns = (
                 );
             },
             cell: ({ row }) => {
-                console.log("Row data:", row);
-                console.log("Can expand:", row.getCanExpand());
-                console.log("Is expanded:", row.getIsExpanded());
                 return row.getCanExpand() ? (
                     <Button
                         variant="ghost"

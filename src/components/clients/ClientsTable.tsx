@@ -13,8 +13,6 @@ import { clientsColumns } from "./ClientTableColumns";
 export function ClientsTable({ data }: { data: ClientWithDescription[] }) {
     const { user } = useProfile();
 
-    console.log(data);
-
     const columns = useMemo(
         () => clientsColumns(user?.isSuperAdmin || false),
         [user],
