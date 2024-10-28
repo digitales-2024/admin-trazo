@@ -28,25 +28,25 @@ import {
     DrawerTrigger,
 } from "../ui/drawer";
 
-interface ReactivateProductsDialogProps
+interface ReactivateClientsDialogProps
     extends ComponentPropsWithoutRef<typeof AlertDialog> {
-    products: Row<Client>["original"][];
+    clients: Row<Client>["original"][];
     showTrigger?: boolean;
     onSuccess?: () => void;
 }
 
-export const ReactivateProductsDialog = ({
-    products,
+export const ReactivateClientsDialog = ({
+    clients,
     showTrigger = true,
     onSuccess,
     ...props
-}: ReactivateProductsDialogProps) => {
+}: ReactivateClientsDialogProps) => {
     const isDesktop = useMediaQuery("(min-width: 640px)");
 
     const { onReactivateClients, isLoadingReactivateClients } = useClients();
 
-    const onReactivateProductsHandler = () => {
-        onReactivateClients(products);
+    const onReactivateClientsHandler = () => {
+        onReactivateClients(clients);
         props.onOpenChange?.(false);
         onSuccess?.();
     };
@@ -61,7 +61,7 @@ export const ReactivateProductsDialog = ({
                                 className="mr-2 size-4"
                                 aria-hidden="true"
                             />
-                            Reactivar ({products.length})
+                            Reactivar ({clients.length})
                         </Button>
                     </AlertDialogTrigger>
                 ) : null}
@@ -74,9 +74,9 @@ export const ReactivateProductsDialog = ({
                             Esta acción reactivará a{" "}
                             <span className="font-medium">
                                 {" "}
-                                {products.length}
+                                {clients.length}
                             </span>
-                            {products.length === 1 ? " producto" : " productos"}
+                            {clients.length === 1 ? " cliente" : " cliente"}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter className="gap-2 sm:space-x-0">
@@ -85,7 +85,7 @@ export const ReactivateProductsDialog = ({
                         </AlertDialogCancel>
                         <AlertDialogAction
                             aria-label="Reactivate selected rows"
-                            onClick={onReactivateProductsHandler}
+                            onClick={onReactivateClientsHandler}
                             disabled={isLoadingReactivateClients}
                         >
                             {isLoadingReactivateClients && (
@@ -110,7 +110,7 @@ export const ReactivateProductsDialog = ({
                             className="mr-2 size-4"
                             aria-hidden="true"
                         />
-                        Reactivar ({products.length})
+                        Reactivar ({clients.length})
                     </Button>
                 </DrawerTrigger>
             ) : null}
@@ -119,14 +119,14 @@ export const ReactivateProductsDialog = ({
                     <DrawerTitle>¿Estás absolutamente seguro?</DrawerTitle>
                     <DrawerDescription>
                         Esta acción reactivará a
-                        <span className="font-medium">{products.length}</span>
-                        {products.length === 1 ? " producto" : " productos"}
+                        <span className="font-medium">{clients.length}</span>
+                        {clients.length === 1 ? " cliente" : " clientes"}
                     </DrawerDescription>
                 </DrawerHeader>
                 <DrawerFooter className="gap-2 sm:space-x-0">
                     <Button
                         aria-label="Reactivate selected rows"
-                        onClick={onReactivateProductsHandler}
+                        onClick={onReactivateClientsHandler}
                         disabled={isLoadingReactivateClients}
                     >
                         {isLoadingReactivateClients && (

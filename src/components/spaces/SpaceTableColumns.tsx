@@ -16,12 +16,13 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+import { cn } from "@/lib/utils";
+
 import { DataTableColumnHeader } from "../data-table/DataTableColumnHeader";
 import { Badge } from "../ui/badge";
 import { DeleteSpacesDialog } from "./DeleteSpacesDialog";
 import { ReactivateSpacessDialog } from "./ReactivateSpacesDialog";
 import { UpdateSpacesSheet } from "./UpdateSpacesSheet";
-import { cn } from "@/lib/utils";
 
 export const spaceColumns = (isSuperAdmin: boolean): ColumnDef<Spaces>[] => {
     const columns: ColumnDef<Spaces>[] = [

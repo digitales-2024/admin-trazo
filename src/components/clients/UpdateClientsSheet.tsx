@@ -1,16 +1,18 @@
 "use client";
 
+import { departments } from "@/data/department";
 import { useClients } from "@/hooks/use-client";
 import {
     clientsSchema,
     CreateClientsSchema,
 } from "@/schemas/clients/createClientSchema";
-import { Client } from "@/types";
+import { Client, City } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RefreshCcw } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { AutoComplete, type Option } from "@/components/ui/autocomplete";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -41,60 +43,96 @@ import {
     SheetTitle,
 } from "@/components/ui/sheet";
 
-import { Textarea } from "../ui/textarea";
-
 const infoSheet = {
-    title: "Actualizar Producto",
-    description: "Actualiza la información del producto y guarda los cambios",
+    title: "Actualizar Cliente",
+    description: "Actualiza la información del cliente y guarda los cambios",
 };
 
-interface UpdateProductSheetProps
+interface UpdateClientSheetProps
     extends Omit<
         React.ComponentPropsWithRef<typeof Sheet>,
         "open" | "onOpenChange"
     > {
-    product: Client;
+    client: Client;
     open: boolean;
     onOpenChange: (open: boolean) => void;
 }
 
-export function UpdateProductSheet({
-    product,
+export function UpdateClientSheet({
+    client,
     open,
     onOpenChange,
-}: UpdateProductSheetProps) {
+}: UpdateClientSheetProps) {
     const { onUpdateClient, isSuccessUpdateClient, isLoadingUpdateClient } =
         useClients();
 
     const form = useForm<CreateClientsSchema>({
         resolver: zodResolver(clientsSchema),
         defaultValues: {
-            name: product.name ?? "",
-            rucDni: product.rucDni ?? "",
-            phone: product.phone ?? "",
-            address: product.address ?? "",
-            province: product.province ?? "",
-            department: product.department ?? "",
+            name: client.name ?? "",
+            rucDni: client.rucDni ?? "",
+            phone: client.phone ?? "",
+            address: client.address ?? "",
+            province: client.province ?? "",
+            department: client.department ?? "",
         },
     });
+
+    const [cities, setCities] = useState<City[]>([]);
+    const [isDepartmentSelected, setIsDepartmentSelected] = useState(false);
+
+    const departmentOptions: Option[] = departments.map((department) => ({
+        value: department.id.toString(),
+        label: department.name,
+    }));
+
+    const handleDepartmentChange = (departmentId: string) => {
+        const selectedDepartment = departments.find(
+            (dept) => dept.id.toString() === departmentId,
+        );
+        const selectedCities = selectedDepartment?.cities || [];
+        setCities(selectedCities);
+        setIsDepartmentSelected(true);
+        form.setValue("province", "");
+    };
 
     useEffect(() => {
         if (open) {
             form.reset({
-                name: product.name ?? "",
-                rucDni: product.rucDni ?? "",
-                phone: product.phone ?? "",
-                address: product.address ?? "",
-                province: product.province ?? "",
-                department: product.department ?? "",
+                name: client.name ?? "",
+                rucDni: client.rucDni ?? "",
+                phone: client.phone ?? "",
+                address: client.address ?? "",
+                province: client.province ?? "",
+                department: client.department ?? "",
             });
+
+            const selectedDepartment = departments.find(
+                (dept) =>
+                    dept.name.toLowerCase() === client.department.toLowerCase(),
+            );
+            if (selectedDepartment) {
+                setCities(selectedDepartment.cities);
+                setIsDepartmentSelected(true);
+
+                const selectedCity = selectedDepartment.cities.find(
+                    (city) =>
+                        city.name.toLowerCase() ===
+                        client.province.toLowerCase(),
+                );
+                form.setValue("department", selectedDepartment.id.toString());
+                form.setValue(
+                    "province",
+                    selectedCity ? selectedCity.id.toString() : "",
+                );
+            }
         }
-    }, [open, product, form]);
+    }, [open, client, form]);
 
     const onSubmit = async (input: CreateClientsSchema) => {
         onUpdateClient({
             ...input,
-            id: product.id,
+            id: client.id,
         });
     };
 
@@ -118,7 +156,7 @@ export function UpdateProductSheet({
                             className="bg-emerald-100 text-emerald-700"
                             variant="secondary"
                         >
-                            {product.name}
+                            {client.name}
                         </Badge>
                     </SheetTitle>
                     <SheetDescription>{infoSheet.description}</SheetDescription>
@@ -136,11 +174,11 @@ export function UpdateProductSheet({
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
-                                            Nombre del Producto
+                                            Nombre del Cliente
                                         </FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="Ingrese el nombre del producto"
+                                                placeholder="Ingrese el nombre del cliente"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -149,34 +187,16 @@ export function UpdateProductSheet({
                                 )}
                             />
 
-                            {/* Descripción */}
+                            {/* RUC/DNI */}
                             <FormField
                                 control={form.control}
-                                name="description"
+                                name="rucDni"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Descripción</FormLabel>
-                                        <FormControl>
-                                            <Textarea
-                                                placeholder="Ingrese la descripción del producto"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            {/* Precio */}
-                            <FormField
-                                control={form.control}
-                                name="price"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Precio</FormLabel>
+                                        <FormLabel>RUC/DNI</FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="Ingrese el precio del producto"
+                                                placeholder="Ingrese el RUC o DNI"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -185,45 +205,109 @@ export function UpdateProductSheet({
                                 )}
                             />
 
-                            {/* Categoría */}
+                            {/* Dirección */}
                             <FormField
                                 control={form.control}
-                                name="categoryId"
+                                name="address"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Categoría</FormLabel>
+                                        <FormLabel>Dirección</FormLabel>
                                         <FormControl>
-                                            <Select
-                                                onValueChange={(value) =>
-                                                    field.onChange(value)
+                                            <Input
+                                                placeholder="Ingrese la dirección"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* Departamento */}
+                            <FormField
+                                control={form.control}
+                                name="department"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Departamento</FormLabel>
+                                        <FormControl>
+                                            <AutoComplete
+                                                options={departmentOptions}
+                                                emptyMessage="No se encontró el departamento."
+                                                placeholder="Seleccione un departamento"
+                                                onValueChange={(
+                                                    selectedOption,
+                                                ) => {
+                                                    field.onChange(
+                                                        selectedOption?.value ||
+                                                            "",
+                                                    );
+                                                    handleDepartmentChange(
+                                                        selectedOption?.value ||
+                                                            "",
+                                                    );
+                                                }}
+                                                value={
+                                                    departmentOptions.find(
+                                                        (option) =>
+                                                            option.value ===
+                                                            field.value,
+                                                    ) || undefined
                                                 }
-                                                value={field.value || ""}
-                                            >
-                                                <SelectTrigger className="capitalize">
-                                                    <SelectValue placeholder="Selecciona una categoría" />
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* Provincia */}
+                            <FormField
+                                control={form.control}
+                                name="province"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Provincia</FormLabel>
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            value={field.value}
+                                            disabled={!isDepartmentSelected}
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Seleccione una provincia" />
                                                 </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectGroup>
-                                                        {data?.map(
-                                                            (category) => (
-                                                                <SelectItem
-                                                                    key={
-                                                                        category.id
-                                                                    }
-                                                                    value={
-                                                                        category.id
-                                                                    }
-                                                                    className="capitalize"
-                                                                >
-                                                                    {
-                                                                        category.name
-                                                                    }
-                                                                </SelectItem>
-                                                            ),
-                                                        )}
-                                                    </SelectGroup>
-                                                </SelectContent>
-                                            </Select>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    {cities.map((city) => (
+                                                        <SelectItem
+                                                            key={city.id.toString()}
+                                                            value={city.id.toString()}
+                                                        >
+                                                            {city.name}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* Teléfono */}
+                            <FormField
+                                control={form.control}
+                                name="phone"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Teléfono</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="Ingrese el número de teléfono"
+                                                {...field}
+                                            />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>

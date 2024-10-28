@@ -1,4 +1,4 @@
-import { Client } from "@/types";
+import { Client, ClientWithDescription } from "@/types";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 import baseQueryWithReauth from "../baseQuery";
@@ -38,7 +38,7 @@ export const clientsApi = createApi({
             providesTags: (result, error, id) => [{ type: "Client", id }],
         }),
         //Obtener todos los clientes
-        getAllClients: build.query<Client[], void>({
+        getAllClients: build.query<ClientWithDescription[], void>({
             query: () => ({
                 url: "/clients",
                 method: "GET",
@@ -49,7 +49,7 @@ export const clientsApi = createApi({
         //Eliminar clientes
         deleteClients: build.mutation<void, { ids: string[] }>({
             query: (ids) => ({
-                url: `/clients`,
+                url: `/clients/remove/all`,
                 method: "DELETE",
                 body: ids,
                 credentials: "include",

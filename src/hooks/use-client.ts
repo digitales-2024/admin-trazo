@@ -145,7 +145,7 @@ export const useClients = () => {
 
         toast.promise(promise(), {
             loading: "Reactivando...",
-            success: "Clientes reactivados",
+            success: "Clientes reactivados con éxito",
             error: (error) => {
                 return error.message;
             },
@@ -187,7 +187,7 @@ export const useClients = () => {
 
         toast.promise(promise(), {
             loading: "Eliminando...",
-            success: "Clientes eliminados",
+            success: "Clientes eliminados con éxito",
             error: (error) => {
                 return error.message;
             },

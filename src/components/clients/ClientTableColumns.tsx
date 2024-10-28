@@ -1,8 +1,16 @@
 "use client";
 
-import { Client } from "@/types";
+import { ClientWithDescription } from "@/types";
 import { type ColumnDef } from "@tanstack/react-table";
-import { Ellipsis, RefreshCcwDot, Trash } from "lucide-react";
+import {
+    ChevronDown,
+    ChevronUp,
+    Ellipsis,
+    MapPin,
+    RefreshCcwDot,
+    SquareUser,
+    Trash,
+} from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -16,14 +24,18 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+import { cn } from "@/lib/utils";
+
 import { DataTableColumnHeader } from "../data-table/DataTableColumnHeader";
 import { Badge } from "../ui/badge";
-import { DeleteProductsDialog } from "./DeleteClientDialog";
-import { ReactivateProductsDialog } from "./ReactivateClientsDialog";
-import { UpdateProductSheet } from "./UpdateClientsSheet";
+import { DeleteClientsDialog } from "./DeleteClientDialog";
+import { ReactivateClientsDialog } from "./ReactivateClientsDialog";
+import { UpdateClientSheet } from "./UpdateClientsSheet";
 
-export const clientsColumns = (isSuperAdmin: boolean): ColumnDef<Client>[] => {
-    const columns: ColumnDef<Client>[] = [
+export const clientsColumns = (
+    isSuperAdmin: boolean,
+): ColumnDef<ClientWithDescription>[] => {
+    const columns: ColumnDef<ClientWithDescription>[] = [
         {
             id: "select",
             size: 10,
@@ -59,6 +71,28 @@ export const clientsColumns = (isSuperAdmin: boolean): ColumnDef<Client>[] => {
         },
 
         {
+            id: "Documento",
+            accessorKey: "rucDni",
+            header: ({ column }) => (
+                <DataTableColumnHeader column={column} title="Documento" />
+            ),
+            cell: ({ row }) => (
+                <div className="flex min-w-40 items-center truncate capitalize">
+                    <Badge className="text-xs font-light" variant={"outline"}>
+                        <SquareUser
+                            size={14}
+                            className="mr-2"
+                            strokeWidth={1.5}
+                        />
+                        <span className="text-xs">
+                            {row.getValue("Documento") as string}
+                        </span>
+                    </Badge>
+                </div>
+            ),
+        },
+
+        {
             id: "nombre",
             accessorKey: "name",
             header: ({ column }) => (
@@ -66,9 +100,54 @@ export const clientsColumns = (isSuperAdmin: boolean): ColumnDef<Client>[] => {
             ),
             cell: ({ row }) => (
                 <div className="min-w-40 truncate capitalize">
-                    {row.getValue("nombre") as string}
+                    <span className="text-xs">
+                        {row.getValue("nombre") as string}
+                    </span>
                 </div>
             ),
+        },
+
+        {
+            id: "Dirección",
+            accessorKey: "address",
+            header: ({ column }) => (
+                <DataTableColumnHeader column={column} title="Dirección" />
+            ),
+            cell: function Cell({ row }) {
+                const address = row.getValue("Dirección") as string;
+                const [expandido, setExpandido] = useState(false);
+
+                const handleToggle = () => {
+                    setExpandido(!expandido);
+                };
+
+                return (
+                    <div
+                        className={cn(
+                            "w-72 truncate",
+                            expandido
+                                ? "whitespace-normal"
+                                : "whitespace-nowrap",
+                        )}
+                        onClick={handleToggle}
+                    >
+                        {address ? (
+                            <div className="flex font-normal">
+                                <MapPin
+                                    size={14}
+                                    className="mr-2"
+                                    strokeWidth={1.5}
+                                />
+                                <span className="text-xs">{address}</span>
+                            </div>
+                        ) : (
+                            <span className="text-xs text-slate-300">
+                                Sin dirección
+                            </span>
+                        )}
+                    </div>
+                );
+            },
         },
 
         {
@@ -97,9 +176,39 @@ export const clientsColumns = (isSuperAdmin: boolean): ColumnDef<Client>[] => {
                 </div>
             ),
         },
+
+        {
+            id: "descripción",
+            size: 10,
+            accessorKey: "description",
+            header: ({ column }) => {
+                return (
+                    <DataTableColumnHeader
+                        column={column}
+                        title="Descripción"
+                    />
+                );
+            },
+            cell: ({ row }) => {
+                return row.getCanExpand() ? (
+                    <Button
+                        variant="ghost"
+                        {...{
+                            onClick: row.getToggleExpandedHandler(),
+                        }}
+                    >
+                        {row.getIsExpanded() ? <ChevronUp /> : <ChevronDown />}
+                    </Button>
+                ) : null;
+            },
+            enableSorting: false,
+            enableHiding: false,
+            enablePinning: true,
+        },
+
         {
             id: "actions",
-            size: 10,
+            size: 5,
             cell: function Cell({ row }) {
                 const [showDeleteDialog, setShowDeleteDialog] = useState(false);
                 const [showReactivateDialog, setShowReactivateDialog] =
@@ -110,24 +219,24 @@ export const clientsColumns = (isSuperAdmin: boolean): ColumnDef<Client>[] => {
                 return (
                     <div>
                         <div>
-                            <UpdateProductSheet
+                            <UpdateClientSheet
                                 open={showEditDialog}
                                 onOpenChange={setShowEditDialog}
-                                product={row?.original}
+                                client={row?.original}
                             />
-                            <DeleteProductsDialog
+                            <DeleteClientsDialog
                                 open={showDeleteDialog}
                                 onOpenChange={setShowDeleteDialog}
-                                products={[row?.original]}
+                                clients={[row?.original]}
                                 showTrigger={false}
                                 onSuccess={() => {
                                     row.toggleSelected(false);
                                 }}
                             />
-                            <ReactivateProductsDialog
+                            <ReactivateClientsDialog
                                 open={showReactivateDialog}
                                 onOpenChange={setShowReactivateDialog}
-                                products={[row?.original]}
+                                clients={[row?.original]}
                                 showTrigger={false}
                                 onSuccess={() => {
                                     row.toggleSelected(false);
