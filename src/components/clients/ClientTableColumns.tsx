@@ -1,8 +1,14 @@
 "use client";
 
-import { Client } from "@/types";
+import { ClientWithDescription } from "@/types";
 import { type ColumnDef } from "@tanstack/react-table";
-import { Ellipsis, RefreshCcwDot, Trash } from "lucide-react";
+import {
+    ChevronDown,
+    ChevronUp,
+    Ellipsis,
+    RefreshCcwDot,
+    Trash,
+} from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -22,8 +28,10 @@ import { DeleteClientsDialog } from "./DeleteClientDialog";
 import { ReactivateClientsDialog } from "./ReactivateClientsDialog";
 import { UpdateProductSheet } from "./UpdateClientsSheet";
 
-export const clientsColumns = (isSuperAdmin: boolean): ColumnDef<Client>[] => {
-    const columns: ColumnDef<Client>[] = [
+export const clientsColumns = (
+    isSuperAdmin: boolean,
+): ColumnDef<ClientWithDescription>[] => {
+    const columns: ColumnDef<ClientWithDescription>[] = [
         {
             id: "select",
             size: 10,
@@ -59,6 +67,20 @@ export const clientsColumns = (isSuperAdmin: boolean): ColumnDef<Client>[] => {
         },
 
         {
+            id: "Documento",
+            accessorKey: "rucDni",
+            header: ({ column }) => (
+                <DataTableColumnHeader column={column} title="Documento" />
+            ),
+            cell: ({ row }) => (
+                <div className="min-w-40 truncate capitalize">
+                    <span className="text-sm text-slate-500">
+                        {row.getValue("Documento") as string}
+                    </span>
+                </div>
+            ),
+        },
+        {
             id: "nombre",
             accessorKey: "name",
             header: ({ column }) => (
@@ -66,7 +88,24 @@ export const clientsColumns = (isSuperAdmin: boolean): ColumnDef<Client>[] => {
             ),
             cell: ({ row }) => (
                 <div className="min-w-40 truncate capitalize">
-                    {row.getValue("nombre") as string}
+                    <span className="text-sm text-slate-500">
+                        {row.getValue("nombre") as string}
+                    </span>
+                </div>
+            ),
+        },
+
+        {
+            id: "Dirección",
+            accessorKey: "address",
+            header: ({ column }) => (
+                <DataTableColumnHeader column={column} title="Dirección" />
+            ),
+            cell: ({ row }) => (
+                <div className="min-w-40 truncate lowercase">
+                    <span className="text-sm capitalize text-slate-500">
+                        {row.getValue("Dirección") as string}
+                    </span>
                 </div>
             ),
         },
@@ -97,9 +136,43 @@ export const clientsColumns = (isSuperAdmin: boolean): ColumnDef<Client>[] => {
                 </div>
             ),
         },
+
+        {
+            id: "descripción",
+            size: 10,
+            accessorKey: "description",
+            header: ({ column }) => {
+                console.log("Column data:", column);
+                return (
+                    <DataTableColumnHeader
+                        column={column}
+                        title="Descripción"
+                    />
+                );
+            },
+            cell: ({ row }) => {
+                console.log("Row data:", row);
+                console.log("Can expand:", row.getCanExpand());
+                console.log("Is expanded:", row.getIsExpanded());
+                return row.getCanExpand() ? (
+                    <Button
+                        variant="ghost"
+                        {...{
+                            onClick: row.getToggleExpandedHandler(),
+                        }}
+                    >
+                        {row.getIsExpanded() ? <ChevronUp /> : <ChevronDown />}
+                    </Button>
+                ) : null;
+            },
+            enableSorting: false,
+            enableHiding: false,
+            enablePinning: true,
+        },
+
         {
             id: "actions",
-            size: 10,
+            size: 5,
             cell: function Cell({ row }) {
                 const [showDeleteDialog, setShowDeleteDialog] = useState(false);
                 const [showReactivateDialog, setShowReactivateDialog] =
