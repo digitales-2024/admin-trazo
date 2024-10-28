@@ -71,6 +71,9 @@ const errorTranslations = {
         "No se puede eliminar la categoría porque está asignada a productos activos",
     "This client is inactive, contact the superadmin to reactivate it":
         "Este cliente está inactivo, contacta al superadmin para reactivarlo",
+    "This space already exists": "Este ambiente ya existe",
+    "This space exists but is not active":
+        "Este ambiente existe pero no está activo",
 };
 
 export default errorTranslations;
