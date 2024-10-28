@@ -30,7 +30,7 @@ import { DataTableColumnHeader } from "../data-table/DataTableColumnHeader";
 import { Badge } from "../ui/badge";
 import { DeleteClientsDialog } from "./DeleteClientDialog";
 import { ReactivateClientsDialog } from "./ReactivateClientsDialog";
-import { UpdateProductSheet } from "./UpdateClientsSheet";
+import { UpdateClientSheet } from "./UpdateClientsSheet";
 
 export const clientsColumns = (
     isSuperAdmin: boolean,
@@ -219,10 +219,10 @@ export const clientsColumns = (
                 return (
                     <div>
                         <div>
-                            <UpdateProductSheet
+                            <UpdateClientSheet
                                 open={showEditDialog}
                                 onOpenChange={setShowEditDialog}
-                                product={row?.original}
+                                client={row?.original}
                             />
                             <DeleteClientsDialog
                                 open={showDeleteDialog}
