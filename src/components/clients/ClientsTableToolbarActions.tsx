@@ -7,6 +7,8 @@ import { Download } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
+import { exportTableToCSV } from "@/lib/export";
+
 import { CreateClientDialog } from "./CreateClientDialog";
 import { DeleteClientsDialog } from "./DeleteClientDialog";
 import { ReactivateClientsDialog } from "./ReactivateClientsDialog";
@@ -49,10 +51,10 @@ export function ClientTableToolbarActions({
                         size="sm"
                         onClick={() => {
                             if (table) {
-                                /*                                 exportTableToCSV(table, {
+                                exportTableToCSV(table, {
                                     filename: "products",
                                     excludeColumns: ["select", "actions"],
-                                }); */
+                                });
                             }
                         }}
                     >
