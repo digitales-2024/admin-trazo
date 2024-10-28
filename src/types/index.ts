@@ -10,3 +10,4 @@ export type {
 export type { Client, ClientWithDescription } from "./client";
 export type { City } from "./city";
 export type { Spaces } from "./spaces";
+export type { Quotation } from "./quotation";
