@@ -7,13 +7,13 @@ import { useMemo } from "react";
 
 import { DataTable } from "../data-table/DataTable";
 import { SpaceTableToolbarActions } from "./SpaceTableToolbarActions";
-import { clientsColumns } from "./ClientTableColumns";
+import { spaceColumns } from "./SpaceTableColumns";
 
 export function SpacesTable({ data }: { data: Spaces[] }) {
     const { user } = useProfile();
 
     const columns = useMemo(
-        () => clientsColumns(user?.isSuperAdmin || false),
+        () => spaceColumns(user?.isSuperAdmin || false),
         [user],
     );
 
