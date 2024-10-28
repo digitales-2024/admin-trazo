@@ -5,3 +5,4 @@ export {
     usersSchema,
 } from "./users/createUsersSchema";
 export * from "./users/rolesSchema";
+export { type CreateSpacesSchema } from "./spaces/createSpacesSchema";
