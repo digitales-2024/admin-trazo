@@ -22,14 +22,14 @@ export function SpaceTableToolbarActions({
             {table && table.getFilteredSelectedRowModel().rows.length > 0 ? (
                 <>
                     <DeleteSpacesDialog
-                        products={table
+                        spaces={table
                             .getFilteredSelectedRowModel()
                             .rows.map((row) => row.original)}
                         onSuccess={() => table.toggleAllRowsSelected(false)}
                     />
                     {user?.isSuperAdmin && (
                         <ReactivateSpacessDialog
-                            products={table
+                            spaces={table
                                 .getFilteredSelectedRowModel()
                                 .rows.map((row) => row.original)}
                             onSuccess={() => table.toggleAllRowsSelected(false)}
