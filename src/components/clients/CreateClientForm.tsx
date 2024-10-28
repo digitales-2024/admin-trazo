@@ -43,14 +43,14 @@ export const CreateClientsForm = ({
 
     // Prepara las opciones para el AutoComplete
     const departmentOptions: Option[] = departments.map((department) => ({
-        value: department.id.toString(),
+        value: department.name,
         label: department.name,
     }));
 
     // Manejar el cambio de departamento
-    const handleDepartmentChange = (departmentId: string) => {
+    const handleDepartmentChange = (departmentName: string) => {
         const selectedDepartment = departments.find(
-            (dept) => dept.id.toString() === departmentId,
+            (dept) => dept.name === departmentName,
         );
         const selectedCities = selectedDepartment?.cities || [];
         setCities(selectedCities);
@@ -183,7 +183,7 @@ export const CreateClientsForm = ({
                                             {cities.map((city) => (
                                                 <SelectItem
                                                     key={city.id.toString()}
-                                                    value={city.id.toString()}
+                                                    value={city.name.toString()}
                                                 >
                                                     {city.name}
                                                 </SelectItem>
