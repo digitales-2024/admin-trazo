@@ -1,16 +1,17 @@
 "use client";
 "use memo";
 
-import { useClients } from "@/hooks/use-client";
+import { useQuotations } from "@/hooks/use-quotation";
 
-import { ClientsTable } from "@/components/clients/ClientsTable";
 import { HeaderPage } from "@/components/common/HeaderPage";
 import { Shell } from "@/components/common/Shell";
 import { DataTableSkeleton } from "@/components/data-table/DataTableSkeleton";
+import { QuotationsTable } from "@/components/quotation/QuotationsTable";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function QuotationPage() {
-    const { dataClientsAll, isLoading } = useClients();
+    const { dataQuotationsAll, isLoading } = useQuotations();
+    console.log(dataQuotationsAll);
 
     if (isLoading) {
         return (
@@ -32,7 +33,7 @@ export default function QuotationPage() {
             </Shell>
         );
     }
-    if (!dataClientsAll) {
+    if (!dataQuotationsAll) {
         return null;
     }
     return (
@@ -41,7 +42,7 @@ export default function QuotationPage() {
                 title="Cotizaciones"
                 description="Lista de cotizaciones registrados en el sistema."
             />
-            <ClientsTable data={dataClientsAll} />
+            <QuotationsTable data={dataQuotationsAll} />
         </Shell>
     );
 }
