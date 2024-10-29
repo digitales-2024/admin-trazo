@@ -2,8 +2,8 @@ export type Quotation = {
     id: string;
     name: string;
     code: string;
-    clientId: Client;
-    sellerId: Seller;
+    client: Client;
+    user: User;
     status: string;
     discount: number;
     totalAmount: number;
@@ -24,7 +24,12 @@ export type Client = {
     id: string;
     name: string;
 };
-export type Seller = {
+export type User = {
     id: string;
     name: string;
 };
+export enum QuotationStatusType {
+    PENDING = "PENDING",
+    APPROVED = "APPROVED",
+    REJECTED = "REJECTED",
+}
