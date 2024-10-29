@@ -11,7 +11,7 @@ export const quotationsApi = createApi({
         //Obtener todos los cotizaciones
         getAllQuotations: build.query<Quotation[], void>({
             query: () => ({
-                url: "/clients",
+                url: "/quotation",
                 method: "GET",
                 credentials: "include",
             }),
