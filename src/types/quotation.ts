@@ -2,8 +2,8 @@ export type Quotation = {
     id: string;
     name: string;
     code: string;
-    clientId: string;
-    sellerId: string;
+    clientId: Client;
+    sellerId: Seller;
     status: string;
     discount: number;
     totalAmount: number;
@@ -19,4 +19,12 @@ export type Quotation = {
     metrado: number;
     createdAt: string;
     updatedAt: string;
+};
+export type Client = {
+    id: string;
+    name: string;
+};
+export type Seller = {
+    id: string;
+    name: string;
 };
