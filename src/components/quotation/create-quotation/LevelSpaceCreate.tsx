@@ -62,7 +62,7 @@ export function CreateLevelSpace() {
                     ...floor,
                     spaces: [
                         ...floor.spaces,
-                        { id: "", name: "", meters: 0, amount: 0 },
+                        { id: "", name: "", meters: 0, amount: 1 },
                     ],
                 };
             }
