@@ -29,6 +29,20 @@ export function SpaceForm({
 }: EnvironmentFormProps) {
     const { dataSpacesAll = [] } = useSpaces();
     const [selectedSpace, setSelectedSpace] = React.useState(space.name);
+    const [amount, setAmount] = React.useState(space.amount || 1);
+    const [meters, setMeters] = React.useState(space.meters);
+
+    const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = Math.max(1, Number(e.target.value));
+        setAmount(value);
+        updateEnvironment(floorNumber, environmentIndex, "amount", value);
+    };
+
+    const handleMetersChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = Math.max(0, Number(e.target.value));
+        setMeters(value);
+        updateEnvironment(floorNumber, environmentIndex, "meters", value);
+    };
 
     return (
         <div className="grid grid-flow-row items-center gap-4 lg:grid-cols-6">
@@ -39,15 +53,8 @@ export function SpaceForm({
                 <Input
                     id={`amount-${floorNumber}-${environmentIndex}`}
                     type="number"
-                    value={space.amount}
-                    onChange={(e) =>
-                        updateEnvironment(
-                            floorNumber,
-                            environmentIndex,
-                            "amount",
-                            Number(e.target.value),
-                        )
-                    }
+                    value={amount}
+                    onChange={handleAmountChange}
                     placeholder="Cantidad"
                 />
             </div>
@@ -80,15 +87,8 @@ export function SpaceForm({
                 <Input
                     id={`meters-${floorNumber}-${environmentIndex}`}
                     type="number"
-                    value={space.meters}
-                    onChange={(e) =>
-                        updateEnvironment(
-                            floorNumber,
-                            environmentIndex,
-                            "meters",
-                            Number(e.target.value),
-                        )
-                    }
+                    value={meters}
+                    onChange={handleMetersChange}
                     placeholder="m²"
                 />
             </div>
