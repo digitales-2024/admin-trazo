@@ -1,5 +1,5 @@
 import { Floor } from "@/types";
-import { Edit2, Trash, Plus } from "lucide-react";
+import { Edit2, Trash, Plus, Copy } from "lucide-react"; // Importa el icono Copy
 import { useState } from "react";
 
 import {
@@ -17,6 +17,12 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 import { SpaceForm } from "./SpaceForm";
 
@@ -32,6 +38,8 @@ interface LevelAccordionItemProps {
     ) => void;
     addSpace: (floorNumber: number) => void;
     calculateTotalMeters: (floor: Floor) => number;
+    duplicateFloor: (floorNumber: number) => void;
+    deleteSpace: (floorNumber: number, spaceIndex: number) => void; // Nueva función
 }
 
 export function LevelAccordionItem({
@@ -41,6 +49,8 @@ export function LevelAccordionItem({
     updateSpace,
     addSpace,
     calculateTotalMeters,
+    duplicateFloor,
+    deleteSpace, // Nueva función
 }: LevelAccordionItemProps) {
     const [newName, setNewName] = useState(floor.name);
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -51,16 +61,67 @@ export function LevelAccordionItem({
                 <div className="flex w-full items-center justify-between">
                     <span>{floor.name}</span>
                     <div className="flex items-center">
+                        <TooltipProvider>
+                            {/* Botón para editar el nombre del nivel */}
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="ml-2"
+                                        onClick={() => setDialogOpen(true)}
+                                    >
+                                        <Edit2 className="h-4 w-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <span>Editar nivel</span>
+                                </TooltipContent>
+                            </Tooltip>
+
+                            {/* Botón para duplicar el nivel */}
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="ml-2"
+                                        onClick={() =>
+                                            duplicateFloor(floor.number)
+                                        }
+                                    >
+                                        <Copy className="h-4 w-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <span>Duplicar nivel</span>
+                                </TooltipContent>
+                            </Tooltip>
+
+                            {/* Botón para eliminar el nivel */}
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="ml-2"
+                                        onClick={() =>
+                                            deleteFloor(floor.number)
+                                        }
+                                    >
+                                        <Trash className="h-4 w-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <span>Eliminar nivel</span>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+
+                        {/* Dialog para editar el nombre */}
                         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                             <DialogTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="ml-2"
-                                    onClick={() => setDialogOpen(true)}
-                                >
-                                    <Edit2 className="h-4 w-4" />
-                                </Button>
+                                <></>
                             </DialogTrigger>
                             <DialogContent>
                                 <DialogHeader>
@@ -71,7 +132,7 @@ export function LevelAccordionItem({
                                 <Input
                                     value={newName}
                                     onChange={(e) => setNewName(e.target.value)}
-                                    placeholder="New floor name"
+                                    placeholder="Nuevo nombre del nivel"
                                 />
                                 <div className="mt-4 flex justify-end">
                                     <Button
@@ -99,14 +160,6 @@ export function LevelAccordionItem({
                                 </div>
                             </DialogContent>
                         </Dialog>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            className="ml-2"
-                            onClick={() => deleteFloor(floor.number)}
-                        >
-                            <Trash className="h-4 w-4" />
-                        </Button>
                     </div>
                 </div>
             </AccordionTrigger>
@@ -120,6 +173,7 @@ export function LevelAccordionItem({
                                 floorNumber={floor.number}
                                 environmentIndex={index}
                                 updateEnvironment={updateSpace}
+                                deleteSpace={deleteSpace} // Pasar la función deleteSpace
                             />
                         ))}
                         <Button
