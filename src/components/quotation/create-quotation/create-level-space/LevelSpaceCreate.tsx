@@ -12,7 +12,6 @@ import {
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { Input } from "@/components/ui/input";
 
 import { DesignSummary } from "./DesignSummary";
 import { LevelAccordionItem } from "./LevelAccordionItem";
@@ -28,8 +27,6 @@ export function CreateLevelSpace({
     setFloors,
     calculateTotalBuildingMeters,
 }: CreateLevelSpaceProps) {
-    const [rangeStart, setRangeStart] = useState<number>(2);
-    const [rangeEnd, setRangeEnd] = useState<number>(4);
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
     const addFloor = () => {
@@ -44,18 +41,19 @@ export function CreateLevelSpace({
         ]);
     };
 
-    const addFloorsInRange = () => {
-        const newSpaces = floors[floors.length - 1].spaces;
-        const newFloors = [];
-        for (let i = rangeStart; i <= rangeEnd; i++) {
-            newFloors.push({
-                number: i,
-                name: `Nivel ${i}`,
-                spaces: [...newSpaces],
+    const duplicateFloor = (floorNumber: number) => {
+        const floorToDuplicate = floors.find(
+            (floor) => floor.number === floorNumber,
+        );
+        if (floorToDuplicate) {
+            const newFloor = {
+                ...floorToDuplicate,
+                number: floors.length + 1,
+                name: `${floorToDuplicate.name} (Copia)`,
                 expanded: false,
-            });
+            };
+            setFloors([...floors, newFloor]);
         }
-        setFloors([...floors, ...newFloors]);
     };
 
     const deleteFloor = (floorNumber: number) => {
@@ -109,6 +107,19 @@ export function CreateLevelSpace({
         setFloors(newFloors);
     };
 
+    const deleteSpace = (floorNumber: number, spaceIndex: number) => {
+        const newFloors = floors.map((floor) => {
+            if (floor.number === floorNumber) {
+                const newSpaces = floor.spaces.filter(
+                    (_, index) => index !== spaceIndex,
+                );
+                return { ...floor, spaces: newSpaces };
+            }
+            return floor;
+        });
+        setFloors(newFloors);
+    };
+
     const calculateTotalMeters = (floor: Floor) => {
         return floor.spaces.reduce((total, space) => total + space.meters, 0);
     };
@@ -143,34 +154,7 @@ export function CreateLevelSpace({
                                     <Button onClick={addFloor}>
                                         <Plus className="mr-2" /> Agregar Nivel
                                     </Button>
-                                    <div className="flex items-center gap-2">
-                                        <Input
-                                            type="number"
-                                            value={rangeStart}
-                                            onChange={(e) =>
-                                                setRangeStart(
-                                                    Number(e.target.value),
-                                                )
-                                            }
-                                            className="w-20"
-                                            placeholder="Start"
-                                        />
-                                        <span>a</span>
-                                        <Input
-                                            type="number"
-                                            value={rangeEnd}
-                                            onChange={(e) =>
-                                                setRangeEnd(
-                                                    Number(e.target.value),
-                                                )
-                                            }
-                                            className="w-20"
-                                            placeholder="End"
-                                        />
-                                        <Button onClick={addFloorsInRange}>
-                                            Añadir Rango
-                                        </Button>
-                                    </div>
+                                    {/* Removemos los campos de rango y el botón "Añadir Rango" */}
                                 </div>
                                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                                     <div className="space-y-6">
@@ -191,6 +175,10 @@ export function CreateLevelSpace({
                                                     calculateTotalMeters={
                                                         calculateTotalMeters
                                                     }
+                                                    duplicateFloor={
+                                                        duplicateFloor
+                                                    } // Pasamos la función aquí
+                                                    deleteSpace={deleteSpace} // Pasamos la función aquí
                                                 />
                                             ))}
                                         </Accordion>
