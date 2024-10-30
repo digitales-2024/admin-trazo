@@ -73,7 +73,7 @@ export const quotationsColumns = (
 
         {
             id: "metrado",
-            accessorKey: "metrado",
+            accessorKey: "metering",
             header: ({ column }) => (
                 <DataTableColumnHeader column={column} title="Metrado" />
             ),
