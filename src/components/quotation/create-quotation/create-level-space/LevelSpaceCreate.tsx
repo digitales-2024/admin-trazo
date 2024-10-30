@@ -17,10 +17,17 @@ import { Input } from "@/components/ui/input";
 import { DesignSummary } from "./DesignSummary";
 import { LevelAccordionItem } from "./LevelAccordionItem";
 
-export function CreateLevelSpace() {
-    const [floors, setFloors] = useState<Floor[]>([
-        { number: 1, name: "Nivel 1", spaces: [], expanded: true },
-    ]);
+interface CreateLevelSpaceProps {
+    floors: Floor[];
+    setFloors: React.Dispatch<React.SetStateAction<Floor[]>>;
+    calculateTotalBuildingMeters: () => number;
+}
+
+export function CreateLevelSpace({
+    floors,
+    setFloors,
+    calculateTotalBuildingMeters,
+}: CreateLevelSpaceProps) {
     const [rangeStart, setRangeStart] = useState<number>(2);
     const [rangeEnd, setRangeEnd] = useState<number>(4);
     const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -104,13 +111,6 @@ export function CreateLevelSpace() {
 
     const calculateTotalMeters = (floor: Floor) => {
         return floor.spaces.reduce((total, space) => total + space.meters, 0);
-    };
-
-    const calculateTotalBuildingMeters = () => {
-        return floors.reduce(
-            (total, floor) => total + calculateTotalMeters(floor),
-            0,
-        );
     };
 
     return (
