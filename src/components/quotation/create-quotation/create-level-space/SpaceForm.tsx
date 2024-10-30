@@ -2,10 +2,18 @@
 
 import { useSpaces } from "@/hooks/use-space";
 import { Space } from "@/types";
+import { Trash } from "lucide-react";
 import * as React from "react";
 
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 import { Combobox } from "./ComboboxSpace";
 
@@ -19,6 +27,7 @@ interface EnvironmentFormProps {
         field: "name" | "meters" | "amount",
         value: string | number,
     ) => void;
+    deleteSpace: (floorNumber: number, environmentIndex: number) => void;
 }
 
 export function SpaceForm({
@@ -26,6 +35,7 @@ export function SpaceForm({
     floorNumber,
     environmentIndex,
     updateEnvironment,
+    deleteSpace,
 }: EnvironmentFormProps) {
     const { dataSpacesAll = [] } = useSpaces();
     const [selectedSpace, setSelectedSpace] = React.useState(space.name);
@@ -45,7 +55,7 @@ export function SpaceForm({
     };
 
     return (
-        <div className="grid grid-flow-row items-center gap-4 lg:grid-cols-6">
+        <div className="flex items-center gap-4 lg:grid-cols-6">
             <div className="w-full">
                 <Label htmlFor={`amount-${floorNumber}-${environmentIndex}`}>
                     Cantidad
@@ -64,21 +74,19 @@ export function SpaceForm({
                 >
                     Nombre
                 </Label>
-                <div className="col-span-3">
-                    <Combobox
-                        dataSpacesAll={dataSpacesAll}
-                        value={selectedSpace}
-                        setValue={(value) => {
-                            setSelectedSpace(value);
-                            updateEnvironment(
-                                floorNumber,
-                                environmentIndex,
-                                "name",
-                                value,
-                            );
-                        }}
-                    />
-                </div>
+                <Combobox
+                    dataSpacesAll={dataSpacesAll}
+                    value={selectedSpace}
+                    setValue={(value) => {
+                        setSelectedSpace(value);
+                        updateEnvironment(
+                            floorNumber,
+                            environmentIndex,
+                            "name",
+                            value,
+                        );
+                    }}
+                />
             </div>
             <div className="col-span-2">
                 <Label htmlFor={`meters-${floorNumber}-${environmentIndex}`}>
@@ -92,6 +100,25 @@ export function SpaceForm({
                     placeholder="m²"
                 />
             </div>
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="ml-2"
+                            onClick={() =>
+                                deleteSpace(floorNumber, environmentIndex)
+                            }
+                        >
+                            <Trash className="h-4 w-4" />
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <span>Eliminar ambiente</span>
+                    </TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
         </div>
     );
 }
