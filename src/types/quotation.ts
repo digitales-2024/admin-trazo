@@ -16,7 +16,7 @@ export type Quotation = {
     structuralCost: number;
     electricCost: number;
     sanitaryCost: number;
-    metrado: number;
+    metering: number;
     createdAt: string;
     updatedAt: string;
 };

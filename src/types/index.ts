@@ -13,3 +13,4 @@ export type { Spaces } from "./spaces";
 export type { Quotation } from "./quotation";
 export { QuotationStatusType } from "./quotation";
 export type { Space, Floor } from "./floor";
+export type { IntegralProjectItem, Costs } from "./integralProjectQuotation";
