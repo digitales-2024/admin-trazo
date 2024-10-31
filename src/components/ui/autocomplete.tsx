@@ -118,7 +118,7 @@ export const AutoComplete = ({
                     )}
                 >
                     <ScrollArea className="h-[10rem]">
-                        <CommandList className="h-full rounded-lg ring-1 ring-slate-200">
+                        <CommandList className="h-full rounded-lg capitalize ring-1 ring-slate-200">
                             {isLoading ? (
                                 <CommandPrimitive.Loading>
                                     <div className="p-1">
