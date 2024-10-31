@@ -33,7 +33,7 @@ interface LevelAccordionItemProps {
     updateSpace: (
         floorNumber: number,
         spaceIndex: number,
-        field: "name" | "meters" | "amount" | "selected",
+        field: "name" | "meters" | "amount" | "selected" | "spaceId",
         value: string | number | boolean,
     ) => void;
     addSpace: (floorNumber: number) => void;
