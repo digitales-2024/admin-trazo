@@ -48,8 +48,8 @@ export default function IntegralProject({ area }: IntegralProjectProps) {
         Object.values(costs).reduce((sum, cost) => sum + cost, 0) * area;
 
     useEffect(() => {
-        const totalWithDiscount = discount;
-        setTotalCost(totalWithDiscount * exchangeRate);
+        const totalWithDiscount = (subtotal - discount) * exchangeRate;
+        setTotalCost(totalWithDiscount);
     }, [costs, area, discount, exchangeRate, subtotal]);
 
     const handleCostChange = (project: keyof Costs, value: string) => {
