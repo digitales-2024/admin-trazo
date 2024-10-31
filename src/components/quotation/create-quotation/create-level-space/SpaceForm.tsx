@@ -1,3 +1,5 @@
+// SpaceForm.tsx
+
 "use client";
 
 import { useSpaces } from "@/hooks/use-space";
@@ -16,7 +18,7 @@ interface EnvironmentFormProps {
     updateEnvironment: (
         floorNumber: number,
         environmentIndex: number,
-        field: "name" | "meters" | "amount" | "selected",
+        field: "name" | "meters" | "amount" | "selected" | "spaceId",
         value: string | number | boolean,
     ) => void;
 }
@@ -28,9 +30,14 @@ export function SpaceForm({
     updateEnvironment,
 }: EnvironmentFormProps) {
     const { dataSpacesAll = [] } = useSpaces();
-    const [selectedSpace, setSelectedSpace] = React.useState(space.name);
-    const [amount, setAmount] = React.useState(space.amount || 1);
-    const [meters, setMeters] = React.useState(space.meters);
+    const [selectedSpaceId, setSelectedSpaceId] = React.useState<string>(
+        space.spaceId || "",
+    );
+    const [selectedSpaceName, setSelectedSpaceName] = React.useState<string>(
+        space.name,
+    );
+    const [amount, setAmount] = React.useState<number>(space.amount || 1);
+    const [meters, setMeters] = React.useState<number>(space.meters);
     const [isSelected, setIsSelected] = React.useState<boolean>(
         space.selected || false,
     );
@@ -51,10 +58,21 @@ export function SpaceForm({
         updateEnvironment(floorNumber, environmentIndex, "meters", value);
     };
 
-    // Ajuste del manejador para onCheckedChange
     const handleCheckboxChange = (checked: boolean) => {
         setIsSelected(checked);
         updateEnvironment(floorNumber, environmentIndex, "selected", checked);
+    };
+
+    const handleSpaceChange = (option: { value: string; label: string }) => {
+        setSelectedSpaceId(option.value);
+        setSelectedSpaceName(option.label);
+        updateEnvironment(
+            floorNumber,
+            environmentIndex,
+            "spaceId",
+            option.value,
+        );
+        updateEnvironment(floorNumber, environmentIndex, "name", option.label);
     };
 
     return (
@@ -85,31 +103,23 @@ export function SpaceForm({
                 <div className="w-full">
                     <Label
                         className="truncate"
-                        htmlFor={`environment-${floorNumber}-${environmentIndex}`}
+                        htmlFor={`space-${floorNumber}-${environmentIndex}`}
                     >
-                        Nombre
+                        Espacio
                     </Label>
 
                     <AutoComplete
-                        options={dataSpacesAll.map((space) => ({
-                            value: space.name,
-                            label: space.name,
+                        options={dataSpacesAll.map((spaceItem) => ({
+                            value: spaceItem.id,
+                            label: spaceItem.name,
                         }))}
                         placeholder="Selecciona un espacio"
                         emptyMessage="No se encontraron espacios"
                         value={{
-                            value: selectedSpace,
-                            label: selectedSpace,
+                            value: selectedSpaceId,
+                            label: selectedSpaceName,
                         }}
-                        onValueChange={(option) => {
-                            setSelectedSpace(option.value);
-                            updateEnvironment(
-                                floorNumber,
-                                environmentIndex,
-                                "name",
-                                option.value,
-                            );
-                        }}
+                        onValueChange={handleSpaceChange}
                         className="z-50"
                     />
                 </div>
