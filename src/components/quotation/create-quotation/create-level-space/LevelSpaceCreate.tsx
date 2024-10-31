@@ -2,7 +2,7 @@
 
 import { Floor } from "@/types";
 import { Plus, ChevronDown, ChevronUp, BrickWall } from "lucide-react";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 import { Accordion } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
@@ -81,7 +81,7 @@ export function CreateLevelSpace({
                     spaces: [
                         ...floor.spaces,
                         {
-                            id: "",
+                            spaceId: "",
                             name: "",
                             meters: 0,
                             amount: 1,
@@ -95,26 +95,31 @@ export function CreateLevelSpace({
         setFloors(newFloors);
     };
 
-    const updateSpace = (
-        floorNumber: number,
-        spaceIndex: number,
-        field: "name" | "meters" | "amount" | "selected",
-        value: string | number | boolean,
-    ) => {
-        const newFloors = floors.map((floor) => {
-            if (floor.number === floorNumber) {
-                const newSpaces = floor.spaces.map((space, index) => {
-                    if (index === spaceIndex) {
-                        return { ...space, [field]: value };
+    // updateSpace ahora utiliza useCallback para garantizar la consistencia
+    const updateSpace = useCallback(
+        (
+            floorNumber: number,
+            spaceIndex: number,
+            field: "name" | "meters" | "amount" | "selected" | "spaceId",
+            value: string | number | boolean,
+        ) => {
+            setFloors((prevFloors) =>
+                prevFloors.map((floor) => {
+                    if (floor.number === floorNumber) {
+                        const updatedSpaces = floor.spaces.map(
+                            (space, index) =>
+                                index === spaceIndex
+                                    ? { ...space, [field]: value }
+                                    : space,
+                        );
+                        return { ...floor, spaces: updatedSpaces };
                     }
-                    return space;
-                });
-                return { ...floor, spaces: newSpaces };
-            }
-            return floor;
-        });
-        setFloors(newFloors);
-    };
+                    return floor;
+                }),
+            );
+        },
+        [setFloors],
+    );
 
     const changeFloorName = (floorNumber: number, newName: string) => {
         const newFloors = floors.map((floor) => {
