@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 
 import { HeaderPage } from "@/components/common/HeaderPage";
 import { Shell } from "@/components/common/Shell";
+import HeadQuotation from "@/components/quotation/create-quotation/create-head-quotation/HeadQuotation";
 import IntegralProject from "@/components/quotation/create-quotation/create-integral-project/IntegralProject";
 import { CreateLevelSpace } from "@/components/quotation/create-quotation/create-level-space/LevelSpaceCreate";
 import { Button } from "@/components/ui/button";
@@ -42,6 +43,7 @@ export default function CreateQuotationPage() {
                 title="Crear Cotización"
                 description="Complete todos los campos para crear una cotización."
             />
+            <HeadQuotation />
             <CreateLevelSpace
                 floors={floors}
                 setFloors={setFloors}
