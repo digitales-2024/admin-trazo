@@ -1,5 +1,5 @@
 import { Floor } from "@/types";
-import { Edit2, Trash, Plus, Copy } from "lucide-react"; // Importa el icono Copy
+import { Edit2, Trash, Plus, Copy } from "lucide-react";
 import { useState } from "react";
 
 import {
@@ -19,9 +19,9 @@ import {
 import { Input } from "@/components/ui/input";
 import {
     Tooltip,
-    TooltipContent,
     TooltipProvider,
     TooltipTrigger,
+    TooltipContent,
 } from "@/components/ui/tooltip";
 
 import { SpaceForm } from "./SpaceForm";
@@ -33,13 +33,13 @@ interface LevelAccordionItemProps {
     updateSpace: (
         floorNumber: number,
         spaceIndex: number,
-        field: "name" | "meters" | "amount",
-        value: string | number,
+        field: "name" | "meters" | "amount" | "selected",
+        value: string | number | boolean,
     ) => void;
     addSpace: (floorNumber: number) => void;
     calculateTotalMeters: (floor: Floor) => number;
     duplicateFloor: (floorNumber: number) => void;
-    deleteSpace: (floorNumber: number, spaceIndex: number) => void; // Nueva función
+    deleteSelectedSpaces: (floorNumber: number) => void;
 }
 
 export function LevelAccordionItem({
@@ -50,13 +50,21 @@ export function LevelAccordionItem({
     addSpace,
     calculateTotalMeters,
     duplicateFloor,
-    deleteSpace, // Nueva función
+    deleteSelectedSpaces,
 }: LevelAccordionItemProps) {
     const [newName, setNewName] = useState(floor.name);
     const [dialogOpen, setDialogOpen] = useState(false);
 
+    const selectedSpacesCount = floor.spaces.filter(
+        (space) => space.selected,
+    ).length;
+
     return (
-        <AccordionItem key={floor.number} value={`floor-${floor.number}`}>
+        <AccordionItem
+            key={floor.number}
+            value={`floor-${floor.number}`}
+            className=""
+        >
             <AccordionTrigger>
                 <div className="flex w-full items-center justify-between">
                     <span>{floor.name}</span>
@@ -163,9 +171,28 @@ export function LevelAccordionItem({
                     </div>
                 </div>
             </AccordionTrigger>
-            <AccordionContent>
+            <AccordionContent className="z-[999] h-fit">
                 <Card>
-                    <CardContent className="pt-6">
+                    <CardContent className="p-4">
+                        <div className="mb-6">
+                            <div className="flex flex-col gap-4 xl:flex-row">
+                                <Button onClick={() => addSpace(floor.number)}>
+                                    <Plus className="mr-2" /> Añadir ambiente
+                                </Button>
+                                {selectedSpacesCount > 0 && (
+                                    <Button
+                                        variant="destructive"
+                                        onClick={() =>
+                                            deleteSelectedSpaces(floor.number)
+                                        }
+                                    >
+                                        <Trash className="mr-2" />
+                                        Eliminar ambientes (
+                                        {selectedSpacesCount})
+                                    </Button>
+                                )}
+                            </div>
+                        </div>
                         {floor.spaces.map((space, index) => (
                             <SpaceForm
                                 key={index}
@@ -173,15 +200,8 @@ export function LevelAccordionItem({
                                 floorNumber={floor.number}
                                 environmentIndex={index}
                                 updateEnvironment={updateSpace}
-                                deleteSpace={deleteSpace} // Pasar la función deleteSpace
                             />
                         ))}
-                        <Button
-                            onClick={() => addSpace(floor.number)}
-                            className="mt-4 w-full"
-                        >
-                            <Plus className="mr-2" /> Añadir ambiente
-                        </Button>
                         <div className="mt-4 text-right">
                             <strong>
                                 Total m² del nivel:{" "}
