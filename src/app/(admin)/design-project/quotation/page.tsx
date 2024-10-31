@@ -11,7 +11,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function QuotationPage() {
     const { dataQuotationsAll, isLoading } = useQuotations();
-    console.log(dataQuotationsAll);
 
     if (isLoading) {
         return (

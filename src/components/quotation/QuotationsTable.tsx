@@ -11,7 +11,6 @@ import { QuotationTableToolbarActions } from "./QuotationTableToolbarActions";
 
 export function QuotationsTable({ data }: { data: Quotation[] }) {
     const { user } = useProfile();
-    console.log(data);
 
     const columns = useMemo(
         () => quotationsColumns(user?.isSuperAdmin || false),
