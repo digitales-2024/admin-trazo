@@ -13,7 +13,7 @@ export type { Spaces } from "./spaces";
 export type {
     Quotation,
     HeadQuotation,
-    Level,
+    LevelQuotation,
     SpaceQuotation,
 } from "./quotation";
 export { QuotationStatusType } from "./quotation";

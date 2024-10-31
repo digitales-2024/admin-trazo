@@ -1,5 +1,5 @@
 export interface Space {
-    id: string;
+    spaceId: string;
     name: string;
     meters: number;
     amount: number;

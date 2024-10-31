@@ -39,7 +39,7 @@ export type HeadQuotation = {
     idClient: string;
 };
 
-export type Level = {
+export type LevelQuotation = {
     name: string;
     spaces: SpaceQuotation[];
 };
