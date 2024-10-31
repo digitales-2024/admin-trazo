@@ -3,6 +3,7 @@ export interface Space {
     name: string;
     meters: number;
     amount: number;
+    selected?: boolean;
 }
 
 export interface Floor {
