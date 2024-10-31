@@ -10,7 +10,12 @@ export type {
 export type { Client, ClientWithDescription } from "./client";
 export type { City } from "./city";
 export type { Spaces } from "./spaces";
-export type { Quotation } from "./quotation";
+export type {
+    Quotation,
+    HeadQuotation,
+    Level,
+    SpaceQuotation,
+} from "./quotation";
 export { QuotationStatusType } from "./quotation";
 export type { Space, Floor } from "./floor";
 export type {

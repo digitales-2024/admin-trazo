@@ -2,8 +2,8 @@ export type Quotation = {
     id: string;
     name: string;
     code: string;
+    description: string;
     client: Client;
-    user: User;
     status: string;
     discount: number;
     totalAmount: number;
@@ -24,12 +24,28 @@ export type Client = {
     id: string;
     name: string;
 };
-export type User = {
-    id: string;
-    name: string;
-};
+
 export enum QuotationStatusType {
     PENDING = "PENDING",
     APPROVED = "APPROVED",
     REJECTED = "REJECTED",
 }
+
+export type HeadQuotation = {
+    name: string;
+    description: string;
+    deliveryTime: number;
+    landArea: number;
+    idClient: string;
+};
+
+export type Level = {
+    name: string;
+    spaces: SpaceQuotation[];
+};
+
+export type SpaceQuotation = {
+    amount: number;
+    area: number;
+    spaceId: string;
+};
