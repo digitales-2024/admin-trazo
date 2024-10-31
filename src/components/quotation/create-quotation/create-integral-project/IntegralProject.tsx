@@ -44,12 +44,13 @@ export default function IntegralProject({ area }: IntegralProjectProps) {
     const [exchangeRate, setExchangeRate] = useState(3.5);
     const [totalCost, setTotalCost] = useState(0);
 
+    const subtotal =
+        Object.values(costs).reduce((sum, cost) => sum + cost, 0) * area;
+
     useEffect(() => {
-        const subtotal =
-            Object.values(costs).reduce((sum, cost) => sum + cost, 0) * area;
-        const totalWithDiscount = subtotal - (subtotal * discount) / 100;
+        const totalWithDiscount = discount;
         setTotalCost(totalWithDiscount * exchangeRate);
-    }, [costs, area, discount, exchangeRate]);
+    }, [costs, area, discount, exchangeRate, subtotal]);
 
     const handleCostChange = (project: keyof Costs, value: string) => {
         setCosts((prev) => ({ ...prev, [project]: parseFloat(value) || 0 }));
@@ -175,6 +176,7 @@ export default function IntegralProject({ area }: IntegralProjectProps) {
                                     costs={costs}
                                     discount={discount}
                                     exchangeRate={exchangeRate}
+                                    subtotal={subtotal}
                                     totalCost={totalCost}
                                     setDiscount={setDiscount}
                                     setExchangeRate={setExchangeRate}
