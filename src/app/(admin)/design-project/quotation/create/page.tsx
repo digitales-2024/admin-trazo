@@ -1,6 +1,7 @@
 "use client";
 import { Floor } from "@/types";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
 
 import { HeaderPage } from "@/components/common/HeaderPage";
 import { Shell } from "@/components/common/Shell";
@@ -13,6 +14,13 @@ export default function CreateQuotationPage() {
         { number: 1, name: "Nivel 1", spaces: [], expanded: true },
     ]);
 
+    const [isClient, setIsClient] = useState(false);
+    const router = useRouter();
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
     const calculateTotalBuildingMeters = () => {
         return floors.reduce(
             (total, floor) =>
@@ -20,6 +28,12 @@ export default function CreateQuotationPage() {
                 floor.spaces.reduce((sum, space) => sum + space.meters, 0),
             0,
         );
+    };
+
+    const handleBack = () => {
+        if (isClient) {
+            router.push("/design-project/quotation");
+        }
     };
 
     return (
@@ -34,7 +48,12 @@ export default function CreateQuotationPage() {
                 calculateTotalBuildingMeters={calculateTotalBuildingMeters}
             />
             <IntegralProject area={calculateTotalBuildingMeters()} />
-            <Button>Crear Cotización</Button>
+            <div className="flex justify-end gap-4">
+                <Button variant={"destructive"} onClick={handleBack}>
+                    Cancelar
+                </Button>
+                <Button variant={"normal"}>Crear Cotización</Button>
+            </div>
         </Shell>
     );
 }
