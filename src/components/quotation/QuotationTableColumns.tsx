@@ -119,27 +119,6 @@ export const quotationsColumns = (
         },
 
         {
-            id: "usuario",
-            accessorKey: "user.name",
-            header: ({ column }) => (
-                <DataTableColumnHeader column={column} title="Usuario" />
-            ),
-            cell: ({ row }) => {
-                const userName = row.getValue("usuario") as string;
-                return (
-                    <div className="flex justify-center">
-                        <Badge
-                            variant="outline"
-                            className="truncate capitalize"
-                        >
-                            {userName}
-                        </Badge>
-                    </div>
-                );
-            },
-        },
-
-        {
             id: "estado",
             accessorKey: "status",
             header: ({ column }) => (
