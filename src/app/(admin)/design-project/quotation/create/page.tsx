@@ -6,6 +6,7 @@ import { HeaderPage } from "@/components/common/HeaderPage";
 import { Shell } from "@/components/common/Shell";
 import IntegralProject from "@/components/quotation/create-quotation/create-integral-project/IntegralProject";
 import { CreateLevelSpace } from "@/components/quotation/create-quotation/create-level-space/LevelSpaceCreate";
+import { Button } from "@/components/ui/button";
 
 export default function CreateQuotationPage() {
     const [floors, setFloors] = useState<Floor[]>([
@@ -33,6 +34,7 @@ export default function CreateQuotationPage() {
                 calculateTotalBuildingMeters={calculateTotalBuildingMeters}
             />
             <IntegralProject area={calculateTotalBuildingMeters()} />
+            <Button>Crear Cotización</Button>
         </Shell>
     );
 }
