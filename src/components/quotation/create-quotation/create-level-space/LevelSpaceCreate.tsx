@@ -41,6 +41,19 @@ export function CreateLevelSpace({
         ]);
     };
 
+    const deleteSelectedSpaces = (floorNumber: number) => {
+        const newFloors = floors.map((floor) => {
+            if (floor.number === floorNumber) {
+                return {
+                    ...floor,
+                    spaces: floor.spaces.filter((space) => !space.selected),
+                };
+            }
+            return floor;
+        });
+        setFloors(newFloors);
+    };
+
     const duplicateFloor = (floorNumber: number) => {
         const floorToDuplicate = floors.find(
             (floor) => floor.number === floorNumber,
@@ -67,7 +80,13 @@ export function CreateLevelSpace({
                     ...floor,
                     spaces: [
                         ...floor.spaces,
-                        { id: "", name: "", meters: 0, amount: 1 },
+                        {
+                            id: "",
+                            name: "",
+                            meters: 0,
+                            amount: 1,
+                            selected: false,
+                        },
                     ],
                 };
             }
@@ -79,8 +98,8 @@ export function CreateLevelSpace({
     const updateSpace = (
         floorNumber: number,
         spaceIndex: number,
-        field: "name" | "meters" | "amount",
-        value: string | number,
+        field: "name" | "meters" | "amount" | "selected",
+        value: string | number | boolean,
     ) => {
         const newFloors = floors.map((floor) => {
             if (floor.number === floorNumber) {
@@ -107,21 +126,11 @@ export function CreateLevelSpace({
         setFloors(newFloors);
     };
 
-    const deleteSpace = (floorNumber: number, spaceIndex: number) => {
-        const newFloors = floors.map((floor) => {
-            if (floor.number === floorNumber) {
-                const newSpaces = floor.spaces.filter(
-                    (_, index) => index !== spaceIndex,
-                );
-                return { ...floor, spaces: newSpaces };
-            }
-            return floor;
-        });
-        setFloors(newFloors);
-    };
-
     const calculateTotalMeters = (floor: Floor) => {
-        return floor.spaces.reduce((total, space) => total + space.meters, 0);
+        return floor.spaces.reduce(
+            (total, space) => total + space.meters * space.amount,
+            0,
+        );
     };
 
     return (
@@ -154,9 +163,8 @@ export function CreateLevelSpace({
                                     <Button onClick={addFloor}>
                                         <Plus className="mr-2" /> Agregar Nivel
                                     </Button>
-                                    {/* Removemos los campos de rango y el botón "Añadir Rango" */}
                                 </div>
-                                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
                                     <div className="space-y-6">
                                         <Accordion
                                             type="multiple"
@@ -177,8 +185,10 @@ export function CreateLevelSpace({
                                                     }
                                                     duplicateFloor={
                                                         duplicateFloor
-                                                    } // Pasamos la función aquí
-                                                    deleteSpace={deleteSpace} // Pasamos la función aquí
+                                                    }
+                                                    deleteSelectedSpaces={
+                                                        deleteSelectedSpaces
+                                                    }
                                                 />
                                             ))}
                                         </Accordion>
