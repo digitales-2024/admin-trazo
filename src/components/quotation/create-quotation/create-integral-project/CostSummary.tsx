@@ -18,6 +18,7 @@ interface CostSummaryProps {
     discount: number;
     exchangeRate: number;
     totalCost: number;
+    subtotal: number;
     setDiscount: (value: number) => void;
     setExchangeRate: (value: number) => void;
 }
@@ -34,6 +35,7 @@ const CostSummary: React.FC<CostSummaryProps> = ({
     discount,
     exchangeRate,
     totalCost,
+    subtotal,
     setDiscount,
     setExchangeRate,
 }) => (
@@ -62,7 +64,17 @@ const CostSummary: React.FC<CostSummaryProps> = ({
             </Table>
             <div className="mt-6 space-y-4">
                 <div className="flex items-center justify-between">
-                    <Label htmlFor="discount">Descuento (%):</Label>
+                    <Label htmlFor="discount">Costo x m² Proyecto (USD):</Label>
+                    <Input
+                        id="costM2Project"
+                        type="number"
+                        value={subtotal}
+                        className="max-w-[200px]"
+                        disabled
+                    />
+                </div>
+                <div className="flex items-center justify-between">
+                    <Label htmlFor="discount">Descuento (USD):</Label>
                     <Input
                         id="discount"
                         type="number"
@@ -88,7 +100,11 @@ const CostSummary: React.FC<CostSummaryProps> = ({
                     />
                 </div>
                 <div className="flex items-center justify-between font-bold">
-                    <Label>Costo Total (USD):</Label>
+                    <Label>Costo total sin descuento (PEN):</Label>
+                    <span>{(subtotal * exchangeRate).toFixed(2)}</span>
+                </div>
+                <div className="flex items-center justify-between font-bold">
+                    <Label>Costo Total (PEN):</Label>
                     <span>{totalCost.toFixed(2)}</span>
                 </div>
             </div>
