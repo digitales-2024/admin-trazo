@@ -23,6 +23,7 @@ type AutoCompleteProps = {
     isLoading?: boolean;
     disabled?: boolean;
     placeholder?: string;
+    className?: string;
 };
 
 export const AutoComplete = ({
@@ -33,6 +34,7 @@ export const AutoComplete = ({
     onValueChange,
     disabled,
     isLoading = false,
+    className,
 }: AutoCompleteProps) => {
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -104,7 +106,11 @@ export const AutoComplete = ({
                 className="text-sm"
             />
 
-            <div className={cn("relative", isOpen ? "mt-1" : "mt-0")}>
+            <div
+                className={cn("relative", isOpen ? "mt-1" : "mt-0", {
+                    className,
+                })}
+            >
                 <div
                     className={cn(
                         "absolute top-0 z-10 w-full rounded-xl border border-input bg-white shadow outline-none animate-in fade-in-0 zoom-in-95",
