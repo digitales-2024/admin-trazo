@@ -9,3 +9,10 @@ export interface Costs {
     electricCost: number;
     sanitaryCost: number;
 }
+
+export type IntegralProjectDesign = {
+    project: string;
+    items: IntegralProjectItem[];
+    area: number;
+    cost: number;
+};
