@@ -21,7 +21,7 @@ export function DesignSummary({
             </CardHeader>
             <CardContent>
                 <div className="mb-4 flex items-center justify-center">
-                    <Building2 size={100} />
+                    <Building2 size={100} strokeWidth={1} />
                 </div>
                 <div className="space-y-4">
                     {floors.map((floor) => (
