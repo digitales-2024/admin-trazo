@@ -120,7 +120,7 @@ export default function CreateQuotationPage() {
                 ([nombreProyecto, items]) => ({
                     nombreProyecto,
                     items,
-
+                    area,
                     cost: costs[
                         Object.keys(projectNames).find(
                             (key) =>

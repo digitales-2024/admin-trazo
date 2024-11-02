@@ -17,7 +17,7 @@ interface CreateQuotationButtonProps {
         projects: {
             nombreProyecto: string;
             items: IntegralProjectItem[];
-
+            area: number;
             cost: number;
         }[];
     };
