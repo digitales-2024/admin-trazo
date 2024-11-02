@@ -23,6 +23,7 @@ type AutoCompleteProps = {
     isLoading?: boolean;
     disabled?: boolean;
     placeholder?: string;
+    className?: string;
 };
 
 export const AutoComplete = ({
@@ -33,6 +34,7 @@ export const AutoComplete = ({
     onValueChange,
     disabled,
     isLoading = false,
+    className,
 }: AutoCompleteProps) => {
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -101,10 +103,14 @@ export const AutoComplete = ({
                 onFocus={() => setOpen(true)}
                 placeholder={placeholder}
                 disabled={disabled}
-                className="text-sm"
+                className="text-sm capitalize"
             />
 
-            <div className={cn("relative", isOpen ? "mt-1" : "mt-0")}>
+            <div
+                className={cn("relative", isOpen ? "mt-1" : "mt-0", {
+                    className,
+                })}
+            >
                 <div
                     className={cn(
                         "absolute top-0 z-10 w-full rounded-xl border border-input bg-white shadow outline-none animate-in fade-in-0 zoom-in-95",
@@ -112,7 +118,7 @@ export const AutoComplete = ({
                     )}
                 >
                     <ScrollArea className="h-[10rem]">
-                        <CommandList className="h-full rounded-lg ring-1 ring-slate-200">
+                        <CommandList className="h-full rounded-lg capitalize ring-1 ring-slate-200">
                             {isLoading ? (
                                 <CommandPrimitive.Loading>
                                     <div className="p-1">

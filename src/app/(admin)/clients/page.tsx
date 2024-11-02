@@ -9,7 +9,7 @@ import { Shell } from "@/components/common/Shell";
 import { DataTableSkeleton } from "@/components/data-table/DataTableSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function PageUsers() {
+export default function ClientsPage() {
     const { dataClientsAll, isLoading } = useClients();
 
     if (isLoading) {

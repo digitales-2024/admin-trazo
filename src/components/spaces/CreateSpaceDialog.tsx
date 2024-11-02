@@ -1,7 +1,7 @@
 "use client";
 
-import { useSpaces } from "@/hooks/use-space";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { useSpaces } from "@/hooks/use-space";
 import {
     CreateSpacesSchema,
     spacesSchema,

@@ -4,7 +4,6 @@ import localFont from "next/font/local";
 import { Toaster } from "sonner";
 
 import "./globals.css";
-/* import { ApiStatus } from "@/components/common/ApiStatus"; */
 
 const geistSans = localFont({
     src: "./fonts/GeistVF.woff",
@@ -43,7 +42,6 @@ export default function RootLayout({
                     }}
                     closeButton
                 />
-                {/*                <ApiStatus /> */}
                 <Providers>{children}</Providers>
             </body>
         </html>

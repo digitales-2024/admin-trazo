@@ -1,24 +1,23 @@
 "use client";
 "use memo";
 
-import { useSpaces } from "@/hooks/use-space";
-import React from "react";
+import { useQuotations } from "@/hooks/use-quotation";
 
 import { HeaderPage } from "@/components/common/HeaderPage";
 import { Shell } from "@/components/common/Shell";
 import { DataTableSkeleton } from "@/components/data-table/DataTableSkeleton";
-import { SpacesTable } from "@/components/spaces/SpacesTable";
+import { QuotationsTable } from "@/components/quotation/QuotationsTable";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function SpacesPage() {
-    const { dataSpacesAll, isLoading } = useSpaces();
+export default function QuotationPage() {
+    const { dataQuotationsAll, isLoading } = useQuotations();
 
     if (isLoading) {
         return (
             <Shell className="gap-2">
                 <HeaderPage
-                    title="Ambientes"
-                    description="Lista de ambientes registrados en el sistema."
+                    title="Cotizaciones"
+                    description="Lista de cotizaciones registrados en el sistema."
                 />
                 <div className="flex flex-col items-end justify-center gap-4">
                     <Skeleton className="h-7 w-52 justify-end" />
@@ -33,16 +32,16 @@ export default function SpacesPage() {
             </Shell>
         );
     }
-    if (!dataSpacesAll) {
+    if (!dataQuotationsAll) {
         return null;
     }
     return (
         <Shell className="gap-6">
             <HeaderPage
-                title="Ambientes"
-                description="Lista de ambientes registrados en el sistema."
+                title="Cotizaciones"
+                description="Lista de cotizaciones registrados en el sistema."
             />
-            <SpacesTable data={dataSpacesAll} />
+            <QuotationsTable data={dataQuotationsAll} />
         </Shell>
     );
 }

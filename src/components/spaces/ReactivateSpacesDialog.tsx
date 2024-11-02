@@ -1,5 +1,5 @@
-import { useSpaces } from "@/hooks/use-space";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { useSpaces } from "@/hooks/use-space";
 import { Spaces } from "@/types";
 import { Row } from "@tanstack/react-table";
 import { RefreshCcw, RefreshCcwDot } from "lucide-react";
