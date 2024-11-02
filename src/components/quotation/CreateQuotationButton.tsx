@@ -1,6 +1,11 @@
-// CreateQuotationButton.tsx
-
-import { HeadQuotation, LevelQuotation, IntegralProjectItem } from "@/types";
+import { useQuotations } from "@/hooks/use-quotation";
+import {
+    HeadQuotation,
+    LevelQuotation,
+    IntegralProjectItem,
+    QuotationStructure,
+} from "@/types";
+import { PaymentSchedule } from "@/types/quotation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -30,10 +35,17 @@ export default function CreateQuotationButton({
 }: CreateQuotationButtonProps) {
     const [isClient, setIsClient] = useState(false);
     const router = useRouter();
+    const { onCreateQuotation, isSuccessCreateQuotation } = useQuotations();
 
     useEffect(() => {
         setIsClient(true);
     }, []);
+
+    useEffect(() => {
+        if (isSuccessCreateQuotation && isClient) {
+            router.push("/design-project/quotation");
+        }
+    }, [isSuccessCreateQuotation, isClient, router]);
 
     const handleBack = () => {
         if (isClient) {
@@ -46,9 +58,60 @@ export default function CreateQuotationButton({
         const headQuotationData = obtenerHeadQuotation();
         const integralProjectData = getAllDataIntegralProject();
 
-        console.log("Level Space Data:", levelSpaceData);
-        console.log("Head Quotation Data:", headQuotationData);
-        console.log("Integral Project Data:", integralProjectData);
+        const totalCost = integralProjectData.totalCost;
+
+        const paymentSchedule: PaymentSchedule[] = [
+            {
+                name: "INICIAL FIRMA DE CONTRATO",
+                percentage: 30,
+                cost: (totalCost * 30) / 100,
+                description:
+                    "INICIO DE DISEÑO APROBACIÓN PROPIETARIO DE DISEÑO PARA INICIAR INGENIERÍA",
+            },
+            {
+                name: "APROBACION DEL ANTEPROYECTO",
+                percentage: 50,
+                cost: (totalCost * 50) / 100,
+            },
+            {
+                name: "ENTREGA DE EXPEDIENTE TECNICO",
+                percentage: 20,
+                cost: (totalCost * 20) / 100,
+            },
+        ];
+
+        const architecturalCost = integralProjectData.projects[0]?.cost || 0;
+        const structuralCost = integralProjectData.projects[1]?.cost || 0;
+        const electricCost = integralProjectData.projects[2]?.cost || 0;
+        const sanitaryCost = integralProjectData.projects[3]?.cost || 0;
+
+        const quotation: QuotationStructure = {
+            name: headQuotationData.name,
+            code: "SGC-P-04-F3",
+            description: headQuotationData.description,
+            discount: integralProjectData.discount,
+            deliveryTime: headQuotationData.deliveryTime,
+            exchangeRate: integralProjectData.exchangeRate,
+            landArea: headQuotationData.landArea,
+            paymentSchedule: paymentSchedule,
+            integratedProjectDetails: integralProjectData.projects.map(
+                (proj) => ({
+                    project: proj.nombreProyecto,
+                    items: proj.items,
+                    area: proj.area,
+                    cost: proj.cost,
+                }),
+            ),
+            architecturalCost: architecturalCost,
+            structuralCost: structuralCost,
+            electricCost: electricCost,
+            sanitaryCost: sanitaryCost,
+            metering: integralProjectData.area,
+            levels: levelSpaceData,
+            clientId: headQuotationData.idClient,
+        };
+
+        onCreateQuotation(quotation);
     };
 
     return (
