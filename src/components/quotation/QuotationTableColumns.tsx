@@ -188,7 +188,7 @@ export const quotationsColumns = (
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 {isSuperAdmin && (
-                                    <DropdownMenuItem disabled={status}>
+                                    <DropdownMenuItem /* disabled={status} */>
                                         Reactivar
                                         <DropdownMenuShortcut>
                                             <RefreshCcwDot
