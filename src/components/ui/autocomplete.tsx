@@ -103,7 +103,7 @@ export const AutoComplete = ({
                 onFocus={() => setOpen(true)}
                 placeholder={placeholder}
                 disabled={disabled}
-                className="text-sm"
+                className="text-sm capitalize"
             />
 
             <div
