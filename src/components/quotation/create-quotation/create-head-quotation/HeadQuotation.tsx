@@ -1,5 +1,3 @@
-// HeadQuotation.tsx
-
 import { useClients } from "@/hooks/use-client";
 import {
     Captions,
