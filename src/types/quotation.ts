@@ -44,6 +44,7 @@ export type HeadQuotation = {
 
 export type QuotationStructure = {
     name: string;
+    code: string;
     description: string;
     discount: number;
     deliveryTime: number;
@@ -56,7 +57,8 @@ export type QuotationStructure = {
     electricCost: number;
     sanitaryCost: number;
     metering: number;
-    level: LevelQuotation[];
+    levels: LevelQuotation[];
+    clientId: string;
 };
 
 export type LevelQuotation = {
