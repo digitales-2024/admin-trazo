@@ -1,5 +1,6 @@
+// HeadQuotation.tsx
+
 import { useClients } from "@/hooks/use-client";
-import type { HeadQuotation } from "@/types";
 import {
     Captions,
     ChevronDown,
@@ -14,7 +15,6 @@ import { useState } from "react";
 import * as React from "react";
 
 import { AutoComplete } from "@/components/ui/autocomplete";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
     Collapsible,
@@ -26,14 +26,33 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
 
-export default function HeadQuotation() {
+interface HeadQuotationProps {
+    meses: number;
+    setMeses: React.Dispatch<React.SetStateAction<number>>;
+    selectedClient: string;
+    setSelectedClient: React.Dispatch<React.SetStateAction<string>>;
+    projectName: string;
+    setProjectName: React.Dispatch<React.SetStateAction<string>>;
+    landArea: number;
+    setLandArea: React.Dispatch<React.SetStateAction<number>>;
+    description: string;
+    setDescription: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export default function HeadQuotation({
+    meses,
+    setMeses,
+    selectedClient,
+    setSelectedClient,
+    projectName,
+    setProjectName,
+    landArea,
+    setLandArea,
+    description,
+    setDescription,
+}: HeadQuotationProps) {
     const [isOpen, setIsOpen] = useState<boolean>(true);
-    const [meses, setMeses] = useState<number>(1);
     const { dataClientsAll } = useClients();
-    const [selectedClient, setSelectedClient] = React.useState<string>("");
-    const [projectName, setProjectName] = useState<string>("");
-    const [landArea, setLandArea] = useState<number>(0);
-    const [description, setDescription] = useState<string>("");
 
     return (
         <Card>
@@ -41,19 +60,18 @@ export default function HeadQuotation() {
                 <CollapsibleTrigger asChild>
                     <CardHeader className="" onClick={() => setIsOpen(!isOpen)}>
                         <div className="flex w-full justify-between">
-                            <Button
-                                variant={"withoutline"}
+                            <div
                                 className="flex w-full cursor-pointer items-center justify-between"
                                 onClick={() => setIsOpen(!isOpen)}
                             >
                                 <div className="flex items-center gap-2">
-                                    <Captions size={54} />
+                                    <Captions size={28} strokeWidth={1.5} />
                                     <span className="text-xl font-bold text-gray-900">
                                         Cabecera de la Cotización
                                     </span>
                                 </div>
                                 {isOpen ? <ChevronUp /> : <ChevronDown />}
-                            </Button>
+                            </div>
                         </div>
                     </CardHeader>
                 </CollapsibleTrigger>
@@ -128,7 +146,7 @@ export default function HeadQuotation() {
                                                 id="plazo"
                                                 min={1}
                                                 max={36}
-                                                value={[meses]} // Ajusta el valor a un array de números
+                                                value={[meses]}
                                                 onValueChange={(value) =>
                                                     setMeses(value[0])
                                                 }

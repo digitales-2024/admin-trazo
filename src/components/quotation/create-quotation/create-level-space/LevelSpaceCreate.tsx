@@ -1,6 +1,6 @@
 "use client";
 
-import { Floor } from "@/types";
+import { Floor, LevelQuotation } from "@/types";
 import { Plus, ChevronDown, ChevronUp, BrickWall } from "lucide-react";
 import { useState, useCallback } from "react";
 
@@ -20,6 +20,17 @@ interface CreateLevelSpaceProps {
     floors: Floor[];
     setFloors: React.Dispatch<React.SetStateAction<Floor[]>>;
     calculateTotalBuildingMeters: () => number;
+}
+
+export function extractData(floors: Floor[]): LevelQuotation[] {
+    return floors.map((floor) => ({
+        name: floor.name,
+        spaces: floor.spaces.map((space) => ({
+            amount: space.amount,
+            area: space.meters * space.amount,
+            spaceId: space.spaceId || "",
+        })),
+    }));
 }
 
 export function CreateLevelSpace({
@@ -95,7 +106,6 @@ export function CreateLevelSpace({
         setFloors(newFloors);
     };
 
-    // updateSpace ahora utiliza useCallback para garantizar la consistencia
     const updateSpace = useCallback(
         (
             floorNumber: number,
@@ -142,21 +152,20 @@ export function CreateLevelSpace({
         <Card>
             <Collapsible open={isOpen} onOpenChange={setIsOpen}>
                 <CollapsibleTrigger asChild>
-                    <CardHeader className="" onClick={() => setIsOpen(!isOpen)}>
+                    <CardHeader>
                         <div className="flex w-full justify-between">
-                            <Button
-                                variant={"withoutline"}
+                            <div
                                 className="flex w-full cursor-pointer items-center justify-between"
                                 onClick={() => setIsOpen(!isOpen)}
                             >
                                 <div className="flex items-center gap-2">
-                                    <BrickWall size={54} />
+                                    <BrickWall size={28} strokeWidth={1.5} />
                                     <span className="text-xl font-bold text-gray-900">
                                         Definir niveles y ambientes
                                     </span>
                                 </div>
                                 {isOpen ? <ChevronUp /> : <ChevronDown />}
-                            </Button>
+                            </div>
                         </div>
                     </CardHeader>
                 </CollapsibleTrigger>

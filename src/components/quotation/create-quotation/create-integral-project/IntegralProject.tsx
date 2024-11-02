@@ -1,8 +1,10 @@
+// IntegralProject.tsx
+
 "use client";
 
 import { Costs, IntegralProjectItem } from "@/types";
 import { ChevronDown, ChevronUp, PencilRuler } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import {
     Accordion,
@@ -10,7 +12,6 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
     Collapsible,
@@ -21,6 +22,16 @@ import {
 import CostSummary from "./CostSummary";
 import IntegralProjectTable from "./IntegralProjectTable";
 
+interface IntegralProjectProps {
+    area: number;
+    costs: Costs;
+    setCosts: React.Dispatch<React.SetStateAction<Costs>>;
+    discount: number;
+    setDiscount: React.Dispatch<React.SetStateAction<number>>;
+    exchangeRate: number;
+    setExchangeRate: React.Dispatch<React.SetStateAction<number>>;
+}
+
 const projectNames: { [key in keyof Costs]: string } = {
     architecturalCost: "Proyecto Arquitectónico",
     structuralCost: "Proyecto Estructural",
@@ -28,29 +39,20 @@ const projectNames: { [key in keyof Costs]: string } = {
     sanitaryCost: "Proyecto de Instalaciones Sanitarias",
 };
 
-interface IntegralProjectProps {
-    area: number;
-}
-
-export default function IntegralProject({ area }: IntegralProjectProps) {
+export default function IntegralProject({
+    area,
+    costs,
+    setCosts,
+    discount,
+    setDiscount,
+    exchangeRate,
+    setExchangeRate,
+}: IntegralProjectProps) {
     const [isOpen, setIsOpen] = useState<boolean>(true);
-    const [costs, setCosts] = useState<Costs>({
-        architecturalCost: 0,
-        structuralCost: 0,
-        electricCost: 0,
-        sanitaryCost: 0,
-    });
-    const [discount, setDiscount] = useState(0);
-    const [exchangeRate, setExchangeRate] = useState(3.5);
-    const [totalCost, setTotalCost] = useState(0);
 
     const subtotal =
         Object.values(costs).reduce((sum, cost) => sum + cost, 0) * area;
-
-    useEffect(() => {
-        const totalWithDiscount = (subtotal - discount) * exchangeRate;
-        setTotalCost(totalWithDiscount);
-    }, [costs, area, discount, exchangeRate, subtotal]);
+    const totalCost = discount * exchangeRate;
 
     const handleCostChange = (project: keyof Costs, value: string) => {
         setCosts((prev) => ({ ...prev, [project]: parseFloat(value) || 0 }));
@@ -62,10 +64,7 @@ export default function IntegralProject({ area }: IntegralProjectProps) {
                 description: "Plano de Ubicación y Localización",
                 unit: "escala 1/1000",
             },
-            {
-                description: "Plano de Diferentes Niveles",
-                unit: "escala 1/50",
-            },
+            { description: "Plano de Diferentes Niveles", unit: "escala 1/50" },
             { description: "Plano de Elevaciones", unit: "escala 1/50" },
             { description: "Plano de Cortes", unit: "escala 1/50" },
             { description: "Memoria Descriptiva", unit: "" },
@@ -83,22 +82,13 @@ export default function IntegralProject({ area }: IntegralProjectProps) {
             { description: "Memoria Descriptiva", unit: "" },
         ],
         "Proyecto de Instalaciones Eléctricas": [
-            {
-                description: "Planos de Tendido Eléctrico",
-                unit: "escala 1/50",
-            },
+            { description: "Planos de Tendido Eléctrico", unit: "escala 1/50" },
             { description: "Cálculo Eléctrico", unit: "" },
             { description: "Memoria Justificativa", unit: "" },
         ],
         "Proyecto de Instalaciones Sanitarias": [
-            {
-                description: "Planos de Tendido Sanitario",
-                unit: "escala 1/50",
-            },
-            {
-                description: "Planos de Agua y Desagüe",
-                unit: "escala 1/50",
-            },
+            { description: "Planos de Tendido Sanitario", unit: "escala 1/50" },
+            { description: "Planos de Agua y Desagüe", unit: "escala 1/50" },
             { description: "Memoria Justificativa", unit: "" },
         ],
     };
@@ -107,21 +97,20 @@ export default function IntegralProject({ area }: IntegralProjectProps) {
         <Card>
             <Collapsible open={isOpen} onOpenChange={setIsOpen}>
                 <CollapsibleTrigger asChild>
-                    <CardHeader className="" onClick={() => setIsOpen(!isOpen)}>
+                    <CardHeader className="">
                         <div className="flex w-full justify-between">
-                            <Button
-                                variant={"withoutline"}
+                            <div
                                 className="flex w-full cursor-pointer items-center justify-between"
                                 onClick={() => setIsOpen(!isOpen)}
                             >
                                 <div className="flex items-center gap-2">
-                                    <PencilRuler size={54} />
+                                    <PencilRuler size={28} strokeWidth={1.5} />
                                     <span className="text-xl font-bold text-gray-900">
                                         Proyecto Integral de la Cotización
                                     </span>
                                 </div>
                                 {isOpen ? <ChevronUp /> : <ChevronDown />}
-                            </Button>
+                            </div>
                         </div>
                     </CardHeader>
                 </CollapsibleTrigger>
