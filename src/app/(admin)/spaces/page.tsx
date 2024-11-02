@@ -3,10 +3,11 @@
 
 import { useSpaces } from "@/hooks/use-space";
 import React from "react";
-import { SpacesTable } from "@/components/spaces/SpacesTable";
+
 import { HeaderPage } from "@/components/common/HeaderPage";
 import { Shell } from "@/components/common/Shell";
 import { DataTableSkeleton } from "@/components/data-table/DataTableSkeleton";
+import { SpacesTable } from "@/components/spaces/SpacesTable";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function SpacesPage() {

@@ -1,7 +1,7 @@
 "use client";
 
-import { useSpaces } from "@/hooks/use-space";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { useSpaces } from "@/hooks/use-space";
 import { Spaces } from "@/types";
 import { type Row } from "@tanstack/react-table";
 import { RefreshCcw, Trash } from "lucide-react";

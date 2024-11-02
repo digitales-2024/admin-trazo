@@ -1,5 +1,3 @@
-// SpaceForm.tsx
-
 "use client";
 
 import { useSpaces } from "@/hooks/use-space";

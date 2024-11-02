@@ -6,8 +6,8 @@ import { Spaces } from "@/types";
 import { useMemo } from "react";
 
 import { DataTable } from "../data-table/DataTable";
-import { SpaceTableToolbarActions } from "./SpaceTableToolbarActions";
 import { spaceColumns } from "./SpaceTableColumns";
+import { SpaceTableToolbarActions } from "./SpaceTableToolbarActions";
 
 export function SpacesTable({ data }: { data: Spaces[] }) {
     const { user } = useProfile();
