@@ -15,6 +15,7 @@ export type {
     HeadQuotation,
     LevelQuotation,
     SpaceQuotation,
+    QuotationStructure,
 } from "./quotation";
 export { QuotationStatusType } from "./quotation";
 export type { Space, Floor } from "./floor";

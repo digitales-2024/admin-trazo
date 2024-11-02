@@ -1,3 +1,5 @@
+import { IntegralProjectDesign } from "./integralProjectQuotation";
+
 export type Quotation = {
     id: string;
     name: string;
@@ -20,6 +22,7 @@ export type Quotation = {
     createdAt: string;
     updatedAt: string;
 };
+
 export type Client = {
     id: string;
     name: string;
@@ -39,6 +42,23 @@ export type HeadQuotation = {
     idClient: string;
 };
 
+export type QuotationStructure = {
+    name: string;
+    description: string;
+    discount: number;
+    deliveryTime: number;
+    exchangeRate: number;
+    landArea: number;
+    paymentSchedule: PaymentSchedule[];
+    integratedProjectDetails: IntegralProjectDesign[];
+    architecturalCost: number;
+    structuralCost: number;
+    electricCost: number;
+    sanitaryCost: number;
+    metering: number;
+    level: LevelQuotation[];
+};
+
 export type LevelQuotation = {
     name: string;
     spaces: SpaceQuotation[];
@@ -48,4 +68,10 @@ export type SpaceQuotation = {
     amount: number;
     area: number;
     spaceId: string;
+};
+export type PaymentSchedule = {
+    name: string;
+    percentage: number;
+    cost: number;
+    description?: string;
 };
