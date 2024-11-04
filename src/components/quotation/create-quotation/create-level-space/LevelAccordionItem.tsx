@@ -80,6 +80,7 @@ export function LevelAccordionItem({
                                     size="sm"
                                     className="ml-2"
                                     onClick={() => setDialogOpen(true)}
+                                    type="button"
                                 >
                                     <Edit2 className="h-4 w-4" />
                                 </Button>
@@ -96,6 +97,7 @@ export function LevelAccordionItem({
                                     size="sm"
                                     className="ml-2"
                                     onClick={() => duplicateFloor(floor.number)}
+                                    type="button"
                                 >
                                     <Copy className="h-4 w-4" />
                                 </Button>
@@ -112,6 +114,7 @@ export function LevelAccordionItem({
                                     size="sm"
                                     className="ml-2"
                                     onClick={() => deleteFloor(floor.number)}
+                                    type="button"
                                 >
                                     <Trash className="h-4 w-4" />
                                 </Button>
@@ -143,6 +146,7 @@ export function LevelAccordionItem({
                                 setNewName(floor.name);
                                 setDialogOpen(false);
                             }}
+                            type="button"
                         >
                             Cancelar
                         </Button>
@@ -153,6 +157,7 @@ export function LevelAccordionItem({
                                 changeFloorName(floor.number, newName);
                                 setDialogOpen(false);
                             }}
+                            type="button"
                         >
                             Aceptar
                         </Button>
@@ -165,11 +170,15 @@ export function LevelAccordionItem({
                     <CardContent className="p-4">
                         <div className="mb-6">
                             <div className="flex flex-col gap-4 xl:flex-row">
-                                <Button onClick={() => addSpace(floor.number)}>
+                                <Button
+                                    type="button"
+                                    onClick={() => addSpace(floor.number)}
+                                >
                                     <Plus className="mr-2" /> Añadir ambiente
                                 </Button>
                                 {selectedSpacesCount > 0 && (
                                     <Button
+                                        type="button"
                                         variant="destructive"
                                         onClick={() =>
                                             deleteSelectedSpaces(floor.number)
