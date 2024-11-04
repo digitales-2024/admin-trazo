@@ -10,7 +10,6 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { HeaderPage } from "@/components/common/HeaderPage";
 import { Shell } from "@/components/common/Shell";
@@ -21,8 +20,6 @@ import {
     extractData,
 } from "@/components/quotation/create-quotation/create-level-space/LevelSpaceCreate";
 import CreateQuotationButton from "@/components/quotation/CreateQuotationButton";
-
-type CreateHeadQuotationSchema = z.infer<typeof createHeadQuotationSchema>;
 
 export default function CreateQuotationPage() {
     const [floors, setFloors] = useState<Floor[]>([
@@ -143,13 +140,11 @@ export default function CreateQuotationPage() {
             discount: 0,
             exchangeRate: 3.5,
             paymentSchedule: [],
-            // Add other default values for QuotationStructure properties here
         },
     });
 
-    const onSubmit = (data: CreateHeadQuotationSchema) => {
-        console.log(data);
-        // Aquí puedes manejar el envío del formulario
+    const onSubmit = () => {
+        // No se usa el parámetro data
     };
 
     return (
