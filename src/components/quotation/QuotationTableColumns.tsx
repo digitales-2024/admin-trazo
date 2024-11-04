@@ -2,7 +2,8 @@
 
 import { Quotation, QuotationStatusType } from "@/types";
 import { type ColumnDef } from "@tanstack/react-table";
-import { Contact, Ellipsis, RefreshCcwDot, Ruler, Trash } from "lucide-react";
+import { Contact, Ellipsis, NotebookPen, Ruler } from "lucide-react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -17,6 +18,7 @@ import {
 
 import { DataTableColumnHeader } from "../data-table/DataTableColumnHeader";
 import { Badge } from "../ui/badge";
+import UpdateStatusQuotationDialog from "./UpdateStatusQuotationDialog";
 
 export const quotationsColumns = (
     isSuperAdmin: boolean,
@@ -166,9 +168,23 @@ export const quotationsColumns = (
             id: "actions",
             size: 5,
             cell: function Cell({ row }) {
+                const [showUpdateStatusDialog, setShowUpdateStatusDialog] =
+                    useState(false);
+
                 const { status } = row.original;
                 return (
                     <div>
+                        <div>
+                            <UpdateStatusQuotationDialog
+                                open={showUpdateStatusDialog}
+                                onOpenChange={setShowUpdateStatusDialog}
+                                quotation={row?.original}
+                                showTrigger={false}
+                                onSuccess={() => {
+                                    row.toggleSelected(false);
+                                }}
+                            />
+                        </div>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button
@@ -183,30 +199,25 @@ export const quotationsColumns = (
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-40">
-                                <DropdownMenuItem disabled={!status}>
-                                    Editar
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                {isSuperAdmin && (
-                                    <DropdownMenuItem /* disabled={status} */>
-                                        Reactivar
-                                        <DropdownMenuShortcut>
-                                            <RefreshCcwDot
-                                                className="size-4"
-                                                aria-hidden="true"
-                                            />
-                                        </DropdownMenuShortcut>
-                                    </DropdownMenuItem>
-                                )}
-                                <DropdownMenuItem disabled={!status}>
-                                    Eliminar
+                                <DropdownMenuItem
+                                    onSelect={() =>
+                                        setShowUpdateStatusDialog(true)
+                                    }
+                                    disabled={
+                                        status ===
+                                            QuotationStatusType.APPROVED &&
+                                        !isSuperAdmin
+                                    }
+                                >
+                                    Cambiar Estado
                                     <DropdownMenuShortcut>
-                                        <Trash
+                                        <NotebookPen
                                             className="size-4"
                                             aria-hidden="true"
                                         />
                                     </DropdownMenuShortcut>
                                 </DropdownMenuItem>
+                                <DropdownMenuSeparator />
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
