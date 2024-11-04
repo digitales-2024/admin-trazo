@@ -175,6 +175,7 @@ export default function IntegralProject({
                                     totalCost={totalCost}
                                     setDiscount={setDiscount}
                                     setExchangeRate={setExchangeRate}
+                                    form={form}
                                 />
                             </div>
                         </CollapsibleContent>
