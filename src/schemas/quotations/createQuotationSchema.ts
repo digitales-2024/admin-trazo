@@ -12,13 +12,6 @@ export const createHeadQuotationSchema = z.object({
     landArea: z
         .number()
         .min(1, { message: "El área del terreno debe ser al menos 1 m²" }),
-});
-
-export type CreateHeadQuotationSchema = z.infer<
-    typeof createHeadQuotationSchema
->;
-
-export const createQuotationIntegralProjectSchema = z.object({
     architecturalCost: z.number().min(1, {
         message: "El costo del proyecto arquitectónico debe ser mayor a 0",
     }),
@@ -39,6 +32,6 @@ export const createQuotationIntegralProjectSchema = z.object({
     }),
 });
 
-export type CreateQuotationIntegralProjectSchema = z.infer<
-    typeof createQuotationIntegralProjectSchema
+export type CreateHeadQuotationSchema = z.infer<
+    typeof createHeadQuotationSchema
 >;
