@@ -174,7 +174,7 @@ export function CreateLevelSpace({
                         <CollapsibleContent>
                             <div className="container mx-auto p-4">
                                 <div className="mb-6 flex flex-wrap gap-4">
-                                    <Button onClick={addFloor}>
+                                    <Button onClick={addFloor} type="button">
                                         <Plus className="mr-2" /> Agregar Nivel
                                     </Button>
                                 </div>
