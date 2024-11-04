@@ -1,7 +1,9 @@
-import { Costs } from "@/types";
+import { Costs, QuotationStructure } from "@/types";
 import React from "react";
+import { UseFormReturn } from "react-hook-form";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -13,7 +15,8 @@ import {
     TableRow,
 } from "@/components/ui/table";
 
-interface CostSummaryProps {
+interface CostSummaryProps
+    extends Omit<React.ComponentPropsWithRef<"form">, "onSubmit"> {
     costs: Costs;
     discount: number;
     exchangeRate: number;
@@ -21,6 +24,7 @@ interface CostSummaryProps {
     subtotal: number;
     setDiscount: (value: number) => void;
     setExchangeRate: (value: number) => void;
+    form: UseFormReturn<QuotationStructure>;
 }
 
 const projectNames: { [key in keyof Costs]: string } = {
@@ -38,6 +42,7 @@ const CostSummary: React.FC<CostSummaryProps> = ({
     subtotal,
     setDiscount,
     setExchangeRate,
+    form,
 }) => (
     <Card>
         <CardHeader>
@@ -69,34 +74,56 @@ const CostSummary: React.FC<CostSummaryProps> = ({
                         id="costM2Project"
                         type="number"
                         value={subtotal}
-                        className="max-w-[200px]"
+                        className="max-w-[100px]"
                         disabled
                     />
                 </div>
                 <div className="flex items-center justify-between">
                     <Label htmlFor="discount">Descuento (USD):</Label>
-                    <Input
-                        id="discount"
-                        type="number"
-                        value={discount}
-                        onChange={(e) =>
-                            setDiscount(parseFloat(e.target.value) || 0)
-                        }
-                        className="max-w-[200px]"
+                    <FormField
+                        control={form.control}
+                        name="discount"
+                        render={({ field }) => (
+                            <FormItem className="justify-items-end">
+                                <Input
+                                    id="discount"
+                                    type="number"
+                                    className="max-w-[100px]"
+                                    value={discount}
+                                    onChange={(e) => {
+                                        const value = Number(e.target.value);
+                                        field.onChange(value);
+                                        setDiscount(value);
+                                    }}
+                                />
+                                <FormMessage />
+                            </FormItem>
+                        )}
                     />
                 </div>
                 <div className="flex items-center justify-between">
                     <Label htmlFor="exchange-rate">
                         Tasa de Cambio (PEN/USD):
                     </Label>
-                    <Input
-                        id="exchange-rate"
-                        type="number"
-                        value={exchangeRate}
-                        onChange={(e) =>
-                            setExchangeRate(parseFloat(e.target.value) || 0)
-                        }
-                        className="max-w-[200px]"
+                    <FormField
+                        control={form.control}
+                        name="exchangeRate"
+                        render={({ field }) => (
+                            <FormItem className="justify-items-end">
+                                <Input
+                                    id="exchange-rate"
+                                    type="number"
+                                    className="max-w-[100px]"
+                                    value={exchangeRate}
+                                    onChange={(e) => {
+                                        const value = Number(e.target.value);
+                                        field.onChange(value);
+                                        setExchangeRate(value);
+                                    }}
+                                />
+                                <FormMessage />
+                            </FormItem>
+                        )}
                     />
                 </div>
                 <div className="flex items-center justify-between font-bold">
