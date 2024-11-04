@@ -99,7 +99,7 @@ export const quotationsColumns = (
             cell: ({ row }) => {
                 const clientName = row.getValue("cliente") as string;
                 return (
-                    <div className="flex justify-center">
+                    <div className="flex items-center">
                         <Badge
                             variant="outline"
                             className="truncate capitalize"
