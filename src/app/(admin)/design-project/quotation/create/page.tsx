@@ -148,7 +148,6 @@ export default function CreateQuotationPage() {
         },
     });
 
-    console.log(form.watch());
     const onSubmit = () => {};
 
     return (
@@ -180,14 +179,14 @@ export default function CreateQuotationPage() {
                         setExchangeRate={setExchangeRate}
                         form={form}
                     />
-                    <CreateQuotationButton
-                        extractData={() => extractData(floors)}
-                        obtenerHeadQuotation={obtenerHeadQuotation}
-                        getAllDataIntegralProject={getAllDataIntegralProject}
-                        form={form}
-                    />
                 </form>
             </Form>
+            <CreateQuotationButton
+                extractData={() => extractData(floors)}
+                obtenerHeadQuotation={obtenerHeadQuotation}
+                getAllDataIntegralProject={getAllDataIntegralProject}
+                form={form}
+            />
         </Shell>
     );
 }
