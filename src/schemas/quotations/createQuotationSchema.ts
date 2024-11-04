@@ -17,3 +17,22 @@ export const createHeadQuotationSchema = z.object({
 export type CreateHeadQuotationSchema = z.infer<
     typeof createHeadQuotationSchema
 >;
+
+export const createQuotationIntegralProjectSchema = z.object({
+    architecturalCost: z.number().min(1, {
+        message: "El costo del proyecto arquitectónico debe ser mayor a 0",
+    }),
+    structuralCost: z.number().min(1, {
+        message: "El costo del proyecto estructural debe ser mayor a 0",
+    }),
+    electricCost: z.number().min(1, {
+        message: "El costo del proyecto eléctrico debe ser mayor a 0",
+    }),
+    sanitaryCost: z.number().min(1, {
+        message: "El costo del proyecto sanitario debe ser mayor a 0",
+    }),
+});
+
+export type CreateQuotationIntegralProjectSchema = z.infer<
+    typeof createQuotationIntegralProjectSchema
+>;
