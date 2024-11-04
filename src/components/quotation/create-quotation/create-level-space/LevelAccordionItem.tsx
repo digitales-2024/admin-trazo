@@ -1,6 +1,7 @@
-import { Floor } from "@/types";
+import { Floor, QuotationStructure } from "@/types";
 import { Edit2, Trash, Plus, Copy } from "lucide-react";
 import { useState } from "react";
+import { UseFormReturn } from "react-hook-form";
 
 import {
     AccordionItem,
@@ -26,7 +27,8 @@ import {
 
 import { SpaceForm } from "./SpaceForm";
 
-interface LevelAccordionItemProps {
+interface LevelAccordionItemProps
+    extends Omit<React.ComponentPropsWithRef<"form">, "onSubmit"> {
     floor: Floor;
     deleteFloor: (floorNumber: number) => void;
     changeFloorName: (floorNumber: number, newName: string) => void;
@@ -40,6 +42,7 @@ interface LevelAccordionItemProps {
     calculateTotalMeters: (floor: Floor) => number;
     duplicateFloor: (floorNumber: number) => void;
     deleteSelectedSpaces: (floorNumber: number) => void;
+    form: UseFormReturn<QuotationStructure>;
 }
 
 export function LevelAccordionItem({
@@ -51,6 +54,7 @@ export function LevelAccordionItem({
     calculateTotalMeters,
     duplicateFloor,
     deleteSelectedSpaces,
+    form,
 }: LevelAccordionItemProps) {
     const [newName, setNewName] = useState(floor.name);
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -198,6 +202,7 @@ export function LevelAccordionItem({
                                 floorNumber={floor.number}
                                 environmentIndex={index}
                                 updateEnvironment={updateSpace}
+                                form={form}
                             />
                         ))}
                         <div className="mt-4 text-right">
