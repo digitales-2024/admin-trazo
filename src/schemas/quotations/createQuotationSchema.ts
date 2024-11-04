@@ -31,6 +31,12 @@ export const createQuotationIntegralProjectSchema = z.object({
     sanitaryCost: z.number().min(1, {
         message: "El costo del proyecto sanitario debe ser mayor a 0",
     }),
+    discount: z.number().min(1, {
+        message: "El descuento debe ser mayor a 0",
+    }),
+    exchangeRate: z.number().min(1, {
+        message: "El tipo de cambio debe ser mayor a 0",
+    }),
 });
 
 export type CreateQuotationIntegralProjectSchema = z.infer<
