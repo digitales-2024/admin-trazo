@@ -168,6 +168,7 @@ export default function CreateQuotationPage() {
                         calculateTotalBuildingMeters={
                             calculateTotalBuildingMeters
                         }
+                        form={form}
                     />
                     <IntegralProject
                         area={calculateTotalBuildingMeters()}
