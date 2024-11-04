@@ -1,8 +1,9 @@
 "use client";
 
-import { Floor, LevelQuotation } from "@/types";
+import { Floor, LevelQuotation, QuotationStructure } from "@/types";
 import { Plus, ChevronDown, ChevronUp, BrickWall } from "lucide-react";
 import { useState, useCallback } from "react";
+import { UseFormReturn } from "react-hook-form";
 
 import { Accordion } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
@@ -16,10 +17,12 @@ import {
 import { DesignSummary } from "./DesignSummary";
 import { LevelAccordionItem } from "./LevelAccordionItem";
 
-interface CreateLevelSpaceProps {
+interface CreateLevelSpaceProps
+    extends Omit<React.ComponentPropsWithRef<"form">, "onSubmit"> {
     floors: Floor[];
     setFloors: React.Dispatch<React.SetStateAction<Floor[]>>;
     calculateTotalBuildingMeters: () => number;
+    form: UseFormReturn<QuotationStructure>;
 }
 
 export function extractData(floors: Floor[]): LevelQuotation[] {
@@ -37,6 +40,7 @@ export function CreateLevelSpace({
     floors,
     setFloors,
     calculateTotalBuildingMeters,
+    form,
 }: CreateLevelSpaceProps) {
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
@@ -203,6 +207,7 @@ export function CreateLevelSpace({
                                                     deleteSelectedSpaces={
                                                         deleteSelectedSpaces
                                                     }
+                                                    form={form}
                                                 />
                                             ))}
                                         </Accordion>
