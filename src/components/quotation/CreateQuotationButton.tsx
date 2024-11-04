@@ -125,6 +125,7 @@ export default function CreateQuotationButton({
             <Button
                 variant={"normal"}
                 onClick={form.handleSubmit(handleCreateQuotation)}
+                type="submit"
             >
                 Crear Cotización
             </Button>
