@@ -20,6 +20,7 @@ import {
     extractData,
 } from "@/components/quotation/create-quotation/create-level-space/LevelSpaceCreate";
 import CreateQuotationButton from "@/components/quotation/CreateQuotationButton";
+import { Form } from "@/components/ui/form";
 
 export default function CreateQuotationPage() {
     const [floors, setFloors] = useState<Floor[]>([
@@ -140,12 +141,15 @@ export default function CreateQuotationPage() {
             discount: 0,
             exchangeRate: 3.5,
             paymentSchedule: [],
+            architecturalCost: 0,
+            structuralCost: 0,
+            electricCost: 0,
+            sanitaryCost: 0,
         },
     });
 
-    const onSubmit = () => {
-        // No se usa el parámetro data
-    };
+    console.log(form.watch());
+    const onSubmit = () => {};
 
     return (
         <Shell className="gap-6">
@@ -153,27 +157,37 @@ export default function CreateQuotationPage() {
                 title="Crear Cotización"
                 description="Complete todos los campos para crear una cotización."
             />
-            <HeadQuotation form={form} onSubmit={onSubmit} />
-            <CreateLevelSpace
-                floors={floors}
-                setFloors={setFloors}
-                calculateTotalBuildingMeters={calculateTotalBuildingMeters}
-            />
-            <IntegralProject
-                area={calculateTotalBuildingMeters()}
-                costs={costs}
-                setCosts={setCosts}
-                discount={discount}
-                setDiscount={setDiscount}
-                exchangeRate={exchangeRate}
-                setExchangeRate={setExchangeRate}
-            />
-            <CreateQuotationButton
-                extractData={() => extractData(floors)}
-                obtenerHeadQuotation={obtenerHeadQuotation}
-                getAllDataIntegralProject={getAllDataIntegralProject}
-                form={form}
-            />
+            <Form {...form}>
+                <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-8 p-1"
+                >
+                    <HeadQuotation form={form} />
+                    <CreateLevelSpace
+                        floors={floors}
+                        setFloors={setFloors}
+                        calculateTotalBuildingMeters={
+                            calculateTotalBuildingMeters
+                        }
+                    />
+                    <IntegralProject
+                        area={calculateTotalBuildingMeters()}
+                        costs={costs}
+                        setCosts={setCosts}
+                        discount={discount}
+                        setDiscount={setDiscount}
+                        exchangeRate={exchangeRate}
+                        setExchangeRate={setExchangeRate}
+                        form={form}
+                    />
+                    <CreateQuotationButton
+                        extractData={() => extractData(floors)}
+                        obtenerHeadQuotation={obtenerHeadQuotation}
+                        getAllDataIntegralProject={getAllDataIntegralProject}
+                        form={form}
+                    />
+                </form>
+            </Form>
         </Shell>
     );
 }
