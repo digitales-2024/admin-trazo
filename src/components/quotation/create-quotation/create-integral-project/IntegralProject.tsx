@@ -1,10 +1,9 @@
-// IntegralProject.tsx
-
 "use client";
 
-import { Costs, IntegralProjectItem } from "@/types";
+import { Costs, IntegralProjectItem, QuotationStructure } from "@/types";
 import { ChevronDown, ChevronUp, PencilRuler } from "lucide-react";
 import React, { useState } from "react";
+import { UseFormReturn } from "react-hook-form";
 
 import {
     Accordion,
@@ -22,7 +21,8 @@ import {
 import CostSummary from "./CostSummary";
 import IntegralProjectTable from "./IntegralProjectTable";
 
-interface IntegralProjectProps {
+interface IntegralProjectProps
+    extends Omit<React.ComponentPropsWithRef<"form">, "onSubmit"> {
     area: number;
     costs: Costs;
     setCosts: React.Dispatch<React.SetStateAction<Costs>>;
@@ -30,6 +30,7 @@ interface IntegralProjectProps {
     setDiscount: React.Dispatch<React.SetStateAction<number>>;
     exchangeRate: number;
     setExchangeRate: React.Dispatch<React.SetStateAction<number>>;
+    form: UseFormReturn<QuotationStructure>;
 }
 
 const projectNames: { [key in keyof Costs]: string } = {
@@ -42,11 +43,12 @@ const projectNames: { [key in keyof Costs]: string } = {
 export default function IntegralProject({
     area,
     costs,
-    setCosts,
     discount,
     setDiscount,
     exchangeRate,
     setExchangeRate,
+    setCosts,
+    form,
 }: IntegralProjectProps) {
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
@@ -54,8 +56,11 @@ export default function IntegralProject({
         Object.values(costs).reduce((sum, cost) => sum + cost, 0) * area;
     const totalCost = discount * exchangeRate;
 
-    const handleCostChange = (project: keyof Costs, value: string) => {
-        setCosts((prev) => ({ ...prev, [project]: parseFloat(value) || 0 }));
+    const handleCostChange = (project: keyof Costs, value: number) => {
+        setCosts((prev) => ({
+            ...prev,
+            [project]: value || 0,
+        }));
     };
 
     const projects: { [key: string]: IntegralProjectItem[] } = {
@@ -149,6 +154,7 @@ export default function IntegralProject({
                                                                     ) as keyof Costs
                                                                 }
                                                                 area={area}
+                                                                form={form}
                                                                 costs={costs}
                                                                 handleCostChange={
                                                                     handleCostChange
