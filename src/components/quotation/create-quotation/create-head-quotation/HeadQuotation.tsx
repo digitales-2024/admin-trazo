@@ -1,62 +1,55 @@
+"use client";
 import { useClients } from "@/hooks/use-client";
-import {
-    Captions,
-    ChevronDown,
-    ChevronUp,
-    Building2,
-    User,
-    Calendar,
-    LayoutDashboard,
-    FileText,
-} from "lucide-react";
+import { CreateHeadQuotationSchema } from "@/schemas/quotations/createQuotationSchema";
+import { QuotationStructure } from "@/types";
+import { Captions, ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
-import * as React from "react";
+import { UseFormReturn } from "react-hook-form";
 
-import { AutoComplete } from "@/components/ui/autocomplete";
+import { AutoComplete, type Option } from "@/components/ui/autocomplete";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
 
-interface HeadQuotationProps {
-    meses: number;
-    setMeses: React.Dispatch<React.SetStateAction<number>>;
-    selectedClient: string;
-    setSelectedClient: React.Dispatch<React.SetStateAction<string>>;
-    projectName: string;
-    setProjectName: React.Dispatch<React.SetStateAction<string>>;
-    landArea: number;
-    setLandArea: React.Dispatch<React.SetStateAction<number>>;
-    description: string;
-    setDescription: React.Dispatch<React.SetStateAction<string>>;
+interface HeadQuotationProps
+    extends Omit<React.ComponentPropsWithRef<"form">, "onSubmit"> {
+    children?: React.ReactNode;
+    form: UseFormReturn<QuotationStructure>;
+    onSubmit: (data: CreateHeadQuotationSchema) => void;
 }
 
-export default function HeadQuotation({
-    meses,
-    setMeses,
-    selectedClient,
-    setSelectedClient,
-    projectName,
-    setProjectName,
-    landArea,
-    setLandArea,
-    description,
-    setDescription,
-}: HeadQuotationProps) {
+export const HeadQuotation = ({
+    children,
+    form,
+    onSubmit,
+}: HeadQuotationProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(true);
     const { dataClientsAll } = useClients();
+
+    const clientOptions: Option[] = (dataClientsAll ?? []).map((client) => ({
+        value: client.id,
+        label: client.name,
+    }));
 
     return (
         <Card>
             <Collapsible open={isOpen} onOpenChange={setIsOpen}>
                 <CollapsibleTrigger asChild>
-                    <CardHeader className="" onClick={() => setIsOpen(!isOpen)}>
+                    <CardHeader className="">
                         <div className="flex w-full justify-between">
                             <div
                                 className="flex w-full cursor-pointer items-center justify-between"
@@ -76,129 +69,167 @@ export default function HeadQuotation({
                 {isOpen && (
                     <CardContent>
                         <CollapsibleContent>
-                            <div className="space-y-6 p-6">
-                                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                                    <div className="space-y-2">
-                                        <Label
-                                            htmlFor="proyecto"
-                                            className="flex items-center space-x-2"
-                                        >
-                                            <Building2 className="h-4 w-4" />
-                                            <span>Nombre del Proyecto</span>
-                                        </Label>
-                                        <Input
-                                            id="proyecto"
-                                            placeholder="Ingrese el nombre del proyecto"
-                                            value={projectName}
-                                            onChange={(e) =>
-                                                setProjectName(e.target.value)
-                                            }
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label
-                                            htmlFor="propietario"
-                                            className="flex items-center space-x-2"
-                                        >
-                                            <User className="h-4 w-4" />
-                                            <span>Propietario / Cliente</span>
-                                        </Label>
-                                        <AutoComplete
-                                            options={(dataClientsAll ?? []).map(
-                                                (client) => ({
-                                                    value: client.id,
-                                                    label: client.name,
-                                                }),
+                            <Form {...form}>
+                                <form
+                                    onSubmit={form.handleSubmit(onSubmit)}
+                                    className="space-y-8 p-1"
+                                >
+                                    <div className="flex flex-col gap-6 p-4 sm:p-0">
+                                        {/* Campo de Nombre del Proyecto */}
+                                        <FormField
+                                            control={form.control}
+                                            name="name"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel htmlFor="name">
+                                                        Nombre del Proyecto
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            id="name"
+                                                            placeholder="Ingrese el nombre del proyecto"
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
                                             )}
-                                            placeholder="Selecciona un cliente"
-                                            emptyMessage="No se encontraron clientes"
-                                            value={{
-                                                value: selectedClient,
-                                                label:
-                                                    dataClientsAll?.find(
-                                                        (client) =>
-                                                            client.id ===
-                                                            selectedClient,
-                                                    )?.name || "",
-                                            }}
-                                            onValueChange={(option) => {
-                                                setSelectedClient(option.value);
-                                            }}
-                                            className="z-50"
+                                        />
+
+                                        {/* Campo de Cliente */}
+                                        <FormField
+                                            control={form.control}
+                                            name="clientId"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel htmlFor="clientId">
+                                                        Propietario / Cliente
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <AutoComplete
+                                                            options={
+                                                                clientOptions
+                                                            }
+                                                            placeholder="Selecciona un cliente"
+                                                            emptyMessage="No se encontraron clientes"
+                                                            value={
+                                                                clientOptions.find(
+                                                                    (option) =>
+                                                                        option.value ===
+                                                                        field.value,
+                                                                ) || undefined
+                                                            }
+                                                            onValueChange={(
+                                                                option,
+                                                            ) => {
+                                                                field.onChange(
+                                                                    option.value,
+                                                                );
+                                                            }}
+                                                            className="z-50"
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        {/* Campo de Plazo de Entrega */}
+                                        <FormField
+                                            control={form.control}
+                                            name="deliveryTime"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel htmlFor="deliveryTime">
+                                                        Plazo de Entrega (Meses)
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <div className="flex items-center space-x-2">
+                                                            <Slider
+                                                                id="deliveryTime"
+                                                                min={1}
+                                                                max={36}
+                                                                value={[
+                                                                    field.value,
+                                                                ]}
+                                                                onValueChange={(
+                                                                    value,
+                                                                ) =>
+                                                                    field.onChange(
+                                                                        value[0],
+                                                                    )
+                                                                }
+                                                                className="flex-grow"
+                                                            />
+                                                            <span className="font-normal text-black">
+                                                                {field.value}
+                                                            </span>
+                                                        </div>
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        {/* Campo de Área del Terreno */}
+                                        <FormField
+                                            control={form.control}
+                                            name="landArea"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel htmlFor="landArea">
+                                                        Área del Terreno (m²)
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            id="landArea"
+                                                            type="number"
+                                                            placeholder="Ingrese el área en m²"
+                                                            {...field}
+                                                            onChange={(e) =>
+                                                                field.onChange(
+                                                                    parseFloat(
+                                                                        e.target
+                                                                            .value,
+                                                                    ),
+                                                                )
+                                                            }
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        {/* Campo de Descripción */}
+                                        <FormField
+                                            control={form.control}
+                                            name="description"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel htmlFor="description">
+                                                        Descripción del Proyecto
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Textarea
+                                                            id="description"
+                                                            placeholder="Ingrese una breve descripción del proyecto"
+                                                            className="min-h-[100px] transition-all duration-200 ease-in-out focus:min-h-[150px]"
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
                                         />
                                     </div>
-                                </div>
-                                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                                    <div className="space-y-2">
-                                        <Label
-                                            htmlFor="plazo"
-                                            className="flex items-center space-x-2"
-                                        >
-                                            <Calendar className="h-4 w-4" />
-                                            <span>
-                                                Plazo de Entrega (Meses)
-                                            </span>
-                                        </Label>
-                                        <div className="flex items-center space-x-2">
-                                            <Slider
-                                                id="plazo"
-                                                min={1}
-                                                max={36}
-                                                value={[meses]}
-                                                onValueChange={(value) =>
-                                                    setMeses(value[0])
-                                                }
-                                                className="flex-grow"
-                                            />
-                                            <span className="font-normal text-black">
-                                                {meses}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label
-                                            htmlFor="area"
-                                            className="flex items-center space-x-2"
-                                        >
-                                            <LayoutDashboard className="h-4 w-4" />
-                                            <span>Área del Terreno (m²)</span>
-                                        </Label>
-                                        <Input
-                                            id="area"
-                                            type="number"
-                                            placeholder="Ingrese el área en m²"
-                                            value={landArea}
-                                            onChange={(e) =>
-                                                setLandArea(
-                                                    parseFloat(e.target.value),
-                                                )
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                <div className="space-y-2">
-                                    <Label
-                                        htmlFor="descripcion"
-                                        className="flex items-center space-x-2"
-                                    >
-                                        <FileText className="h-4 w-4" />
-                                        <span>Descripción del Proyecto</span>
-                                    </Label>
-                                    <Textarea
-                                        id="descripcion"
-                                        placeholder="Ingrese una breve descripción del proyecto"
-                                        className="min-h-[100px] transition-all duration-200 ease-in-out focus:min-h-[150px]"
-                                        value={description}
-                                        onChange={(e) =>
-                                            setDescription(e.target.value)
-                                        }
-                                    />
-                                </div>
-                            </div>
+                                    {children}
+                                </form>
+                            </Form>
                         </CollapsibleContent>
                     </CardContent>
                 )}
             </Collapsible>
         </Card>
     );
-}
+};
