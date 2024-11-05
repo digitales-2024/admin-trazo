@@ -122,7 +122,7 @@ export const useQuotations = () => {
                     link.href = url;
                     link.setAttribute(
                         "download",
-                        `report-classes-${format(new Date(), "yyyy-MM-dd")}.pdf`,
+                        `quotation-${format(new Date(), "yyyy-MM-dd")}.pdf`,
                     );
 
                     // Añadir el enlace al DOM y disparar la descarga
