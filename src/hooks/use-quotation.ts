@@ -1,8 +1,13 @@
 import {
     useCreateQuotationMutation,
     useGetAllQuotationsQuery,
+    useUpdateStatusQuotationMutation,
 } from "@/redux/services/quotationApi";
-import { CustomErrorData, QuotationStructure } from "@/types";
+import {
+    CustomErrorData,
+    QuotationStatusType,
+    QuotationStructure,
+} from "@/types";
 import { translateError } from "@/utils/translateError";
 import { toast } from "sonner";
 
@@ -17,6 +22,11 @@ export const useQuotations = () => {
 
     const [createQuotation, { isSuccess: isSuccessCreateQuotation }] =
         useCreateQuotationMutation();
+
+    const [
+        updateQuotationStatus,
+        { isSuccess: isSuccessUpdateQuotationStatus },
+    ] = useUpdateStatusQuotationMutation();
 
     const onCreateQuotation = async (input: Partial<QuotationStructure>) => {
         const promise = () =>
@@ -54,6 +64,48 @@ export const useQuotations = () => {
         });
     };
 
+    const onUpdateQuotationStatus = async (
+        id: string,
+        newStatus: QuotationStatusType,
+    ) => {
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                try {
+                    const result = await updateQuotationStatus({
+                        id,
+                        newStatus,
+                    });
+                    if (result.error) {
+                        if (
+                            typeof result.error === "object" &&
+                            "data" in result.error
+                        ) {
+                            const error = (result.error.data as CustomErrorData)
+                                .message;
+                            const message = translateError(error as string);
+                            reject(new Error(message));
+                        } else {
+                            reject(
+                                new Error(
+                                    "Ocurrió un error inesperado, por favor intenta de nuevo",
+                                ),
+                            );
+                        }
+                    } else {
+                        resolve(result);
+                    }
+                } catch (error) {
+                    reject(error);
+                }
+            });
+
+        return toast.promise(promise(), {
+            loading: "Actualizando estado de cotización...",
+            success: "Estado de cotización actualizado con éxito",
+            error: (err) => err.message,
+        });
+    };
+
     return {
         dataQuotationsAll,
         error,
@@ -62,5 +114,7 @@ export const useQuotations = () => {
         refetch,
         onCreateQuotation,
         isSuccessCreateQuotation,
+        onUpdateQuotationStatus,
+        isSuccessUpdateQuotationStatus,
     };
 };
