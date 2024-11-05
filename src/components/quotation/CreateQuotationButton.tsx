@@ -61,7 +61,8 @@ export default function CreateQuotationButton({
         const headQuotationData = obtenerHeadQuotation();
         const integralProjectData = getAllDataIntegralProject();
 
-        const totalCost = integralProjectData.totalCost;
+        const totalCost =
+            integralProjectData.totalCost * integralProjectData.area;
 
         const paymentSchedule: PaymentSchedule[] = [
             {
@@ -112,6 +113,7 @@ export default function CreateQuotationButton({
             metering: integralProjectData.area,
             levels: levelSpaceData,
             clientId: headQuotationData.idClient,
+            totalAmount: totalCost,
         };
 
         onCreateQuotation(quotation);
