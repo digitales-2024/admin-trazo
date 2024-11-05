@@ -2,6 +2,7 @@
 "use memo";
 
 import { useProfile } from "@/hooks/use-profile";
+import { useQuotations } from "@/hooks/use-quotation";
 import { Quotation } from "@/types";
 import { useMemo } from "react";
 
@@ -12,9 +13,15 @@ import { QuotationTableToolbarActions } from "./QuotationTableToolbarActions";
 export function QuotationsTable({ data }: { data: Quotation[] }) {
     const { user } = useProfile();
 
+    const { exportQuotationToPdf } = useQuotations();
+
     const columns = useMemo(
-        () => quotationsColumns(user?.isSuperAdmin || false),
-        [user],
+        () =>
+            quotationsColumns(
+                user?.isSuperAdmin || false,
+                exportQuotationToPdf,
+            ),
+        [user, exportQuotationToPdf],
     );
 
     return (
