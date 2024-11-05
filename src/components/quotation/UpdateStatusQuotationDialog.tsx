@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuotations } from "@/hooks/use-quotation";
-import { Quotation, QuotationStatusType } from "@/types";
+import { QuotationStatusType, QuotationSummary } from "@/types";
 import { Row } from "@tanstack/react-table";
 import { useState, useEffect } from "react";
 
@@ -63,7 +63,7 @@ function useMediaQuery(query: string): boolean {
 }
 
 interface UpdateStatusQuotationDialogProps {
-    quotation: Row<Quotation>["original"];
+    quotation: Row<QuotationSummary>["original"];
     showTrigger?: boolean;
     onSuccess?: () => void;
     open: boolean;
