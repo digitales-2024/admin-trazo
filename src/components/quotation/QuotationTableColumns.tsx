@@ -1,6 +1,6 @@
 "use client";
 
-import { Quotation, QuotationStatusType } from "@/types";
+import { QuotationStatusType, QuotationSummary } from "@/types";
 import { type ColumnDef } from "@tanstack/react-table";
 import { Contact, Ellipsis, FileDown, NotebookPen, Ruler } from "lucide-react";
 import { useState } from "react";
@@ -18,13 +18,14 @@ import {
 
 import { DataTableColumnHeader } from "../data-table/DataTableColumnHeader";
 import { Badge } from "../ui/badge";
+import { UpdateClientSheet } from "./UpdateQuotationsSheet";
 import UpdateStatusQuotationDialog from "./UpdateStatusQuotationDialog";
 
 export const quotationsColumns = (
     isSuperAdmin: boolean,
     exportQuotationToPdf: (id: string) => void,
-): ColumnDef<Quotation>[] => {
-    const columns: ColumnDef<Quotation>[] = [
+): ColumnDef<QuotationSummary>[] => {
+    const columns: ColumnDef<QuotationSummary>[] = [
         {
             id: "select",
             size: 10,
@@ -175,6 +176,7 @@ export const quotationsColumns = (
                 const downloadPdfQuotation = () => {
                     exportQuotationToPdf(id);
                 };
+                const [showEditDialog, setShowEditDialog] = useState(false);
                 return (
                     <div>
                         <div>
@@ -186,6 +188,11 @@ export const quotationsColumns = (
                                 onSuccess={() => {
                                     row.toggleSelected(false);
                                 }}
+                            />
+                            <UpdateClientSheet
+                                open={showEditDialog}
+                                onOpenChange={setShowEditDialog}
+                                client={row?.original}
                             />
                         </div>
                         <DropdownMenu>
@@ -203,12 +210,21 @@ export const quotationsColumns = (
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-40">
                                 <DropdownMenuItem
+                                    onSelect={() => setShowEditDialog(true)}
+                                    disabled={
+                                        status === QuotationStatusType.APPROVED
+                                    }
+                                >
+                                    Editar
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
                                     onSelect={() =>
                                         setShowUpdateStatusDialog(true)
                                     }
                                     disabled={
                                         status ===
-                                            QuotationStatusType.APPROVED &&
+                                            QuotationStatusType.APPROVED ||
                                         !isSuperAdmin
                                     }
                                 >
@@ -220,7 +236,6 @@ export const quotationsColumns = (
                                         />
                                     </DropdownMenuShortcut>
                                 </DropdownMenuItem>
-                                <DropdownMenuSeparator />
 
                                 <DropdownMenuItem
                                     onSelect={() => downloadPdfQuotation()}

@@ -3,14 +3,14 @@
 
 import { useProfile } from "@/hooks/use-profile";
 import { useQuotations } from "@/hooks/use-quotation";
-import { Quotation } from "@/types";
+import { QuotationSummary } from "@/types";
 import { useMemo } from "react";
 
 import { DataTable } from "../data-table/DataTable";
 import { quotationsColumns } from "./QuotationTableColumns";
 import { QuotationTableToolbarActions } from "./QuotationTableToolbarActions";
 
-export function QuotationsTable({ data }: { data: Quotation[] }) {
+export function QuotationsTable({ data }: { data: QuotationSummary[] }) {
     const { user } = useProfile();
 
     const { exportQuotationToPdf } = useQuotations();
