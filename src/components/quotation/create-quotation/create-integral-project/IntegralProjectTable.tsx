@@ -1,6 +1,8 @@
-import { Costs, IntegralProjectItem } from "@/types";
+import { Costs, IntegralProjectItem, QuotationStructure } from "@/types";
 import React from "react";
+import { UseFormReturn } from "react-hook-form";
 
+import { FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
     Table,
@@ -11,12 +13,15 @@ import {
     TableRow,
 } from "@/components/ui/table";
 
-interface IntegralProjectTableProps {
+interface IntegralProjectTableProps
+    extends Omit<React.ComponentPropsWithRef<"form">, "onSubmit"> {
     items: IntegralProjectItem[];
     project: keyof Costs;
-    area: number;
     costs: Costs;
-    handleCostChange: (project: keyof Costs, value: string) => void;
+    handleCostChange: (project: keyof Costs, value: number) => void;
+    area: number;
+
+    form: UseFormReturn<QuotationStructure>;
 }
 
 const IntegralProjectTable: React.FC<IntegralProjectTableProps> = ({
@@ -24,6 +29,7 @@ const IntegralProjectTable: React.FC<IntegralProjectTableProps> = ({
     project,
     costs,
     handleCostChange,
+    form,
 }) => (
     <Table>
         <TableHeader>
@@ -42,13 +48,24 @@ const IntegralProjectTable: React.FC<IntegralProjectTableProps> = ({
             <TableRow>
                 <TableCell className="font-medium">Costo Total</TableCell>
                 <TableCell>
-                    <Input
-                        type="number"
-                        value={costs[project]}
-                        onChange={(e) =>
-                            handleCostChange(project, e.target.value)
-                        }
-                        className="w-[100px]"
+                    <FormField
+                        control={form.control}
+                        name={project}
+                        render={({ field }) => (
+                            <FormItem>
+                                <Input
+                                    type="number"
+                                    className="w-[100px]"
+                                    value={costs[project]}
+                                    onChange={(e) => {
+                                        const value = Number(e.target.value);
+                                        field.onChange(value);
+                                        handleCostChange(project, value);
+                                    }}
+                                />
+                                <FormMessage />
+                            </FormItem>
+                        )}
                     />
                 </TableCell>
             </TableRow>

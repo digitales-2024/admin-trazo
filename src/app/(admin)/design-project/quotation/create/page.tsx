@@ -1,35 +1,31 @@
-// page.tsx
-
 "use client";
+import { createHeadQuotationSchema } from "@/schemas/quotations/createQuotationSchema";
 import {
     Floor,
     HeadQuotation as HeadQuotationType,
     Costs,
     IntegralProjectItem,
+    QuotationStructure,
 } from "@/types";
+import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
 
 import { HeaderPage } from "@/components/common/HeaderPage";
 import { Shell } from "@/components/common/Shell";
-import HeadQuotation from "@/components/quotation/create-quotation/create-head-quotation/HeadQuotation";
+import { HeadQuotation } from "@/components/quotation/create-quotation/create-head-quotation/HeadQuotation";
 import IntegralProject from "@/components/quotation/create-quotation/create-integral-project/IntegralProject";
 import {
     CreateLevelSpace,
     extractData,
 } from "@/components/quotation/create-quotation/create-level-space/LevelSpaceCreate";
 import CreateQuotationButton from "@/components/quotation/CreateQuotationButton";
+import { Form } from "@/components/ui/form";
 
 export default function CreateQuotationPage() {
     const [floors, setFloors] = useState<Floor[]>([
         { number: 1, name: "Nivel 1", spaces: [], expanded: true },
     ]);
-
-    // Estados para HeadQuotation
-    const [meses, setMeses] = useState<number>(1);
-    const [selectedClient, setSelectedClient] = useState<string>("");
-    const [projectName, setProjectName] = useState<string>("");
-    const [landArea, setLandArea] = useState<number>(0);
-    const [description, setDescription] = useState<string>("");
 
     // Estados para IntegralProject
     const [costs, setCosts] = useState<Costs>({
@@ -101,11 +97,11 @@ export default function CreateQuotationPage() {
 
     const obtenerHeadQuotation = (): HeadQuotationType => {
         return {
-            name: projectName,
-            description,
-            deliveryTime: meses,
-            landArea,
-            idClient: selectedClient,
+            name: form.getValues("name"),
+            description: form.getValues("description"),
+            deliveryTime: form.getValues("deliveryTime"),
+            landArea: form.getValues("landArea"),
+            idClient: form.getValues("clientId"),
         };
     };
 
@@ -133,42 +129,64 @@ export default function CreateQuotationPage() {
         };
     };
 
+    const form = useForm<QuotationStructure>({
+        resolver: zodResolver(createHeadQuotationSchema),
+        defaultValues: {
+            name: "",
+            description: "",
+            clientId: "",
+            deliveryTime: 1,
+            landArea: 1,
+            code: "",
+            discount: 0,
+            exchangeRate: 3.5,
+            paymentSchedule: [],
+            architecturalCost: 0,
+            structuralCost: 0,
+            electricCost: 0,
+            sanitaryCost: 0,
+        },
+    });
+
+    const onSubmit = () => {};
+
     return (
         <Shell className="gap-6">
             <HeaderPage
                 title="Crear Cotización"
                 description="Complete todos los campos para crear una cotización."
             />
-            <HeadQuotation
-                meses={meses}
-                setMeses={setMeses}
-                selectedClient={selectedClient}
-                setSelectedClient={setSelectedClient}
-                projectName={projectName}
-                setProjectName={setProjectName}
-                landArea={landArea}
-                setLandArea={setLandArea}
-                description={description}
-                setDescription={setDescription}
-            />
-            <CreateLevelSpace
-                floors={floors}
-                setFloors={setFloors}
-                calculateTotalBuildingMeters={calculateTotalBuildingMeters}
-            />
-            <IntegralProject
-                area={calculateTotalBuildingMeters()}
-                costs={costs}
-                setCosts={setCosts}
-                discount={discount}
-                setDiscount={setDiscount}
-                exchangeRate={exchangeRate}
-                setExchangeRate={setExchangeRate}
-            />
+            <Form {...form}>
+                <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-8 p-1"
+                >
+                    <HeadQuotation form={form} />
+                    <CreateLevelSpace
+                        floors={floors}
+                        setFloors={setFloors}
+                        calculateTotalBuildingMeters={
+                            calculateTotalBuildingMeters
+                        }
+                        form={form}
+                    />
+                    <IntegralProject
+                        area={calculateTotalBuildingMeters()}
+                        costs={costs}
+                        setCosts={setCosts}
+                        discount={discount}
+                        setDiscount={setDiscount}
+                        exchangeRate={exchangeRate}
+                        setExchangeRate={setExchangeRate}
+                        form={form}
+                    />
+                </form>
+            </Form>
             <CreateQuotationButton
                 extractData={() => extractData(floors)}
                 obtenerHeadQuotation={obtenerHeadQuotation}
                 getAllDataIntegralProject={getAllDataIntegralProject}
+                form={form}
             />
         </Shell>
     );

@@ -8,6 +8,7 @@ import {
 import { PaymentSchedule } from "@/types/quotation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { UseFormReturn } from "react-hook-form";
 
 import { Button } from "../ui/button";
 
@@ -26,12 +27,14 @@ interface CreateQuotationButtonProps {
             cost: number;
         }[];
     };
+    form: UseFormReturn<QuotationStructure>;
 }
 
 export default function CreateQuotationButton({
     extractData,
     obtenerHeadQuotation,
     getAllDataIntegralProject,
+    form,
 }: CreateQuotationButtonProps) {
     const [isClient, setIsClient] = useState(false);
     const router = useRouter();
@@ -119,7 +122,11 @@ export default function CreateQuotationButton({
             <Button variant={"destructive"} onClick={handleBack}>
                 Cancelar
             </Button>
-            <Button variant={"normal"} onClick={handleCreateQuotation}>
+            <Button
+                variant={"normal"}
+                onClick={form.handleSubmit(handleCreateQuotation)}
+                type="submit"
+            >
                 Crear Cotización
             </Button>
         </div>

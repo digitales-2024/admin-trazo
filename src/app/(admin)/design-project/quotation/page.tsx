@@ -3,6 +3,7 @@
 
 import { useQuotations } from "@/hooks/use-quotation";
 
+import { ErrorPage } from "@/components/common/ErrorPage";
 import { HeaderPage } from "@/components/common/HeaderPage";
 import { Shell } from "@/components/common/Shell";
 import { DataTableSkeleton } from "@/components/data-table/DataTableSkeleton";
@@ -33,7 +34,15 @@ export default function QuotationPage() {
         );
     }
     if (!dataQuotationsAll) {
-        return null;
+        return (
+            <Shell className="gap-6">
+                <HeaderPage
+                    title="Cotizaciones"
+                    description="Lista de cotizaciones registrados en el sistema."
+                />
+                <ErrorPage />
+            </Shell>
+        );
     }
     return (
         <Shell className="gap-6">

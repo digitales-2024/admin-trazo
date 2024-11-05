@@ -1,4 +1,4 @@
-import { Quotation, QuotationStructure } from "@/types";
+import { Quotation, QuotationStatusType, QuotationStructure } from "@/types";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 import baseQueryWithReauth from "../baseQuery";
@@ -8,7 +8,7 @@ export const quotationsApi = createApi({
     baseQuery: baseQueryWithReauth,
     tagTypes: ["Quotation"],
     endpoints: (build) => ({
-        //Crear clientes
+        // Crear cotización
         createQuotation: build.mutation<
             QuotationStructure,
             Partial<QuotationStructure>
@@ -21,7 +21,7 @@ export const quotationsApi = createApi({
             }),
             invalidatesTags: ["Quotation"],
         }),
-        //Obtener todos los cotizaciones
+        // Obtener todos los cotizaciones
         getAllQuotations: build.query<Quotation[], void>({
             query: () => ({
                 url: "/quotation",
@@ -30,8 +30,24 @@ export const quotationsApi = createApi({
             }),
             providesTags: ["Quotation"],
         }),
+        // Actualizar el estado de una cotización
+        updateStatusQuotation: build.mutation<
+            Quotation,
+            { id: string; newStatus: QuotationStatusType }
+        >({
+            query: ({ id, newStatus }) => ({
+                url: `/quotation/${id}/status`,
+                method: "PATCH",
+                body: { newStatus },
+                credentials: "include",
+            }),
+            invalidatesTags: ["Quotation"],
+        }),
     }),
 });
 
-export const { useGetAllQuotationsQuery, useCreateQuotationMutation } =
-    quotationsApi;
+export const {
+    useGetAllQuotationsQuery,
+    useCreateQuotationMutation,
+    useUpdateStatusQuotationMutation,
+} = quotationsApi;

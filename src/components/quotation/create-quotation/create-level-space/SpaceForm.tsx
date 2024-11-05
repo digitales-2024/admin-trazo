@@ -1,15 +1,18 @@
 "use client";
 
 import { useSpaces } from "@/hooks/use-space";
-import { Space } from "@/types";
+import { QuotationStructure, Space } from "@/types";
 import * as React from "react";
+import { UseFormReturn } from "react-hook-form";
 
 import { AutoComplete } from "@/components/ui/autocomplete";
 import { Checkbox } from "@/components/ui/checkbox";
+import { FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-interface EnvironmentFormProps {
+interface EnvironmentFormProps
+    extends Omit<React.ComponentPropsWithRef<"form">, "onSubmit"> {
     space: Space;
     floorNumber: number;
     environmentIndex: number;
@@ -19,6 +22,7 @@ interface EnvironmentFormProps {
         field: "name" | "meters" | "amount" | "selected" | "spaceId",
         value: string | number | boolean,
     ) => void;
+    form: UseFormReturn<QuotationStructure>;
 }
 
 export function SpaceForm({
@@ -26,6 +30,7 @@ export function SpaceForm({
     floorNumber,
     environmentIndex,
     updateEnvironment,
+    form,
 }: EnvironmentFormProps) {
     const { dataSpacesAll = [] } = useSpaces();
     const [selectedSpaceId, setSelectedSpaceId] = React.useState<string>(
@@ -83,58 +88,95 @@ export function SpaceForm({
                     className="mb-4"
                 />
                 <div>
-                    <Label
-                        className="truncate"
-                        htmlFor={`amount-${floorNumber}-${environmentIndex}`}
-                    >
-                        Cantidad
-                    </Label>
-                    <Input
-                        id={`amount-${floorNumber}-${environmentIndex}`}
-                        type="number"
-                        value={amount}
-                        onChange={handleAmountChange}
-                        placeholder="Cantidad"
-                        className="w-16"
+                    <FormField
+                        control={form.control}
+                        name={`levels.${floorNumber}.spaces.${environmentIndex}.amount`}
+                        render={({ field }) => (
+                            <FormItem>
+                                <Label
+                                    className="truncate"
+                                    htmlFor={`amount-${floorNumber}-${environmentIndex}`}
+                                >
+                                    Cantidad
+                                </Label>
+                                <Input
+                                    id={`amount-${floorNumber}-${environmentIndex}`}
+                                    type="number"
+                                    value={amount}
+                                    onChange={(e) => {
+                                        const value = Number(e.target.value);
+                                        field.onChange(value);
+                                        handleAmountChange(e);
+                                    }}
+                                    placeholder="Cantidad"
+                                    className="max-w-[70px]"
+                                />
+                                <FormMessage />
+                            </FormItem>
+                        )}
                     />
                 </div>
                 <div className="w-full">
-                    <Label
-                        className="truncate"
-                        htmlFor={`space-${floorNumber}-${environmentIndex}`}
-                    >
-                        Espacio
-                    </Label>
-
-                    <AutoComplete
-                        options={dataSpacesAll.map((spaceItem) => ({
-                            value: spaceItem.id,
-                            label: spaceItem.name,
-                        }))}
-                        placeholder="Selecciona un espacio"
-                        emptyMessage="No se encontraron espacios"
-                        value={{
-                            value: selectedSpaceId,
-                            label: selectedSpaceName,
-                        }}
-                        onValueChange={handleSpaceChange}
-                        className="z-50"
+                    <FormField
+                        control={form.control}
+                        name={`levels.${floorNumber}.spaces.${environmentIndex}.spaceId`}
+                        render={({ field }) => (
+                            <FormItem>
+                                <Label
+                                    className="truncate"
+                                    htmlFor={`space-${floorNumber}-${environmentIndex}`}
+                                >
+                                    Espacio
+                                </Label>
+                                <AutoComplete
+                                    options={dataSpacesAll.map((spaceItem) => ({
+                                        value: spaceItem.id,
+                                        label: spaceItem.name,
+                                    }))}
+                                    placeholder="Selecciona un espacio"
+                                    emptyMessage="No se encontraron espacios"
+                                    value={{
+                                        value: selectedSpaceId,
+                                        label: selectedSpaceName,
+                                    }}
+                                    onValueChange={(value) => {
+                                        field.onChange(value);
+                                        handleSpaceChange(value);
+                                    }}
+                                    className="z-50"
+                                />
+                                <FormMessage />
+                            </FormItem>
+                        )}
                     />
                 </div>
-                <div className="">
-                    <Label
-                        className="truncate"
-                        htmlFor={`meters-${floorNumber}-${environmentIndex}`}
-                    >
-                        Área (m²)
-                    </Label>
-                    <Input
-                        id={`meters-${floorNumber}-${environmentIndex}`}
-                        type="number"
-                        value={meters}
-                        onChange={handleMetersChange}
-                        placeholder="m²"
-                        className="w-14"
+                <div>
+                    <FormField
+                        control={form.control}
+                        name={`levels.${floorNumber}.spaces.${environmentIndex}.area`}
+                        render={({ field }) => (
+                            <FormItem>
+                                <Label
+                                    className="truncate"
+                                    htmlFor={`meters-${floorNumber}-${environmentIndex}`}
+                                >
+                                    Área (m²)
+                                </Label>
+                                <Input
+                                    id={`meters-${floorNumber}-${environmentIndex}`}
+                                    type="number"
+                                    value={meters}
+                                    onChange={(e) => {
+                                        const value = Number(e.target.value);
+                                        field.onChange(value);
+                                        handleMetersChange(e);
+                                    }}
+                                    placeholder="m²"
+                                    className="max-w-[70px]"
+                                />
+                                <FormMessage />
+                            </FormItem>
+                        )}
                     />
                 </div>
             </div>

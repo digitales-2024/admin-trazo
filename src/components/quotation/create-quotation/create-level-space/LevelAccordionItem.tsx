@@ -1,6 +1,7 @@
-import { Floor } from "@/types";
+import { Floor, QuotationStructure } from "@/types";
 import { Edit2, Trash, Plus, Copy } from "lucide-react";
 import { useState } from "react";
+import { UseFormReturn } from "react-hook-form";
 
 import {
     AccordionItem,
@@ -26,7 +27,8 @@ import {
 
 import { SpaceForm } from "./SpaceForm";
 
-interface LevelAccordionItemProps {
+interface LevelAccordionItemProps
+    extends Omit<React.ComponentPropsWithRef<"form">, "onSubmit"> {
     floor: Floor;
     deleteFloor: (floorNumber: number) => void;
     changeFloorName: (floorNumber: number, newName: string) => void;
@@ -40,6 +42,7 @@ interface LevelAccordionItemProps {
     calculateTotalMeters: (floor: Floor) => number;
     duplicateFloor: (floorNumber: number) => void;
     deleteSelectedSpaces: (floorNumber: number) => void;
+    form: UseFormReturn<QuotationStructure>;
 }
 
 export function LevelAccordionItem({
@@ -51,6 +54,7 @@ export function LevelAccordionItem({
     calculateTotalMeters,
     duplicateFloor,
     deleteSelectedSpaces,
+    form,
 }: LevelAccordionItemProps) {
     const [newName, setNewName] = useState(floor.name);
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -68,119 +72,117 @@ export function LevelAccordionItem({
             <AccordionTrigger>
                 <div className="flex w-full items-center justify-between">
                     <span>{floor.name}</span>
-                    <div className="flex items-center">
-                        <TooltipProvider>
-                            {/* Botón para editar el nombre del nivel */}
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="ml-2"
-                                        onClick={() => setDialogOpen(true)}
-                                    >
-                                        <Edit2 className="h-4 w-4" />
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <span>Editar nivel</span>
-                                </TooltipContent>
-                            </Tooltip>
-
-                            {/* Botón para duplicar el nivel */}
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="ml-2"
-                                        onClick={() =>
-                                            duplicateFloor(floor.number)
-                                        }
-                                    >
-                                        <Copy className="h-4 w-4" />
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <span>Duplicar nivel</span>
-                                </TooltipContent>
-                            </Tooltip>
-
-                            {/* Botón para eliminar el nivel */}
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="ml-2"
-                                        onClick={() =>
-                                            deleteFloor(floor.number)
-                                        }
-                                    >
-                                        <Trash className="h-4 w-4" />
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <span>Eliminar nivel</span>
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
-
-                        {/* Dialog para editar el nombre */}
-                        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                            <DialogTrigger asChild>
-                                <></>
-                            </DialogTrigger>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>
-                                        Cambiar nombre del nivel
-                                    </DialogTitle>
-                                </DialogHeader>
-                                <Input
-                                    value={newName}
-                                    onChange={(e) => setNewName(e.target.value)}
-                                    placeholder="Nuevo nombre del nivel"
-                                />
-                                <div className="mt-4 flex justify-end">
-                                    <Button
-                                        variant="ghost"
-                                        onClick={() => {
-                                            setNewName(floor.name);
-                                            setDialogOpen(false);
-                                        }}
-                                    >
-                                        Cancelar
-                                    </Button>
-                                    <Button
-                                        variant="default"
-                                        className="ml-2"
-                                        onClick={() => {
-                                            changeFloorName(
-                                                floor.number,
-                                                newName,
-                                            );
-                                            setDialogOpen(false);
-                                        }}
-                                    >
-                                        Aceptar
-                                    </Button>
-                                </div>
-                            </DialogContent>
-                        </Dialog>
-                    </div>
                 </div>
             </AccordionTrigger>
+            <div className="relative">
+                <div className="absolute bottom-2 right-6 flex items-center">
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="ml-2"
+                                    onClick={() => setDialogOpen(true)}
+                                    type="button"
+                                >
+                                    <Edit2 className="h-4 w-4" />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <span>Editar nivel</span>
+                            </TooltipContent>
+                        </Tooltip>
+
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="ml-2"
+                                    onClick={() => duplicateFloor(floor.number)}
+                                    type="button"
+                                >
+                                    <Copy className="h-4 w-4" />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <span>Duplicar nivel</span>
+                            </TooltipContent>
+                        </Tooltip>
+
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="ml-2"
+                                    onClick={() => deleteFloor(floor.number)}
+                                    type="button"
+                                >
+                                    <Trash className="h-4 w-4" />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <span>Eliminar nivel</span>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                </div>
+            </div>
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogTrigger asChild>
+                    <></>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Cambiar nombre del nivel</DialogTitle>
+                    </DialogHeader>
+                    <Input
+                        value={newName}
+                        onChange={(e) => setNewName(e.target.value)}
+                        placeholder="Nuevo nombre del nivel"
+                    />
+                    <div className="mt-4 flex justify-end">
+                        <Button
+                            variant="ghost"
+                            onClick={() => {
+                                setNewName(floor.name);
+                                setDialogOpen(false);
+                            }}
+                            type="button"
+                        >
+                            Cancelar
+                        </Button>
+                        <Button
+                            variant="default"
+                            className="ml-2"
+                            onClick={() => {
+                                changeFloorName(floor.number, newName);
+                                setDialogOpen(false);
+                            }}
+                            type="button"
+                        >
+                            Aceptar
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
+
             <AccordionContent className="z-[999] h-fit">
                 <Card>
                     <CardContent className="p-4">
                         <div className="mb-6">
                             <div className="flex flex-col gap-4 xl:flex-row">
-                                <Button onClick={() => addSpace(floor.number)}>
+                                <Button
+                                    type="button"
+                                    onClick={() => addSpace(floor.number)}
+                                >
                                     <Plus className="mr-2" /> Añadir ambiente
                                 </Button>
                                 {selectedSpacesCount > 0 && (
                                     <Button
+                                        type="button"
                                         variant="destructive"
                                         onClick={() =>
                                             deleteSelectedSpaces(floor.number)
@@ -200,6 +202,7 @@ export function LevelAccordionItem({
                                 floorNumber={floor.number}
                                 environmentIndex={index}
                                 updateEnvironment={updateSpace}
+                                form={form}
                             />
                         ))}
                         <div className="mt-4 text-right">
