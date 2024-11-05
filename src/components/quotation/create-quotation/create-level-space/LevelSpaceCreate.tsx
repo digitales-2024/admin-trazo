@@ -30,7 +30,7 @@ export function extractData(floors: Floor[]): LevelQuotation[] {
         name: floor.name,
         spaces: floor.spaces.map((space) => ({
             amount: space.amount,
-            area: space.meters * space.amount,
+            area: space.meters,
             spaceId: space.spaceId || "",
         })),
     }));
