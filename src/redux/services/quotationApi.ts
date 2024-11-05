@@ -43,6 +43,15 @@ export const quotationsApi = createApi({
             }),
             invalidatesTags: ["Quotation"],
         }),
+        // Generar Pdf cotización
+        genPdfQuotation: build.mutation<Blob, string>({
+            query: (id) => ({
+                url: `/quotation/${id}/pdf`,
+                method: "GET",
+                responseHandler: (response: Response) => response.blob(),
+                credentials: "include",
+            }),
+        }),
     }),
 });
 
@@ -50,4 +59,5 @@ export const {
     useGetAllQuotationsQuery,
     useCreateQuotationMutation,
     useUpdateStatusQuotationMutation,
+    useGenPdfQuotationMutation,
 } = quotationsApi;
