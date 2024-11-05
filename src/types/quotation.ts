@@ -48,6 +48,7 @@ export type QuotationStructure = {
     code: string;
     description: string;
     discount: number;
+    totalAmount: number;
     deliveryTime: number;
     exchangeRate: number;
     landArea: number;
