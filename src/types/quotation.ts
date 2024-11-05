@@ -24,6 +24,15 @@ export type Quotation = {
     updatedAt: string;
 };
 
+export type QuotationSummary = {
+    id: string;
+    name: string;
+    client: Client;
+    status: string;
+    totalAmount: number;
+    metering: number;
+};
+
 export type Client = {
     id: string;
     name: string;

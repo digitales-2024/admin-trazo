@@ -1,4 +1,9 @@
-import { Quotation, QuotationStatusType, QuotationStructure } from "@/types";
+import {
+    Quotation,
+    QuotationStatusType,
+    QuotationStructure,
+    QuotationSummary,
+} from "@/types";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 import baseQueryWithReauth from "../baseQuery";
@@ -22,7 +27,7 @@ export const quotationsApi = createApi({
             invalidatesTags: ["Quotation"],
         }),
         // Obtener todos los cotizaciones
-        getAllQuotations: build.query<Quotation[], void>({
+        getAllQuotations: build.query<QuotationSummary[], void>({
             query: () => ({
                 url: "/quotation",
                 method: "GET",
