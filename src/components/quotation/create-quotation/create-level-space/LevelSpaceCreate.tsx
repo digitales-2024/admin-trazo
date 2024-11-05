@@ -146,10 +146,7 @@ export function CreateLevelSpace({
     };
 
     const calculateTotalMeters = (floor: Floor) => {
-        return floor.spaces.reduce(
-            (total, space) => total + space.meters * space.amount,
-            0,
-        );
+        return floor.spaces.reduce((total, space) => total + space.meters, 0);
     };
 
     return (
