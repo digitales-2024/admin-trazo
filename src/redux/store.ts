@@ -22,7 +22,18 @@ export const store = configureStore({
         [quotationsApi.reducerPath]: quotationsApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware()
+        getDefaultMiddleware({
+            // Configuración para evitar errores de "non-serializable value"
+            serializableCheck: {
+                // Ignorar las acciones que no son serializables, específicamente de classApi
+                ignoredActions: [
+                    "quotationsApi/executeMutation/fulfilled",
+                    "quotationsApi/executeMutation/rejected",
+                ],
+                // Ignorar las rutas en el estado que contienen valores no serializables
+                ignoredPaths: ["quotationsApi.mutations"],
+            },
+        })
             .concat(authApi.middleware)
             .concat(adminApi.middleware)
             .concat(businessApi.middleware)
