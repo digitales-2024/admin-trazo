@@ -2,7 +2,7 @@
 
 import { Quotation, QuotationStatusType } from "@/types";
 import { type ColumnDef } from "@tanstack/react-table";
-import { Contact, Ellipsis, NotebookPen, Ruler } from "lucide-react";
+import { Contact, Ellipsis, FileDown, NotebookPen, Ruler } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,7 @@ import UpdateStatusQuotationDialog from "./UpdateStatusQuotationDialog";
 
 export const quotationsColumns = (
     isSuperAdmin: boolean,
+    exportQuotationToPdf: (id: string) => void,
 ): ColumnDef<Quotation>[] => {
     const columns: ColumnDef<Quotation>[] = [
         {
@@ -170,9 +171,10 @@ export const quotationsColumns = (
             cell: function Cell({ row }) {
                 const [showUpdateStatusDialog, setShowUpdateStatusDialog] =
                     useState(false);
-                console.log(row.original);
-                const { status } = row.original;
-
+                const { status, id } = row.original;
+                const downloadPdfQuotation = () => {
+                    exportQuotationToPdf(id);
+                };
                 return (
                     <div>
                         <div>
@@ -210,7 +212,7 @@ export const quotationsColumns = (
                                         !isSuperAdmin
                                     }
                                 >
-                                    Cambiar Estado
+                                    Actualizar
                                     <DropdownMenuShortcut>
                                         <NotebookPen
                                             className="size-4"
@@ -219,6 +221,18 @@ export const quotationsColumns = (
                                     </DropdownMenuShortcut>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
+
+                                <DropdownMenuItem
+                                    onSelect={() => downloadPdfQuotation()}
+                                >
+                                    Descargar
+                                    <DropdownMenuShortcut>
+                                        <FileDown
+                                            className="size-4"
+                                            aria-hidden="true"
+                                        />
+                                    </DropdownMenuShortcut>
+                                </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
