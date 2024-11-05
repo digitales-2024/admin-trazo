@@ -64,7 +64,6 @@ export function CreateClientDialog() {
 
     const onSubmit = async (input: CreateClientsSchema) => {
         try {
-            console.table(input);
             startCreateTransition(() => {
                 onCreateClient({
                     ...input,
