@@ -183,7 +183,7 @@ export const CreateClientsForm = ({
                                             {cities.map((city) => (
                                                 <SelectItem
                                                     key={city.id.toString()}
-                                                    value={city.name.toString()}
+                                                    value={city.name}
                                                 >
                                                     {city.name}
                                                 </SelectItem>
