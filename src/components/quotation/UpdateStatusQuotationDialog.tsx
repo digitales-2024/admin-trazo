@@ -134,7 +134,11 @@ export default function UpdateStatusQuotationDialog({
                     >
                         Cancelar
                     </Button>
-                    <Button variant="normal" onClick={handleAccept}>
+                    <Button
+                        variant="normal"
+                        onClick={handleAccept}
+                        disabled={status === quotation.status}
+                    >
                         Aceptar
                     </Button>
                 </DrawerFooter>
@@ -146,7 +150,11 @@ export default function UpdateStatusQuotationDialog({
                     >
                         Cancelar
                     </Button>
-                    <Button variant="normal" onClick={handleAccept}>
+                    <Button
+                        variant="normal"
+                        onClick={handleAccept}
+                        disabled={status === quotation.status}
+                    >
                         Aceptar
                     </Button>
                 </DialogFooter>
