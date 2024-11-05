@@ -33,7 +33,7 @@ export default function QuotationPage() {
             </Shell>
         );
     }
-    if (!dataQuotationsAll || dataQuotationsAll.length === 0) {
+    if (!dataQuotationsAll) {
         return (
             <Shell className="gap-6">
                 <HeaderPage
