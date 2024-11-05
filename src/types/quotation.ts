@@ -19,6 +19,7 @@ export type Quotation = {
     electricCost: number;
     sanitaryCost: number;
     metering: number;
+    levels: LevelQuotation[];
     createdAt: string;
     updatedAt: string;
 };
