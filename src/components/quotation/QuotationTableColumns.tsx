@@ -170,8 +170,9 @@ export const quotationsColumns = (
             cell: function Cell({ row }) {
                 const [showUpdateStatusDialog, setShowUpdateStatusDialog] =
                     useState(false);
-
+                console.log(row.original);
                 const { status } = row.original;
+
                 return (
                     <div>
                         <div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useQuotations } from "@/hooks/use-quotation";
 import { Quotation, QuotationStatusType } from "@/types";
 import { Row } from "@tanstack/react-table";
 import { useState, useEffect } from "react";
@@ -79,6 +80,8 @@ export default function UpdateStatusQuotationDialog({
     const [status, setStatus] = useState<QuotationStatusType>(
         quotation.status as QuotationStatusType,
     );
+    const { onUpdateQuotationStatus, isSuccessUpdateQuotationStatus } =
+        useQuotations();
     const [showAlert, setShowAlert] = useState(false);
     const isMobile = useMediaQuery("(max-width: 640px)");
 
@@ -90,14 +93,17 @@ export default function UpdateStatusQuotationDialog({
         setShowAlert(true);
     };
 
-    const handleConfirm = () => {
-        console.log(
-            `Cambiando estado de la cotización ${quotation.id} a ${status}`,
-        );
-        onOpenChange(false);
-        setShowAlert(false);
-        onSuccess?.();
+    const handleConfirm = async () => {
+        await onUpdateQuotationStatus(quotation.id, status);
     };
+
+    useEffect(() => {
+        if (isSuccessUpdateQuotationStatus) {
+            onOpenChange(false);
+            setShowAlert(false);
+            onSuccess?.();
+        }
+    }, [isSuccessUpdateQuotationStatus, onOpenChange, onSuccess]);
 
     const Content = () => (
         <>
