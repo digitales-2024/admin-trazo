@@ -82,7 +82,12 @@ export function UpdateClientSheet({
             deliveryTime: quotationById?.deliveryTime ?? 0,
             landArea: quotationById?.landArea ?? 0,
             description: quotationById?.description ?? "",
+            architecturalCost: quotationById?.architecturalCost ?? 0,
+            structuralCost: quotationById?.structuralCost ?? 0,
+            electricCost: quotationById?.electricCost ?? 0,
+            sanitaryCost: quotationById?.sanitaryCost ?? 0,
             discount: quotationById?.discount ?? 0,
+            exchangeRate: quotationById?.exchangeRate ?? 0,
         },
     });
 
@@ -94,7 +99,12 @@ export function UpdateClientSheet({
                 deliveryTime: quotationById?.deliveryTime ?? 0,
                 landArea: quotationById?.landArea ?? 0,
                 description: quotationById?.description ?? "",
+                architecturalCost: quotationById?.architecturalCost ?? 0,
+                structuralCost: quotationById?.structuralCost ?? 0,
+                electricCost: quotationById?.electricCost ?? 0,
+                sanitaryCost: quotationById?.sanitaryCost ?? 0,
                 discount: quotationById?.discount ?? 0,
+                exchangeRate: quotationById?.exchangeRate ?? 0,
             });
         }
     }, [open, quotation, quotationById, form]);
@@ -275,6 +285,117 @@ export function UpdateClientSheet({
                             />
 
                             <Separator className="my-4" />
+                            <FormField
+                                control={form.control}
+                                name="architecturalCost"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel htmlFor="architecturalCost">
+                                            Costo Arquitectónico
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                id="architecturalCost"
+                                                type="number"
+                                                placeholder="Ingrese el costo arquitectónico"
+                                                {...field}
+                                                onChange={(e) =>
+                                                    field.onChange(
+                                                        parseFloat(
+                                                            e.target.value,
+                                                        ),
+                                                    )
+                                                }
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="structuralCost"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel htmlFor="structuralCost">
+                                            Costo Estructural
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                id="structuralCost"
+                                                type="number"
+                                                placeholder="Ingrese el costo estructural"
+                                                {...field}
+                                                onChange={(e) =>
+                                                    field.onChange(
+                                                        parseFloat(
+                                                            e.target.value,
+                                                        ),
+                                                    )
+                                                }
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="electricCost"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel htmlFor="electricCost">
+                                            Costo de Electricidad
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                id="electricCost"
+                                                type="number"
+                                                placeholder="Ingrese el costo de electricidad"
+                                                {...field}
+                                                onChange={(e) =>
+                                                    field.onChange(
+                                                        parseFloat(
+                                                            e.target.value,
+                                                        ),
+                                                    )
+                                                }
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="sanitaryCost"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel htmlFor="sanitaryCost">
+                                            Costo Sanitario
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                id="sanitaryCost"
+                                                type="number"
+                                                placeholder="Ingrese el costo sanitario"
+                                                {...field}
+                                                onChange={(e) =>
+                                                    field.onChange(
+                                                        parseFloat(
+                                                            e.target.value,
+                                                        ),
+                                                    )
+                                                }
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
                             <FormField
                                 control={form.control}
@@ -303,6 +424,65 @@ export function UpdateClientSheet({
                                     </FormItem>
                                 )}
                             />
+
+                            <FormField
+                                control={form.control}
+                                name="exchangeRate"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel htmlFor="exchangeRate">
+                                            Descuento (%)
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                id="exchangeRate"
+                                                type="number"
+                                                placeholder="Ingrese la tasa de cambio"
+                                                {...field}
+                                                onChange={(e) =>
+                                                    field.onChange(
+                                                        parseFloat(
+                                                            e.target.value,
+                                                        ),
+                                                    )
+                                                }
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/*                             <FormField
+                                control={form.control}
+                                name="totalAmount"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel htmlFor="totalCost">
+                                            Costo Total
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                id="totalCost"
+                                                type="number"
+                                                placeholder="Ingrese el costo total"
+                                                value={
+                                                    form.watch(
+                                                        "architecturalCost",
+                                                    ) +
+                                                    form.watch(
+                                                        "structuralCost",
+                                                    ) +
+                                                    form.watch("electricCost") +
+                                                    form.watch("sanitaryCost")
+                                                }
+                                                readOnly
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            /> */}
 
                             <SheetFooter className="gap-2 pt-2 sm:space-x-0">
                                 <div className="flex flex-row-reverse gap-2">
