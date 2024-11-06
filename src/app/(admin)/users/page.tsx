@@ -48,9 +48,7 @@ export default function PageUsers() {
         <Shell className="gap-6">
             <HeaderPage
                 title="Usuarios"
-                description="
-          Aquí puedes ver la lista de usuarios registrados en la aplicación.
-        "
+                description="Aquí puedes ver la lista de usuarios registrados en la aplicación."
             />
             <UsersTable data={data} />
         </Shell>
