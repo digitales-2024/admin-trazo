@@ -2,6 +2,7 @@ import {
     useCreateQuotationMutation,
     useGenPdfQuotationMutation,
     useGetAllQuotationsQuery,
+    useGetQuotationByIdQuery,
     useUpdateStatusQuotationMutation,
 } from "@/redux/services/quotationApi";
 import {
@@ -13,7 +14,12 @@ import { translateError } from "@/utils/translateError";
 import { format } from "date-fns";
 import { toast } from "sonner";
 
-export const useQuotations = () => {
+interface UseQuotationsProps {
+    id?: string;
+}
+
+export const useQuotations = (options: UseQuotationsProps = {}) => {
+    const { id } = options;
     const {
         data: dataQuotationsAll,
         error,
@@ -21,6 +27,14 @@ export const useQuotations = () => {
         isSuccess,
         refetch,
     } = useGetAllQuotationsQuery();
+
+    const { data: quotationById, refetch: refetchQuotationsById } =
+        useGetQuotationByIdQuery(
+            { id: id as string },
+            {
+                skip: !id, // Evita hacer la query si no hay id
+            },
+        );
 
     const [createQuotation, { isSuccess: isSuccessCreateQuotation }] =
         useCreateQuotationMutation();
@@ -168,5 +182,7 @@ export const useQuotations = () => {
         onUpdateQuotationStatus,
         isSuccessUpdateQuotationStatus,
         exportQuotationToPdf,
+        quotationById,
+        refetchQuotationsById,
     };
 };

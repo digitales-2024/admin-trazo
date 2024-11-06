@@ -8,6 +8,10 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 
 import baseQueryWithReauth from "../baseQuery";
 
+interface GetQuotationsByIdProps {
+    id: string;
+}
+
 export const quotationsApi = createApi({
     reducerPath: "quotationsApi",
     baseQuery: baseQueryWithReauth,
@@ -57,6 +61,15 @@ export const quotationsApi = createApi({
                 credentials: "include",
             }),
         }),
+        // Obtener cotización por id
+        getQuotationById: build.query<Quotation, GetQuotationsByIdProps>({
+            query: ({ id }) => ({
+                url: `/quotation/${id}`,
+                method: "GET",
+                credentials: "include",
+            }),
+            providesTags: ["Quotation"],
+        }),
     }),
 });
 
@@ -65,4 +78,5 @@ export const {
     useCreateQuotationMutation,
     useUpdateStatusQuotationMutation,
     useGenPdfQuotationMutation,
+    useGetQuotationByIdQuery,
 } = quotationsApi;
