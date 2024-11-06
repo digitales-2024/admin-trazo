@@ -2,7 +2,7 @@ import { useRol } from "@/hooks/use-rol";
 import { useUsers } from "@/hooks/use-users";
 import { CreateUsersSchema, usersSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { RefreshCcw } from "lucide-react";
+import { Bot, RefreshCcw } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
@@ -32,6 +32,12 @@ import {
     SelectTrigger,
     SelectValue,
 } from "../ui/select";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "../ui/tooltip";
 
 export function CreateUsersDialog() {
     const { dataRoles } = useRol();
@@ -49,6 +55,16 @@ export function CreateUsersDialog() {
             roles: [],
         },
     });
+
+    const { handleGeneratePassword, password } = useUsers();
+    const { setValue, clearErrors } = form;
+
+    useEffect(() => {
+        if (password) {
+            setValue("password", password?.password);
+            clearErrors("password");
+        }
+    }, [password, setValue, clearErrors]);
 
     const onSubmit = async (input: CreateUsersSchema) => {
         startCreateTransition(async () => {
@@ -135,13 +151,38 @@ export function CreateUsersDialog() {
                                 name="password"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Contraseña</FormLabel>
+                                        <FormLabel htmlFor="password">
+                                            Generar contraseña
+                                        </FormLabel>
                                         <FormControl>
-                                            <Input
-                                                placeholder="········"
-                                                type="password"
-                                                {...field}
-                                            />
+                                            <div className="flex items-center gap-2">
+                                                <Input
+                                                    id="password"
+                                                    placeholder="********"
+                                                    {...field}
+                                                />
+                                                <TooltipProvider>
+                                                    <Tooltip>
+                                                        <TooltipTrigger asChild>
+                                                            <Button
+                                                                type="button"
+                                                                variant="outline"
+                                                                onClick={
+                                                                    handleGeneratePassword
+                                                                }
+                                                            >
+                                                                <Bot
+                                                                    className="size-4"
+                                                                    aria-hidden="true"
+                                                                />
+                                                            </Button>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>
+                                                            Generar constraseña
+                                                        </TooltipContent>
+                                                    </Tooltip>
+                                                </TooltipProvider>
+                                            </div>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
