@@ -1,11 +1,10 @@
 "use client";
 
+import { LogoSunat } from "@/assets/icons/LogoSunat";
 import { useClients } from "@/hooks/use-client";
+import { useExchangeRate } from "@/hooks/use-exchange-rate-sunat";
 import { useQuotations } from "@/hooks/use-quotation";
-import {
-    createQuotationSchema,
-    CreateQuotationSchema,
-} from "@/schemas/quotations/createQuotationSchema";
+import { updateQuotationSchema, UpdateQuotationSchema } from "@/schemas";
 import { QuotationSummary } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RefreshCcw } from "lucide-react";
@@ -38,6 +37,12 @@ import {
 import { Separator } from "../ui/separator";
 import { Slider } from "../ui/slider";
 import { Textarea } from "../ui/textarea";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "../ui/tooltip";
 
 const infoSheet = {
     title: "Actualizar Cotización",
@@ -74,17 +79,28 @@ export function UpdateClientSheet({
         label: client.name,
     }));
 
-    const form = useForm<CreateQuotationSchema>({
-        resolver: zodResolver(createQuotationSchema),
+    const form = useForm<UpdateQuotationSchema>({
+        resolver: zodResolver(updateQuotationSchema),
         defaultValues: {
             name: quotation.name ?? "",
             clientId: quotation.client.id ?? "",
             deliveryTime: quotationById?.deliveryTime ?? 0,
             landArea: quotationById?.landArea ?? 0,
             description: quotationById?.description ?? "",
+            architecturalCost: quotationById?.architecturalCost ?? 0,
+            structuralCost: quotationById?.structuralCost ?? 0,
+            electricCost: quotationById?.electricCost ?? 0,
+            sanitaryCost: quotationById?.sanitaryCost ?? 0,
             discount: quotationById?.discount ?? 0,
+            exchangeRate: quotationById?.exchangeRate ?? 0,
+            totalAmount: quotationById?.totalAmount ?? 0,
         },
     });
+
+    const architecturalCost = form.watch("architecturalCost").toString();
+    const structuralCost = form.watch("structuralCost").toString();
+    const electricCost = form.watch("electricCost").toString();
+    const sanitaryCost = form.watch("sanitaryCost").toString();
 
     useEffect(() => {
         if (open) {
@@ -94,12 +110,38 @@ export function UpdateClientSheet({
                 deliveryTime: quotationById?.deliveryTime ?? 0,
                 landArea: quotationById?.landArea ?? 0,
                 description: quotationById?.description ?? "",
+                architecturalCost: quotationById?.architecturalCost ?? 0,
+                structuralCost: quotationById?.structuralCost ?? 0,
+                electricCost: quotationById?.electricCost ?? 0,
+                sanitaryCost: quotationById?.sanitaryCost ?? 0,
                 discount: quotationById?.discount ?? 0,
+                exchangeRate: quotationById?.exchangeRate ?? 0,
+                totalAmount: quotationById?.totalAmount ?? 0,
             });
         }
     }, [open, quotation, quotationById, form]);
 
-    const onSubmit = async (input: CreateQuotationSchema) => {
+    useEffect(() => {
+        const total =
+            parseFloat(architecturalCost) +
+            parseFloat(structuralCost) +
+            parseFloat(electricCost) +
+            parseFloat(sanitaryCost);
+        form.setValue("totalAmount", total);
+    }, [architecturalCost, structuralCost, electricCost, sanitaryCost, form]);
+
+    const { handleFetchExchangeRate, exchangeRate } = useExchangeRate();
+    const { setValue, clearErrors } = form;
+
+    const handleButtonClick = async () => {
+        await handleFetchExchangeRate();
+        if (exchangeRate) {
+            setValue("exchangeRate", parseFloat(exchangeRate));
+            clearErrors("exchangeRate");
+        }
+    };
+
+    const onSubmit = async (input: UpdateQuotationSchema) => {
         onUpdateClient({
             ...input,
             id: quotation.id,
@@ -275,6 +317,186 @@ export function UpdateClientSheet({
                             />
 
                             <Separator className="my-4" />
+
+                            <FormField
+                                control={form.control}
+                                name="architecturalCost"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel htmlFor="architecturalCost">
+                                            Costo del Proyecto Arquitectónico
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                id="architecturalCost"
+                                                type="number"
+                                                placeholder="Ingrese el costo del proyecto arquitectónico"
+                                                {...field}
+                                                onChange={(e) =>
+                                                    field.onChange(
+                                                        parseFloat(
+                                                            e.target.value,
+                                                        ),
+                                                    )
+                                                }
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="structuralCost"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel htmlFor="structuralCost">
+                                            Costo del Proyecto Estructural
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                id="structuralCost"
+                                                type="number"
+                                                placeholder="Ingrese el costo del proyecto estructural"
+                                                {...field}
+                                                onChange={(e) =>
+                                                    field.onChange(
+                                                        parseFloat(
+                                                            e.target.value,
+                                                        ),
+                                                    )
+                                                }
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="electricCost"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel htmlFor="electricCost">
+                                            Costo del Proyecto de Instalaciones
+                                            Eléctricas
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                id="electricCost"
+                                                type="number"
+                                                placeholder="Ingrese el costo de instalaciones eléctricas"
+                                                {...field}
+                                                onChange={(e) =>
+                                                    field.onChange(
+                                                        parseFloat(
+                                                            e.target.value,
+                                                        ),
+                                                    )
+                                                }
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="sanitaryCost"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel htmlFor="sanitaryCost">
+                                            Costo del Proyecto de Instalaciones
+                                            Sanitarias
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                id="sanitaryCost"
+                                                type="number"
+                                                placeholder="Ingrese el costo de instalaciones sanitarias"
+                                                {...field}
+                                                onChange={(e) =>
+                                                    field.onChange(
+                                                        parseFloat(
+                                                            e.target.value,
+                                                        ),
+                                                    )
+                                                }
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="discount"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel htmlFor="lastDiscount">
+                                            Costo x m² (Proyecto)
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                id="lastDiscount"
+                                                type="number"
+                                                disabled
+                                                value={
+                                                    field.value
+                                                        ? field.value.toFixed(2)
+                                                        : ""
+                                                }
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="exchangeRate"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel htmlFor="exchangeRate">
+                                            Tasa de Cambio (USD)
+                                        </FormLabel>
+                                        <FormControl>
+                                            <div className="flex items-center gap-2">
+                                                <Input
+                                                    id="exchangeRate"
+                                                    placeholder="Ingrese la tasa de cambio"
+                                                    {...field}
+                                                />
+                                                <TooltipProvider>
+                                                    <Tooltip>
+                                                        <TooltipTrigger asChild>
+                                                            <Button
+                                                                type="button"
+                                                                variant="outline"
+                                                                onClick={
+                                                                    handleButtonClick
+                                                                }
+                                                            >
+                                                                <LogoSunat />
+                                                            </Button>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>
+                                                            Obtener Tasa de
+                                                            Cambio
+                                                        </TooltipContent>
+                                                    </Tooltip>
+                                                </TooltipProvider>
+                                            </div>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
                             <FormField
                                 control={form.control}
