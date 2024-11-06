@@ -166,10 +166,7 @@ export function BusinessUpdateForm() {
                         </FormItem>
                     )}
                 />
-                <Button
-                    disabled={isCreatePending || !form.formState.isDirty}
-                    className="w-full"
-                >
+                <Button disabled={isCreatePending || !form.formState.isDirty}>
                     {isCreatePending && (
                         <RefreshCcw
                             className="mr-2 size-4 animate-spin"

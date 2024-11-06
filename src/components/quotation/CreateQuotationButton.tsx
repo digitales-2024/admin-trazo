@@ -61,7 +61,8 @@ export default function CreateQuotationButton({
         const headQuotationData = obtenerHeadQuotation();
         const integralProjectData = getAllDataIntegralProject();
 
-        const totalCost = integralProjectData.totalCost;
+        const totalCost =
+            integralProjectData.totalCost * integralProjectData.area;
 
         const paymentSchedule: PaymentSchedule[] = [
             {
@@ -88,6 +89,18 @@ export default function CreateQuotationButton({
         const electricCost = integralProjectData.projects[2]?.cost || 0;
         const sanitaryCost = integralProjectData.projects[3]?.cost || 0;
 
+        // Convertir los datos de levels a la estructura esperada, excluyendo la propiedad 'name' de 'spaces'
+        const formattedLevels: LevelQuotation[] = levelSpaceData.map(
+            (level) => ({
+                name: level.name,
+                spaces: level.spaces.map(({ amount, area, spaceId }) => ({
+                    amount,
+                    area,
+                    spaceId,
+                })),
+            }),
+        );
+
         const quotation: QuotationStructure = {
             name: headQuotationData.name,
             code: "SGC-P-04-F3",
@@ -110,8 +123,9 @@ export default function CreateQuotationButton({
             electricCost: electricCost,
             sanitaryCost: sanitaryCost,
             metering: integralProjectData.area,
-            levels: levelSpaceData,
+            levels: formattedLevels, // Usar los datos formateados
             clientId: headQuotationData.idClient,
+            totalAmount: totalCost,
         };
 
         onCreateQuotation(quotation);

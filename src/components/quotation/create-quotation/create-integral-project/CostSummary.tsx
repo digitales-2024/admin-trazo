@@ -25,6 +25,7 @@ interface CostSummaryProps
     setDiscount: (value: number) => void;
     setExchangeRate: (value: number) => void;
     form: UseFormReturn<QuotationStructure>;
+    area: number;
 }
 
 const projectNames: { [key in keyof Costs]: string } = {
@@ -42,6 +43,7 @@ const CostSummary: React.FC<CostSummaryProps> = ({
     subtotal,
     setDiscount,
     setExchangeRate,
+    area,
     form,
 }) => (
     <Card>
@@ -73,7 +75,7 @@ const CostSummary: React.FC<CostSummaryProps> = ({
                     <Input
                         id="costM2Project"
                         type="number"
-                        value={subtotal}
+                        value={subtotal.toFixed(2)}
                         className="max-w-[100px]"
                         disabled
                     />
@@ -128,7 +130,7 @@ const CostSummary: React.FC<CostSummaryProps> = ({
                 </div>
                 <div className="flex items-center justify-between font-bold">
                     <Label>Costo total sin descuento (PEN):</Label>
-                    <span>{(subtotal * exchangeRate).toFixed(2)}</span>
+                    <span>{(subtotal * exchangeRate * area).toFixed(2)}</span>
                 </div>
                 <div className="flex items-center justify-between font-bold">
                     <Label>Costo Total (PEN):</Label>

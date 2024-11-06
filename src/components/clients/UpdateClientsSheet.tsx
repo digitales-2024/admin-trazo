@@ -82,13 +82,13 @@ export function UpdateClientSheet({
     const [isDepartmentSelected, setIsDepartmentSelected] = useState(false);
 
     const departmentOptions: Option[] = departments.map((department) => ({
-        value: department.id.toString(),
+        value: department.name,
         label: department.name,
     }));
 
-    const handleDepartmentChange = (departmentId: string) => {
+    const handleDepartmentChange = (departmentName: string) => {
         const selectedDepartment = departments.find(
-            (dept) => dept.id.toString() === departmentId,
+            (dept) => dept.name === departmentName,
         );
         const selectedCities = selectedDepartment?.cities || [];
         setCities(selectedCities);
@@ -120,10 +120,10 @@ export function UpdateClientSheet({
                         city.name.toLowerCase() ===
                         client.province.toLowerCase(),
                 );
-                form.setValue("department", selectedDepartment.id.toString());
+                form.setValue("department", selectedDepartment.name);
                 form.setValue(
                     "province",
-                    selectedCity ? selectedCity.id.toString() : "",
+                    selectedCity ? selectedCity.name : "",
                 );
             }
         }
@@ -283,7 +283,7 @@ export function UpdateClientSheet({
                                                     {cities.map((city) => (
                                                         <SelectItem
                                                             key={city.id.toString()}
-                                                            value={city.id.toString()}
+                                                            value={city.name}
                                                         >
                                                             {city.name}
                                                         </SelectItem>

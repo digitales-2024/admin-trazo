@@ -17,6 +17,7 @@ export type {
     SpaceQuotation,
     QuotationStructure,
     PaymentSchedule,
+    QuotationSummary,
 } from "./quotation";
 export { QuotationStatusType } from "./quotation";
 export type { Space, Floor } from "./floor";

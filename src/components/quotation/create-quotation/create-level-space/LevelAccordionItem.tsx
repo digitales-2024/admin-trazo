@@ -27,26 +27,27 @@ import {
 
 import { SpaceForm } from "./SpaceForm";
 
-interface LevelAccordionItemProps
-    extends Omit<React.ComponentPropsWithRef<"form">, "onSubmit"> {
+interface LevelAccordionItemProps {
     floor: Floor;
-    deleteFloor: (floorNumber: number) => void;
-    changeFloorName: (floorNumber: number, newName: string) => void;
+    floorIndex: number;
+    deleteFloor: (floorIndex: number) => void;
+    changeFloorName: (floorIndex: number, newName: string) => void;
     updateSpace: (
-        floorNumber: number,
+        floorIndex: number,
         spaceIndex: number,
         field: "name" | "meters" | "amount" | "selected" | "spaceId",
         value: string | number | boolean,
     ) => void;
-    addSpace: (floorNumber: number) => void;
+    addSpace: (floorIndex: number) => void;
     calculateTotalMeters: (floor: Floor) => number;
-    duplicateFloor: (floorNumber: number) => void;
-    deleteSelectedSpaces: (floorNumber: number) => void;
+    duplicateFloor: (floorIndex: number) => void;
+    deleteSelectedSpaces: (floorIndex: number) => void;
     form: UseFormReturn<QuotationStructure>;
 }
 
 export function LevelAccordionItem({
     floor,
+    floorIndex,
     deleteFloor,
     changeFloorName,
     updateSpace,
@@ -176,7 +177,7 @@ export function LevelAccordionItem({
                             <div className="flex flex-col gap-4 xl:flex-row">
                                 <Button
                                     type="button"
-                                    onClick={() => addSpace(floor.number)}
+                                    onClick={() => addSpace(floorIndex)}
                                 >
                                     <Plus className="mr-2" /> Añadir ambiente
                                 </Button>
@@ -185,7 +186,7 @@ export function LevelAccordionItem({
                                         type="button"
                                         variant="destructive"
                                         onClick={() =>
-                                            deleteSelectedSpaces(floor.number)
+                                            deleteSelectedSpaces(floorIndex)
                                         }
                                     >
                                         <Trash className="mr-2" />
@@ -195,12 +196,12 @@ export function LevelAccordionItem({
                                 )}
                             </div>
                         </div>
-                        {floor.spaces.map((space, index) => (
+                        {floor.spaces.map((space, environmentIndex) => (
                             <SpaceForm
-                                key={index}
+                                key={environmentIndex}
                                 space={space}
-                                floorNumber={floor.number}
-                                environmentIndex={index}
+                                floorIndex={floorIndex}
+                                environmentIndex={environmentIndex}
                                 updateEnvironment={updateSpace}
                                 form={form}
                             />

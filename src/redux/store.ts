@@ -5,6 +5,7 @@ import { adminApi } from "./services/adminApi";
 import { authApi } from "./services/authApi";
 import { businessApi } from "./services/businessApi";
 import { clientsApi } from "./services/clientApi";
+import { exchangeRateSunatApi } from "./services/exchangeRateSunatApi";
 import { quotationsApi } from "./services/quotationApi";
 import { rolesApi } from "./services/rolesApi";
 import { spacesApi } from "./services/spaceApi";
@@ -20,9 +21,21 @@ export const store = configureStore({
         [spacesApi.reducerPath]: spacesApi.reducer,
         [clientsApi.reducerPath]: clientsApi.reducer,
         [quotationsApi.reducerPath]: quotationsApi.reducer,
+        [exchangeRateSunatApi.reducerPath]: exchangeRateSunatApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware()
+        getDefaultMiddleware({
+            // Configuración para evitar errores de "non-serializable value"
+            serializableCheck: {
+                // Ignorar las acciones que no son serializables, específicamente de classApi
+                ignoredActions: [
+                    "quotationsApi/executeMutation/fulfilled",
+                    "quotationsApi/executeMutation/rejected",
+                ],
+                // Ignorar las rutas en el estado que contienen valores no serializables
+                ignoredPaths: ["quotationsApi.mutations"],
+            },
+        })
             .concat(authApi.middleware)
             .concat(adminApi.middleware)
             .concat(businessApi.middleware)
@@ -30,7 +43,8 @@ export const store = configureStore({
             .concat(usersApi.middleware)
             .concat(spacesApi.middleware)
             .concat(clientsApi.middleware)
-            .concat(quotationsApi.middleware),
+            .concat(quotationsApi.middleware)
+            .concat(exchangeRateSunatApi.middleware),
 });
 setupListeners(store.dispatch);
 

@@ -7,6 +7,8 @@ export {
 export * from "./users/rolesSchema";
 export { type CreateSpacesSchema } from "./spaces/createSpacesSchema";
 export {
-    type CreateHeadQuotationSchema,
-    type CreateQuotationIntegralProjectSchema,
+    type CreateQuotationSchema,
+    type UpdateQuotationSchema,
+    createQuotationSchema,
+    updateQuotationSchema,
 } from "./quotations/createQuotationSchema";

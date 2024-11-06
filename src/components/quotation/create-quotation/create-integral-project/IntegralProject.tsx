@@ -52,9 +52,8 @@ export default function IntegralProject({
 }: IntegralProjectProps) {
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
-    const subtotal =
-        Object.values(costs).reduce((sum, cost) => sum + cost, 0) * area;
-    const totalCost = discount * exchangeRate;
+    const subtotal = Object.values(costs).reduce((sum, cost) => sum + cost, 0);
+    const totalCost = discount * exchangeRate * area;
 
     const handleCostChange = (project: keyof Costs, value: number) => {
         setCosts((prev) => ({
@@ -176,6 +175,7 @@ export default function IntegralProject({
                                     setDiscount={setDiscount}
                                     setExchangeRate={setExchangeRate}
                                     form={form}
+                                    area={area}
                                 />
                             </div>
                         </CollapsibleContent>
