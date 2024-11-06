@@ -5,11 +5,11 @@ import { useClients } from "@/hooks/use-client";
 import { useExchangeRate } from "@/hooks/use-exchange-rate-sunat";
 import { useQuotations } from "@/hooks/use-quotation";
 import { updateQuotationSchema, UpdateQuotationSchema } from "@/schemas";
-import { QuotationSummary } from "@/types";
+import { QuotationSummary, QuotationStructure, Floor } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RefreshCcw } from "lucide-react";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useForm, UseFormReturn } from "react-hook-form";
 
 import { AutoComplete, type Option } from "@/components/ui/autocomplete";
 import { Badge } from "@/components/ui/badge";
@@ -43,6 +43,10 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "../ui/tooltip";
+import {
+    CreateLevelSpace,
+    extractData,
+} from "./create-quotation/create-level-space/LevelSpaceCreate";
 
 const infoSheet = {
     title: "Actualizar Cotización",
@@ -67,10 +71,26 @@ export function UpdateClientSheet({
 }: UpdateClientSheetProps) {
     const { onUpdateClient, isSuccessUpdateClient, isLoadingUpdateClient } =
         useClients();
-
+    const updateLevelQuotation = true;
     const { quotationById } = useQuotations({
         id: quotation.id,
     });
+
+    const levelData = quotationById?.levels ?? [];
+    const adaptedLevelData = levelData.map((level, index) => ({
+        number: index, // Cambiamos a index para que comience desde 0
+        name: level.name,
+        spaces: level.spaces.map((space) => ({
+            spaceId: space.spaceId,
+            name: space.name,
+            meters: space.area,
+            amount: space.amount,
+            selected: false,
+        })),
+        expanded: false,
+    }));
+
+    const [floors, setFloors] = useState<Floor[]>(adaptedLevelData);
 
     const { dataClientsAll } = useClients();
 
@@ -121,6 +141,7 @@ export function UpdateClientSheet({
                 totalAmount: quotationById?.totalAmount ?? 0,
                 newTotal: quotationById?.discount ?? 0,
             });
+            setFloors(adaptedLevelData);
         }
     }, [open, quotation, quotationById, form]);
 
@@ -158,9 +179,25 @@ export function UpdateClientSheet({
         }
     };
 
+    const calculateTotalMeters = (floor: Floor) => {
+        return floor.spaces.reduce((total, space) => total + space.meters, 0);
+    };
+
+    const calculateTotalBuildingMeters = () => {
+        return floors.reduce(
+            (total, floor) => total + calculateTotalMeters(floor),
+            0,
+        );
+    };
+
     const onSubmit = async (input: UpdateQuotationSchema) => {
+        // Extraemos los datos de niveles y ambientes
+        const levelsData = extractData(floors);
+
+        // Puedes incluir los datos en la actualización si lo deseas
         onUpdateClient({
             ...input,
+            levels: levelsData, // Incluimos los niveles en la actualización
             id: quotation.id,
         });
     };
@@ -196,6 +233,7 @@ export function UpdateClientSheet({
                             onSubmit={form.handleSubmit(onSubmit)}
                             className="flex flex-col gap-4 p-4"
                         >
+                            {/* Campos del formulario */}
                             {/* Campo de Nombre del Proyecto */}
                             <FormField
                                 control={form.control}
@@ -335,6 +373,8 @@ export function UpdateClientSheet({
 
                             <Separator className="my-4" />
 
+                            {/* Campos de Costos */}
+                            {/* Costo del Proyecto Arquitectónico */}
                             <FormField
                                 control={form.control}
                                 name="architecturalCost"
@@ -363,6 +403,7 @@ export function UpdateClientSheet({
                                 )}
                             />
 
+                            {/* Costo del Proyecto Estructural */}
                             <FormField
                                 control={form.control}
                                 name="structuralCost"
@@ -391,6 +432,7 @@ export function UpdateClientSheet({
                                 )}
                             />
 
+                            {/* Costo del Proyecto de Instalaciones Eléctricas */}
                             <FormField
                                 control={form.control}
                                 name="electricCost"
@@ -420,6 +462,7 @@ export function UpdateClientSheet({
                                 )}
                             />
 
+                            {/* Costo del Proyecto de Instalaciones Sanitarias */}
                             <FormField
                                 control={form.control}
                                 name="sanitaryCost"
@@ -449,6 +492,7 @@ export function UpdateClientSheet({
                                 )}
                             />
 
+                            {/* Costo x m² (Proyecto) */}
                             <FormField
                                 control={form.control}
                                 name="newTotal"
@@ -474,6 +518,7 @@ export function UpdateClientSheet({
                                 )}
                             />
 
+                            {/* Tasa de Cambio (USD) */}
                             <FormField
                                 control={form.control}
                                 name="exchangeRate"
@@ -515,6 +560,7 @@ export function UpdateClientSheet({
                                 )}
                             />
 
+                            {/* Descuento (%) */}
                             <FormField
                                 control={form.control}
                                 name="discount"
@@ -543,6 +589,7 @@ export function UpdateClientSheet({
                                 )}
                             />
 
+                            {/* Costo Total (PEN) */}
                             <FormField
                                 control={form.control}
                                 name="totalAmount"
@@ -566,6 +613,17 @@ export function UpdateClientSheet({
                                         <FormMessage />
                                     </FormItem>
                                 )}
+                            />
+
+                            {/* Componente CreateLevelSpace */}
+                            <CreateLevelSpace
+                                form={form as UseFormReturn<QuotationStructure>}
+                                floors={floors}
+                                setFloors={setFloors}
+                                calculateTotalBuildingMeters={
+                                    calculateTotalBuildingMeters
+                                }
+                                updateLevelQuotation={updateLevelQuotation}
                             />
 
                             <SheetFooter className="gap-2 pt-2 sm:space-x-0">
