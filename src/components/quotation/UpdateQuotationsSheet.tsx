@@ -94,6 +94,7 @@ export function UpdateClientSheet({
             discount: quotationById?.discount ?? 0,
             exchangeRate: quotationById?.exchangeRate ?? 0,
             totalAmount: quotationById?.totalAmount ?? 0,
+            newTotal: quotationById?.discount ?? 0,
         },
     });
 
@@ -101,6 +102,7 @@ export function UpdateClientSheet({
     const structuralCost = form.watch("structuralCost").toString();
     const electricCost = form.watch("electricCost").toString();
     const sanitaryCost = form.watch("sanitaryCost").toString();
+    const discount = form.watch("discount").toString();
 
     useEffect(() => {
         if (open) {
@@ -117,6 +119,7 @@ export function UpdateClientSheet({
                 discount: quotationById?.discount ?? 0,
                 exchangeRate: quotationById?.exchangeRate ?? 0,
                 totalAmount: quotationById?.totalAmount ?? 0,
+                newTotal: quotationById?.discount ?? 0,
             });
         }
     }, [open, quotation, quotationById, form]);
@@ -127,8 +130,22 @@ export function UpdateClientSheet({
             parseFloat(structuralCost) +
             parseFloat(electricCost) +
             parseFloat(sanitaryCost);
-        form.setValue("totalAmount", total);
-    }, [architecturalCost, structuralCost, electricCost, sanitaryCost, form]);
+        form.setValue("newTotal", total);
+        form.setValue(
+            "totalAmount",
+            parseFloat(discount) *
+                form.watch("exchangeRate") *
+                (quotationById?.metering ?? 1),
+        );
+    }, [
+        architecturalCost,
+        structuralCost,
+        electricCost,
+        sanitaryCost,
+        form,
+        quotationById?.metering,
+        discount,
+    ]);
 
     const { handleFetchExchangeRate, exchangeRate } = useExchangeRate();
     const { setValue, clearErrors } = form;
@@ -434,15 +451,15 @@ export function UpdateClientSheet({
 
                             <FormField
                                 control={form.control}
-                                name="discount"
+                                name="newTotal"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel htmlFor="lastDiscount">
+                                        <FormLabel htmlFor="newTotal">
                                             Costo x m² (Proyecto)
                                         </FormLabel>
                                         <FormControl>
                                             <Input
-                                                id="lastDiscount"
+                                                id="newTotal"
                                                 type="number"
                                                 disabled
                                                 value={
@@ -518,6 +535,31 @@ export function UpdateClientSheet({
                                                             e.target.value,
                                                         ),
                                                     )
+                                                }
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="totalAmount"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel htmlFor="totalAmount">
+                                            Costo Total (PEN)
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                id="totalAmount"
+                                                type="number"
+                                                disabled
+                                                value={
+                                                    field.value
+                                                        ? field.value.toFixed(2)
+                                                        : ""
                                                 }
                                             />
                                         </FormControl>
