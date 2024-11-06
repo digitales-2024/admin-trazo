@@ -11,13 +11,12 @@ import { FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-interface EnvironmentFormProps
-    extends Omit<React.ComponentPropsWithRef<"form">, "onSubmit"> {
+interface SpaceFormProps {
     space: Space;
-    floorNumber: number;
+    floorIndex: number;
     environmentIndex: number;
     updateEnvironment: (
-        floorNumber: number,
+        floorIndex: number,
         environmentIndex: number,
         field: "name" | "meters" | "amount" | "selected" | "spaceId",
         value: string | number | boolean,
@@ -27,11 +26,11 @@ interface EnvironmentFormProps
 
 export function SpaceForm({
     space,
-    floorNumber,
+    floorIndex,
     environmentIndex,
     updateEnvironment,
     form,
-}: EnvironmentFormProps) {
+}: SpaceFormProps) {
     const { dataSpacesAll = [] } = useSpaces();
     const [selectedSpaceId, setSelectedSpaceId] = React.useState<string>(
         space.spaceId || "",
@@ -52,37 +51,37 @@ export function SpaceForm({
     const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = Math.max(1, Number(e.target.value));
         setAmount(value);
-        updateEnvironment(floorNumber, environmentIndex, "amount", value);
+        updateEnvironment(floorIndex, environmentIndex, "amount", value);
     };
 
     const handleMetersChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = Math.max(0, Number(e.target.value));
         setMeters(value);
-        updateEnvironment(floorNumber, environmentIndex, "meters", value);
+        updateEnvironment(floorIndex, environmentIndex, "meters", value);
     };
 
     const handleCheckboxChange = (checked: boolean) => {
         setIsSelected(checked);
-        updateEnvironment(floorNumber, environmentIndex, "selected", checked);
+        updateEnvironment(floorIndex, environmentIndex, "selected", checked);
     };
 
     const handleSpaceChange = (option: { value: string; label: string }) => {
         setSelectedSpaceId(option.value);
         setSelectedSpaceName(option.label);
         updateEnvironment(
-            floorNumber,
+            floorIndex,
             environmentIndex,
             "spaceId",
             option.value,
         );
-        updateEnvironment(floorNumber, environmentIndex, "name", option.label);
+        updateEnvironment(floorIndex, environmentIndex, "name", option.label);
     };
 
     return (
         <div className="grid grid-cols-1 items-center gap-2 pb-4">
             <div className="flex flex-row items-end justify-end gap-2">
                 <Checkbox
-                    id={`checkbox-${floorNumber}-${environmentIndex}`}
+                    id={`checkbox-${floorIndex}-${environmentIndex}`}
                     checked={isSelected}
                     onCheckedChange={handleCheckboxChange}
                     className="mb-4"
@@ -90,17 +89,17 @@ export function SpaceForm({
                 <div>
                     <FormField
                         control={form.control}
-                        name={`levels.${floorNumber}.spaces.${environmentIndex}.amount`}
+                        name={`levels.${floorIndex}.spaces.${environmentIndex}.amount`}
                         render={({ field }) => (
                             <FormItem>
                                 <Label
                                     className="truncate"
-                                    htmlFor={`amount-${floorNumber}-${environmentIndex}`}
+                                    htmlFor={`amount-${floorIndex}-${environmentIndex}`}
                                 >
                                     Cantidad
                                 </Label>
                                 <Input
-                                    id={`amount-${floorNumber}-${environmentIndex}`}
+                                    id={`amount-${floorIndex}-${environmentIndex}`}
                                     type="number"
                                     value={amount}
                                     onChange={(e) => {
@@ -119,12 +118,12 @@ export function SpaceForm({
                 <div className="w-full">
                     <FormField
                         control={form.control}
-                        name={`levels.${floorNumber}.spaces.${environmentIndex}.spaceId`}
+                        name={`levels.${floorIndex}.spaces.${environmentIndex}.spaceId`}
                         render={({ field }) => (
                             <FormItem>
                                 <Label
                                     className="truncate"
-                                    htmlFor={`space-${floorNumber}-${environmentIndex}`}
+                                    htmlFor={`space-${floorIndex}-${environmentIndex}`}
                                 >
                                     Espacio
                                 </Label>
@@ -153,17 +152,17 @@ export function SpaceForm({
                 <div>
                     <FormField
                         control={form.control}
-                        name={`levels.${floorNumber}.spaces.${environmentIndex}.area`}
+                        name={`levels.${floorIndex}.spaces.${environmentIndex}.area`}
                         render={({ field }) => (
                             <FormItem>
                                 <Label
                                     className="truncate"
-                                    htmlFor={`meters-${floorNumber}-${environmentIndex}`}
+                                    htmlFor={`meters-${floorIndex}-${environmentIndex}`}
                                 >
                                     Área (m²)
                                 </Label>
                                 <Input
-                                    id={`meters-${floorNumber}-${environmentIndex}`}
+                                    id={`meters-${floorIndex}-${environmentIndex}`}
                                     type="number"
                                     value={meters}
                                     onChange={(e) => {
