@@ -1,76 +1,58 @@
 "use client";
+"use memo";
 
 import { useUsers } from "@/hooks/use-users";
 
 import { ErrorPage } from "@/components/common/ErrorPage";
+import { HeaderPage } from "@/components/common/HeaderPage";
+import { Shell } from "@/components/common/Shell";
 import { DataTableSkeleton } from "@/components/data-table/DataTableSkeleton";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { UsersTable } from "@/components/users/UsersTable";
 
-export default function UsersPage() {
+export default function PageUsers() {
     const { data, isLoading } = useUsers();
 
     if (isLoading) {
         return (
-            <div>
-                <div className="pb-8 pt-16">
-                    <h2 className="pb-2 text-4xl font-black">Usuarios</h2>
-                    <p className="text-sm text-muted-foreground">
-                        Gestiona los usuarios con acceso a la aplicación
-                    </p>
+            <Shell className="gap-2">
+                <HeaderPage
+                    title="Usuarios"
+                    description="
+          Aquí puedes ver la lista de usuarios registrados en la aplicación.
+        "
+                />
+                <div className="flex flex-col items-end justify-center gap-4">
+                    <DataTableSkeleton
+                        columnCount={5}
+                        searchableColumnCount={1}
+                        filterableColumnCount={0}
+                        cellWidths={["1rem", "15rem", "12rem", "12rem", "8rem"]}
+                        shrinkZero
+                    />
                 </div>
-
-                <Card>
-                    <CardHeader />
-                    <CardContent>
-                        <DataTableSkeleton
-                            columnCount={3}
-                            searchableColumnCount={1}
-                            filterableColumnCount={0}
-                            cellWidths={["1rem", "15rem", "12rem"]}
-                            shrinkZero
-                        />
-                    </CardContent>
-                </Card>
-            </div>
+            </Shell>
         );
     }
-
     if (!data) {
         return (
-            <div>
-                <div className="pb-8 pt-16">
-                    <h2 className="pb-2 text-4xl font-black">Usuarios</h2>
-                    <p className="text-sm text-muted-foreground">
-                        Gestiona los usuarios con acceso a la aplicación
-                    </p>
-                </div>
-
-                <Card>
-                    <CardHeader />
-                    <CardContent>
-                        <ErrorPage />
-                    </CardContent>
-                </Card>
-            </div>
+            <Shell>
+                <HeaderPage
+                    title="Usuarios"
+                    description="Aquí puedes ver la lista de usuarios registrados en la aplicación."
+                />
+                <ErrorPage />
+            </Shell>
         );
     }
-
     return (
-        <div>
-            <div className="pb-8 pt-16">
-                <h2 className="pb-2 text-4xl font-black">Usuarios</h2>
-                <p className="text-sm text-muted-foreground">
-                    Gestiona los usuarios con acceso a la aplicación
-                </p>
-            </div>
-
-            <Card>
-                <CardHeader />
-                <CardContent>
-                    <UsersTable data={data} />
-                </CardContent>
-            </Card>
-        </div>
+        <Shell className="gap-6">
+            <HeaderPage
+                title="Usuarios"
+                description="
+          Aquí puedes ver la lista de usuarios registrados en la aplicación.
+        "
+            />
+            <UsersTable data={data} />
+        </Shell>
     );
 }
