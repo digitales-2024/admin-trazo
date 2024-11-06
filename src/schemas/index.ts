@@ -6,4 +6,9 @@ export {
 } from "./users/createUsersSchema";
 export * from "./users/rolesSchema";
 export { type CreateSpacesSchema } from "./spaces/createSpacesSchema";
-export { type CreateQuotationSchema } from "./quotations/createQuotationSchema";
+export {
+    type CreateQuotationSchema,
+    type UpdateQuotationSchema,
+    createQuotationSchema,
+    updateQuotationSchema,
+} from "./quotations/createQuotationSchema";
