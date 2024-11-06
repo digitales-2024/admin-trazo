@@ -1,15 +1,15 @@
 "use client";
 
-import { departments } from "@/data/department";
 import { useClients } from "@/hooks/use-client";
+import { useQuotations } from "@/hooks/use-quotation";
 import {
-    clientsSchema,
-    CreateClientsSchema,
-} from "@/schemas/clients/createClientSchema";
-import { City, QuotationSummary } from "@/types";
+    createQuotationSchema,
+    CreateQuotationSchema,
+} from "@/schemas/quotations/createQuotationSchema";
+import { QuotationSummary } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RefreshCcw } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import { AutoComplete, type Option } from "@/components/ui/autocomplete";
@@ -26,14 +26,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import {
     Sheet,
     SheetClose,
     SheetContent,
@@ -43,9 +35,14 @@ import {
     SheetTitle,
 } from "@/components/ui/sheet";
 
+import { Separator } from "../ui/separator";
+import { Slider } from "../ui/slider";
+import { Textarea } from "../ui/textarea";
+
 const infoSheet = {
-    title: "Actualizar Cliente",
-    description: "Actualiza la información del cliente y guarda los cambios",
+    title: "Actualizar Cotización",
+    description:
+        "Actualiza la información de la cotización y guarda los cambios",
 };
 
 interface UpdateClientSheetProps
@@ -53,86 +50,59 @@ interface UpdateClientSheetProps
         React.ComponentPropsWithRef<typeof Sheet>,
         "open" | "onOpenChange"
     > {
-    client: QuotationSummary;
+    quotation: QuotationSummary;
     open: boolean;
     onOpenChange: (open: boolean) => void;
 }
 
 export function UpdateClientSheet({
-    client,
+    quotation,
     open,
     onOpenChange,
 }: UpdateClientSheetProps) {
     const { onUpdateClient, isSuccessUpdateClient, isLoadingUpdateClient } =
         useClients();
 
-    const form = useForm<CreateClientsSchema>({
-        resolver: zodResolver(clientsSchema),
-        defaultValues: {
-            name: client.name ?? "",
-            rucDni: client.rucDni ?? "",
-            phone: client.phone ?? "",
-            address: client.address ?? "",
-            province: client.province ?? "",
-            department: client.department ?? "",
-        },
+    const { quotationById } = useQuotations({
+        id: quotation.id,
     });
 
-    const [cities, setCities] = useState<City[]>([]);
-    const [isDepartmentSelected, setIsDepartmentSelected] = useState(false);
+    const { dataClientsAll } = useClients();
 
-    const departmentOptions: Option[] = departments.map((department) => ({
-        value: department.name,
-        label: department.name,
+    const clientOptions: Option[] = (dataClientsAll ?? []).map((client) => ({
+        value: client.id,
+        label: client.name,
     }));
 
-    const handleDepartmentChange = (departmentName: string) => {
-        const selectedDepartment = departments.find(
-            (dept) => dept.name === departmentName,
-        );
-        const selectedCities = selectedDepartment?.cities || [];
-        setCities(selectedCities);
-        setIsDepartmentSelected(true);
-        form.setValue("province", "");
-    };
+    const form = useForm<CreateQuotationSchema>({
+        resolver: zodResolver(createQuotationSchema),
+        defaultValues: {
+            name: quotation.name ?? "",
+            clientId: quotation.client.id ?? "",
+            deliveryTime: quotationById?.deliveryTime ?? 0,
+            landArea: quotationById?.landArea ?? 0,
+            description: quotationById?.description ?? "",
+            discount: quotationById?.discount ?? 0,
+        },
+    });
 
     useEffect(() => {
         if (open) {
             form.reset({
-                name: client.name ?? "",
-                rucDni: client.rucDni ?? "",
-                phone: client.phone ?? "",
-                address: client.address ?? "",
-                province: client.province ?? "",
-                department: client.department ?? "",
+                name: quotation.name ?? "",
+                clientId: quotation.client.id ?? "",
+                deliveryTime: quotationById?.deliveryTime ?? 0,
+                landArea: quotationById?.landArea ?? 0,
+                description: quotationById?.description ?? "",
+                discount: quotationById?.discount ?? 0,
             });
-
-            const selectedDepartment = departments.find(
-                (dept) =>
-                    dept.name.toLowerCase() === client.department.toLowerCase(),
-            );
-            if (selectedDepartment) {
-                setCities(selectedDepartment.cities);
-                setIsDepartmentSelected(true);
-
-                const selectedCity = selectedDepartment.cities.find(
-                    (city) =>
-                        city.name.toLowerCase() ===
-                        client.province.toLowerCase(),
-                );
-                form.setValue("department", selectedDepartment.name);
-                form.setValue(
-                    "province",
-                    selectedCity ? selectedCity.name : "",
-                );
-            }
         }
-    }, [open, client, form]);
+    }, [open, quotation, quotationById, form]);
 
-    const onSubmit = async (input: CreateClientsSchema) => {
+    const onSubmit = async (input: CreateQuotationSchema) => {
         onUpdateClient({
             ...input,
-            id: client.id,
+            id: quotation.id,
         });
     };
 
@@ -156,7 +126,7 @@ export function UpdateClientSheet({
                             className="bg-emerald-100 text-emerald-700"
                             variant="secondary"
                         >
-                            {client.name}
+                            {quotation.name}
                         </Badge>
                     </SheetTitle>
                     <SheetDescription>{infoSheet.description}</SheetDescription>
@@ -167,18 +137,19 @@ export function UpdateClientSheet({
                             onSubmit={form.handleSubmit(onSubmit)}
                             className="flex flex-col gap-4 p-4"
                         >
-                            {/* Nombre */}
+                            {/* Campo de Nombre del Proyecto */}
                             <FormField
                                 control={form.control}
                                 name="name"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>
-                                            Nombre del Cliente
+                                        <FormLabel htmlFor="name">
+                                            Nombre del Proyecto
                                         </FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="Ingrese el nombre del cliente"
+                                                id="name"
+                                                placeholder="Ingrese el nombre del proyecto"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -187,72 +158,92 @@ export function UpdateClientSheet({
                                 )}
                             />
 
-                            {/* RUC/DNI */}
+                            {/* Campo de Cliente */}
                             <FormField
                                 control={form.control}
-                                name="rucDni"
+                                name="clientId"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>RUC/DNI</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="Ingrese el RUC o DNI"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            {/* Dirección */}
-                            <FormField
-                                control={form.control}
-                                name="address"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Dirección</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="Ingrese la dirección"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            {/* Departamento */}
-                            <FormField
-                                control={form.control}
-                                name="department"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Departamento</FormLabel>
+                                        <FormLabel htmlFor="clientId">
+                                            Propietario / Cliente
+                                        </FormLabel>
                                         <FormControl>
                                             <AutoComplete
-                                                options={departmentOptions}
-                                                emptyMessage="No se encontró el departamento."
-                                                placeholder="Seleccione un departamento"
-                                                onValueChange={(
-                                                    selectedOption,
-                                                ) => {
-                                                    field.onChange(
-                                                        selectedOption?.value ||
-                                                            "",
-                                                    );
-                                                    handleDepartmentChange(
-                                                        selectedOption?.value ||
-                                                            "",
-                                                    );
-                                                }}
+                                                options={clientOptions}
+                                                placeholder="Selecciona un cliente"
+                                                emptyMessage="No se encontraron clientes"
                                                 value={
-                                                    departmentOptions.find(
+                                                    clientOptions.find(
                                                         (option) =>
                                                             option.value ===
                                                             field.value,
                                                     ) || undefined
+                                                }
+                                                onValueChange={(option) => {
+                                                    field.onChange(
+                                                        option.value,
+                                                    );
+                                                }}
+                                                className="z-50"
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* Campo de Plazo de Entrega */}
+                            <FormField
+                                control={form.control}
+                                name="deliveryTime"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel htmlFor="deliveryTime">
+                                            Plazo de Entrega (Meses)
+                                        </FormLabel>
+                                        <FormControl>
+                                            <div className="flex items-center space-x-2">
+                                                <Slider
+                                                    id="deliveryTime"
+                                                    min={1}
+                                                    max={36}
+                                                    value={[field.value]}
+                                                    onValueChange={(value) =>
+                                                        field.onChange(value[0])
+                                                    }
+                                                    className="flex-grow"
+                                                />
+                                                <span className="font-normal text-black">
+                                                    {field.value}
+                                                </span>
+                                            </div>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* Campo de Área del Terreno */}
+                            <FormField
+                                control={form.control}
+                                name="landArea"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel htmlFor="landArea">
+                                            Área del Terreno (m²)
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                id="landArea"
+                                                type="number"
+                                                placeholder="Ingrese el área en m²"
+                                                {...field}
+                                                onChange={(e) =>
+                                                    field.onChange(
+                                                        parseFloat(
+                                                            e.target.value,
+                                                        ),
+                                                    )
                                                 }
                                             />
                                         </FormControl>
@@ -261,52 +252,51 @@ export function UpdateClientSheet({
                                 )}
                             />
 
-                            {/* Provincia */}
+                            {/* Campo de Descripción */}
                             <FormField
                                 control={form.control}
-                                name="province"
+                                name="description"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Provincia</FormLabel>
-                                        <Select
-                                            onValueChange={field.onChange}
-                                            value={field.value}
-                                            disabled={!isDepartmentSelected}
-                                        >
-                                            <FormControl>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Seleccione una provincia" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    {cities.map((city) => (
-                                                        <SelectItem
-                                                            key={city.id.toString()}
-                                                            value={city.name}
-                                                        >
-                                                            {city.name}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
+                                        <FormLabel htmlFor="description">
+                                            Descripción del Proyecto
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Textarea
+                                                id="description"
+                                                placeholder="Ingrese una breve descripción del proyecto"
+                                                className="min-h-[100px] transition-all duration-200 ease-in-out focus:min-h-[150px]"
+                                                {...field}
+                                            />
+                                        </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
 
-                            {/* Teléfono */}
+                            <Separator className="my-4" />
+
                             <FormField
                                 control={form.control}
-                                name="phone"
+                                name="discount"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Teléfono</FormLabel>
+                                        <FormLabel htmlFor="discount">
+                                            Descuento (%)
+                                        </FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="Ingrese el número de teléfono"
+                                                id="discount"
+                                                type="number"
+                                                placeholder="Ingrese el descuento"
                                                 {...field}
+                                                onChange={(e) =>
+                                                    field.onChange(
+                                                        parseFloat(
+                                                            e.target.value,
+                                                        ),
+                                                    )
+                                                }
                                             />
                                         </FormControl>
                                         <FormMessage />

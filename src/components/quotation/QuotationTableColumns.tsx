@@ -192,7 +192,7 @@ export const quotationsColumns = (
                             <UpdateClientSheet
                                 open={showEditDialog}
                                 onOpenChange={setShowEditDialog}
-                                client={row?.original}
+                                quotation={row?.original}
                             />
                         </div>
                         <DropdownMenu>
