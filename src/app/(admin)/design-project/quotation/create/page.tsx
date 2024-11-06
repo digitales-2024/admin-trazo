@@ -1,5 +1,5 @@
 "use client";
-import { createHeadQuotationSchema } from "@/schemas/quotations/createQuotationSchema";
+import { createQuotationSchema } from "@/schemas/quotations/createQuotationSchema";
 import {
     Floor,
     HeadQuotation as HeadQuotationType,
@@ -130,7 +130,7 @@ export default function CreateQuotationPage() {
     };
 
     const form = useForm<QuotationStructure>({
-        resolver: zodResolver(createHeadQuotationSchema),
+        resolver: zodResolver(createQuotationSchema),
         defaultValues: {
             name: "",
             description: "",
