@@ -69,8 +69,11 @@ export function UpdateClientSheet({
     open,
     onOpenChange,
 }: UpdateClientSheetProps) {
-    const { onUpdateClient, isSuccessUpdateClient, isLoadingUpdateClient } =
-        useClients();
+    const {
+        onUpdateQuotation,
+        isSuccessUpdateQuotation,
+        isLoadingUpdateQuotation,
+    } = useQuotations();
     const updateLevelQuotation = true;
     const { quotationById } = useQuotations({
         id: quotation.id,
@@ -195,7 +198,7 @@ export function UpdateClientSheet({
         const levelsData = extractData(floors);
 
         // Puedes incluir los datos en la actualización si lo deseas
-        onUpdateClient({
+        onUpdateQuotation({
             ...input,
             levels: levelsData, // Incluimos los niveles en la actualización
             id: quotation.id,
@@ -203,11 +206,11 @@ export function UpdateClientSheet({
     };
 
     useEffect(() => {
-        if (isSuccessUpdateClient) {
+        if (isSuccessUpdateQuotation) {
             form.reset();
             onOpenChange(false);
         }
-    }, [isSuccessUpdateClient, form, onOpenChange]);
+    }, [isSuccessUpdateQuotation, form, onOpenChange]);
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
@@ -630,9 +633,9 @@ export function UpdateClientSheet({
                                 <div className="flex flex-row-reverse gap-2">
                                     <Button
                                         type="submit"
-                                        disabled={isLoadingUpdateClient}
+                                        disabled={isLoadingUpdateQuotation}
                                     >
-                                        {isLoadingUpdateClient && (
+                                        {isLoadingUpdateQuotation && (
                                             <RefreshCcw
                                                 className="mr-2 h-4 w-4 animate-spin"
                                                 aria-hidden="true"

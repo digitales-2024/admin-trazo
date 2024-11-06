@@ -1,3 +1,4 @@
+import { useUpdateClientMutation } from "@/redux/services/clientApi";
 import {
     useCreateQuotationMutation,
     useGenPdfQuotationMutation,
@@ -45,6 +46,14 @@ export const useQuotations = (options: UseQuotationsProps = {}) => {
     ] = useUpdateStatusQuotationMutation();
 
     const [genPdfQuotation] = useGenPdfQuotationMutation();
+
+    const [
+        updateQuotation,
+        {
+            isSuccess: isSuccessUpdateQuotation,
+            isLoading: isLoadingUpdateQuotation,
+        },
+    ] = useUpdateClientMutation();
 
     const onCreateQuotation = async (input: Partial<QuotationStructure>) => {
         const promise = () =>
@@ -171,6 +180,45 @@ export const useQuotations = (options: UseQuotationsProps = {}) => {
         });
     };
 
+    const onUpdateQuotation = async (
+        input: Partial<QuotationStructure> & { id: string },
+    ) => {
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                try {
+                    const result = await updateQuotation(input);
+                    if (
+                        result.error &&
+                        typeof result.error === "object" &&
+                        result.error !== null &&
+                        "data" in result.error
+                    ) {
+                        const error = (result.error.data as CustomErrorData)
+                            .message;
+                        const message = translateError(error as string);
+                        reject(new Error(message));
+                    }
+                    if (result.error) {
+                        reject(
+                            new Error(
+                                "Ocurrió un error inesperado, por favor intenta de nuevo",
+                            ),
+                        );
+                    }
+                    resolve(result);
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        toast.promise(promise(), {
+            loading: "Actualizando cotización...",
+            success: "Cotización actualizado exitosamente",
+            error: (error) => {
+                return error.message;
+            },
+        });
+    };
+
     return {
         dataQuotationsAll,
         error,
@@ -184,5 +232,8 @@ export const useQuotations = (options: UseQuotationsProps = {}) => {
         exportQuotationToPdf,
         quotationById,
         refetchQuotationsById,
+        onUpdateQuotation,
+        isSuccessUpdateQuotation,
+        isLoadingUpdateQuotation,
     };
 };
