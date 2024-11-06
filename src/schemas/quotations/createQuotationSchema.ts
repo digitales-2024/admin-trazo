@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-export const createHeadQuotationSchema = z.object({
+export const createQuotationSchema = z.object({
     name: z.string().min(1, { message: "El nombre es obligatorio" }),
     description: z
         .string()
@@ -32,6 +32,4 @@ export const createHeadQuotationSchema = z.object({
     }),
 });
 
-export type CreateHeadQuotationSchema = z.infer<
-    typeof createHeadQuotationSchema
->;
+export type CreateQuotationSchema = z.infer<typeof createQuotationSchema>;
