@@ -74,7 +74,7 @@ export default function UpdateQuotationPage() {
 
             form.reset({
                 name: quotationById.name,
-                clientId: quotationById.client.id.toString(), // Convertir a cadena
+                clientId: quotationById.client.id.toString(),
                 deliveryTime: quotationById.deliveryTime,
                 landArea: quotationById.landArea,
                 description: quotationById.description,
