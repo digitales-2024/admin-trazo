@@ -1,10 +1,9 @@
 "use client";
 
-import { useClients } from "@/hooks/use-client";
 import { useExchangeRate } from "@/hooks/use-exchange-rate-sunat";
 import { useQuotations } from "@/hooks/use-quotation";
 import { updateQuotationSchema, UpdateQuotationSchema } from "@/schemas";
-import { QuotationStructure, Floor } from "@/types";
+import { Floor, QuotationStructure } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RefreshCcw } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -13,12 +12,12 @@ import { useForm, FormProvider, UseFormReturn } from "react-hook-form";
 
 import { HeaderPage } from "@/components/common/HeaderPage";
 import { Shell } from "@/components/common/Shell";
+import { HeadQuotation } from "@/components/quotation/create-quotation/create-head-quotation/HeadQuotation";
 import {
     CreateLevelSpace,
     extractData,
 } from "@/components/quotation/create-quotation/create-level-space/LevelSpaceCreate";
 import { CostFields } from "@/components/quotation/update-quotation/CostFields";
-import { FormFields } from "@/components/quotation/update-quotation/FormFields";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
@@ -32,74 +31,71 @@ export default function UpdateQuotationPage() {
         isLoadingUpdateQuotation,
     } = useQuotations();
     const updateLevelQuotation = true;
-    const levelData = quotationById?.levels ?? [];
-    const adaptedLevelData = levelData.map((level, index) => ({
-        number: index,
-        name: level.name,
-        spaces: level.spaces.map((space) => ({
-            spaceId: space.spaceId,
-            name: space.name ?? "",
-            meters: space.area,
-            amount: space.amount,
-            selected: false,
-        })),
-        expanded: false,
-    }));
 
-    const [floors, setFloors] = useState<Floor[]>(adaptedLevelData);
+    const [floors, setFloors] = useState<Floor[]>([]);
 
-    const { dataClientsAll } = useClients();
-
-    const clientOptions = (dataClientsAll ?? []).map((client) => ({
-        value: client.id,
-        label: client.name,
-    }));
-
+    // Inicializa el formulario con valores vacíos
     const form = useForm<UpdateQuotationSchema>({
         resolver: zodResolver(updateQuotationSchema),
         defaultValues: {
-            name: quotationById?.name ?? "",
-            clientId: quotationById?.client.id ?? "",
-            deliveryTime: quotationById?.deliveryTime ?? 0,
-            landArea: quotationById?.landArea ?? 0,
-            description: quotationById?.description ?? "",
-            architecturalCost: quotationById?.architecturalCost ?? 0,
-            structuralCost: quotationById?.structuralCost ?? 0,
-            electricCost: quotationById?.electricCost ?? 0,
-            sanitaryCost: quotationById?.sanitaryCost ?? 0,
-            discount: quotationById?.discount ?? 0,
-            exchangeRate: quotationById?.exchangeRate ?? 0,
-            totalAmount: quotationById?.totalAmount ?? 0,
-            newTotal: quotationById?.discount ?? 0,
+            name: "",
+            clientId: "",
+            deliveryTime: 0,
+            landArea: 0,
+            description: "",
+            architecturalCost: 0,
+            structuralCost: 0,
+            electricCost: 0,
+            sanitaryCost: 0,
+            discount: 0,
+            exchangeRate: 0,
+            totalAmount: 0,
+            newTotal: 0,
         },
     });
+
+    // Actualiza el formulario y los pisos cuando los datos de la cotización estén disponibles
+    useEffect(() => {
+        if (quotationById) {
+            const adaptedLevelData = quotationById.levels.map(
+                (level, index) => ({
+                    number: index,
+                    name: level.name,
+                    spaces: level.spaces.map((space) => ({
+                        spaceId: space.spaceId,
+                        name: space.name ?? "",
+                        meters: space.area,
+                        amount: space.amount,
+                        selected: false,
+                    })),
+                    expanded: false,
+                }),
+            );
+            setFloors(adaptedLevelData);
+
+            form.reset({
+                name: quotationById.name,
+                clientId: quotationById.client.id.toString(), // Convertir a cadena
+                deliveryTime: quotationById.deliveryTime,
+                landArea: quotationById.landArea,
+                description: quotationById.description,
+                architecturalCost: quotationById.architecturalCost,
+                structuralCost: quotationById.structuralCost,
+                electricCost: quotationById.electricCost,
+                sanitaryCost: quotationById.sanitaryCost,
+                discount: quotationById.discount,
+                exchangeRate: quotationById.exchangeRate,
+                totalAmount: quotationById.totalAmount,
+                newTotal: quotationById.totalAmount,
+            });
+        }
+    }, [quotationById, form]);
 
     const architecturalCost = form.watch("architecturalCost").toString();
     const structuralCost = form.watch("structuralCost").toString();
     const electricCost = form.watch("electricCost").toString();
     const sanitaryCost = form.watch("sanitaryCost").toString();
     const discount = form.watch("discount").toString();
-
-    useEffect(() => {
-        if (quotationById) {
-            form.reset({
-                name: quotationById?.name ?? "",
-                clientId: quotationById?.client.id ?? "",
-                deliveryTime: quotationById?.deliveryTime ?? 0,
-                landArea: quotationById?.landArea ?? 0,
-                description: quotationById?.description ?? "",
-                architecturalCost: quotationById?.architecturalCost ?? 0,
-                structuralCost: quotationById?.structuralCost ?? 0,
-                electricCost: quotationById?.electricCost ?? 0,
-                sanitaryCost: quotationById?.sanitaryCost ?? 0,
-                discount: quotationById?.discount ?? 0,
-                exchangeRate: quotationById?.exchangeRate ?? 0,
-                totalAmount: quotationById?.totalAmount ?? 0,
-                newTotal: quotationById?.discount ?? 0,
-            });
-            setFloors(adaptedLevelData);
-        }
-    }, [quotationById]);
 
     useEffect(() => {
         const total =
@@ -151,6 +147,7 @@ export default function UpdateQuotationPage() {
 
     const onSubmit = async (input: UpdateQuotationSchema) => {
         const levelsData = extractData(floors);
+        console.log("input data:", input);
         onUpdateQuotation({
             ...input,
             levels: levelsData,
@@ -176,14 +173,20 @@ export default function UpdateQuotationPage() {
                     onSubmit={form.handleSubmit(onSubmit)}
                     className="flex flex-col gap-4 p-4"
                 >
-                    <FormFields form={form} clientOptions={clientOptions} />
+                    <HeadQuotation
+                        form={form as UseFormReturn<QuotationStructure>}
+                        clientIdUpdate={quotationById?.client.id.toString()}
+                    />
+
                     <Separator className="my-4" />
+
                     <CostFields
                         form={form}
                         handleButtonClick={handleButtonClick}
                     />
 
                     <Separator className="my-4" />
+
                     <CreateLevelSpace
                         form={form as UseFormReturn<QuotationStructure>}
                         floors={floors}
@@ -193,6 +196,7 @@ export default function UpdateQuotationPage() {
                         }
                         updateLevelQuotation={updateLevelQuotation}
                     />
+
                     <div className="flex flex-row-reverse gap-2 pt-2">
                         <Button
                             type="submit"
