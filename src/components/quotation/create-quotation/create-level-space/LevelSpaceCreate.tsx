@@ -46,11 +46,15 @@ export function CreateLevelSpace({
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
     const addFloor = () => {
+        const maxNumber =
+            floors.length > 0
+                ? Math.max(...floors.map((floor) => floor.number))
+                : 0;
         setFloors([
             ...floors,
             {
-                number: floors.length, // Usamos floors.length como índice
-                name: `Nivel ${floors.length + 1}`,
+                number: maxNumber + 1, // Asegura un número único
+                name: `Nivel ${maxNumber + 1}`,
                 spaces: [],
                 expanded: true,
             },
@@ -70,21 +74,27 @@ export function CreateLevelSpace({
         setFloors(newFloors);
     };
 
-    const duplicateFloor = (floorIndex: number) => {
-        const floorToDuplicate = floors[floorIndex];
+    const duplicateFloor = (floorNumber: number) => {
+        const floorToDuplicate = floors.find(
+            (floor) => floor.number === floorNumber,
+        );
         if (floorToDuplicate) {
-            const newFloor = {
+            const maxNumber =
+                floors.length > 0
+                    ? Math.max(...floors.map((floor) => floor.number))
+                    : 0;
+            const newFloor: Floor = {
                 ...floorToDuplicate,
-                number: floors.length,
-                name: `${floorToDuplicate.name} (Copia)`,
+                number: maxNumber + 1,
+                name: `Nivel ${maxNumber + 1}`,
                 expanded: false,
             };
             setFloors([...floors, newFloor]);
         }
     };
 
-    const deleteFloor = (floorIndex: number) => {
-        setFloors(floors.filter((_, idx) => idx !== floorIndex));
+    const deleteFloor = (floorId: number) => {
+        setFloors(floors.filter((floor) => floor.number !== floorId));
     };
 
     const addSpace = (floorIndex: number) => {
@@ -134,9 +144,9 @@ export function CreateLevelSpace({
         [setFloors],
     );
 
-    const changeFloorName = (floorIndex: number, newName: string) => {
-        const newFloors = floors.map((floor, idx) => {
-            if (idx === floorIndex) {
+    const changeFloorName = (floorNumber: number, newName: string) => {
+        const newFloors = floors.map((floor) => {
+            if (floor.number === floorNumber) {
                 return { ...floor, name: newName };
             }
             return floor;
