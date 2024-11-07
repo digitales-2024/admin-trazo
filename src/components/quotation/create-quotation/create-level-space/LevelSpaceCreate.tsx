@@ -23,7 +23,6 @@ interface CreateLevelSpaceProps
     floors: Floor[];
     setFloors: React.Dispatch<React.SetStateAction<Floor[]>>;
     calculateTotalBuildingMeters: () => number;
-    updateLevelQuotation?: boolean;
 }
 
 export function extractData(floors: Floor[]): LevelQuotation[] {
@@ -43,7 +42,6 @@ export function CreateLevelSpace({
     floors,
     setFloors,
     calculateTotalBuildingMeters,
-    updateLevelQuotation,
 }: CreateLevelSpaceProps) {
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
@@ -180,9 +178,7 @@ export function CreateLevelSpace({
                                         <Plus className="mr-2" /> Agregar Nivel
                                     </Button>
                                 </div>
-                                <div
-                                    className={`grid ${updateLevelQuotation ? "grid-cols-1" : "grid-cols-1 gap-6 xl:grid-cols-2"}`}
-                                >
+                                <div className={`grid grid-cols-1 gap-6`}>
                                     <div className="space-y-6">
                                         <Accordion
                                             type="multiple"
