@@ -30,7 +30,6 @@ export default function UpdateQuotationPage() {
         isSuccessUpdateQuotation,
         isLoadingUpdateQuotation,
     } = useQuotations();
-    const updateLevelQuotation = true;
 
     const [floors, setFloors] = useState<Floor[]>([]);
 
@@ -179,14 +178,6 @@ export default function UpdateQuotationPage() {
                     />
 
                     <Separator className="my-4" />
-
-                    <CostFields
-                        form={form}
-                        handleButtonClick={handleButtonClick}
-                    />
-
-                    <Separator className="my-4" />
-
                     <CreateLevelSpace
                         form={form as UseFormReturn<QuotationStructure>}
                         floors={floors}
@@ -194,8 +185,13 @@ export default function UpdateQuotationPage() {
                         calculateTotalBuildingMeters={
                             calculateTotalBuildingMeters
                         }
-                        updateLevelQuotation={updateLevelQuotation}
                     />
+                    <Separator className="my-4" />
+                    <CostFields
+                        form={form}
+                        handleButtonClick={handleButtonClick}
+                    />
+                    <Separator className="my-4" />
 
                     <div className="flex flex-row-reverse gap-2 pt-2">
                         <Button
