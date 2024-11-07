@@ -57,7 +57,6 @@ export const HeadQuotation = ({ form, clientIdUpdate }: HeadQuotationProps) => {
     // Update the selected client when clientIdUpdate or clientOptions change
     useEffect(() => {
         if (clientIdUpdate && clientOptions.length > 0) {
-            console.log("clientIdUpdate:", clientIdUpdate);
             handleClientChange(clientIdUpdate);
         }
     }, [clientIdUpdate, clientOptions, handleClientChange]);
