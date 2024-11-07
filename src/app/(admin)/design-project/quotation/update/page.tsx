@@ -99,7 +99,7 @@ export default function UpdateQuotationPage() {
             });
             setFloors(adaptedLevelData);
         }
-    }, [quotationById, adaptedLevelData, form]);
+    }, [quotationById]);
 
     useEffect(() => {
         const total =
@@ -107,13 +107,16 @@ export default function UpdateQuotationPage() {
             parseFloat(structuralCost) +
             parseFloat(electricCost) +
             parseFloat(sanitaryCost);
-        form.setValue("newTotal", total);
-        form.setValue(
-            "totalAmount",
+        if (form.getValues("newTotal") !== total) {
+            form.setValue("newTotal", total);
+        }
+        const totalAmount =
             parseFloat(discount) *
-                form.watch("exchangeRate") *
-                (quotationById?.metering ?? 1),
-        );
+            form.watch("exchangeRate") *
+            (quotationById?.metering ?? 1);
+        if (form.getValues("totalAmount") !== totalAmount) {
+            form.setValue("totalAmount", totalAmount);
+        }
     }, [
         architecturalCost,
         structuralCost,
