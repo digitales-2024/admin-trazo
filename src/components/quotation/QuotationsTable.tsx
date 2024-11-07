@@ -4,7 +4,8 @@
 import { useProfile } from "@/hooks/use-profile";
 import { useQuotations } from "@/hooks/use-quotation";
 import { QuotationSummary } from "@/types";
-import { useMemo } from "react";
+import { useRouter } from "next/navigation";
+import { useCallback, useMemo } from "react";
 
 import { DataTable } from "../data-table/DataTable";
 import { quotationsColumns } from "./QuotationTableColumns";
@@ -14,14 +15,21 @@ export function QuotationsTable({ data }: { data: QuotationSummary[] }) {
     const { user } = useProfile();
 
     const { exportQuotationToPdf } = useQuotations();
-
+    const router = useRouter();
+    const handleEditClick = useCallback(
+        (id: string) => {
+            router.push(`/design-project/quotation/update?id=${id}`);
+        },
+        [router],
+    );
     const columns = useMemo(
         () =>
             quotationsColumns(
                 user?.isSuperAdmin || false,
                 exportQuotationToPdf,
+                handleEditClick,
             ),
-        [user, exportQuotationToPdf],
+        [user, exportQuotationToPdf, handleEditClick],
     );
 
     return (

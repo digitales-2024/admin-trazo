@@ -18,12 +18,12 @@ import {
 
 import { DataTableColumnHeader } from "../data-table/DataTableColumnHeader";
 import { Badge } from "../ui/badge";
-import { UpdateClientSheet } from "./UpdateQuotationsSheet";
 import UpdateStatusQuotationDialog from "./UpdateStatusQuotationDialog";
 
 export const quotationsColumns = (
     isSuperAdmin: boolean,
     exportQuotationToPdf: (id: string) => void,
+    handleEditClick: (id: string) => void,
 ): ColumnDef<QuotationSummary>[] => {
     const columns: ColumnDef<QuotationSummary>[] = [
         {
@@ -176,7 +176,7 @@ export const quotationsColumns = (
                 const downloadPdfQuotation = () => {
                     exportQuotationToPdf(id);
                 };
-                const [showEditDialog, setShowEditDialog] = useState(false);
+
                 return (
                     <div>
                         <div>
@@ -188,11 +188,6 @@ export const quotationsColumns = (
                                 onSuccess={() => {
                                     row.toggleSelected(false);
                                 }}
-                            />
-                            <UpdateClientSheet
-                                open={showEditDialog}
-                                onOpenChange={setShowEditDialog}
-                                quotation={row?.original}
                             />
                         </div>
                         <DropdownMenu>
@@ -210,7 +205,7 @@ export const quotationsColumns = (
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-40">
                                 <DropdownMenuItem
-                                    onSelect={() => setShowEditDialog(true)}
+                                    onSelect={() => handleEditClick(id)}
                                     disabled={
                                         status === QuotationStatusType.APPROVED
                                     }
