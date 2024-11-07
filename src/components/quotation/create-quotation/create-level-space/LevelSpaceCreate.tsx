@@ -19,10 +19,11 @@ import { LevelAccordionItem } from "./LevelAccordionItem";
 
 interface CreateLevelSpaceProps
     extends Omit<React.ComponentPropsWithRef<"form">, "onSubmit"> {
+    form: UseFormReturn<QuotationStructure>;
     floors: Floor[];
     setFloors: React.Dispatch<React.SetStateAction<Floor[]>>;
     calculateTotalBuildingMeters: () => number;
-    form: UseFormReturn<QuotationStructure>;
+    updateLevelQuotation?: boolean;
 }
 
 export function extractData(floors: Floor[]): LevelQuotation[] {
@@ -32,15 +33,17 @@ export function extractData(floors: Floor[]): LevelQuotation[] {
             amount: space.amount,
             area: space.meters,
             spaceId: space.spaceId || "",
+            name: space.name,
         })),
     }));
 }
 
 export function CreateLevelSpace({
+    form,
     floors,
     setFloors,
     calculateTotalBuildingMeters,
-    form,
+    updateLevelQuotation,
 }: CreateLevelSpaceProps) {
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
@@ -48,7 +51,7 @@ export function CreateLevelSpace({
         setFloors([
             ...floors,
             {
-                number: floors.length + 1,
+                number: floors.length, // Usamos floors.length como índice
                 name: `Nivel ${floors.length + 1}`,
                 spaces: [],
                 expanded: true,
@@ -56,9 +59,9 @@ export function CreateLevelSpace({
         ]);
     };
 
-    const deleteSelectedSpaces = (floorNumber: number) => {
-        const newFloors = floors.map((floor) => {
-            if (floor.number === floorNumber) {
+    const deleteSelectedSpaces = (floorIndex: number) => {
+        const newFloors = floors.map((floor, idx) => {
+            if (idx === floorIndex) {
                 return {
                     ...floor,
                     spaces: floor.spaces.filter((space) => !space.selected),
@@ -69,14 +72,12 @@ export function CreateLevelSpace({
         setFloors(newFloors);
     };
 
-    const duplicateFloor = (floorNumber: number) => {
-        const floorToDuplicate = floors.find(
-            (floor) => floor.number === floorNumber,
-        );
+    const duplicateFloor = (floorIndex: number) => {
+        const floorToDuplicate = floors[floorIndex];
         if (floorToDuplicate) {
             const newFloor = {
                 ...floorToDuplicate,
-                number: floors.length + 1,
+                number: floors.length,
                 name: `${floorToDuplicate.name} (Copia)`,
                 expanded: false,
             };
@@ -84,13 +85,13 @@ export function CreateLevelSpace({
         }
     };
 
-    const deleteFloor = (floorNumber: number) => {
-        setFloors(floors.filter((floor) => floor.number !== floorNumber));
+    const deleteFloor = (floorIndex: number) => {
+        setFloors(floors.filter((_, idx) => idx !== floorIndex));
     };
 
-    const addSpace = (floorNumber: number) => {
-        const newFloors = floors.map((floor) => {
-            if (floor.number === floorNumber) {
+    const addSpace = (floorIndex: number) => {
+        const newFloors = floors.map((floor, idx) => {
+            if (idx === floorIndex) {
                 return {
                     ...floor,
                     spaces: [
@@ -112,14 +113,14 @@ export function CreateLevelSpace({
 
     const updateSpace = useCallback(
         (
-            floorNumber: number,
+            floorIndex: number,
             spaceIndex: number,
             field: "name" | "meters" | "amount" | "selected" | "spaceId",
             value: string | number | boolean,
         ) => {
             setFloors((prevFloors) =>
-                prevFloors.map((floor) => {
-                    if (floor.number === floorNumber) {
+                prevFloors.map((floor, idx) => {
+                    if (idx === floorIndex) {
                         const updatedSpaces = floor.spaces.map(
                             (space, index) =>
                                 index === spaceIndex
@@ -135,9 +136,9 @@ export function CreateLevelSpace({
         [setFloors],
     );
 
-    const changeFloorName = (floorNumber: number, newName: string) => {
-        const newFloors = floors.map((floor) => {
-            if (floor.number === floorNumber) {
+    const changeFloorName = (floorIndex: number, newName: string) => {
+        const newFloors = floors.map((floor, idx) => {
+            if (idx === floorIndex) {
                 return { ...floor, name: newName };
             }
             return floor;
@@ -179,16 +180,19 @@ export function CreateLevelSpace({
                                         <Plus className="mr-2" /> Agregar Nivel
                                     </Button>
                                 </div>
-                                <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+                                <div
+                                    className={`grid ${updateLevelQuotation ? "grid-cols-1" : "grid-cols-1 gap-6 xl:grid-cols-2"}`}
+                                >
                                     <div className="space-y-6">
                                         <Accordion
                                             type="multiple"
                                             className="w-full"
                                         >
-                                            {floors.map((floor) => (
+                                            {floors.map((floor, floorIndex) => (
                                                 <LevelAccordionItem
                                                     key={floor.number}
                                                     floor={floor}
+                                                    floorIndex={floorIndex}
                                                     deleteFloor={deleteFloor}
                                                     changeFloorName={
                                                         changeFloorName

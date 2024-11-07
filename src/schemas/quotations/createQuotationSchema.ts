@@ -32,4 +32,12 @@ export const createQuotationSchema = z.object({
     }),
 });
 
+export const updateQuotationSchema = createQuotationSchema.extend({
+    totalAmount: z.number().min(1, {
+        message: "El monto total debe ser mayor a 0",
+    }),
+    newTotal: z.number().optional(),
+});
+
 export type CreateQuotationSchema = z.infer<typeof createQuotationSchema>;
+export type UpdateQuotationSchema = z.infer<typeof updateQuotationSchema>;

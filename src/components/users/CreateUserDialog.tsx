@@ -45,8 +45,6 @@ export function CreateUsersDialog() {
     const [isCreatePending, startCreateTransition] = useTransition();
     const { onCreateUser, isSuccessCreateUser } = useUsers();
 
-    const { handleGeneratePassword, password } = useUsers();
-
     const form = useForm<CreateUsersSchema>({
         resolver: zodResolver(usersSchema),
         defaultValues: {
@@ -57,13 +55,17 @@ export function CreateUsersDialog() {
             roles: [],
         },
     });
+
+    const { handleGeneratePassword, password } = useUsers();
     const { setValue, clearErrors } = form;
+
     useEffect(() => {
         if (password) {
             setValue("password", password?.password);
             clearErrors("password");
         }
     }, [password, setValue, clearErrors]);
+
     const onSubmit = async (input: CreateUsersSchema) => {
         startCreateTransition(async () => {
             await onCreateUser(input);
@@ -152,7 +154,38 @@ export function CreateUsersDialog() {
                                         <FormLabel htmlFor="password">
                                             Generar contraseña
                                         </FormLabel>
+                                        <FormLabel htmlFor="password">
+                                            Generar contraseña
+                                        </FormLabel>
                                         <FormControl>
+                                            <div className="flex items-center gap-2">
+                                                <Input
+                                                    id="password"
+                                                    placeholder="********"
+                                                    {...field}
+                                                />
+                                                <TooltipProvider>
+                                                    <Tooltip>
+                                                        <TooltipTrigger asChild>
+                                                            <Button
+                                                                type="button"
+                                                                variant="outline"
+                                                                onClick={
+                                                                    handleGeneratePassword
+                                                                }
+                                                            >
+                                                                <Bot
+                                                                    className="size-4"
+                                                                    aria-hidden="true"
+                                                                />
+                                                            </Button>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>
+                                                            Generar constraseña
+                                                        </TooltipContent>
+                                                    </Tooltip>
+                                                </TooltipProvider>
+                                            </div>
                                             <div className="flex items-center gap-2">
                                                 <Input
                                                     id="password"

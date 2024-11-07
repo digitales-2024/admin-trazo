@@ -54,21 +54,21 @@ export type HeadQuotation = {
 
 export type QuotationStructure = {
     name: string;
-    code: string;
+    code?: string;
     description: string;
     discount: number;
     totalAmount: number;
     deliveryTime: number;
     exchangeRate: number;
     landArea: number;
-    paymentSchedule: PaymentSchedule[];
-    integratedProjectDetails: IntegralProjectDesign[];
+    paymentSchedule?: PaymentSchedule[];
+    integratedProjectDetails?: IntegralProjectDesign[];
     architecturalCost: number;
     structuralCost: number;
     electricCost: number;
     sanitaryCost: number;
-    metering: number;
-    levels: LevelQuotation[];
+    metering?: number;
+    levels?: LevelQuotation[];
     clientId: string;
 };
 
@@ -81,6 +81,7 @@ export type SpaceQuotation = {
     amount: number;
     area: number;
     spaceId: string;
+    name?: string;
 };
 export type PaymentSchedule = {
     name: string;
