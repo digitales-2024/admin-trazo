@@ -64,7 +64,7 @@ export function UpdateClientSheet({
         name: level.name,
         spaces: level.spaces.map((space) => ({
             spaceId: space.spaceId,
-            name: space.name,
+            name: space.name ?? "",
             meters: space.area,
             amount: space.amount,
             selected: false,
@@ -125,7 +125,7 @@ export function UpdateClientSheet({
             });
             setFloors(adaptedLevelData);
         }
-    }, [open, quotation, quotationById, form]);
+    }, [open, quotation, quotationById, form, adaptedLevelData]);
 
     useEffect(() => {
         const total =
