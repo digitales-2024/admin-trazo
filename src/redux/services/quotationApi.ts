@@ -70,8 +70,8 @@ export const quotationsApi = createApi({
             }),
             providesTags: ["Quotation"],
         }),
-        //Actualizar clientes
-        updateClient: build.mutation<
+        //Actualizar cotización
+        updateQuotation: build.mutation<
             Quotation,
             Partial<Quotation> & { id: string }
         >({
@@ -92,5 +92,5 @@ export const {
     useUpdateStatusQuotationMutation,
     useGenPdfQuotationMutation,
     useGetQuotationByIdQuery,
-    useUpdateClientMutation,
+    useUpdateQuotationMutation,
 } = quotationsApi;
