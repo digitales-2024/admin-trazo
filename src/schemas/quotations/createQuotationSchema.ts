@@ -12,17 +12,18 @@ export const createQuotationSchema = z.object({
     landArea: z
         .number()
         .min(1, { message: "El área del terreno debe ser al menos 1 m²" }),
-    architecturalCost: z.number().min(1, {
-        message: "El costo del proyecto arquitectónico debe ser mayor a 0",
+    architecturalCost: z.number().min(0, {
+        message:
+            "El costo del proyecto arquitectónico debe ser mayor o igual a 0",
     }),
-    structuralCost: z.number().min(1, {
-        message: "El costo del proyecto estructural debe ser mayor a 0",
+    structuralCost: z.number().min(0, {
+        message: "El costo del proyecto estructural debe ser mayor o igual a 0",
     }),
-    electricCost: z.number().min(1, {
-        message: "El costo del proyecto eléctrico debe ser mayor a 0",
+    electricCost: z.number().min(0, {
+        message: "El costo del proyecto eléctrico debe ser mayor o igual a 0",
     }),
-    sanitaryCost: z.number().min(1, {
-        message: "El costo del proyecto sanitario debe ser mayor a 0",
+    sanitaryCost: z.number().min(0, {
+        message: "El costo del proyecto sanitario debe ser mayor o igual a 0",
     }),
     discount: z.number().min(1, {
         message: "El descuento debe ser mayor a 0",
@@ -36,7 +37,6 @@ export const updateQuotationSchema = createQuotationSchema.extend({
     totalAmount: z.number().min(1, {
         message: "El monto total debe ser mayor a 0",
     }),
-    newTotal: z.number().optional(),
 });
 
 export type CreateQuotationSchema = z.infer<typeof createQuotationSchema>;
