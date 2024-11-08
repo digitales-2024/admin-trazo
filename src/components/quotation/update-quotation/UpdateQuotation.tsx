@@ -2,7 +2,7 @@
 
 import { useQuotations } from "@/hooks/use-quotation";
 import { updateQuotationSchema, UpdateQuotationSchema } from "@/schemas";
-import { Floor, Quotation, QuotationStructure } from "@/types";
+import { Floor, PaymentSchedule, Quotation, QuotationStructure } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RefreshCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -16,6 +16,9 @@ import {
 } from "@/components/quotation/create-quotation/create-level-space/LevelSpaceCreate";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+
+import IntegralProject from "../create-quotation/create-integral-project/IntegralProject";
+import { projects } from "../IntegralProjectData";
 
 interface UpdateQuotationProps {
     quotationById: Quotation;
@@ -38,6 +41,12 @@ export default function UpdateQuotation({
         setIsClient(true);
     }, []);
 
+    useEffect(() => {
+        if (isSuccessUpdateQuotation && isClient) {
+            router.push("/design-project/quotation");
+        }
+    }, [isSuccessUpdateQuotation, isClient, router]);
+
     // Inicializa el formulario con valores vacíos
     const form = useForm<UpdateQuotationSchema>({
         resolver: zodResolver(updateQuotationSchema),
@@ -54,7 +63,6 @@ export default function UpdateQuotation({
             discount: 0,
             exchangeRate: 0,
             totalAmount: 0,
-            newTotal: 0,
         },
     });
 
@@ -65,8 +73,9 @@ export default function UpdateQuotation({
                 (level, index) => ({
                     number: index,
                     name: level.name,
+
                     spaces: level.spaces.map((space) => ({
-                        spaceId: space.spaceId,
+                        spaceId: space.id ?? "",
                         name: space.name ?? "",
                         meters: space.area,
                         amount: space.amount,
@@ -90,7 +99,6 @@ export default function UpdateQuotation({
                 discount: quotationById.discount,
                 exchangeRate: quotationById.exchangeRate,
                 totalAmount: quotationById.totalAmount,
-                newTotal: quotationById.totalAmount,
             });
         }
     }, [quotationById, form]);
@@ -102,18 +110,11 @@ export default function UpdateQuotation({
     const discount = form.watch("discount").toString();
 
     useEffect(() => {
-        const total =
-            parseFloat(architecturalCost) +
-            parseFloat(structuralCost) +
-            parseFloat(electricCost) +
-            parseFloat(sanitaryCost);
-        if (form.getValues("newTotal") !== total) {
-            form.setValue("newTotal", total);
-        }
         const totalAmount =
             parseFloat(discount) *
             form.watch("exchangeRate") *
             (quotationById?.metering ?? 1);
+        console.log("total amount:", totalAmount);
         if (form.getValues("totalAmount") !== totalAmount) {
             form.setValue("totalAmount", totalAmount);
         }
@@ -140,7 +141,78 @@ export default function UpdateQuotation({
 
     const onSubmit = async (input: UpdateQuotationSchema) => {
         const levelsData = extractData(floors);
-        console.log("input data:", input);
+        const metering = calculateTotalBuildingMeters();
+        const architecturalCost = input.architecturalCost;
+        const structuralCost = input.structuralCost;
+        const electricCost = input.electricCost;
+        const sanitaryCost = input.sanitaryCost;
+
+        const totalCost = input.exchangeRate * input.discount * metering;
+
+        console.log("Total cost:", totalCost);
+
+        const paymentSchedule: PaymentSchedule[] = [
+            {
+                name: "INICIAL FIRMA DE CONTRATO",
+                percentage: 30,
+                cost: (totalCost * 30) / 100,
+                description: "INICIO DE DISEÑO ",
+            },
+            {
+                name: "APROBACION DEL ANTEPROYECTO",
+                percentage: 50,
+                cost: (totalCost * 50) / 100,
+                description:
+                    "APROBACIÓN PROPIETARIO DE DISEÑO PARA INICIAR INGENIERÍA",
+            },
+            {
+                name: "ENTREGA DE EXPEDIENTE TECNICO",
+                percentage: 20,
+                cost: (totalCost * 20) / 100,
+                description: "TRAMITE DE OBTENCIÓN DE LICENCIA",
+            },
+        ];
+
+        const integralProjectsDetails = Object.entries(projects).map(
+            ([nombreProyecto, items]) => {
+                const costMap: { [key: string]: number } = {
+                    architectural: input.architecturalCost,
+                    structural: input.structuralCost,
+                    electric: input.electricCost,
+                    sanitary: input.sanitaryCost,
+                };
+
+                return {
+                    project: nombreProyecto,
+                    items,
+                    metering,
+                    area: metering,
+                    cost: costMap[nombreProyecto] || 0,
+                };
+            },
+        );
+
+        const quotationUpdated: QuotationStructure = {
+            name: input.name,
+            description: input.description,
+            discount: input.discount,
+            deliveryTime: input.deliveryTime,
+            exchangeRate: input.exchangeRate,
+            landArea: input.landArea,
+            paymentSchedule: paymentSchedule,
+            integratedProjectDetails: integralProjectsDetails,
+            architecturalCost: architecturalCost,
+            structuralCost: structuralCost,
+            electricCost: electricCost,
+            sanitaryCost: sanitaryCost,
+            metering: metering,
+            levels: levelsData,
+            clientId: input.clientId,
+            totalAmount: totalCost,
+        };
+
+        console.log("Quotation updated:", quotationUpdated);
+
         onUpdateQuotation({
             ...input,
             levels: levelsData,
@@ -179,6 +251,27 @@ export default function UpdateQuotation({
                 />
                 <Separator className="my-4" />
 
+                <IntegralProject
+                    form={form as UseFormReturn<QuotationStructure>}
+                    area={calculateTotalBuildingMeters()}
+                    costs={{
+                        architecturalCost: parseFloat(architecturalCost),
+                        structuralCost: parseFloat(structuralCost),
+                        electricCost: parseFloat(electricCost),
+                        sanitaryCost: parseFloat(sanitaryCost),
+                    }}
+                    setCosts={(costs) => ({
+                        ...costs,
+                        architecturalCost: parseFloat(architecturalCost),
+                        structuralCost: parseFloat(structuralCost),
+                        electricCost: parseFloat(electricCost),
+                        sanitaryCost: parseFloat(sanitaryCost),
+                    })}
+                    discount={parseFloat(discount)}
+                    exchangeRate={form.watch("exchangeRate")}
+                    setDiscount={(discount) => discount}
+                    setExchangeRate={(exchangeRate) => exchangeRate}
+                />
                 <Separator className="my-4" />
 
                 <div className="flex flex-row-reverse gap-2 pt-2">
