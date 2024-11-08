@@ -32,7 +32,6 @@ export function extractData(floors: Floor[]): LevelQuotation[] {
             amount: space.amount,
             area: space.meters,
             spaceId: space.spaceId || "",
-            name: space.name,
         })),
     }));
 }
@@ -53,7 +52,7 @@ export function CreateLevelSpace({
         setFloors([
             ...floors,
             {
-                number: maxNumber + 1, // Asegura un número único
+                number: maxNumber + 1,
                 name: `Nivel ${maxNumber + 1}`,
                 spaces: [],
                 expanded: true,
