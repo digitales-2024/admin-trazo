@@ -74,6 +74,8 @@ const errorTranslations = {
     "This space already exists": "Este ambiente ya existe",
     "This space exists but is not active":
         "Este ambiente existe pero no está activo",
+    "levels should not be empty":
+        "La asignación de niveles no puede estar en blanco",
 };
 
 export default errorTranslations;
