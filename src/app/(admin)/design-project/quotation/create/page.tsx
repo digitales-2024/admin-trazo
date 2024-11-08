@@ -1,10 +1,10 @@
 "use client";
+import { useExchangeRate } from "@/hooks/use-exchange-rate-sunat";
 import { createQuotationSchema } from "@/schemas/quotations/createQuotationSchema";
 import {
     Floor,
     HeadQuotation as HeadQuotationType,
     Costs,
-    IntegralProjectItem,
     QuotationStructure,
 } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,6 +20,10 @@ import {
     extractData,
 } from "@/components/quotation/create-quotation/create-level-space/LevelSpaceCreate";
 import CreateQuotationButton from "@/components/quotation/CreateQuotationButton";
+import {
+    projectNames,
+    projects,
+} from "@/components/quotation/IntegralProjectData";
 import { Form } from "@/components/ui/form";
 
 export default function CreateQuotationPage() {
@@ -35,50 +39,26 @@ export default function CreateQuotationPage() {
         sanitaryCost: 0,
     });
     const [discount, setDiscount] = useState(0);
+    const { handleFetchExchangeRate, exchangeRate: fetchedExchangeRate } =
+        useExchangeRate();
+
     const [exchangeRate, setExchangeRate] = useState(3.5);
+
+    useEffect(() => {
+        const fetchRate = async () => {
+            if (!fetchedExchangeRate) {
+                await handleFetchExchangeRate();
+            }
+        };
+        fetchRate();
+    }, [fetchedExchangeRate, handleFetchExchangeRate]);
+
+    useEffect(() => {
+        if (fetchedExchangeRate !== undefined) {
+            setExchangeRate(parseFloat(fetchedExchangeRate));
+        }
+    }, [fetchedExchangeRate]);
     const [totalCost, setTotalCost] = useState(0);
-
-    const projectNames: { [key in keyof Costs]: string } = {
-        architecturalCost: "Proyecto Arquitectónico",
-        structuralCost: "Proyecto Estructural",
-        electricCost: "Proyecto de Instalaciones Eléctricas",
-        sanitaryCost: "Proyecto de Instalaciones Sanitarias",
-    };
-
-    const projects: { [key: string]: IntegralProjectItem[] } = {
-        "Proyecto Arquitectónico": [
-            {
-                description: "Plano de Ubicación y Localización",
-                unit: "escala 1/1000",
-            },
-            { description: "Plano de Diferentes Niveles", unit: "escala 1/50" },
-            { description: "Plano de Elevaciones", unit: "escala 1/50" },
-            { description: "Plano de Cortes", unit: "escala 1/50" },
-            { description: "Memoria Descriptiva", unit: "" },
-        ],
-        "Proyecto Estructural": [
-            { description: "Plano de Cimentación", unit: "escala 1/50" },
-            {
-                description: "Plano de Detalles Constructivos",
-                unit: "escala 1/50",
-            },
-            {
-                description: "Plano de Aligerado de Niveles",
-                unit: "escala 1/50",
-            },
-            { description: "Memoria Descriptiva", unit: "" },
-        ],
-        "Proyecto de Instalaciones Eléctricas": [
-            { description: "Planos de Tendido Eléctrico", unit: "escala 1/50" },
-            { description: "Cálculo Eléctrico", unit: "" },
-            { description: "Memoria Justificativa", unit: "" },
-        ],
-        "Proyecto de Instalaciones Sanitarias": [
-            { description: "Planos de Tendido Sanitario", unit: "escala 1/50" },
-            { description: "Planos de Agua y Desagüe", unit: "escala 1/50" },
-            { description: "Memoria Justificativa", unit: "" },
-        ],
-    };
 
     const calculateTotalBuildingMeters = React.useCallback(() => {
         return floors.reduce(
