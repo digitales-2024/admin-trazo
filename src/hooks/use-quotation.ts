@@ -1,13 +1,14 @@
-import { useUpdateClientMutation } from "@/redux/services/clientApi";
 import {
     useCreateQuotationMutation,
     useGenPdfQuotationMutation,
     useGetAllQuotationsQuery,
     useGetQuotationByIdQuery,
+    useUpdateQuotationMutation,
     useUpdateStatusQuotationMutation,
 } from "@/redux/services/quotationApi";
 import {
     CustomErrorData,
+    Quotation,
     QuotationStatusType,
     QuotationStructure,
 } from "@/types";
@@ -53,7 +54,7 @@ export const useQuotations = (options: UseQuotationsProps = {}) => {
             isSuccess: isSuccessUpdateQuotation,
             isLoading: isLoadingUpdateQuotation,
         },
-    ] = useUpdateClientMutation();
+    ] = useUpdateQuotationMutation();
 
     const onCreateQuotation = async (input: Partial<QuotationStructure>) => {
         const promise = () =>
@@ -181,7 +182,7 @@ export const useQuotations = (options: UseQuotationsProps = {}) => {
     };
 
     const onUpdateQuotation = async (
-        input: Partial<QuotationStructure> & { id: string },
+        input: Partial<Quotation> & { id: string },
     ) => {
         const promise = () =>
             new Promise(async (resolve, reject) => {
