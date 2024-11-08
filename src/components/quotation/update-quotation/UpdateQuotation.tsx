@@ -5,6 +5,7 @@ import { updateQuotationSchema, UpdateQuotationSchema } from "@/schemas";
 import { Floor, Quotation, QuotationStructure } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RefreshCcw } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useForm, FormProvider, UseFormReturn } from "react-hook-form";
 
@@ -30,6 +31,12 @@ export default function UpdateQuotation({
     } = useQuotations();
 
     const [floors, setFloors] = useState<Floor[]>([]);
+    const [isClient, setIsClient] = useState(false);
+    const router = useRouter();
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     // Inicializa el formulario con valores vacíos
     const form = useForm<UpdateQuotationSchema>({
@@ -141,6 +148,12 @@ export default function UpdateQuotation({
         });
     };
 
+    const handleBack = () => {
+        if (isClient) {
+            router.push("/design-project/quotation");
+        }
+    };
+
     useEffect(() => {
         if (isSuccessUpdateQuotation) {
             form.reset();
@@ -178,7 +191,11 @@ export default function UpdateQuotation({
                         )}
                         Actualizar
                     </Button>
-                    <Button type="button" variant="outline">
+                    <Button
+                        type="button"
+                        variant={"destructive"}
+                        onClick={handleBack}
+                    >
                         Cancelar
                     </Button>
                 </div>
