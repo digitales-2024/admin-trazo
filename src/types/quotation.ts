@@ -82,6 +82,7 @@ export type SpaceQuotation = {
     area: number;
     spaceId: string;
     name?: string;
+    id?: string;
 };
 export type PaymentSchedule = {
     name: string;
