@@ -72,8 +72,8 @@ export const quotationsApi = createApi({
         }),
         //Actualizar cotización
         updateQuotation: build.mutation<
-            Quotation,
-            Partial<Quotation> & { id: string }
+            QuotationStructure,
+            Partial<QuotationStructure> & { id: string }
         >({
             query: ({ id, ...body }) => ({
                 url: `/quotation/${id}`,

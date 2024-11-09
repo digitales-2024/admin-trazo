@@ -1,7 +1,7 @@
 import { LogoSunat } from "@/assets/icons/LogoSunat";
 import { useExchangeRate } from "@/hooks/use-exchange-rate-sunat";
 import { Costs, QuotationStructure } from "@/types";
-import React from "react";
+import React, { useEffect } from "react";
 import { UseFormReturn } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import {
     Table,
     TableBody,
@@ -29,12 +30,13 @@ interface CostSummaryProps
     costs: Costs;
     discount: number;
     exchangeRate: number;
-    totalCost: number;
     subtotal: number;
     setDiscount: (value: number) => void;
     setExchangeRate: (value: number) => void;
+    setTotalCost: (value: number) => void;
     form: UseFormReturn<QuotationStructure>;
     area: number;
+    updateQuotation?: number;
 }
 
 const projectNames: { [key in keyof Costs]: string } = {
@@ -48,16 +50,23 @@ const CostSummary: React.FC<CostSummaryProps> = ({
     costs,
     discount,
     exchangeRate,
-    totalCost,
     subtotal,
     setDiscount,
     setExchangeRate,
+    setTotalCost,
     area,
     form,
+    updateQuotation,
 }) => {
     const { handleFetchExchangeRate, exchangeRate: fetchedExchangeRate } =
         useExchangeRate();
     const { setValue, clearErrors } = form;
+
+    useEffect(() => {
+        const sumTotal = discount * exchangeRate * area;
+        setTotalCost(sumTotal);
+        setValue("totalAmount", sumTotal);
+    }, [discount, exchangeRate, setTotalCost, area, setValue]);
 
     const handleButtonClick = async () => {
         await handleFetchExchangeRate();
@@ -177,15 +186,47 @@ const CostSummary: React.FC<CostSummaryProps> = ({
                             )}
                         />
                     </div>
+                    {updateQuotation && (
+                        <>
+                            <Separator />
+                            <div className="flex items-center justify-between font-bold">
+                                <Label>Costo registrado (PEN):</Label>
+                                <span>{updateQuotation.toFixed(2)}</span>
+                            </div>
+                        </>
+                    )}
+
+                    <Separator />
                     <div className="flex items-center justify-between font-bold">
                         <Label>Costo total sin descuento (PEN):</Label>
                         <span>
                             {(subtotal * exchangeRate * area).toFixed(2)}
                         </span>
                     </div>
-                    <div className="flex items-center justify-between font-bold">
-                        <Label>Costo Total (PEN):</Label>
-                        <span>{totalCost.toFixed(2)}</span>
+                    <div className="flex items-center justify-between">
+                        <Label htmlFor="totalCost">Costo Total (PEN):</Label>
+                        <FormField
+                            control={form.control}
+                            name="totalAmount"
+                            render={({ field }) => (
+                                <FormItem className="justify-items-end">
+                                    <Input
+                                        id="totalCost"
+                                        type="number"
+                                        className="max-w-[100px]"
+                                        value={field.value}
+                                        onChange={(e) => {
+                                            const value = Number(
+                                                e.target.value,
+                                            );
+                                            field.onChange(value);
+                                            setTotalCost(value);
+                                        }}
+                                    />
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                     </div>
                 </div>
             </CardContent>

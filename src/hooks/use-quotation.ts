@@ -8,7 +8,6 @@ import {
 } from "@/redux/services/quotationApi";
 import {
     CustomErrorData,
-    Quotation,
     QuotationStatusType,
     QuotationStructure,
 } from "@/types";
@@ -182,7 +181,7 @@ export const useQuotations = (options: UseQuotationsProps = {}) => {
     };
 
     const onUpdateQuotation = async (
-        input: Partial<Quotation> & { id: string },
+        input: Partial<QuotationStructure> & { id: string },
     ) => {
         const promise = () =>
             new Promise(async (resolve, reject) => {

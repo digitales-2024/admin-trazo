@@ -159,6 +159,7 @@ export default function CreateQuotationPage() {
                         exchangeRate={exchangeRate}
                         setExchangeRate={setExchangeRate}
                         form={form}
+                        setTotalCost={setTotalCost}
                     />
                 </form>
             </Form>

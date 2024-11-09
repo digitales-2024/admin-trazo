@@ -109,16 +109,7 @@ export default function UpdateQuotation({
     const sanitaryCost = form.watch("sanitaryCost").toString();
     const discount = form.watch("discount").toString();
 
-    useEffect(() => {
-        const totalAmount =
-            parseFloat(discount) *
-            form.watch("exchangeRate") *
-            (quotationById?.metering ?? 1);
-        console.log("total amount:", totalAmount);
-        if (form.getValues("totalAmount") !== totalAmount) {
-            form.setValue("totalAmount", totalAmount);
-        }
-    }, [
+    useEffect(() => {}, [
         architecturalCost,
         structuralCost,
         electricCost,
@@ -147,9 +138,7 @@ export default function UpdateQuotation({
         const electricCost = input.electricCost;
         const sanitaryCost = input.sanitaryCost;
 
-        const totalCost = input.exchangeRate * input.discount * metering;
-
-        console.log("Total cost:", totalCost);
+        const totalCost = input.totalAmount;
 
         const paymentSchedule: PaymentSchedule[] = [
             {
@@ -176,10 +165,10 @@ export default function UpdateQuotation({
         const integralProjectsDetails = Object.entries(projects).map(
             ([nombreProyecto, items]) => {
                 const costMap: { [key: string]: number } = {
-                    architectural: input.architecturalCost,
-                    structural: input.structuralCost,
-                    electric: input.electricCost,
-                    sanitary: input.sanitaryCost,
+                    "Proyecto Arquitectónico": input.architecturalCost,
+                    "Proyecto Estructural": input.structuralCost,
+                    "Proyecto de Instalaciones Eléctricas": input.electricCost,
+                    "Proyecto de Instalaciones Sanitarias": input.sanitaryCost,
                 };
 
                 return {
@@ -211,11 +200,8 @@ export default function UpdateQuotation({
             totalAmount: totalCost,
         };
 
-        console.log("Quotation updated:", quotationUpdated);
-
         onUpdateQuotation({
-            ...input,
-            levels: levelsData,
+            ...quotationUpdated,
             id: quotationById?.id ?? "",
         });
     };
@@ -271,6 +257,8 @@ export default function UpdateQuotation({
                     exchangeRate={form.watch("exchangeRate")}
                     setDiscount={(discount) => discount}
                     setExchangeRate={(exchangeRate) => exchangeRate}
+                    setTotalCost={(totalCost) => totalCost}
+                    updateQuotation={quotationById.totalAmount}
                 />
                 <Separator className="my-4" />
 

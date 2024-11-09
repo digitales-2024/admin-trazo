@@ -26,6 +26,8 @@ interface IntegralProjectProps
     extends Omit<React.ComponentPropsWithRef<"form">, "onSubmit"> {
     area: number;
     costs: Costs;
+    updateQuotation?: number;
+    setTotalCost: (value: number) => void;
     setCosts: React.Dispatch<React.SetStateAction<Costs>>;
     discount: number;
     setDiscount: React.Dispatch<React.SetStateAction<number>>;
@@ -41,20 +43,14 @@ export default function IntegralProject({
     setDiscount,
     exchangeRate,
     setExchangeRate,
+    updateQuotation,
+    setTotalCost,
     setCosts,
     form,
 }: IntegralProjectProps) {
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
     const subtotal = Object.values(costs).reduce((sum, cost) => sum + cost, 0);
-
-    console.log("area de integral", area);
-    console.log("costos", subtotal);
-    console.log("descuento", discount);
-    console.log("tipo de cambio", exchangeRate);
-    const totalCost = discount * exchangeRate * area;
-
-    console.log("costo total", totalCost);
 
     const handleCostChange = (project: keyof Costs, value: number) => {
         setCosts((prev) => ({
@@ -137,11 +133,14 @@ export default function IntegralProject({
                                     discount={discount}
                                     exchangeRate={exchangeRate}
                                     subtotal={subtotal}
-                                    totalCost={totalCost}
                                     setDiscount={setDiscount}
                                     setExchangeRate={setExchangeRate}
                                     form={form}
                                     area={area}
+                                    setTotalCost={setTotalCost}
+                                    {...(updateQuotation && {
+                                        updateQuotation,
+                                    })}
                                 />
                             </div>
                         </CollapsibleContent>

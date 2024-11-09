@@ -61,8 +61,7 @@ export default function CreateQuotationButton({
         const headQuotationData = obtenerHeadQuotation();
         const integralProjectData = getAllDataIntegralProject();
 
-        const totalCost =
-            integralProjectData.totalCost * integralProjectData.area;
+        const totalCost = integralProjectData.totalCost;
 
         const paymentSchedule: PaymentSchedule[] = [
             {
