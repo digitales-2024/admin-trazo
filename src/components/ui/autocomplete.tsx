@@ -1,6 +1,12 @@
 import { Command as CommandPrimitive } from "cmdk";
 import { Check } from "lucide-react";
-import { useState, useRef, useCallback, type KeyboardEvent } from "react";
+import {
+    useState,
+    useRef,
+    useCallback,
+    useEffect,
+    type KeyboardEvent,
+} from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -13,7 +19,11 @@ import {
 import { ScrollArea } from "./scroll-area";
 import { Skeleton } from "./skeleton";
 
-export type Option = Record<"value" | "label", string> & Record<string, string>;
+export type Option = {
+    value: string;
+    label: string;
+    [key: string]: string;
+};
 
 type AutoCompleteProps = {
     options: Option[];
@@ -39,8 +49,14 @@ export const AutoComplete = ({
     const inputRef = useRef<HTMLInputElement>(null);
 
     const [isOpen, setOpen] = useState(false);
-    const [selected, setSelected] = useState<Option>(value as Option);
+    const [selected, setSelected] = useState<Option | undefined>(value);
     const [inputValue, setInputValue] = useState<string>(value?.label || "");
+
+    // Actualiza el estado interno cuando cambia la propiedad value
+    useEffect(() => {
+        setSelected(value);
+        setInputValue(value?.label || "");
+    }, [value]);
 
     const handleKeyDown = useCallback(
         (event: KeyboardEvent<HTMLDivElement>) => {
@@ -49,19 +65,29 @@ export const AutoComplete = ({
                 return;
             }
 
-            // Keep the options displayed when the user is typing
             if (!isOpen) {
                 setOpen(true);
             }
 
-            // This is not a default behaviour of the <input /> field
-            if (event.key === "Enter" && input.value !== "") {
-                const optionToSelect = options.find(
-                    (option) => option.label === input.value,
+            if (event.key === "Enter" && input.value.trim() !== "") {
+                // Buscar coincidencias exactas basadas en el label
+                const exactMatches = options.filter(
+                    (option) =>
+                        option.label.toLowerCase() ===
+                        input.value.trim().toLowerCase(),
                 );
-                if (optionToSelect) {
-                    setSelected(optionToSelect);
-                    onValueChange?.(optionToSelect);
+
+                if (exactMatches.length === 1) {
+                    setSelected(exactMatches[0]);
+                    onValueChange?.(exactMatches[0]);
+                    setOpen(false);
+                } else if (exactMatches.length > 1) {
+                    // Seleccionar la primera coincidencia o manejar múltiples según se requiera
+                    setSelected(exactMatches[0]);
+                    onValueChange?.(exactMatches[0]);
+                    setOpen(false);
+                } else {
+                    // Opcional: manejar caso donde no hay coincidencias
                 }
             }
 
@@ -74,18 +100,16 @@ export const AutoComplete = ({
 
     const handleBlur = useCallback(() => {
         setOpen(false);
-        setInputValue(selected?.label);
+        setInputValue(selected?.label || "");
     }, [selected]);
 
     const handleSelectOption = useCallback(
         (selectedOption: Option) => {
             setInputValue(selectedOption.label);
-
             setSelected(selectedOption);
             onValueChange?.(selectedOption);
+            setOpen(false);
 
-            // This is a hack to prevent the input from being focused after the user selects an option
-            // We can call this hack: "The next tick"
             setTimeout(() => {
                 inputRef?.current?.blur();
             }, 0);
@@ -107,9 +131,7 @@ export const AutoComplete = ({
             />
 
             <div
-                className={cn("relative", isOpen ? "mt-1" : "mt-0", {
-                    className,
-                })}
+                className={cn("relative", isOpen ? "mt-1" : "mt-0", className)}
             >
                 <div
                     className={cn(
@@ -119,20 +141,21 @@ export const AutoComplete = ({
                 >
                     <ScrollArea className="h-[10rem]">
                         <CommandList className="h-full rounded-lg capitalize ring-1 ring-slate-200">
-                            {isLoading ? (
+                            {isLoading && (
                                 <CommandPrimitive.Loading>
                                     <div className="p-1">
                                         <Skeleton className="h-8 w-full" />
                                     </div>
                                 </CommandPrimitive.Loading>
-                            ) : null}
-                            {options.length > 0 && !isLoading ? (
+                            )}
+                            {!isLoading && options.length > 0 && (
                                 <CommandGroup>
                                     {options.map((option) => {
                                         const isSelected =
                                             selected?.value === option.value;
                                         return (
                                             <CommandItem
+                                                // Cambia el valor a option.value para asegurar unicidad
                                                 key={option.value}
                                                 value={option.label}
                                                 onMouseDown={(event) => {
@@ -147,20 +170,21 @@ export const AutoComplete = ({
                                                     !isSelected ? "pl-8" : null,
                                                 )}
                                             >
-                                                {isSelected ? (
+                                                {isSelected && (
                                                     <Check className="w-4" />
-                                                ) : null}
+                                                )}
+                                                {/* Muestra la etiqueta dentro del CommandItem */}
                                                 {option.label}
                                             </CommandItem>
                                         );
                                     })}
                                 </CommandGroup>
-                            ) : null}
-                            {!isLoading ? (
+                            )}
+                            {!isLoading && options.length === 0 && (
                                 <CommandPrimitive.Empty className="select-none rounded-sm px-2 py-3 text-center text-sm">
                                     {emptyMessage}
                                 </CommandPrimitive.Empty>
-                            ) : null}
+                            )}
                         </CommandList>
                     </ScrollArea>
                 </div>

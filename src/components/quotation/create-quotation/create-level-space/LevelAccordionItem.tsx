@@ -13,6 +13,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -138,6 +139,9 @@ export function LevelAccordionItem({
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Cambiar nombre del nivel</DialogTitle>
+                        <DialogDescription>
+                            Ingrese el nuevo nombre para el nivel.
+                        </DialogDescription>
                     </DialogHeader>
                     <Input
                         value={newName}

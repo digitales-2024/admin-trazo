@@ -2,7 +2,7 @@
 import { useClients } from "@/hooks/use-client";
 import { QuotationStructure } from "@/types";
 import { Captions, ChevronDown, ChevronUp } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { UseFormReturn } from "react-hook-form";
 
 import { AutoComplete, type Option } from "@/components/ui/autocomplete";
@@ -26,16 +26,40 @@ import { Textarea } from "@/components/ui/textarea";
 interface HeadQuotationProps
     extends Omit<React.ComponentPropsWithRef<"form">, "onSubmit"> {
     form: UseFormReturn<QuotationStructure>;
+    clientIdUpdate?: string;
 }
 
-export const HeadQuotation = ({ form }: HeadQuotationProps) => {
+export const HeadQuotation = ({ form, clientIdUpdate }: HeadQuotationProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(true);
     const { dataClientsAll } = useClients();
 
+    // Generate client options from fetched clients
     const clientOptions: Option[] = (dataClientsAll ?? []).map((client) => ({
-        value: client.id,
+        value: client.id.toString(),
         label: client.name,
     }));
+
+    // Function to update the client ID in the form when selected
+    const handleClientChange = useCallback(
+        (clientId: string) => {
+            const selectedClient = clientOptions.find(
+                (option) => option.value === clientId,
+            );
+            if (selectedClient) {
+                form.setValue("clientId", selectedClient.value);
+            } else {
+                form.setValue("clientId", "");
+            }
+        },
+        [clientOptions, form],
+    );
+
+    // Update the selected client when clientIdUpdate or clientOptions change
+    useEffect(() => {
+        if (clientIdUpdate && clientOptions.length > 0) {
+            handleClientChange(clientIdUpdate);
+        }
+    }, [clientIdUpdate, clientOptions, handleClientChange]);
 
     return (
         <Card>
@@ -106,7 +130,7 @@ export const HeadQuotation = ({ form }: HeadQuotationProps) => {
                                                     }
                                                     onValueChange={(option) => {
                                                         field.onChange(
-                                                            option.value,
+                                                            option?.value || "",
                                                         );
                                                     }}
                                                     className="z-50"
@@ -171,7 +195,7 @@ export const HeadQuotation = ({ form }: HeadQuotationProps) => {
                                                         field.onChange(
                                                             parseFloat(
                                                                 e.target.value,
-                                                            ),
+                                                            ) || 0,
                                                         )
                                                     }
                                                 />
