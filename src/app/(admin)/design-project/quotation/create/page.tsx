@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
+import { CreateClientDialog } from "@/components/clients/CreateClientDialog";
 import { HeaderPage } from "@/components/common/HeaderPage";
 import { Shell } from "@/components/common/Shell";
 import { HeadQuotation } from "@/components/quotation/create-quotation/create-head-quotation/HeadQuotation";
@@ -24,6 +25,7 @@ import {
     projectNames,
     projects,
 } from "@/components/quotation/IntegralProjectData";
+import { CreateSpaceDialog } from "@/components/spaces/CreateSpaceDialog";
 import { Form } from "@/components/ui/form";
 
 export default function CreateQuotationPage() {
@@ -130,6 +132,10 @@ export default function CreateQuotationPage() {
                 title="Crear Cotización"
                 description="Complete todos los campos para crear una cotización."
             />
+            <div className="flex gap-6">
+                <CreateClientDialog />
+                <CreateSpaceDialog />
+            </div>
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
