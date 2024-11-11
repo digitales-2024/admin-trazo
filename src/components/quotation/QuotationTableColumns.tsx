@@ -22,7 +22,7 @@ import UpdateStatusQuotationDialog from "./UpdateStatusQuotationDialog";
 
 export const quotationsColumns = (
     isSuperAdmin: boolean,
-    exportQuotationToPdf: (id: string) => void,
+    exportQuotationToPdf: (id: string, publicCode: number) => void,
     handleEditClick: (id: string) => void,
 ): ColumnDef<QuotationSummary>[] => {
     const columns: ColumnDef<QuotationSummary>[] = [
@@ -172,9 +172,9 @@ export const quotationsColumns = (
             cell: function Cell({ row }) {
                 const [showUpdateStatusDialog, setShowUpdateStatusDialog] =
                     useState(false);
-                const { status, id } = row.original;
+                const { status, id, publicCode } = row.original;
                 const downloadPdfQuotation = () => {
-                    exportQuotationToPdf(id);
+                    exportQuotationToPdf(id, publicCode);
                 };
 
                 return (
