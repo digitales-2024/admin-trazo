@@ -4,6 +4,7 @@
 import { useSpaces } from "@/hooks/use-space";
 import React from "react";
 
+import { ErrorPage } from "@/components/common/ErrorPage";
 import { HeaderPage } from "@/components/common/HeaderPage";
 import { Shell } from "@/components/common/Shell";
 import { DataTableSkeleton } from "@/components/data-table/DataTableSkeleton";
@@ -34,7 +35,15 @@ export default function SpacesPage() {
         );
     }
     if (!dataSpacesAll) {
-        return null;
+        return (
+            <Shell className="gap-6">
+                <HeaderPage
+                    title="Ambientes"
+                    description="Lista de ambientes registrados en el sistema."
+                />
+                <ErrorPage />
+            </Shell>
+        );
     }
     return (
         <Shell className="gap-6">
