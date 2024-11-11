@@ -76,6 +76,12 @@ const errorTranslations = {
         "Este ambiente existe pero no está activo",
     "levels should not be empty":
         "La asignación de niveles no puede estar en blanco",
+    "phone must be a valid phone number":
+        "El teléfono debe ser un número de teléfono válido",
+    "This DNI is already in use": "Este DNI ya está en uso",
+    "The length of the RUC or DNI is incorrect":
+        "La longitud del RUC o DNI es incorrecta",
+    "This RUC is already in use": "El RUC ya está en uso",
 };
 
 export default errorTranslations;
