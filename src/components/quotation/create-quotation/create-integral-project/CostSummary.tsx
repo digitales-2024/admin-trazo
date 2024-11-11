@@ -125,7 +125,7 @@ const CostSummary: React.FC<CostSummaryProps> = ({
                                         id="discount"
                                         type="number"
                                         className="max-w-[100px]"
-                                        value={discount}
+                                        value={field.value ?? 0}
                                         onChange={(e) => {
                                             const value = Number(
                                                 e.target.value,
@@ -153,7 +153,7 @@ const CostSummary: React.FC<CostSummaryProps> = ({
                                             id="exchange-rate"
                                             type="number"
                                             className="max-w-[100px]"
-                                            value={exchangeRate}
+                                            value={field.value ?? 0}
                                             onChange={(e) => {
                                                 const value = Number(
                                                     e.target.value,
@@ -214,7 +214,7 @@ const CostSummary: React.FC<CostSummaryProps> = ({
                                         id="totalCost"
                                         type="number"
                                         className="max-w-[100px]"
-                                        value={field.value}
+                                        value={field.value ?? 0}
                                         onChange={(e) => {
                                             const value = Number(
                                                 e.target.value,
