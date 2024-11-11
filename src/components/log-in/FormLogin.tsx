@@ -33,7 +33,7 @@ export const FormLogin = () => {
                             type="email"
                             id="email"
                             {...register("email")}
-                            placeholder="ejemplo@chaqchao.com"
+                            placeholder="ejemplo@trazo.com"
                             autoComplete="email"
                         />
                         {errors.email?.message && (
