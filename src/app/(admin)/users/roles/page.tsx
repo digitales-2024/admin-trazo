@@ -1,10 +1,14 @@
 "use client";
 
+("use memo");
+
 import { useRol } from "@/hooks/use-rol";
 
 import { ErrorPage } from "@/components/common/ErrorPage";
+import { HeaderPage } from "@/components/common/HeaderPage";
+import { Shell } from "@/components/common/Shell";
 import { DataTableSkeleton } from "@/components/data-table/DataTableSkeleton";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { RolesTable } from "./_components/RolesTable";
 
@@ -13,61 +17,43 @@ export default function RolesPages() {
 
     if (isLoadingRoles) {
         return (
-            <div>
-                <div className="pb-8 pt-16">
-                    <h2 className="pb-2 text-4xl font-black">Roles</h2>
-                    <p className="text-sm text-muted-foreground">
-                        Gestiona los roles de los usuarios de la aplicación
-                    </p>
+            <Shell className="gap-2">
+                <HeaderPage
+                    title="Roles"
+                    description="Gestiona los roles de los usuarios de la aplicación."
+                />
+                <div className="flex flex-col items-end justify-center gap-4">
+                    <Skeleton className="h-7 w-52 justify-end" />
+                    <DataTableSkeleton
+                        columnCount={5}
+                        searchableColumnCount={1}
+                        filterableColumnCount={0}
+                        cellWidths={["1rem", "15rem", "12rem", "12rem", "8rem"]}
+                        shrinkZero
+                    />
                 </div>
-
-                <Card>
-                    <CardHeader />
-                    <CardContent>
-                        <DataTableSkeleton
-                            columnCount={5}
-                            searchableColumnCount={1}
-                        />
-                    </CardContent>
-                </Card>
-            </div>
+            </Shell>
         );
     }
 
     if (!dataRoles) {
         return (
-            <div>
-                <div className="pb-8 pt-16">
-                    <h2 className="pb-2 text-4xl font-black">Roles</h2>
-                    <p className="text-sm text-muted-foreground">
-                        Gestiona los roles de los usuarios de la aplicación
-                    </p>
-                </div>
-
-                <Card>
-                    <CardHeader />
-                    <CardContent>
-                        <ErrorPage />
-                    </CardContent>
-                </Card>
-            </div>
+            <Shell className="gap-6">
+                <HeaderPage
+                    title="Roles"
+                    description="Gestiona los roles de los usuarios de la aplicación."
+                />
+                <ErrorPage />
+            </Shell>
         );
     }
-
     return (
-        <div>
-            <div className="pb-8 pt-16">
-                <h2 className="pb-2 text-4xl font-black">Roles</h2>
-                <p className="text-sm text-muted-foreground">
-                    Gestiona los roles de los usuarios de la aplicación
-                </p>
-            </div>
-            <Card>
-                <CardHeader />
-                <CardContent>
-                    <RolesTable data={dataRoles} />
-                </CardContent>
-            </Card>
-        </div>
+        <Shell className="gap-6">
+            <HeaderPage
+                title="Roles"
+                description="Gestiona los roles de los usuarios de la aplicación."
+            />
+            <RolesTable data={dataRoles} />
+        </Shell>
     );
 }
