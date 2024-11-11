@@ -27,6 +27,7 @@ export type Quotation = {
 export type QuotationSummary = {
     id: string;
     name: string;
+    publicCode: number;
     client: Client;
     status: string;
     totalAmount: number;
