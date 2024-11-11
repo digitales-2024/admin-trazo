@@ -4,9 +4,9 @@ import {
     FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
 
-const baseQuery: BaseQueryFn = fetchBaseQuery({
+const baseQuery = fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
-    credentials: "include", // Enviar cookies HttpOnly en cada solicitud
+    credentials: "include", // Envía cookies HttpOnly en cada solicitud
 });
 
 export type QueryError = {
@@ -16,27 +16,40 @@ export type QueryError = {
 };
 
 const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
+    // Realiza la solicitud inicial
     let result = await baseQuery(args, api, extraOptions);
 
-    // Si obtenemos un 401 Unauthorized, intentamos refrescar el token
+    // Verifica si el error es 401 (no autorizado)
     if (result.error && (result.error as FetchBaseQueryError).status === 401) {
-        // Intentamos obtener un nuevo access_token usando el refresh_token
+        const originalRequest = args as { url: string };
+        const isLoginRequest = originalRequest.url.includes("/auth/login");
+
+        if (isLoginRequest) {
+            return result;
+        }
+
+        // Intento de refresco de token con el endpoint /auth/refresh-token
         const refreshResult = await baseQuery(
             { url: "/auth/refresh-token", method: "POST" },
             api,
             extraOptions,
         );
+
         if (refreshResult.data) {
-            // Reintenta la solicitud original con el nuevo token
+            // Si el refresco del token fue exitoso, se reintenta la solicitud original
             result = await baseQuery(args, api, extraOptions);
         } else {
-            // Si no se pudo refrescar el token (refresh token expirado), llamamos al endpoint de logout
+            // Si el refresco del token falló, cierra sesión y redirige al login
             await baseQuery(
                 { url: "/auth/logout", method: "POST" },
                 api,
                 extraOptions,
             );
 
+            // Opcional: despacha una acción para actualizar el estado de autenticación en Redux
+            // api.dispatch(logoutAction());
+
+            // Redirecciona al usuario a la página de inicio de sesión
             window.location.href = "/log-in";
         }
     }
