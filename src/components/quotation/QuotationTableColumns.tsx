@@ -2,7 +2,7 @@
 
 import { QuotationStatusType, QuotationSummary } from "@/types";
 import { type ColumnDef } from "@tanstack/react-table";
-import { Contact, Ellipsis, FileDown, NotebookPen, Ruler } from "lucide-react";
+import { Contact, Ellipsis, FileDown, MonitorCog, Ruler } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,7 @@ import {
 
 import { DataTableColumnHeader } from "../data-table/DataTableColumnHeader";
 import { Badge } from "../ui/badge";
+import QuotationDescriptionDialog from "./QuotationDescriptionDialog";
 import UpdateStatusQuotationDialog from "./UpdateStatusQuotationDialog";
 
 export const quotationsColumns = (
@@ -192,10 +193,16 @@ export const quotationsColumns = (
                 const downloadPdfQuotation = () => {
                     exportQuotationToPdf(id, publicCode);
                 };
+                const [showEditDialog, setShowEditDialog] = useState(false);
 
                 return (
                     <div>
                         <div>
+                            <QuotationDescriptionDialog
+                                open={showEditDialog}
+                                onOpenChange={setShowEditDialog}
+                                quotation={row?.original}
+                            />
                             <UpdateStatusQuotationDialog
                                 open={showUpdateStatusDialog}
                                 onOpenChange={setShowUpdateStatusDialog}
@@ -221,6 +228,11 @@ export const quotationsColumns = (
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-40">
                                 <DropdownMenuItem
+                                    onSelect={() => setShowEditDialog(true)}
+                                >
+                                    Ver
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
                                     onSelect={() => handleEditClick(id)}
                                     disabled={
                                         status === QuotationStatusType.APPROVED
@@ -228,6 +240,7 @@ export const quotationsColumns = (
                                 >
                                     Editar
                                 </DropdownMenuItem>
+
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
                                     onSelect={() =>
@@ -241,7 +254,7 @@ export const quotationsColumns = (
                                 >
                                     Actualizar
                                     <DropdownMenuShortcut>
-                                        <NotebookPen
+                                        <MonitorCog
                                             className="size-4"
                                             aria-hidden="true"
                                         />
