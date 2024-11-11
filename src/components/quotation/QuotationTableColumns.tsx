@@ -61,6 +61,22 @@ export const quotationsColumns = (
         },
 
         {
+            id: "Código",
+            accessorKey: "publicCode",
+            header: ({ column }) => (
+                <DataTableColumnHeader column={column} title="Código" />
+            ),
+            cell: ({ row }) => (
+                <div className="min-w-40 truncate capitalize">
+                    <span className="text-xs">
+                        COT-DIS-
+                        {row.getValue("Código") as string}
+                    </span>
+                </div>
+            ),
+        },
+
+        {
             id: "nombre",
             accessorKey: "name",
             header: ({ column }) => (
