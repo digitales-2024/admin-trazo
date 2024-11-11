@@ -39,19 +39,11 @@ export default function CreateQuotationPage() {
         sanitaryCost: 0,
     });
     const [discount, setDiscount] = useState(0);
-    const { handleFetchExchangeRate, exchangeRate: fetchedExchangeRate } =
-        useExchangeRate();
+    const { exchangeRate: fetchedExchangeRate } = useExchangeRate();
 
-    const [exchangeRate, setExchangeRate] = useState(3.5);
-
-    useEffect(() => {
-        const fetchRate = async () => {
-            if (!fetchedExchangeRate) {
-                await handleFetchExchangeRate();
-            }
-        };
-        fetchRate();
-    }, [fetchedExchangeRate, handleFetchExchangeRate]);
+    const [exchangeRate, setExchangeRate] = useState(
+        fetchedExchangeRate ? parseFloat(fetchedExchangeRate) : 3.5,
+    );
 
     useEffect(() => {
         if (fetchedExchangeRate !== undefined) {
@@ -119,7 +111,9 @@ export default function CreateQuotationPage() {
             landArea: 1,
             code: "",
             discount: 0,
-            exchangeRate: 3.5,
+            exchangeRate: fetchedExchangeRate
+                ? parseFloat(fetchedExchangeRate)
+                : undefined,
             paymentSchedule: [],
             architecturalCost: 0,
             structuralCost: 0,
