@@ -10,6 +10,7 @@ import Image from "next/image";
 
 import trazoProfile from "@/assets/images/trazo_profile.webp";
 import { useProfile } from "@/hooks/use-profile";
+import { KeyRound, User } from "lucide-react";
 
 export default function Account() {
     const { user } = useProfile();
@@ -26,12 +27,12 @@ export default function Account() {
                 description="Configura la información de tu cuenta"
             />
 
-            <div className="flex items-center justify-evenly py-8">
-                <div className="px-8 py-12">
+            <div className="flex justify-evenly py-8">
+                <div className="hidden px-4 py-12 xl:block">
                     <div className="group relative hidden lg:block">
                         <Image
                             className="inline-block rounded-full transition-all group-hover:blur-[1px] group-hover:brightness-75"
-                            width={350}
+                            width={320}
                             src={trazoProfile}
                             alt="Perfil"
                         />
@@ -40,15 +41,19 @@ export default function Account() {
                         </div>
                     </div>
                 </div>
-                <div className="flex items-center justify-center">
+                <div className="w-full md:w-auto">
                     <Tabs
                         defaultValue="account"
                         className="w-full md:w-[600px]"
                     >
-                        <TabsList className="grid w-full grid-cols-2">
-                            <TabsTrigger value="account">Cuenta</TabsTrigger>
+                        <TabsList className="grid w-full grid-cols-2 text-lg">
+                            <TabsTrigger value="account">
+                                <User height={20} />
+                                &nbsp;Cuenta
+                            </TabsTrigger>
                             <TabsTrigger value="password">
-                                Contraseña
+                                <KeyRound height={20} />
+                                &nbsp;Contraseña
                             </TabsTrigger>
                         </TabsList>
                         <TabsContent value="account">
