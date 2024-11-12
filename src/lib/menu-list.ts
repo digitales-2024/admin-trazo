@@ -15,6 +15,7 @@ import {
     BrickWall,
     HousePlusIcon,
     GalleryHorizontalEnd,
+    PencilRuler,
 } from "lucide-react";
 
 type Submenu = {
@@ -118,6 +119,13 @@ export function getMenuList(pathname: string): Group[] {
                     label: "Ambientes",
                     active: pathname.includes("/spaces"),
                     icon: GalleryHorizontalEnd,
+                    submenus: [],
+                },
+                {
+                    href: "/zoning",
+                    label: "Zonificaciones",
+                    active: pathname.includes("/zoning"),
+                    icon: PencilRuler,
                     submenus: [],
                 },
                 {
