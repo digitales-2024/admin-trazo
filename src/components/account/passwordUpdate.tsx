@@ -21,10 +21,10 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { InputPassword } from "../common/forms";
 
 const passwordUpdateSchema = z.object({
     password: z.string(),
@@ -93,9 +93,9 @@ export function PasswordComponent() {
                                 <FormItem>
                                     <FormLabel>Contraseña actual</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            placeholder="········"
-                                            type="password"
+                                        <InputPassword
+                                            id="password"
+                                            placeholder="********"
                                             disabled={isLoading}
                                             onInput={() => setIsDirty(true)}
                                             {...field}
@@ -112,9 +112,9 @@ export function PasswordComponent() {
                                 <FormItem>
                                     <FormLabel>Contraseña nueva</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            placeholder="········"
-                                            type="password"
+                                        <InputPassword
+                                            id="newPassword"
+                                            placeholder="********"
                                             disabled={isLoading}
                                             onInput={() => setIsDirty(true)}
                                             {...field}
@@ -133,9 +133,9 @@ export function PasswordComponent() {
                                         Confirmar contraseña nueva
                                     </FormLabel>
                                     <FormControl>
-                                        <Input
-                                            placeholder="········"
-                                            type="password"
+                                        <InputPassword
+                                            id="confirmPassword"
+                                            placeholder="********"
                                             disabled={isLoading}
                                             onInput={() => setIsDirty(true)}
                                             {...field}
