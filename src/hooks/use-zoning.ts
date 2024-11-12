@@ -145,7 +145,7 @@ export const useZoning = () => {
 
         toast.promise(promise(), {
             loading: "Reactivando...",
-            success: "Zonificación reactivados con éxito",
+            success: "Zonificaciones reactivadas con éxito",
             error: (error) => {
                 return error.message;
             },
@@ -187,7 +187,7 @@ export const useZoning = () => {
 
         toast.promise(promise(), {
             loading: "Eliminando...",
-            success: "Zonificación eliminados con éxito",
+            success: "Zonificaciones eliminadas con éxito",
             error: (error) => {
                 return error.message;
             },
