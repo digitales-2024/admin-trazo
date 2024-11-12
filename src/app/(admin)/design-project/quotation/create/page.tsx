@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
+import { CreateClientDialog } from "@/components/clients/CreateClientDialog";
 import { HeaderPage } from "@/components/common/HeaderPage";
 import { Shell } from "@/components/common/Shell";
 import { HeadQuotation } from "@/components/quotation/create-quotation/create-head-quotation/HeadQuotation";
@@ -24,6 +25,7 @@ import {
     projectNames,
     projects,
 } from "@/components/quotation/IntegralProjectData";
+import { CreateSpaceDialog } from "@/components/spaces/CreateSpaceDialog";
 import { Form } from "@/components/ui/form";
 
 export default function CreateQuotationPage() {
@@ -39,19 +41,11 @@ export default function CreateQuotationPage() {
         sanitaryCost: 0,
     });
     const [discount, setDiscount] = useState(0);
-    const { handleFetchExchangeRate, exchangeRate: fetchedExchangeRate } =
-        useExchangeRate();
+    const { exchangeRate: fetchedExchangeRate } = useExchangeRate();
 
-    const [exchangeRate, setExchangeRate] = useState(3.5);
-
-    useEffect(() => {
-        const fetchRate = async () => {
-            if (!fetchedExchangeRate) {
-                await handleFetchExchangeRate();
-            }
-        };
-        fetchRate();
-    }, [fetchedExchangeRate, handleFetchExchangeRate]);
+    const [exchangeRate, setExchangeRate] = useState(
+        fetchedExchangeRate ? parseFloat(fetchedExchangeRate) : 3.5,
+    );
 
     useEffect(() => {
         if (fetchedExchangeRate !== undefined) {
@@ -119,7 +113,9 @@ export default function CreateQuotationPage() {
             landArea: 1,
             code: "",
             discount: 0,
-            exchangeRate: 3.5,
+            exchangeRate: fetchedExchangeRate
+                ? parseFloat(fetchedExchangeRate)
+                : undefined,
             paymentSchedule: [],
             architecturalCost: 0,
             structuralCost: 0,
@@ -136,6 +132,10 @@ export default function CreateQuotationPage() {
                 title="Crear Cotización"
                 description="Complete todos los campos para crear una cotización."
             />
+            <div className="flex gap-6">
+                <CreateClientDialog />
+                <CreateSpaceDialog />
+            </div>
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}

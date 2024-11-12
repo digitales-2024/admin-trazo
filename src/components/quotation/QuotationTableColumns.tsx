@@ -2,7 +2,7 @@
 
 import { QuotationStatusType, QuotationSummary } from "@/types";
 import { type ColumnDef } from "@tanstack/react-table";
-import { Contact, Ellipsis, FileDown, NotebookPen, Ruler } from "lucide-react";
+import { Contact, Ellipsis, FileDown, MonitorCog, Ruler } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -18,11 +18,12 @@ import {
 
 import { DataTableColumnHeader } from "../data-table/DataTableColumnHeader";
 import { Badge } from "../ui/badge";
+import QuotationDescriptionDialog from "./QuotationDescriptionDialog";
 import UpdateStatusQuotationDialog from "./UpdateStatusQuotationDialog";
 
 export const quotationsColumns = (
     isSuperAdmin: boolean,
-    exportQuotationToPdf: (id: string) => void,
+    exportQuotationToPdf: (id: string, publicCode: number) => void,
     handleEditClick: (id: string) => void,
 ): ColumnDef<QuotationSummary>[] => {
     const columns: ColumnDef<QuotationSummary>[] = [
@@ -58,6 +59,22 @@ export const quotationsColumns = (
             enableSorting: false,
             enableHiding: false,
             enablePinning: true,
+        },
+
+        {
+            id: "Código",
+            accessorKey: "publicCode",
+            header: ({ column }) => (
+                <DataTableColumnHeader column={column} title="Código" />
+            ),
+            cell: ({ row }) => (
+                <div className="min-w-40 truncate capitalize">
+                    <span className="text-xs">
+                        COT-DIS-
+                        {row.getValue("Código") as string}
+                    </span>
+                </div>
+            ),
         },
 
         {
@@ -172,14 +189,20 @@ export const quotationsColumns = (
             cell: function Cell({ row }) {
                 const [showUpdateStatusDialog, setShowUpdateStatusDialog] =
                     useState(false);
-                const { status, id } = row.original;
+                const { status, id, publicCode } = row.original;
                 const downloadPdfQuotation = () => {
-                    exportQuotationToPdf(id);
+                    exportQuotationToPdf(id, publicCode);
                 };
+                const [showEditDialog, setShowEditDialog] = useState(false);
 
                 return (
                     <div>
                         <div>
+                            <QuotationDescriptionDialog
+                                open={showEditDialog}
+                                onOpenChange={setShowEditDialog}
+                                quotation={row?.original}
+                            />
                             <UpdateStatusQuotationDialog
                                 open={showUpdateStatusDialog}
                                 onOpenChange={setShowUpdateStatusDialog}
@@ -205,6 +228,11 @@ export const quotationsColumns = (
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-40">
                                 <DropdownMenuItem
+                                    onSelect={() => setShowEditDialog(true)}
+                                >
+                                    Ver
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
                                     onSelect={() => handleEditClick(id)}
                                     disabled={
                                         status === QuotationStatusType.APPROVED
@@ -212,6 +240,7 @@ export const quotationsColumns = (
                                 >
                                     Editar
                                 </DropdownMenuItem>
+
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
                                     onSelect={() =>
@@ -225,7 +254,7 @@ export const quotationsColumns = (
                                 >
                                     Actualizar
                                     <DropdownMenuShortcut>
-                                        <NotebookPen
+                                        <MonitorCog
                                             className="size-4"
                                             aria-hidden="true"
                                         />

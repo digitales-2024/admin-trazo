@@ -153,7 +153,7 @@ export function UpdateClientSheet({
                     <SheetTitle className="flex flex-col items-start">
                         {infoSheet.title}
                         <Badge
-                            className="bg-emerald-100 text-emerald-700"
+                            className="bg-emerald-100 capitalize text-emerald-700"
                             variant="secondary"
                         >
                             {client.name}
@@ -161,7 +161,7 @@ export function UpdateClientSheet({
                     </SheetTitle>
                     <SheetDescription>{infoSheet.description}</SheetDescription>
                 </SheetHeader>
-                <ScrollArea className="mt-4 w-full gap-4">
+                <ScrollArea className="w-full gap-4 rounded-md border p-4">
                     <Form {...form}>
                         <form
                             onSubmit={form.handleSubmit(onSubmit)}
@@ -178,6 +178,7 @@ export function UpdateClientSheet({
                                         </FormLabel>
                                         <FormControl>
                                             <Input
+                                                className="capitalize"
                                                 placeholder="Ingrese el nombre del cliente"
                                                 {...field}
                                             />
@@ -214,6 +215,7 @@ export function UpdateClientSheet({
                                         <FormLabel>Dirección</FormLabel>
                                         <FormControl>
                                             <Input
+                                                className="capitalize"
                                                 placeholder="Ingrese la dirección"
                                                 {...field}
                                             />

@@ -37,7 +37,7 @@ export function QuotationsTable({ data }: { data: QuotationSummary[] }) {
             data={data}
             columns={columns}
             toolbarActions={<QuotationTableToolbarActions />}
-            placeholder="Buscar clientes..."
+            placeholder="Buscar cotizaciones..."
         />
     );
 }

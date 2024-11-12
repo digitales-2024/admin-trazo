@@ -2,6 +2,7 @@
 
 import { useQuotations } from "@/hooks/use-quotation";
 import { QuotationStatusType, QuotationSummary } from "@/types";
+import { DialogDescription } from "@radix-ui/react-dialog";
 import { Row } from "@tanstack/react-table";
 import { useState, useEffect } from "react";
 
@@ -31,6 +32,7 @@ import {
     DrawerTitle,
     DrawerTrigger,
     DrawerFooter,
+    DrawerDescription,
 } from "@/components/ui/drawer";
 import {
     Select,
@@ -176,6 +178,9 @@ export default function UpdateStatusQuotationDialog({
                             <DrawerTitle>
                                 Cambiar Estado de Cotización
                             </DrawerTitle>
+                            <DrawerDescription>
+                                Selecciona un estado para la cotización
+                            </DrawerDescription>
                         </DrawerHeader>
                         <Content />
                     </DrawerContent>
@@ -192,6 +197,9 @@ export default function UpdateStatusQuotationDialog({
                             <DialogTitle>
                                 Cambiar Estado de Cotización
                             </DialogTitle>
+                            <DialogDescription>
+                                Selecciona un estado para la cotización
+                            </DialogDescription>
                         </DialogHeader>
                         <Content />
                     </DialogContent>

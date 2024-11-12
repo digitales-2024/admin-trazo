@@ -67,7 +67,7 @@ export function getMenuList(pathname: string): Group[] {
                             icon: FileSpreadsheet,
                         },
                         {
-                            href: "/design-project/categories",
+                            href: "/design-project/projects",
                             label: "Proyectos",
                             active: pathname.includes("/projects"),
                             icon: FolderRoot,
@@ -81,19 +81,19 @@ export function getMenuList(pathname: string): Group[] {
                     icon: Hammer,
                     submenus: [
                         {
-                            href: "/design-project/budgets",
+                            href: "/execution-project/budgets",
                             label: "Presupuestos",
                             active: pathname.includes("/budgets"),
                             icon: FileChartColumnIncreasing,
                         },
                         {
-                            href: "/design-project/categories",
+                            href: "/execution-project/projects",
                             label: "Proyectos",
                             active: pathname.includes("/projects"),
                             icon: FolderRoot,
                         },
                         {
-                            href: "/design-project/categories",
+                            href: "/execution-project/categories",
                             label: "Adicionales",
                             active: pathname.includes("/projects"),
                             icon: HousePlusIcon,
