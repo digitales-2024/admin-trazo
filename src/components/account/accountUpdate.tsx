@@ -2,7 +2,7 @@
 
 import { useProfile } from "@/hooks/use-profile";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -36,6 +36,7 @@ type AccountUpdateSchema = z.infer<typeof accountUpdateSchema>;
 
 export function AccountComponent() {
     const { user, onUpdate, isLoading, isSuccess, refetch } = useProfile();
+    const [isDirty, setIsDirty] = useState(false);
 
     const form = useForm<AccountUpdateSchema>({
         resolver: zodResolver(accountUpdateSchema),
@@ -60,7 +61,10 @@ export function AccountComponent() {
             name: data.name ?? "",
             phone: data?.telephone ?? "",
         };
-        onUpdate(updateData).then(() => refetch());
+        onUpdate(updateData).then(() => {
+            setIsDirty(false);
+            refetch();
+        });
     };
 
     return (
@@ -91,6 +95,7 @@ export function AccountComponent() {
                                             placeholder="Cargando..."
                                             disabled={isLoading}
                                             {...field}
+                                            onInput={() => setIsDirty(true)}
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -107,6 +112,7 @@ export function AccountComponent() {
                                         <Input
                                             placeholder="Cargando..."
                                             disabled={isLoading}
+                                            onInput={() => setIsDirty(true)}
                                             {...field}
                                         />
                                     </FormControl>
@@ -114,10 +120,7 @@ export function AccountComponent() {
                                 </FormItem>
                             )}
                         />
-                        <Button
-                            disabled={isLoading || !form.formState.isDirty}
-                            type="submit"
-                        >
+                        <Button disabled={isLoading || !isDirty} type="submit">
                             {isLoading
                                 ? "Actualizando..."
                                 : "Actualizar información"}

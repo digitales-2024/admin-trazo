@@ -24,6 +24,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 const passwordUpdateSchema = z.object({
     password: z.string(),
@@ -43,6 +44,7 @@ const passwordUpdateSchema = z.object({
 type PasswordUpdateSchema = z.infer<typeof passwordUpdateSchema>;
 
 export function PasswordComponent() {
+    const [isDirty, setIsDirty] = useState(false);
     const {
         onUpdatePassword,
         isLoadingUpdatePassword: isLoading,
@@ -95,6 +97,7 @@ export function PasswordComponent() {
                                             placeholder="········"
                                             type="password"
                                             disabled={isLoading}
+                                            onInput={() => setIsDirty(true)}
                                             {...field}
                                         />
                                     </FormControl>
@@ -113,6 +116,7 @@ export function PasswordComponent() {
                                             placeholder="········"
                                             type="password"
                                             disabled={isLoading}
+                                            onInput={() => setIsDirty(true)}
                                             {...field}
                                         />
                                     </FormControl>
@@ -133,6 +137,7 @@ export function PasswordComponent() {
                                             placeholder="········"
                                             type="password"
                                             disabled={isLoading}
+                                            onInput={() => setIsDirty(true)}
                                             {...field}
                                         />
                                     </FormControl>
@@ -140,10 +145,7 @@ export function PasswordComponent() {
                                 </FormItem>
                             )}
                         />
-                        <Button
-                            disabled={isLoading || !form.formState.isDirty}
-                            type="submit"
-                        >
+                        <Button disabled={isLoading || !isDirty} type="submit">
                             {isLoading
                                 ? "Actualizando..."
                                 : "Actualizar contraseña"}
