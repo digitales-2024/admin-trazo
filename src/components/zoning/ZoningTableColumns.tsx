@@ -2,7 +2,15 @@
 
 import { Zoning } from "@/types";
 import { type ColumnDef } from "@tanstack/react-table";
-import { Ellipsis, RefreshCcwDot, SquareUser, Trash } from "lucide-react";
+import {
+    Building,
+    Ellipsis,
+    Map,
+    Percent,
+    RefreshCcwDot,
+    Trash,
+    Trees,
+} from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -68,16 +76,14 @@ export const zoningColumns = (isSuperAdmin: boolean): ColumnDef<Zoning>[] => {
             ),
             cell: ({ row }) => (
                 <div className="flex min-w-40 items-center truncate capitalize">
-                    <Badge className="text-xs font-light" variant={"outline"}>
-                        <SquareUser
-                            size={14}
-                            className="mr-2"
-                            strokeWidth={1.5}
-                        />
-                        <span className="text-xs">
-                            {row.getValue("Código") as string}
-                        </span>
-                    </Badge>
+                    <Map
+                        size={12}
+                        className="mr-1 text-slate-600"
+                        strokeWidth={1}
+                    />
+                    <span className="text-xs font-medium text-slate-800">
+                        {row.getValue("Código") as string}
+                    </span>
                 </div>
             ),
         },
@@ -119,7 +125,7 @@ export const zoningColumns = (isSuperAdmin: boolean): ColumnDef<Zoning>[] => {
         },
 
         {
-            id: "Area Construible",
+            id: "Área Construible",
             accessorKey: "buildableArea",
             header: ({ column }) => (
                 <DataTableColumnHeader
@@ -129,37 +135,55 @@ export const zoningColumns = (isSuperAdmin: boolean): ColumnDef<Zoning>[] => {
             ),
             cell: ({ row }) => (
                 <div className="flex min-w-40 items-center truncate capitalize">
-                    <Badge className="text-xs font-light" variant={"outline"}>
-                        <SquareUser
-                            size={14}
-                            className="mr-2"
+                    <Badge
+                        className="border-yellow-500 bg-yellow-50 text-xs font-light text-yellow-800"
+                        variant={"outline"}
+                    >
+                        <Building
+                            size={16}
                             strokeWidth={1.5}
+                            className="mr-2 text-yellow-500"
                         />
-                        <span className="text-xs">
-                            {row.getValue("Area Construible") as string}
-                        </span>
+                        <div className="mr-2">
+                            <span className="font-normal">Porcentaje:</span>
+                        </div>
+                        <div className="flex flex-row items-center font-semibold">
+                            <span className="text-xs font-light">
+                                {row.getValue("Área Construible") as string}
+                            </span>
+                            <Percent size={12} strokeWidth={1.5} />
+                        </div>
                     </Badge>
                 </div>
             ),
         },
 
         {
-            id: "Área libre",
+            id: "Área Libre",
             accessorKey: "openArea",
             header: ({ column }) => (
-                <DataTableColumnHeader column={column} title="Área libre" />
+                <DataTableColumnHeader column={column} title="Área Libre" />
             ),
             cell: ({ row }) => (
                 <div className="flex min-w-40 items-center truncate capitalize">
-                    <Badge className="text-xs font-light" variant={"outline"}>
-                        <SquareUser
-                            size={14}
-                            className="mr-2"
+                    <Badge
+                        className="border-green-500 bg-green-50 text-xs font-light text-green-800"
+                        variant={"outline"}
+                    >
+                        <Trees
+                            size={16}
                             strokeWidth={1.5}
+                            className="mr-2 text-green-500"
                         />
-                        <span className="text-xs">
-                            {row.getValue("Área libre") as string}
-                        </span>
+                        <div className="mr-2">
+                            <span className="font-normal">Porcentaje:</span>
+                        </div>
+                        <div className="flex flex-row items-center font-semibold text-emerald-700">
+                            <span className="text-xs font-light">
+                                {row.getValue("Área Libre") as string}
+                            </span>
+                            <Percent size={12} strokeWidth={1.5} />
+                        </div>
                     </Badge>
                 </div>
             ),
