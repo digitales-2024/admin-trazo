@@ -139,7 +139,7 @@ export function SpaceForm({
                                         label: selectedSpaceName,
                                     }}
                                     onValueChange={(value) => {
-                                        field.onChange(value);
+                                        field.onChange(value.value);
                                         handleSpaceChange(value);
                                     }}
                                     className="z-50"

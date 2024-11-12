@@ -1,9 +1,9 @@
-import { useUpdateClientMutation } from "@/redux/services/clientApi";
 import {
     useCreateQuotationMutation,
     useGenPdfQuotationMutation,
     useGetAllQuotationsQuery,
     useGetQuotationByIdQuery,
+    useUpdateQuotationMutation,
     useUpdateStatusQuotationMutation,
 } from "@/redux/services/quotationApi";
 import {
@@ -53,7 +53,7 @@ export const useQuotations = (options: UseQuotationsProps = {}) => {
             isSuccess: isSuccessUpdateQuotation,
             isLoading: isLoadingUpdateQuotation,
         },
-    ] = useUpdateClientMutation();
+    ] = useUpdateQuotationMutation();
 
     const onCreateQuotation = async (input: Partial<QuotationStructure>) => {
         const promise = () =>
@@ -133,7 +133,7 @@ export const useQuotations = (options: UseQuotationsProps = {}) => {
         });
     };
 
-    const exportQuotationToPdf = async (id: string) => {
+    const exportQuotationToPdf = async (id: string, publicCode: number) => {
         const promise = () =>
             new Promise(async (resolve, reject) => {
                 try {
@@ -145,7 +145,7 @@ export const useQuotations = (options: UseQuotationsProps = {}) => {
                     link.href = url;
                     link.setAttribute(
                         "download",
-                        `quotation-${format(new Date(), "yyyy-MM-dd")}.pdf`,
+                        `COT-DIS-${publicCode}-${format(new Date(), "yyyy-MM-dd")}.pdf`,
                     );
 
                     // Añadir el enlace al DOM y disparar la descarga

@@ -90,156 +90,148 @@ export function CreateUsersDialog() {
                     <DialogDescription>
                         Complete la información y presione el boton Crear.
                     </DialogDescription>
-
-                    <Form {...form}>
-                        <form
-                            onSubmit={form.handleSubmit(onSubmit)}
-                            className="space-y-6"
-                        >
-                            <FormField
-                                control={form.control}
-                                name="name"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Nombre Completo</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="Ejm: Juan Perez"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="email"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>
-                                            Correo electrónico
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="usuario@trazoarq.com"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="phone"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Teléfono</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="Ejemplo: 999 888 777"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="password"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel htmlFor="password">
-                                            Generar contraseña
-                                        </FormLabel>
-                                        <FormControl>
-                                            <div className="flex items-center gap-2">
-                                                <Input
-                                                    id="password"
-                                                    placeholder="********"
-                                                    {...field}
-                                                />
-                                                <TooltipProvider>
-                                                    <Tooltip>
-                                                        <TooltipTrigger asChild>
-                                                            <Button
-                                                                type="button"
-                                                                variant="outline"
-                                                                onClick={
-                                                                    handleGeneratePassword
-                                                                }
-                                                            >
-                                                                <Bot
-                                                                    className="size-4"
-                                                                    aria-hidden="true"
-                                                                />
-                                                            </Button>
-                                                        </TooltipTrigger>
-                                                        <TooltipContent>
-                                                            Generar constraseña
-                                                        </TooltipContent>
-                                                    </Tooltip>
-                                                </TooltipProvider>
-                                            </div>
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="roles"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel htmlFor="rol">Rol</FormLabel>
-                                        <Select
-                                            onValueChange={(value) =>
-                                                field.onChange([value])
-                                            }
-                                            defaultValue={
-                                                field?.value?.[0] ?? ""
-                                            }
-                                        >
-                                            <FormControl>
-                                                <SelectTrigger className="capitalize">
-                                                    <SelectValue placeholder="Selecciona un rol" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    {dataRoles?.map((rol) => (
-                                                        <SelectItem
-                                                            key={rol.id}
-                                                            value={rol.id}
-                                                            className="capitalize"
-                                                        >
-                                                            {rol.name}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <Button
-                                disabled={isCreatePending}
-                                className="w-full"
-                            >
-                                {isCreatePending && (
-                                    <RefreshCcw
-                                        className="mr-2 size-4 animate-spin"
-                                        aria-hidden="true"
-                                    />
-                                )}
-                                Registrar y enviar correo
-                            </Button>
-                        </form>
-                    </Form>
                 </DialogHeader>
+                <Form {...form}>
+                    <form
+                        onSubmit={form.handleSubmit(onSubmit)}
+                        className="space-y-6"
+                    >
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Nombre Completo</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Ejm: Juan Perez"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Correo electrónico</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="usuario@trazoarq.com"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="phone"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Teléfono</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Ejemplo: 999 888 777"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel htmlFor="password">
+                                        Generar contraseña
+                                    </FormLabel>
+                                    <FormControl>
+                                        <div className="flex items-center gap-2">
+                                            <Input
+                                                id="password"
+                                                placeholder="********"
+                                                {...field}
+                                            />
+                                            <TooltipProvider>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <Button
+                                                            type="button"
+                                                            variant="outline"
+                                                            onClick={
+                                                                handleGeneratePassword
+                                                            }
+                                                        >
+                                                            <Bot
+                                                                className="size-4"
+                                                                aria-hidden="true"
+                                                            />
+                                                        </Button>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        Generar constraseña
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
+                                        </div>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="roles"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel htmlFor="rol">Rol</FormLabel>
+                                    <Select
+                                        onValueChange={(value) =>
+                                            field.onChange([value])
+                                        }
+                                        defaultValue={field?.value?.[0] ?? ""}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger className="capitalize">
+                                                <SelectValue placeholder="Selecciona un rol" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                {dataRoles?.map((rol) => (
+                                                    <SelectItem
+                                                        key={rol.id}
+                                                        value={rol.id}
+                                                        className="capitalize"
+                                                    >
+                                                        {rol.name}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <Button disabled={isCreatePending} className="w-full">
+                            {isCreatePending && (
+                                <RefreshCcw
+                                    className="mr-2 size-4 animate-spin"
+                                    aria-hidden="true"
+                                />
+                            )}
+                            Registrar y enviar correo
+                        </Button>
+                    </form>
+                </Form>
             </DialogContent>
         </Dialog>
     );

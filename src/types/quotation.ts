@@ -27,6 +27,7 @@ export type Quotation = {
 export type QuotationSummary = {
     id: string;
     name: string;
+    publicCode: number;
     client: Client;
     status: string;
     totalAmount: number;
@@ -82,6 +83,7 @@ export type SpaceQuotation = {
     area: number;
     spaceId: string;
     name?: string;
+    id?: string;
 };
 export type PaymentSchedule = {
     name: string;

@@ -4,6 +4,7 @@
 import { useClients } from "@/hooks/use-client";
 
 import { ClientsTable } from "@/components/clients/ClientsTable";
+import { ErrorPage } from "@/components/common/ErrorPage";
 import { HeaderPage } from "@/components/common/HeaderPage";
 import { Shell } from "@/components/common/Shell";
 import { DataTableSkeleton } from "@/components/data-table/DataTableSkeleton";
@@ -33,7 +34,15 @@ export default function ClientsPage() {
         );
     }
     if (!dataClientsAll) {
-        return null;
+        return (
+            <Shell className="gap-6">
+                <HeaderPage
+                    title="Clientes"
+                    description="Lista de clientes registrados en el sistema."
+                />
+                <ErrorPage />
+            </Shell>
+        );
     }
     return (
         <Shell className="gap-6">

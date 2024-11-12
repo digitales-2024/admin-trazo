@@ -1,3 +1,4 @@
+export { authSchema } from "./authSchema";
 export {
     type CreateUsersSchema,
     type UpdateUsersSchema,

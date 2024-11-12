@@ -99,7 +99,7 @@ export function UpdateSpacesSheet({
                     <SheetTitle className="flex flex-col items-start">
                         {infoSheet.title}
                         <Badge
-                            className="bg-emerald-100 text-emerald-700"
+                            className="bg-emerald-100 capitalize text-emerald-700"
                             variant="secondary"
                         >
                             {space.name}
@@ -107,7 +107,7 @@ export function UpdateSpacesSheet({
                     </SheetTitle>
                     <SheetDescription>{infoSheet.description}</SheetDescription>
                 </SheetHeader>
-                <ScrollArea className="mt-4 w-full gap-4">
+                <ScrollArea className="w-full gap-4 rounded-md border p-4">
                     <Form {...form}>
                         <form
                             onSubmit={form.handleSubmit(onSubmit)}
