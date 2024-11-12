@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import Image from "next/image";
 
-import apartmentImg from "@/assets/images/departamento.webp";
+import trazoProfile from "@/assets/images/trazo_profile.webp";
 import { useProfile } from "@/hooks/use-profile";
 
 export default function Account() {
@@ -26,15 +26,16 @@ export default function Account() {
                 description="Configura la información de tu cuenta"
             />
 
-            <div className="grid gap-8 lg:grid-cols-2">
-                <div>
-                    <div className="group relative hidden px-4 py-12 lg:block">
+            <div className="flex items-center justify-evenly py-8">
+                <div className="px-8 py-12">
+                    <div className="group relative hidden lg:block">
                         <Image
-                            className="rounded-md brightness-75 transition-all group-hover:brightness-50"
-                            src={apartmentImg}
+                            className="inline-block rounded-full transition-all group-hover:blur-[1px] group-hover:brightness-75"
+                            width={350}
+                            src={trazoProfile}
                             alt="Perfil"
                         />
-                        <div className="absolute left-0 top-0 flex h-full w-full items-center justify-center text-4xl font-black uppercase tracking-widest text-white">
+                        <div className="absolute left-0 top-0 flex h-full w-full items-center justify-center text-5xl font-black uppercase tracking-widest text-white">
                             {initials}
                         </div>
                     </div>
@@ -42,7 +43,7 @@ export default function Account() {
                 <div className="flex items-center justify-center">
                     <Tabs
                         defaultValue="account"
-                        className="w-full md:w-[500px]"
+                        className="w-full md:w-[600px]"
                     >
                         <TabsList className="grid w-full grid-cols-2">
                             <TabsTrigger value="account">Cuenta</TabsTrigger>
