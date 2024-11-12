@@ -13,3 +13,7 @@ export {
     createQuotationSchema,
     updateQuotationSchema,
 } from "./quotations/createQuotationSchema";
+export {
+    zoningSchema,
+    type CreateZoningSchema,
+} from "./zoning/createZoningSchema";
