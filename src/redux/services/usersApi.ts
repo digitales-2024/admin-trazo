@@ -1,4 +1,5 @@
 import { CreateUsersSchema, UpdateUsersSchema } from "@/schemas";
+import { UpdateUserPasswordSchema } from "@/schemas/users/createUsersSchema";
 import { SendNewPasswordSchema } from "@/schemas/users/sendNewPasswordSchema";
 import { User } from "@/types/user";
 import { createApi } from "@reduxjs/toolkit/query/react";
@@ -32,6 +33,21 @@ export const usersApi = createApi({
         updateUser: build.mutation<
             UserUpdate,
             UpdateUsersSchema & { id: string }
+        >({
+            query: ({ id, ...body }) => ({
+                url: `users/${id}`,
+                method: "PATCH",
+                body,
+                credentials: "include",
+            }),
+
+            invalidatesTags: ["Users"],
+        }),
+
+        // Actualizar contraseña del usuario por id del parametro /users/:id
+        updateUserPassword: build.mutation<
+            UserUpdate,
+            UpdateUserPasswordSchema & { id: string }
         >({
             query: ({ id, ...body }) => ({
                 url: `users/${id}`,
