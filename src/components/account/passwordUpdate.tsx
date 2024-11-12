@@ -2,6 +2,7 @@
 
 import { useProfile } from "@/hooks/use-profile";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -23,7 +24,7 @@ import {
 } from "@/components/ui/form";
 
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+
 import { InputPassword } from "../common/forms";
 
 const passwordUpdateSchema = z.object({

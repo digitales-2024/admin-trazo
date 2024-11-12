@@ -3,17 +3,16 @@
 import { AccountComponent } from "@/components/account/accountUpdate";
 import { PasswordComponent } from "@/components/account/passwordUpdate";
 import { HeaderPage } from "@/components/common/HeaderPage";
+import { Shell } from "@/components/common/Shell";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Account() {
     return (
-        <div>
-            <div className="pb-8 pt-16">
-                <HeaderPage
-                    title="Mi cuenta"
-                    description="Configura la información de tu cuenta"
-                />
-            </div>
+        <Shell className="gap-2">
+            <HeaderPage
+                title="Mi cuenta"
+                description="Configura la información de tu cuenta"
+            />
 
             <div className="flex justify-center">
                 <Tabs defaultValue="account" className="w-[600px]">
@@ -30,6 +29,6 @@ export default function Account() {
                     </TabsContent>
                 </Tabs>
             </div>
-        </div>
+        </Shell>
     );
 }
