@@ -10,6 +10,7 @@ import { quotationsApi } from "./services/quotationApi";
 import { rolesApi } from "./services/rolesApi";
 import { spacesApi } from "./services/spaceApi";
 import { usersApi } from "./services/usersApi";
+import { zoningApi } from "./services/zoningApi";
 
 export const store = configureStore({
     reducer: {
@@ -22,6 +23,7 @@ export const store = configureStore({
         [clientsApi.reducerPath]: clientsApi.reducer,
         [quotationsApi.reducerPath]: quotationsApi.reducer,
         [exchangeRateSunatApi.reducerPath]: exchangeRateSunatApi.reducer,
+        [zoningApi.reducerPath]: zoningApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
@@ -44,7 +46,8 @@ export const store = configureStore({
             .concat(spacesApi.middleware)
             .concat(clientsApi.middleware)
             .concat(quotationsApi.middleware)
-            .concat(exchangeRateSunatApi.middleware),
+            .concat(exchangeRateSunatApi.middleware)
+            .concat(zoningApi.middleware),
 });
 setupListeners(store.dispatch);
 
