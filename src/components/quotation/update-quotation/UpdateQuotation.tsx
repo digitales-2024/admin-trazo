@@ -53,6 +53,7 @@ export default function UpdateQuotation({
         defaultValues: {
             name: "",
             clientId: "",
+            zoningId: "",
             deliveryTime: 0,
             landArea: 0,
             description: "",
@@ -89,6 +90,7 @@ export default function UpdateQuotation({
             form.reset({
                 name: quotationById.name,
                 clientId: quotationById.client.id.toString(),
+                zoningId: quotationById.zoning.id.toString(),
                 deliveryTime: quotationById.deliveryTime,
                 landArea: quotationById.landArea,
                 description: quotationById.description,
@@ -197,6 +199,7 @@ export default function UpdateQuotation({
             metering: metering,
             levels: levelsData,
             clientId: input.clientId,
+            zoningId: input.zoningId,
             totalAmount: totalCost,
         };
 
