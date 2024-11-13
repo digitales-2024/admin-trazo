@@ -47,12 +47,16 @@ export default function Account() {
                     >
                         <TabsList className="grid w-full grid-cols-2 text-lg">
                             <TabsTrigger value="account">
-                                <User height={20} />
-                                &nbsp;Cuenta
+                                <User className="mr-2 h-4 w-4 flex-shrink-0" />
+                                <span className="truncate text-ellipsis">
+                                    Cuenta
+                                </span>
                             </TabsTrigger>
                             <TabsTrigger value="password">
-                                <KeyRound height={20} />
-                                &nbsp;Contraseña
+                                <KeyRound className="mr-2 h-4 w-4 flex-shrink-0" />
+                                <span className="truncate text-ellipsis">
+                                    Contraseña
+                                </span>
                             </TabsTrigger>
                         </TabsList>
                         <TabsContent value="account">
