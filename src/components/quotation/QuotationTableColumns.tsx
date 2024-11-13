@@ -2,7 +2,14 @@
 
 import { QuotationStatusType, QuotationSummary } from "@/types";
 import { type ColumnDef } from "@tanstack/react-table";
-import { Contact, Ellipsis, FileDown, MonitorCog, Ruler } from "lucide-react";
+import {
+    Contact,
+    Ellipsis,
+    FileDown,
+    Grid3X3,
+    MonitorCog,
+    Ruler,
+} from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -106,6 +113,30 @@ export const quotationsColumns = (
                         <span className="text-xs font-light">
                             {metrado} m²{" "}
                         </span>
+                    </div>
+                );
+            },
+        },
+
+        {
+            id: "Zonificación",
+            accessorKey: "zoning.zoneCode",
+            header: ({ column }) => (
+                <DataTableColumnHeader column={column} title="Zonificación" />
+            ),
+            cell: ({ row }) => {
+                return (
+                    <div className="flex items-center space-x-2 truncate">
+                        <Grid3X3
+                            size={16}
+                            className="text-slate-700"
+                            strokeWidth={1.5}
+                        />
+                        <div className="flex flex-col leading-tight">
+                            <span className="text-xs font-normal">
+                                {row.getValue("Zonificación")}
+                            </span>
+                        </div>
                     </div>
                 );
             },
