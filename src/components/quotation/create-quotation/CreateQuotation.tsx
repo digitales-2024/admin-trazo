@@ -25,6 +25,7 @@ import {
 } from "@/components/quotation/IntegralProjectData";
 import { CreateSpaceDialog } from "@/components/spaces/CreateSpaceDialog";
 import { Form } from "@/components/ui/form";
+import { CreateZoningDialog } from "@/components/zoning/CreateZoningDialog";
 
 export default function CreateQuotation() {
     const [floors, setFloors] = useState<Floor[]>([
@@ -125,11 +126,14 @@ export default function CreateQuotation() {
 
     const onSubmit = () => {};
 
+    const diferentPage = true;
+
     return (
         <>
-            <div className="flex gap-6">
-                <CreateClientDialog />
-                <CreateSpaceDialog />
+            <div className="flex flex-col gap-6 sm:flex-row">
+                <CreateClientDialog diferentPage={diferentPage} />
+                <CreateSpaceDialog diferentPage={diferentPage} />
+                <CreateZoningDialog diferentPage={diferentPage} />
             </div>
             <Form {...form}>
                 <form

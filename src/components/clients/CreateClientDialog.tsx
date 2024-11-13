@@ -7,7 +7,7 @@ import {
     CreateClientsSchema,
 } from "@/schemas/clients/createClientSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus, RefreshCcw } from "lucide-react";
+import { Plus, RefreshCcw, UserPlus } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
@@ -43,7 +43,13 @@ const dataForm = {
         "Complete los detalles a continuación para crear nuevos clientes.",
 };
 
-export function CreateClientDialog() {
+interface CreateClientDialogSheetProps {
+    diferentPage?: boolean;
+}
+
+export function CreateClientDialog({
+    diferentPage,
+}: CreateClientDialogSheetProps) {
     const [open, setOpen] = useState(false);
     const [isCreatePending, startCreateTransition] = useTransition();
     const isDesktop = useMediaQuery("(min-width: 640px)");
@@ -89,7 +95,14 @@ export function CreateClientDialog() {
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
                     <Button variant="outline" size="sm">
-                        <Plus className="mr-2 size-4" aria-hidden="true" />
+                        {diferentPage ? (
+                            <UserPlus
+                                className="mr-2 size-4"
+                                aria-hidden="true"
+                            />
+                        ) : (
+                            <Plus className="mr-2 size-4" aria-hidden="true" />
+                        )}
                         {dataForm.button}
                     </Button>
                 </DialogTrigger>
