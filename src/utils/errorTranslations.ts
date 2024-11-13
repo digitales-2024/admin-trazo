@@ -82,6 +82,9 @@ const errorTranslations = {
     "The length of the RUC or DNI is incorrect":
         "La longitud del RUC o DNI es incorrecta",
     "This RUC is already in use": "El RUC ya está en uso",
+    "This zoningCode already exists": "Este código de zonificación ya existe",
+    "The sum of buildable area and open area must be 100":
+        "La suma del área construible y el área libre debe ser 100",
 };
 
 export default errorTranslations;
