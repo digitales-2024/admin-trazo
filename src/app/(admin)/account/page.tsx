@@ -1,16 +1,15 @@
 "use client";
 
+import trazoProfile from "@/assets/images/trazo_profile.webp";
+import { useProfile } from "@/hooks/use-profile";
+import { KeyRound, User } from "lucide-react";
+import Image from "next/image";
+
 import { AccountComponent } from "@/components/account/accountUpdate";
 import { PasswordComponent } from "@/components/account/passwordUpdate";
 import { HeaderPage } from "@/components/common/HeaderPage";
 import { Shell } from "@/components/common/Shell";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-import Image from "next/image";
-
-import trazoProfile from "@/assets/images/trazo_profile.webp";
-import { useProfile } from "@/hooks/use-profile";
-import { KeyRound, User } from "lucide-react";
 
 export default function Account() {
     const { user } = useProfile();
@@ -36,7 +35,7 @@ export default function Account() {
                             src={trazoProfile}
                             alt="Perfil"
                         />
-                        <div className="absolute left-0 top-0 flex h-full w-full items-center justify-center text-5xl font-black uppercase tracking-widest text-white">
+                        <div className="absolute left-0 top-0 flex h-full w-full cursor-default items-center justify-center text-5xl font-black uppercase tracking-widest text-white">
                             {initials}
                         </div>
                     </div>
