@@ -122,8 +122,9 @@ export default function CreateQuotationButton({
             electricCost: electricCost,
             sanitaryCost: sanitaryCost,
             metering: integralProjectData.area,
-            levels: formattedLevels, // Usar los datos formateados
+            levels: formattedLevels,
             clientId: headQuotationData.idClient,
+            zoningId: headQuotationData.idZoning,
             totalAmount: totalCost,
         };
 

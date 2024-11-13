@@ -6,6 +6,7 @@ export type Quotation = {
     code: string;
     description: string;
     client: Client;
+    zoning: Zoning;
     status: string;
     discount: number;
     totalAmount: number;
@@ -29,6 +30,7 @@ export type QuotationSummary = {
     name: string;
     publicCode: number;
     client: Client;
+    zoning: Zoning;
     status: string;
     totalAmount: number;
     metering: number;
@@ -37,6 +39,11 @@ export type QuotationSummary = {
 export type Client = {
     id: string;
     name: string;
+};
+
+export type Zoning = {
+    id: string;
+    zoneCode: string;
 };
 
 export enum QuotationStatusType {
@@ -51,6 +58,7 @@ export type HeadQuotation = {
     deliveryTime: number;
     landArea: number;
     idClient: string;
+    idZoning: string;
 };
 
 export type QuotationStructure = {
@@ -71,6 +79,9 @@ export type QuotationStructure = {
     metering?: number;
     levels?: LevelQuotation[];
     clientId: string;
+    zoningId: string;
+    buildableArea?: number;
+    openArea?: number;
 };
 
 export type LevelQuotation = {
