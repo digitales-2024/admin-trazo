@@ -5,7 +5,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 import {
     Building,
     Ellipsis,
-    Map,
+    Grid3X3,
     Percent,
     RefreshCcwDot,
     Trash,
@@ -74,18 +74,22 @@ export const zoningColumns = (isSuperAdmin: boolean): ColumnDef<Zoning>[] => {
             header: ({ column }) => (
                 <DataTableColumnHeader column={column} title="Código" />
             ),
-            cell: ({ row }) => (
-                <div className="flex min-w-40 items-center truncate capitalize">
-                    <Map
-                        size={12}
-                        className="mr-1 text-slate-600"
-                        strokeWidth={1}
-                    />
-                    <span className="text-xs font-medium text-slate-800">
-                        {row.getValue("Código") as string}
-                    </span>
-                </div>
-            ),
+            cell: ({ row }) => {
+                return (
+                    <div className="flex items-center space-x-2 truncate">
+                        <Grid3X3
+                            size={16}
+                            className="text-slate-700"
+                            strokeWidth={1.5}
+                        />
+                        <div className="flex flex-col leading-tight">
+                            <span className="text-xs font-normal">
+                                {row.getValue("Código")}
+                            </span>
+                        </div>
+                    </div>
+                );
+            },
         },
 
         {
