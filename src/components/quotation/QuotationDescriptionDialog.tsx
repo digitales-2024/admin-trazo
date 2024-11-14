@@ -109,8 +109,6 @@ export default function QuotationDescriptionDialog({
 }: QuotationDescriptionDialogProps) {
     const { quotationById } = useQuotations({ id: quotation.id });
 
-    console.log(JSON.stringify(quotationById?.levels));
-
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="w-full max-w-5xl p-4">

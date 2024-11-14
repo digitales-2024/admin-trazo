@@ -9,13 +9,16 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useForm, FormProvider, UseFormReturn } from "react-hook-form";
 
+import { CreateClientDialog } from "@/components/clients/CreateClientDialog";
 import { HeadQuotation } from "@/components/quotation/create-quotation/create-head-quotation/HeadQuotation";
 import {
     CreateLevelSpace,
     extractData,
 } from "@/components/quotation/create-quotation/create-level-space/LevelSpaceCreate";
+import { CreateSpaceDialog } from "@/components/spaces/CreateSpaceDialog";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { CreateZoningDialog } from "@/components/zoning/CreateZoningDialog";
 
 import IntegralProject from "../create-quotation/create-integral-project/IntegralProject";
 import { projects } from "../IntegralProjectData";
@@ -53,6 +56,7 @@ export default function UpdateQuotation({
         defaultValues: {
             name: "",
             clientId: "",
+            zoningId: "",
             deliveryTime: 0,
             landArea: 0,
             description: "",
@@ -89,6 +93,7 @@ export default function UpdateQuotation({
             form.reset({
                 name: quotationById.name,
                 clientId: quotationById.client.id.toString(),
+                zoningId: quotationById.zoning.id.toString(),
                 deliveryTime: quotationById.deliveryTime,
                 landArea: quotationById.landArea,
                 description: quotationById.description,
@@ -197,6 +202,7 @@ export default function UpdateQuotation({
             metering: metering,
             levels: levelsData,
             clientId: input.clientId,
+            zoningId: input.zoningId,
             totalAmount: totalCost,
         };
 
@@ -217,70 +223,84 @@ export default function UpdateQuotation({
             form.reset();
         }
     }, [isSuccessUpdateQuotation, form]);
+
+    const diferentPage = true;
     return (
-        <FormProvider {...form}>
-            <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="flex flex-col gap-4 p-4"
-            >
-                <HeadQuotation
-                    form={form as UseFormReturn<QuotationStructure>}
-                    clientIdUpdate={quotationById?.client.id.toString()}
-                />
+        <>
+            <div className="flex flex-col gap-6 sm:flex-row">
+                <CreateClientDialog diferentPage={diferentPage} />
+                <CreateSpaceDialog diferentPage={diferentPage} />
+                <CreateZoningDialog diferentPage={diferentPage} />
+            </div>
+            <FormProvider {...form}>
+                <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="flex flex-col gap-4 p-4"
+                >
+                    <HeadQuotation
+                        form={form as UseFormReturn<QuotationStructure>}
+                        clientIdUpdate={quotationById?.client.id.toString()}
+                    />
 
-                <Separator className="my-4" />
-                <CreateLevelSpace
-                    form={form as UseFormReturn<QuotationStructure>}
-                    floors={floors}
-                    setFloors={setFloors}
-                    calculateTotalBuildingMeters={calculateTotalBuildingMeters}
-                />
-                <Separator className="my-4" />
+                    <Separator className="my-4" />
+                    <CreateLevelSpace
+                        form={form as UseFormReturn<QuotationStructure>}
+                        floors={floors}
+                        setFloors={setFloors}
+                        calculateTotalBuildingMeters={
+                            calculateTotalBuildingMeters
+                        }
+                    />
+                    <Separator className="my-4" />
 
-                <IntegralProject
-                    form={form as UseFormReturn<QuotationStructure>}
-                    area={calculateTotalBuildingMeters()}
-                    costs={{
-                        architecturalCost: parseFloat(architecturalCost),
-                        structuralCost: parseFloat(structuralCost),
-                        electricCost: parseFloat(electricCost),
-                        sanitaryCost: parseFloat(sanitaryCost),
-                    }}
-                    setCosts={(costs) => ({
-                        ...costs,
-                        architecturalCost: parseFloat(architecturalCost),
-                        structuralCost: parseFloat(structuralCost),
-                        electricCost: parseFloat(electricCost),
-                        sanitaryCost: parseFloat(sanitaryCost),
-                    })}
-                    discount={parseFloat(discount)}
-                    exchangeRate={form.watch("exchangeRate")}
-                    setDiscount={(discount) => discount}
-                    setExchangeRate={(exchangeRate) => exchangeRate}
-                    setTotalCost={(totalCost) => totalCost}
-                    updateQuotation={quotationById.totalAmount}
-                />
-                <Separator className="my-4" />
+                    <IntegralProject
+                        form={form as UseFormReturn<QuotationStructure>}
+                        area={calculateTotalBuildingMeters()}
+                        costs={{
+                            architecturalCost: parseFloat(architecturalCost),
+                            structuralCost: parseFloat(structuralCost),
+                            electricCost: parseFloat(electricCost),
+                            sanitaryCost: parseFloat(sanitaryCost),
+                        }}
+                        setCosts={(costs) => ({
+                            ...costs,
+                            architecturalCost: parseFloat(architecturalCost),
+                            structuralCost: parseFloat(structuralCost),
+                            electricCost: parseFloat(electricCost),
+                            sanitaryCost: parseFloat(sanitaryCost),
+                        })}
+                        discount={parseFloat(discount)}
+                        exchangeRate={form.watch("exchangeRate")}
+                        setDiscount={(discount) => discount}
+                        setExchangeRate={(exchangeRate) => exchangeRate}
+                        setTotalCost={(totalCost) => totalCost}
+                        updateQuotation={quotationById.totalAmount}
+                    />
+                    <Separator className="my-4" />
 
-                <div className="flex flex-row-reverse gap-2 pt-2">
-                    <Button type="submit" disabled={isLoadingUpdateQuotation}>
-                        {isLoadingUpdateQuotation && (
-                            <RefreshCcw
-                                className="mr-2 h-4 w-4 animate-spin"
-                                aria-hidden="true"
-                            />
-                        )}
-                        Actualizar
-                    </Button>
-                    <Button
-                        type="button"
-                        variant={"destructive"}
-                        onClick={handleBack}
-                    >
-                        Cancelar
-                    </Button>
-                </div>
-            </form>
-        </FormProvider>
+                    <div className="flex flex-row-reverse gap-2 pt-2">
+                        <Button
+                            type="submit"
+                            disabled={isLoadingUpdateQuotation}
+                        >
+                            {isLoadingUpdateQuotation && (
+                                <RefreshCcw
+                                    className="mr-2 h-4 w-4 animate-spin"
+                                    aria-hidden="true"
+                                />
+                            )}
+                            Actualizar
+                        </Button>
+                        <Button
+                            type="button"
+                            variant={"destructive"}
+                            onClick={handleBack}
+                        >
+                            Cancelar
+                        </Button>
+                    </div>
+                </form>
+            </FormProvider>
+        </>
     );
 }

@@ -25,18 +25,7 @@ export function QuotationTableToolbarActions({
     return (
         <div className="flex w-fit flex-wrap items-center gap-2">
             {table && table.getFilteredSelectedRowModel().rows.length > 0 ? (
-                <>
-                    <Button variant="outline" size="sm">
-                        <Plus className="mr-2 size-4" aria-hidden="true" />
-                        Eliminar
-                    </Button>
-                    {user?.isSuperAdmin && (
-                        <Button variant="outline" size="sm">
-                            <Plus className="mr-2 size-4" aria-hidden="true" />
-                            Reactivar
-                        </Button>
-                    )}
-                </>
+                <></>
             ) : null}
             <Button
                 variant="outline"
