@@ -14,6 +14,7 @@ import {
     Dialog,
     DialogContent,
     DialogDescription,
+    DialogFooter,
     DialogHeader,
     DialogTitle,
 } from "../../ui/dialog";
@@ -219,6 +220,50 @@ export default function QuotationDescriptionDialog({
                             </AccordionContent>
                         </AccordionItem>
                     </Accordion>
+                    <DialogFooter>
+                        <div className="mt-8">
+                            <h2 className="mb-4 text-3xl font-bold text-gray-800">
+                                Resumen Financiero
+                            </h2>
+                            <div className="grid gap-6 md:grid-cols-3">
+                                <div>
+                                    <p className="text-2xl font-semibold text-emerald-500">
+                                        S/.{" "}
+                                        {quotationById?.totalAmount.toLocaleString() ??
+                                            "N/A"}
+                                    </p>
+                                    <p className="text-gray-600">Monto Total</p>
+                                </div>
+                                <div>
+                                    <p className="text-2xl font-light text-emerald-500">
+                                        S/.{" "}
+                                        {quotationById?.exchangeRate ?? "N/A"}
+                                    </p>
+                                    <p className="text-gray-600">
+                                        Tasa de Cambio (1 USD)
+                                    </p>
+                                </div>
+                                <div>
+                                    <p className="text-2xl font-light text-emerald-500">
+                                        ${" "}
+                                        {quotationById?.totalAmount &&
+                                        quotationById.exchangeRate
+                                            ? (
+                                                  quotationById?.totalAmount /
+                                                  quotationById.exchangeRate
+                                              ).toLocaleString(undefined, {
+                                                  minimumFractionDigits: 2,
+                                                  maximumFractionDigits: 2,
+                                              })
+                                            : "N/A"}
+                                    </p>
+                                    <p className="text-gray-600">
+                                        Monto Total (USD)
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </DialogFooter>
                 </ScrollArea>
             </DialogContent>
         </Dialog>

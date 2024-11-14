@@ -6,35 +6,39 @@ interface CostQuotationDescriptionProps {
     quotationById: Quotation;
 }
 
+const costFields = [
+    {
+        label: "Costo Arquitectónico",
+        value: (quotation: Quotation) => quotation.architecturalCost,
+    },
+    {
+        label: "Costo Sanitario",
+        value: (quotation: Quotation) => quotation.sanitaryCost,
+    },
+    {
+        label: "Costo Eléctrico",
+        value: (quotation: Quotation) => quotation.electricCost,
+    },
+    {
+        label: "Costo Estructural",
+        value: (quotation: Quotation) => quotation.structuralCost,
+    },
+];
+
 export default function CostQuotationDescription({
     quotationById,
 }: CostQuotationDescriptionProps) {
     return (
         <div className="mb-4 grid grid-cols-2 gap-4 p-4">
-            <div>
-                <div className="flex flex-row items-center">
-                    <strong>Costo Arquitectónico:</strong>
+            {costFields.map((field, index) => (
+                <div key={index} className="flex flex-row items-center">
+                    <span className="font-medium">{field.label}:</span>
                     <DollarSign className="h-4 w-4" strokeWidth={1.5} />
-                    {quotationById?.architecturalCost.toLocaleString() ?? "N/A"}
+                    <span className="font-light">
+                        {field.value(quotationById)?.toLocaleString() ?? "N/A"}
+                    </span>
                 </div>
-                <div className="flex flex-row items-center">
-                    <strong>Costo Sanitario:</strong>
-                    <DollarSign className="h-4 w-4" strokeWidth={1.5} />
-                    {quotationById?.sanitaryCost.toLocaleString() ?? "N/A"}
-                </div>
-            </div>
-            <div>
-                <div className="flex flex-row items-center">
-                    <strong>Costo Eléctrico:</strong>
-                    <DollarSign className="h-4 w-4" strokeWidth={1.5} />
-                    {quotationById?.electricCost.toLocaleString() ?? "N/A"}
-                </div>
-                <div className="flex flex-row items-center">
-                    <strong>Costo Estructural:</strong>
-                    <DollarSign className="h-4 w-4" strokeWidth={1.5} />
-                    {quotationById?.structuralCost.toLocaleString() ?? "N/A"}
-                </div>
-            </div>
+            ))}
         </div>
     );
 }

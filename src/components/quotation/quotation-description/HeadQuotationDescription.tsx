@@ -6,37 +6,48 @@ interface HeadQuotationDescriptionProps {
     quotationById: Quotation;
 }
 
+const fields = [
+    { label: "Nombre", value: (quotation: Quotation) => quotation.name },
+    {
+        label: "Descripción",
+        value: (quotation: Quotation) => quotation.description,
+    },
+    {
+        label: "Cliente",
+        value: (quotation: Quotation) => quotation.client.name,
+        className: "capitalize",
+    },
+    {
+        label: "Área del terreno",
+        value: (quotation: Quotation) => `${quotation.landArea} m²`,
+    },
+    {
+        label: "Plazo de Propuesta",
+        value: (quotation: Quotation) => `${quotation.deliveryTime} meses`,
+    },
+    {
+        label: "Fecha de Cotización",
+        value: (quotation: Quotation) =>
+            quotation.createdAt &&
+            format(new Date(quotation.createdAt), "d 'de' MMMM 'del' yyyy", {
+                locale: es,
+            }),
+    },
+];
+
 export default function HeadQuotationDescription({
     quotationById,
 }: HeadQuotationDescriptionProps) {
     return (
-        <div className="flex flex-col p-4">
-            <span>
-                <strong>Nombre:</strong> {quotationById?.name}
-            </span>
-            <span>
-                <strong>Descripción:</strong> {quotationById?.description}
-            </span>
-            <span>
-                <strong>Cliente:</strong>{" "}
-                <span className="capitalize">{quotationById?.client.name}</span>
-            </span>
-            <span>
-                <strong>Área del terreno</strong> {quotationById?.landArea} m²
-            </span>
-            <span>
-                <strong>Plazo de Propuesta</strong>{" "}
-                {quotationById?.deliveryTime} meses
-            </span>
-            <span>
-                <strong>Fecha de Cotización</strong>{" "}
-                {quotationById?.createdAt &&
-                    format(
-                        new Date(quotationById.createdAt),
-                        "d 'de' MMMM 'del' yyyy",
-                        { locale: es },
-                    )}
-            </span>
+        <div className="flex flex-col gap-4 p-4">
+            {fields.map((field, index) => (
+                <div key={index}>
+                    <span className="font-medium">{field.label}:</span>{" "}
+                    <span className={`font-light ${field.className || ""}`}>
+                        {field.value(quotationById)}
+                    </span>
+                </div>
+            ))}
         </div>
     );
 }
