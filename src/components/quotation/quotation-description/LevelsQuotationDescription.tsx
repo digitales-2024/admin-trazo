@@ -41,15 +41,15 @@ export default function LevelsQuotationDescription({
         <div className="container mx-auto min-h-screen p-6">
             <Card className="mb-6">
                 <CardHeader>
-                    <CardTitle className="text-2xl font-bold">
+                    <CardTitle className="text-base font-light">
                         Resumen de Niveles y Ambientes
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div className="flex flex-col items-center justify-center rounded-lg p-4">
-                            <Maximize2 className="mb-2 h-8 w-8" />
-                            <span className="text-2xl font-bold">
+                            <Maximize2 className="mb-2 h-6 w-6" />
+                            <span className="text-lg font-light">
                                 {totalArea} m²
                             </span>
                             <span className="text-sm text-muted-foreground">
@@ -57,8 +57,8 @@ export default function LevelsQuotationDescription({
                             </span>
                         </div>
                         <div className="flex flex-col items-center justify-center rounded-lg p-4">
-                            <Home className="mb-2 h-8 w-8" />
-                            <span className="text-2xl font-bold">
+                            <Home className="mb-2 h-6 w-6" />
+                            <span className="text-lg font-light">
                                 {totalSpaces}
                             </span>
                             <span className="text-sm text-muted-foreground">
@@ -72,8 +72,11 @@ export default function LevelsQuotationDescription({
             <div className="grid gap-6 md:grid-cols-4">
                 <Card className="md:col-span-1">
                     <CardHeader>
-                        <CardTitle className="flex items-center text-xl font-semibold">
-                            <Layers className="mr-2 h-5 w-5" />
+                        <CardTitle className="flex items-center text-base font-light">
+                            <Layers
+                                className="mr-4 h-6 w-6"
+                                strokeWidth={1.5}
+                            />
                             Niveles del Edificio
                         </CardTitle>
                     </CardHeader>
@@ -89,7 +92,7 @@ export default function LevelsQuotationDescription({
                                     <TabsTrigger
                                         key={level.name}
                                         value={level.name}
-                                        className="justify-start"
+                                        className="justify-start font-light"
                                     >
                                         {level.name}
                                     </TabsTrigger>
@@ -101,7 +104,7 @@ export default function LevelsQuotationDescription({
 
                 <Card className="md:col-span-3">
                     <CardHeader>
-                        <CardTitle className="text-xl font-semibold">
+                        <CardTitle className="text-base font-light">
                             Espacios del Nivel
                         </CardTitle>
                     </CardHeader>
