@@ -1,6 +1,6 @@
 import { useQuotations } from "@/hooks/use-quotation";
 import { QuotationStatusType, QuotationSummary } from "@/types";
-import { Home, DollarSign, Layout, Calendar, Building } from "lucide-react";
+import { DollarSign, Layout, Calendar, Building, Info } from "lucide-react";
 import React from "react";
 
 import {
@@ -107,8 +107,13 @@ export default function QuotationDescriptionDialog({
                         <AccordionItem value="info-general">
                             <AccordionTrigger>
                                 <div className="flex items-center">
-                                    <Home className="mr-2 h-6 w-6" />
-                                    Información General
+                                    <Info
+                                        className="mr-2 h-6 w-6"
+                                        strokeWidth={1.5}
+                                    />
+                                    <span className="text-base font-light">
+                                        Información General
+                                    </span>
                                 </div>
                             </AccordionTrigger>
                             <AccordionContent>
@@ -122,8 +127,13 @@ export default function QuotationDescriptionDialog({
                         <AccordionItem value="costos-presupuestos">
                             <AccordionTrigger>
                                 <div className="flex items-center">
-                                    <DollarSign className="mr-2 h-6 w-6" />
-                                    Costos y Presupuestos
+                                    <DollarSign
+                                        className="mr-2 h-6 w-6"
+                                        strokeWidth={1.5}
+                                    />
+                                    <span className="text-base font-light">
+                                        Costos y Presupuestos
+                                    </span>
                                 </div>
                             </AccordionTrigger>
                             <AccordionContent>
@@ -137,8 +147,13 @@ export default function QuotationDescriptionDialog({
                         <AccordionItem value="detalles-proyecto">
                             <AccordionTrigger>
                                 <div className="flex items-center">
-                                    <Layout className="mr-2 h-6 w-6" />
-                                    Detalles Integrales del Proyecto
+                                    <Layout
+                                        className="mr-2 h-6 w-6"
+                                        strokeWidth={1.5}
+                                    />
+                                    <span className="text-base font-light">
+                                        Detalles Integrales del Proyecto
+                                    </span>
                                 </div>
                             </AccordionTrigger>
                             <AccordionContent>
@@ -160,8 +175,13 @@ export default function QuotationDescriptionDialog({
                         <AccordionItem value="cronograma-pagos">
                             <AccordionTrigger>
                                 <div className="flex items-center">
-                                    <Calendar className="mr-2 h-6 w-6" />
-                                    Cronograma de Pagos
+                                    <Calendar
+                                        className="mr-2 h-6 w-6"
+                                        strokeWidth={1.5}
+                                    />
+                                    <span className="text-base font-light">
+                                        Cronograma de Pagos
+                                    </span>
                                 </div>
                             </AccordionTrigger>
                             <AccordionContent>
@@ -183,8 +203,13 @@ export default function QuotationDescriptionDialog({
                         <AccordionItem value="levels-spaces">
                             <AccordionTrigger>
                                 <div className="flex items-center">
-                                    <Building className="mr-2 h-6 w-6" />
-                                    Detalles de los Niveles y Ambientes
+                                    <Building
+                                        className="mr-2 h-6 w-6"
+                                        strokeWidth={1.5}
+                                    />
+                                    <span className="text-base font-light">
+                                        Detalles de los Niveles y Ambientes
+                                    </span>
                                 </div>
                             </AccordionTrigger>
                             <AccordionContent>
