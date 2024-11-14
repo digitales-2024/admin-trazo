@@ -21,8 +21,8 @@ import { ScrollArea } from "../../ui/scroll-area";
 import CostQuotationDescription from "./CostQuotationDescription";
 import HeadQuotationDescription from "./HeadQuotationDescription";
 import IntegralProjectQuotationDescription from "./IntegralProjectQuotationDescription";
+import LevelsQuotationDescription from "./LevelsQuotationDescription";
 import PaymentScheduleQuotationDescription from "./PaymentScheduleQuotationDescription";
-import ArchitecturalSpaceVisualizer from "./QuotationDescriptionDialog copy";
 
 interface QuotationDescriptionDialogProps {
     quotation: QuotationSummary;
@@ -188,7 +188,7 @@ export default function QuotationDescriptionDialog({
                                 </div>
                             </AccordionTrigger>
                             <AccordionContent>
-                                <ArchitecturalSpaceVisualizer
+                                <LevelsQuotationDescription
                                     levelData={quotationById?.levels ?? []}
                                 />
                             </AccordionContent>
