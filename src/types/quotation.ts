@@ -4,6 +4,7 @@ export type Quotation = {
     id: string;
     name: string;
     code: string;
+    publicCode: number;
     description: string;
     client: Client;
     zoning: Zoning;
