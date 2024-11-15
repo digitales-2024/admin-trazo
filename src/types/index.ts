@@ -28,3 +28,4 @@ export type {
 } from "./integralProjectQuotation";
 export type { Credentials, UserLogin } from "./login";
 export type { Zoning } from "./zoning";
+export type { ProjectCharter } from "./projectCharter";
