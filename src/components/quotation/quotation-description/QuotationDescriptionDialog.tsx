@@ -1,6 +1,14 @@
+import { useMediaQuery } from "@/hooks/use-media-query";
 import { useQuotations } from "@/hooks/use-quotation";
 import { QuotationStatusType, QuotationSummary } from "@/types";
-import { DollarSign, Layout, Calendar, Building, Info } from "lucide-react";
+import {
+    DollarSign,
+    Layout,
+    Calendar,
+    Building,
+    Info,
+    Grid2X2,
+} from "lucide-react";
 import React from "react";
 
 import {
@@ -18,6 +26,14 @@ import {
     DialogHeader,
     DialogTitle,
 } from "../../ui/dialog";
+import {
+    Drawer,
+    DrawerContent,
+    DrawerDescription,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerTitle,
+} from "../../ui/drawer";
 import { ScrollArea } from "../../ui/scroll-area";
 import CostQuotationDescription from "./CostQuotationDescription";
 import FooterQuotationDescription from "./FooterQuotationDescription";
@@ -25,6 +41,7 @@ import HeadQuotationDescription from "./HeadQuotationDescription";
 import IntegralProjectQuotationDescription from "./IntegralProjectQuotationDescription";
 import LevelsQuotationDescription from "./LevelsQuotationDescription";
 import PaymentScheduleQuotationDescription from "./PaymentScheduleQuotationDescription";
+import ZoningQuotationDescription from "./ZoningQuotationDescription";
 
 interface QuotationDescriptionDialogProps {
     quotation: QuotationSummary;
@@ -38,15 +55,24 @@ export default function QuotationDescriptionDialog({
     onOpenChange,
 }: QuotationDescriptionDialogProps) {
     const { quotationById } = useQuotations({ id: quotation.id });
+    const isDesktop = useMediaQuery("(min-width: 1024px)");
+
+    // Definimos los componentes según el dispositivo
+    const Container = isDesktop ? Dialog : Drawer;
+    const ContentComponent = isDesktop ? DialogContent : DrawerContent;
+    const Header = isDesktop ? DialogHeader : DrawerHeader;
+    const Title = isDesktop ? DialogTitle : DrawerTitle;
+    const Description = isDesktop ? DialogDescription : DrawerDescription;
+    const Footer = isDesktop ? DialogFooter : DrawerFooter;
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="w-full max-w-5xl p-4">
-                <DialogHeader className="text-left">
+        <Container open={open} onOpenChange={onOpenChange}>
+            <ContentComponent className="w-full max-w-5xl p-4">
+                <Header className="text-left">
                     <div>
-                        <DialogTitle className="flex flex-col items-start">
+                        <Title className="flex flex-col items-start">
                             Detalles de la Cotización
-                        </DialogTitle>
+                        </Title>
                         <div className="mt-2">
                             {quotationById?.status ===
                             QuotationStatusType.APPROVED ? (
@@ -83,7 +109,7 @@ export default function QuotationDescriptionDialog({
                         </div>
                     </div>
                     <div>
-                        <DialogDescription>
+                        <Description>
                             Información detallada de la cotización{" "}
                             <span
                                 className={`${
@@ -101,10 +127,12 @@ export default function QuotationDescriptionDialog({
                             >
                                 COT-DIS-{quotationById?.publicCode}
                             </span>
-                        </DialogDescription>
+                        </Description>
                     </div>
-                </DialogHeader>
-                <ScrollArea className="h-[80vh] gap-4 p-4">
+                </Header>
+                <ScrollArea
+                    className={`${isDesktop ? "h-[80vh]" : "h-[60vh]"} gap-4 p-4`}
+                >
                     <Accordion type="multiple" className="mb-6">
                         <AccordionItem value="info-general">
                             <AccordionTrigger>
@@ -124,6 +152,24 @@ export default function QuotationDescriptionDialog({
                                         quotationById={quotationById}
                                     />
                                 )}
+                            </AccordionContent>
+                        </AccordionItem>
+                        <AccordionItem value="zoning">
+                            <AccordionTrigger>
+                                <div className="flex items-center">
+                                    <Grid2X2
+                                        className="mr-2 h-6 w-6"
+                                        strokeWidth={1.5}
+                                    />
+                                    <span className="text-base font-light">
+                                        Detalles de la Zonificación
+                                    </span>
+                                </div>
+                            </AccordionTrigger>
+                            <AccordionContent>
+                                <ZoningQuotationDescription
+                                    id={quotationById?.zoning.id ?? ""}
+                                />
                             </AccordionContent>
                         </AccordionItem>
                         <AccordionItem value="costos-presupuestos">
@@ -222,16 +268,16 @@ export default function QuotationDescriptionDialog({
                         </AccordionItem>
                     </Accordion>
                     <div className="items-end">
-                        <DialogFooter>
+                        <Footer>
                             {quotationById && (
                                 <FooterQuotationDescription
                                     quotationById={quotationById}
                                 />
                             )}
-                        </DialogFooter>
+                        </Footer>
                     </div>
                 </ScrollArea>
-            </DialogContent>
-        </Dialog>
+            </ContentComponent>
+        </Container>
     );
 }
