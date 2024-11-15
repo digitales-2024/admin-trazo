@@ -25,7 +25,7 @@ import {
 
 import { DataTableColumnHeader } from "../data-table/DataTableColumnHeader";
 import { Badge } from "../ui/badge";
-import QuotationDescriptionDialog from "./QuotationDescriptionDialog";
+import QuotationDescriptionDialog from "./quotation-description/QuotationDescriptionDialog";
 import UpdateStatusQuotationDialog from "./UpdateStatusQuotationDialog";
 
 export const quotationsColumns = (
