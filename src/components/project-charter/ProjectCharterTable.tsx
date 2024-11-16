@@ -6,8 +6,8 @@ import { ProjectCharter } from "@/types";
 import { useMemo } from "react";
 
 import { DataTable } from "../data-table/DataTable";
-import { ClientTableToolbarActions } from "./ClientsTableToolbarActions";
 import { projectsChartersColumns } from "./ProjectCharterTableColumns";
+import { ProjectCharterTableToolbarActions } from "./ProjectCharterTableToolbarActions";
 
 export function ProjectCharterTable({ data }: { data: ProjectCharter[] }) {
     const { user } = useProfile();
@@ -21,7 +21,7 @@ export function ProjectCharterTable({ data }: { data: ProjectCharter[] }) {
         <DataTable
             data={data}
             columns={columns}
-            toolbarActions={<ClientTableToolbarActions />}
+            toolbarActions={<ProjectCharterTableToolbarActions />}
             placeholder="Buscar actas de proyectos..."
         />
     );
