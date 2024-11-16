@@ -68,9 +68,9 @@ export function getMenuList(pathname: string): Group[] {
                             icon: FileSpreadsheet,
                         },
                         {
-                            href: "/design-project/projects",
+                            href: "/design-project/design",
                             label: "Proyectos",
-                            active: pathname.includes("/projects"),
+                            active: pathname.includes("/design-project/design"),
                             icon: FolderRoot,
                         },
                     ],
