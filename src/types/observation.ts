@@ -1,10 +1,8 @@
 export type Observation = {
     id: string;
-    zoneCode: string;
-    description: string;
-    buildableArea: number;
-    openArea: number;
-    isActive: boolean;
+    observation: string;
+    meetingDate: string;
+    projectCharterId: string;
 };
 
 export type ObservationProject = {
