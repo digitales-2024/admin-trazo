@@ -11,7 +11,7 @@ import { rolesApi } from "./services/rolesApi";
 import { spacesApi } from "./services/spaceApi";
 import { usersApi } from "./services/usersApi";
 import { zoningApi } from "./services/zoningApi";
-import { designProjectApi } from "./services/designProject";
+import { designProjectApi } from "./services/designProjectApi";
 
 export const store = configureStore({
     reducer: {
