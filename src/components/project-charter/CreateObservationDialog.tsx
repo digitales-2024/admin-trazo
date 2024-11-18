@@ -1,11 +1,8 @@
 "use client";
 
-import { useClients } from "@/hooks/use-client";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import {
-    clientsSchema,
-    CreateClientsSchema,
-} from "@/schemas/clients/createClientSchema";
+import { useObservation } from "@/hooks/use-observation";
+import { CreateObservationSchema, observationSchema } from "@/schemas";
 import { ProjectCharter } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RefreshCcw } from "lucide-react";
@@ -15,7 +12,6 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
-    DialogClose,
     DialogContent,
     DialogDescription,
     DialogFooter,
@@ -24,7 +20,6 @@ import {
 } from "@/components/ui/dialog";
 import {
     Drawer,
-    DrawerClose,
     DrawerContent,
     DrawerDescription,
     DrawerFooter,
@@ -33,7 +28,7 @@ import {
 } from "@/components/ui/drawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-import { CreateClientsForm } from "./CreateClientForm";
+import { CreateObservationsForm } from "./CreateObservationForm";
 
 const dataForm = {
     title: "Crear Observación",
@@ -59,26 +54,25 @@ export function CreateObservationDialog({
     const [isCreatePending, startCreateTransition] = useTransition();
     const isDesktop = useMediaQuery("(min-width: 640px)");
 
-    const { onCreateClient, isSuccessCreateClient } = useClients();
+    const { onCreateObservation, isSuccessCreateObservation } =
+        useObservation();
 
-    const form = useForm<CreateClientsSchema>({
-        resolver: zodResolver(clientsSchema),
+    const form = useForm<CreateObservationSchema>({
+        resolver: zodResolver(observationSchema),
         defaultValues: {
-            name: "",
-            rucDni: "",
-            address: "",
-            department: "",
-            province: "",
-            phone: "",
+            observation: "",
+            meetingDate: "",
+            projectCharterId: projectCharter.id,
         },
     });
 
-    const onSubmit = async (input: CreateClientsSchema) => {
+    const onSubmit = async (input: CreateObservationSchema) => {
         try {
             startCreateTransition(() => {
-                onCreateClient({
-                    ...input,
+                onCreateObservation({
                     projectCharterId: projectCharter.id,
+                    observation: input.observation,
+                    meetingDate: input.meetingDate,
                 });
             });
         } catch (error) {
@@ -87,15 +81,17 @@ export function CreateObservationDialog({
     };
 
     useEffect(() => {
-        if (isSuccessCreateClient) {
+        if (isSuccessCreateObservation) {
             form.reset();
             onOpenChange(false);
         }
-    }, [isSuccessCreateClient, form, onOpenChange]);
+    }, [isSuccessCreateObservation, form, onOpenChange]);
 
     const handleClose = () => {
         form.reset();
+        onOpenChange(false);
     };
+
     if (isDesktop)
         return (
             <Dialog open={open} onOpenChange={onOpenChange}>
@@ -107,7 +103,7 @@ export function CreateObservationDialog({
                         </DialogDescription>
                     </DialogHeader>
                     <ScrollArea className="h-full max-h-[80vh] w-full justify-center gap-4">
-                        <CreateClientsForm form={form} onSubmit={onSubmit}>
+                        <CreateObservationsForm form={form} onSubmit={onSubmit}>
                             <DialogFooter>
                                 <div className="flex w-full flex-row-reverse gap-2">
                                     <Button
@@ -122,19 +118,18 @@ export function CreateObservationDialog({
                                         )}
                                         Registrar
                                     </Button>
-                                    <DialogClose asChild>
-                                        <Button
-                                            onClick={handleClose}
-                                            type="button"
-                                            variant="outline"
-                                            className="w-full"
-                                        >
-                                            Cancelar
-                                        </Button>
-                                    </DialogClose>
+                                    {/* Eliminamos DialogClose y usamos el botón directamente */}
+                                    <Button
+                                        onClick={handleClose}
+                                        type="button"
+                                        variant="outline"
+                                        className="w-full"
+                                    >
+                                        Cancelar
+                                    </Button>
                                 </div>
                             </DialogFooter>
-                        </CreateClientsForm>
+                        </CreateObservationsForm>
                     </ScrollArea>
                 </DialogContent>
             </Dialog>
@@ -150,7 +145,7 @@ export function CreateObservationDialog({
                     </DrawerDescription>
                 </DrawerHeader>
                 <ScrollArea className="mt-4 max-h-full w-full gap-4 pr-4">
-                    <CreateClientsForm form={form} onSubmit={onSubmit}>
+                    <CreateObservationsForm form={form} onSubmit={onSubmit}>
                         <DrawerFooter className="gap-2 sm:space-x-0">
                             <Button disabled={isCreatePending}>
                                 {isCreatePending && (
@@ -161,11 +156,16 @@ export function CreateObservationDialog({
                                 )}
                                 Registrar
                             </Button>
-                            <DrawerClose asChild>
-                                <Button variant="outline">Cancelar</Button>
-                            </DrawerClose>
+                            {/* Eliminamos DrawerClose y usamos el botón directamente */}
+                            <Button
+                                onClick={handleClose}
+                                type="button"
+                                variant="outline"
+                            >
+                                Cancelar
+                            </Button>
                         </DrawerFooter>
-                    </CreateClientsForm>
+                    </CreateObservationsForm>
                 </ScrollArea>
             </DrawerContent>
         </Drawer>

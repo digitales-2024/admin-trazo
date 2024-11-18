@@ -1,6 +1,7 @@
 "use client";
 
 import { CreateObservationSchema } from "@/schemas";
+import { parse, format } from "date-fns";
 import { UseFormReturn } from "react-hook-form";
 
 import DatePicker from "../ui/date-time-picker";
@@ -46,14 +47,19 @@ export const CreateObservationsForm = ({
                                     <DatePicker
                                         value={
                                             field.value
-                                                ? new Date(field.value)
+                                                ? parse(
+                                                      field.value,
+                                                      "yyyy-MM-dd",
+                                                      new Date(),
+                                                  )
                                                 : undefined
                                         }
                                         onChange={(date) => {
                                             if (date) {
-                                                const formattedDate = date
-                                                    .toISOString()
-                                                    .split("T")[0];
+                                                const formattedDate = format(
+                                                    date,
+                                                    "yyyy-MM-dd",
+                                                );
                                                 field.onChange(formattedDate);
                                             } else {
                                                 field.onChange("");
