@@ -2,7 +2,7 @@ import * as z from "zod";
 
 export const observationSchema = z.object({
     projectCharterId: z.string({
-        required_error: "El id del acta de proyecto es obligatorio",
+        required_error: "El id de acta de proyecto es obligatorio",
     }),
     observation: z.string({
         required_error: "La observación es obligatoria",
