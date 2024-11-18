@@ -1,3 +1,5 @@
+"use client";
+
 import { HeaderPage } from "@/components/common/HeaderPage";
 import { Shell } from "@/components/common/Shell";
 

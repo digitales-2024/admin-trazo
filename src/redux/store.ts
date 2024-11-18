@@ -11,12 +11,14 @@ import { rolesApi } from "./services/rolesApi";
 import { spacesApi } from "./services/spaceApi";
 import { usersApi } from "./services/usersApi";
 import { zoningApi } from "./services/zoningApi";
+import { designProjectApi } from "./services/designProject";
 
 export const store = configureStore({
     reducer: {
         [authApi.reducerPath]: authApi.reducer,
         [adminApi.reducerPath]: adminApi.reducer,
         [businessApi.reducerPath]: businessApi.reducer,
+        [designProjectApi.reducerPath]: designProjectApi.reducer,
         [usersApi.reducerPath]: usersApi.reducer,
         [rolesApi.reducerPath]: rolesApi.reducer,
         [spacesApi.reducerPath]: spacesApi.reducer,
@@ -41,6 +43,7 @@ export const store = configureStore({
             .concat(authApi.middleware)
             .concat(adminApi.middleware)
             .concat(businessApi.middleware)
+            .concat(designProjectApi.middleware)
             .concat(rolesApi.middleware)
             .concat(usersApi.middleware)
             .concat(spacesApi.middleware)
