@@ -1,131 +1,134 @@
+// DatePicker.tsx
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
+import { es } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
+import * as React from "react";
+
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 import { cn } from "@/lib/utils";
 
-import { Button } from "./button";
-import { Calendar } from "./calendar";
-import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "./form";
-import { Popover, PopoverContent, PopoverTrigger } from "./popover";
+interface DatePickerProps {
+    value: Date | undefined;
+    onChange: (date: Date | undefined) => void;
+}
 
-const FormSchema = z.object({
-    date: z.date({
-        required_error: "Date is required!.",
-    }),
-});
+export default function DatePicker({ value, onChange }: DatePickerProps) {
+    const [month, setMonth] = React.useState<number>(
+        value ? value.getMonth() : new Date().getMonth(),
+    );
+    const [year, setYear] = React.useState<number>(
+        value ? value.getFullYear() : new Date().getFullYear(),
+    );
 
-export function DateTimePickerV2() {
-    const [isOpen, setIsOpen] = useState(false);
-    const [date, setDate] = useState<Date | null>(null);
-    const form = useForm<z.infer<typeof FormSchema>>({
-        resolver: zodResolver(FormSchema),
-    });
+    const years = Array.from({ length: 21 }, (_, i) => year - 10 + i);
+    const months = [
+        "Enero",
+        "Febrero",
+        "Marzo",
+        "Abril",
+        "Mayo",
+        "Junio",
+        "Julio",
+        "Agosto",
+        "Septiembre",
+        "Octubre",
+        "Noviembre",
+        "Diciembre",
+    ];
 
-    async function onSubmit(data: z.infer<typeof FormSchema>) {
-        toast.success(`Meeting on: ${format(data.date, "PPP")}`);
-    }
+    const handleMonthChange = (value: string) => {
+        setMonth(parseInt(value));
+    };
+
+    const handleYearChange = (value: string) => {
+        setYear(parseInt(value));
+    };
 
     return (
-        <>
-            <Form {...form}>
-                <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className="space-y-8"
+        <Popover>
+            <PopoverTrigger asChild>
+                <Button
+                    variant={"outline"}
+                    className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !value && "text-muted-foreground",
+                    )}
                 >
-                    <div className="flex w-full gap-4">
-                        <FormField
-                            control={form.control}
-                            name="date"
-                            render={({ field }) => (
-                                <FormItem className="flex w-full flex-col">
-                                    <FormLabel>Date</FormLabel>
-                                    <Popover
-                                        open={isOpen}
-                                        onOpenChange={setIsOpen}
-                                    >
-                                        <PopoverTrigger asChild>
-                                            <FormControl>
-                                                <Button
-                                                    variant={"outline"}
-                                                    className={cn(
-                                                        "w-full font-normal",
-                                                        !field.value &&
-                                                            "text-muted-foreground",
-                                                    )}
-                                                >
-                                                    {field.value ? (
-                                                        `${format(field.value, "PPP")}`
-                                                    ) : (
-                                                        <span>Pick a date</span>
-                                                    )}
-                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                </Button>
-                                            </FormControl>
-                                        </PopoverTrigger>
-                                        <PopoverContent
-                                            className="w-auto p-0"
-                                            align="start"
-                                        >
-                                            <Calendar
-                                                mode="single"
-                                                captionLayout="dropdown"
-                                                selected={date || field.value}
-                                                onSelect={(selectedDate) => {
-                                                    setDate(selectedDate!);
-                                                    field.onChange(
-                                                        selectedDate,
-                                                    );
-                                                }}
-                                                onDayClick={() =>
-                                                    setIsOpen(false)
-                                                }
-                                                fromYear={2000}
-                                                toYear={new Date().getFullYear()}
-                                                disabled={(date) =>
-                                                    Number(date) <
-                                                        Date.now() -
-                                                            1000 *
-                                                                60 *
-                                                                60 *
-                                                                24 ||
-                                                    Number(date) >
-                                                        Date.now() +
-                                                            1000 *
-                                                                60 *
-                                                                60 *
-                                                                24 *
-                                                                30
-                                                }
-                                                defaultMonth={field.value}
-                                            />
-                                        </PopoverContent>
-                                    </Popover>
-                                    <FormDescription>
-                                        Set your date.
-                                    </FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                    <Button type="submit">Submit</Button>
-                </form>
-            </Form>
-        </>
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {value ? (
+                        format(value, "PPP", { locale: es })
+                    ) : (
+                        <span>Selecciona una fecha</span>
+                    )}
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="center" side="bottom">
+                <div className="flex items-center justify-between p-3">
+                    <Select
+                        value={month.toString()}
+                        onValueChange={handleMonthChange}
+                    >
+                        <SelectTrigger className="w-[140px]">
+                            <SelectValue placeholder="Mes" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {months.map((month, index) => (
+                                <SelectItem
+                                    key={month}
+                                    value={index.toString()}
+                                >
+                                    {month}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                    <Select
+                        value={year.toString()}
+                        onValueChange={handleYearChange}
+                    >
+                        <SelectTrigger className="w-[100px]">
+                            <SelectValue placeholder="Año" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {years.map((year) => (
+                                <SelectItem key={year} value={year.toString()}>
+                                    {year}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div className="p-2">
+                    <Calendar
+                        mode="single"
+                        selected={value}
+                        onSelect={onChange}
+                        month={new Date(year, month)}
+                        onMonthChange={(newMonth) => {
+                            setMonth(newMonth.getMonth());
+                            setYear(newMonth.getFullYear());
+                        }}
+                        initialFocus
+                        locale={es}
+                    />
+                </div>
+            </PopoverContent>
+        </Popover>
     );
 }
