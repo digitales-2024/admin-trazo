@@ -1,7 +1,7 @@
+import { DesignProjectSummaryData } from "@/types/designProject";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 import baseQueryWithReauth from "../baseQuery";
-import { DesignProjectSummaryData } from "@/types/designProject";
 
 export const designProjectApi = createApi({
     reducerPath: "designProjectApi",
@@ -18,8 +18,6 @@ export const designProjectApi = createApi({
             providesTags: ["DesignProject"],
         }),
     }),
-})
+});
 
-export const {
-    useGetDesignProjectsQuery,
-} = designProjectApi;
+export const { useGetDesignProjectsQuery } = designProjectApi;

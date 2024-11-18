@@ -3,8 +3,7 @@ export type DesignProjectStatus =
     | "ENGINEERING"
     | "CONFIRMATION"
     | "PRESENTATION"
-    | "COMPLETED"
-    ;
+    | "COMPLETED";
 
 interface BaseDesignProject {
     id: string;
@@ -31,4 +30,3 @@ export type DesignProjectSummaryData = BaseDesignProject & {
         name: string;
     };
 };
-

@@ -1,19 +1,38 @@
 "use client";
 
+import { useDesignProject } from "@/hooks/use-design-project";
+import { useProfile } from "@/hooks/use-profile";
+import {
+    DesignProjectSummaryData,
+    DesignProjectStatus,
+} from "@/types/designProject";
+import { ColumnDef, Table } from "@tanstack/react-table";
+import { Contact, Download, Ellipsis, Plus } from "lucide-react";
+import { useState } from "react";
+
 import { ErrorPage } from "@/components/common/ErrorPage";
 import { HeaderPage } from "@/components/common/HeaderPage";
 import { Shell } from "@/components/common/Shell";
 import { DataTable } from "@/components/data-table/DataTable";
 import { DataTableSkeleton } from "@/components/data-table/DataTableSkeleton";
-import { useDesignProject } from "@/hooks/use-design-project";
-import { DesignProjectSummaryData, DesignProjectStatus } from "@/types/designProject";
-import { ColumnDef } from "@tanstack/react-table";
-import { Contact, Ellipsis } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useState } from "react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Project() {
     const { data, isLoading } = useDesignProject();
@@ -33,7 +52,7 @@ export default function Project() {
                     shrinkZero
                 />
             </Shell>
-        )
+        );
     }
 
     if (!data) {
@@ -45,7 +64,7 @@ export default function Project() {
                 />
                 <ErrorPage />
             </Shell>
-        )
+        );
     }
 
     return (
@@ -59,7 +78,11 @@ export default function Project() {
     );
 }
 
-function DesignProjectTable({ data }: { data: Array<DesignProjectSummaryData> }) {
+function DesignProjectTable({
+    data,
+}: {
+    data: Array<DesignProjectSummaryData>;
+}) {
     const columns: ColumnDef<DesignProjectSummaryData>[] = [
         {
             id: "select",
@@ -136,52 +159,58 @@ function DesignProjectTable({ data }: { data: Array<DesignProjectSummaryData> })
                 let badge = <></>;
                 switch (estado) {
                     case "APPROVED":
-                        badge = <Badge
-                            variant="secondary"
-                            className="bg-emerald-100 text-emerald-500"
-                        >
-                            Aprobado
-                        </Badge>;
+                        badge = (
+                            <Badge
+                                variant="secondary"
+                                className="bg-emerald-100 text-emerald-500"
+                            >
+                                Aprobado
+                            </Badge>
+                        );
                         break;
                     case "COMPLETED":
-                        badge = <Badge
-                            variant="secondary"
-                            className="bg-emerald-100 text-emerald-500"
-                        >
-                            Completado
-                        </Badge>;
+                        badge = (
+                            <Badge
+                                variant="secondary"
+                                className="bg-emerald-100 text-emerald-500"
+                            >
+                                Completado
+                            </Badge>
+                        );
                         break;
                     case "ENGINEERING":
-                        badge = <Badge
-                            variant="secondary"
-                            className="bg-emerald-100 text-emerald-500"
-                        >
-                            En ingeniería
-                        </Badge>;
+                        badge = (
+                            <Badge
+                                variant="secondary"
+                                className="bg-emerald-100 text-emerald-500"
+                            >
+                                En ingeniería
+                            </Badge>
+                        );
                         break;
                     case "CONFIRMATION":
-                        badge = <Badge
-                            variant="secondary"
-                            className="bg-emerald-100 text-emerald-500"
-                        >
-                            Confirmado
-                        </Badge>;
+                        badge = (
+                            <Badge
+                                variant="secondary"
+                                className="bg-emerald-100 text-emerald-500"
+                            >
+                                Confirmado
+                            </Badge>
+                        );
                         break;
                     case "PRESENTATION":
-                        badge = <Badge
-                            variant="secondary"
-                            className="bg-emerald-100 text-emerald-500"
-                        >
-                            En presentacion
-                        </Badge>;
+                        badge = (
+                            <Badge
+                                variant="secondary"
+                                className="bg-emerald-100 text-emerald-500"
+                            >
+                                En presentacion
+                            </Badge>
+                        );
                         break;
                 }
 
-                return (
-                    <div>
-                        {badge}
-                    </div>
-                );
+                return <div>{badge}</div>;
             },
         },
         {
@@ -204,10 +233,7 @@ function DesignProjectTable({ data }: { data: Array<DesignProjectSummaryData> })
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-40">
-                                <DropdownMenuItem
-                                >
-                                    Ver
-                                </DropdownMenuItem>
+                                <DropdownMenuItem>Ver</DropdownMenuItem>
 
                                 <DropdownMenuSeparator />
                             </DropdownMenuContent>
@@ -217,13 +243,72 @@ function DesignProjectTable({ data }: { data: Array<DesignProjectSummaryData> })
             },
             enablePinning: true,
         },
-    ]
+    ];
     return (
         <DataTable
             data={data}
             columns={columns}
             placeholder="Buscar proyectos..."
+            toolbarActions={<DesignProjectTableToolbarActions />}
         />
-    )
+    );
 }
 
+function DesignProjectTableToolbarActions() {
+    // TODO: bring actual data
+    const table: Table<any> = undefined;
+    const { user } = useProfile();
+    const exportFile = false;
+
+    return (
+        <div className="flex w-fit flex-wrap items-center gap-2">
+            {table && table.getFilteredSelectedRowModel().rows.length > 0 ? (
+                <></>
+            ) : null}
+            <CreateProjectDialog />
+            {exportFile ||
+                (user?.isSuperAdmin && (
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                            if (table) {
+                                console.log("export on click :D");
+                            }
+                        }}
+                    >
+                        <Download className="mr-2 size-4" aria-hidden="true" />
+                        Exportar
+                    </Button>
+                ))}
+        </div>
+    );
+}
+
+function CreateProjectDialog() {
+    const [open, setOpen] = useState(false);
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => console.log("Create on click :D")}
+                >
+                    <Plus className="mr-2 size-4" aria-hidden="true" />
+                    Crear Cotización
+                </Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Crear un proyecto de diseño</DialogTitle>
+                    <DialogDescription>
+                        Seleccione una cotización aprobada y presione el boton
+                        Crear.
+                    </DialogDescription>
+                </DialogHeader>
+            </DialogContent>
+        </Dialog>
+    );
+}

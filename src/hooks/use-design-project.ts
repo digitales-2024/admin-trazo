@@ -7,6 +7,5 @@ export const useDesignProject = () => {
         data,
         isLoading,
         error,
-    }
-}
-
+    };
+};
