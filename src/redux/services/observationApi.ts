@@ -1,4 +1,4 @@
-import { Zoning } from "@/types";
+import { Observation, ObservationProject } from "@/types";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 import baseQueryWithReauth from "../baseQuery";
@@ -8,76 +8,68 @@ interface GetObservationByIdProps {
 }
 
 export const observationApi = createApi({
-    reducerPath: "zoningApi",
+    reducerPath: "observationApi",
     baseQuery: baseQueryWithReauth,
-    tagTypes: ["Zoning"],
+    tagTypes: ["Observation"],
     endpoints: (build) => ({
-        //Crear zonificaciones
-        createZoning: build.mutation<Zoning, Partial<Zoning>>({
+        //Crear observaciones
+        createObservation: build.mutation<Observation, Partial<Observation>>({
             query: (body) => ({
-                url: "/zoning",
+                url: "/observations",
                 method: "POST",
                 body,
                 credentials: "include",
             }),
-            invalidatesTags: ["Zoning"],
+            invalidatesTags: ["Observation"],
         }),
-        //Actualizar zonificaciones
-        updateZoning: build.mutation<Zoning, Partial<Zoning> & { id: string }>({
+        //Actualizar observaciones
+        updateObservation: build.mutation<
+            Observation,
+            Partial<Observation> & { id: string }
+        >({
             query: ({ id, ...body }) => ({
-                url: `/zoning/${id}`,
+                url: `/observations/${id}`,
                 method: "PATCH",
                 body,
                 credentials: "include",
             }),
-            invalidatesTags: ["Zoning"],
+            invalidatesTags: ["Observation"],
         }),
-        //Obtener zonificación por id
-        getZoningById: build.query<Zoning, GetObservationByIdProps>({
+        //Obtener observación por id
+        getObservationById: build.query<Observation, GetObservationByIdProps>({
             query: ({ id }) => ({
-                url: `/zoning/${id}`,
+                url: `/observations/${id}`,
                 method: "GET",
                 credentials: "include",
             }),
-            providesTags: ["Zoning"],
+            providesTags: ["Observation"],
         }),
-        //Obtener todos los zonificaciones
-        getAllZoning: build.query<Zoning[], void>({
-            query: () => ({
-                url: "/zoning",
+        //Obtener todos las observaciones de una acta de proyecto
+        getAllObservation: build.query<ObservationProject[], { id: string }>({
+            query: (id) => ({
+                url: `/observations/project-charter/${id}`,
                 method: "GET",
                 credentials: "include",
             }),
-            providesTags: ["Zoning"],
+            providesTags: ["Observation"],
         }),
-        //Eliminar zonificaciones
-        deleteZoning: build.mutation<void, { ids: string[] }>({
+        //Eliminar observaciones
+        deleteObservations: build.mutation<void, { ids: string[] }>({
             query: (ids) => ({
-                url: `/zoning/remove/all`,
+                url: `/observations/remove/all`,
                 method: "DELETE",
                 body: ids,
                 credentials: "include",
             }),
-            invalidatesTags: ["Zoning"],
-        }),
-        //Activar zonificaciones
-        reactivateZoning: build.mutation<void, { ids: string[] }>({
-            query: (ids) => ({
-                url: `/zoning/reactivate/all`,
-                method: "PATCH",
-                body: ids,
-                credentials: "include",
-            }),
-            invalidatesTags: ["Zoning"],
+            invalidatesTags: ["Observation"],
         }),
     }),
 });
 
 export const {
-    useCreateZoningMutation,
-    useUpdateZoningMutation,
-    useGetZoningByIdQuery,
-    useGetAllZoningQuery,
-    useDeleteZoningMutation,
-    useReactivateZoningMutation,
-} = zoningApi;
+    useCreateObservationMutation,
+    useUpdateObservationMutation,
+    useGetObservationByIdQuery,
+    useGetAllObservationQuery,
+    useDeleteObservationsMutation,
+} = observationApi;
