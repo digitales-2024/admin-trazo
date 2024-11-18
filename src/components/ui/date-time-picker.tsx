@@ -1,4 +1,3 @@
-// DatePicker.tsx
 "use client";
 
 import { format } from "date-fns";
@@ -126,6 +125,7 @@ export default function DatePicker({ value, onChange }: DatePickerProps) {
                         }}
                         initialFocus
                         locale={es}
+                        className="capitalize"
                     />
                 </div>
             </PopoverContent>
