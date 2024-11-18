@@ -12,7 +12,7 @@ export const observationSchema = z.object({
             required_error: "La fecha de reunión es obligatoria",
         })
         .regex(/^\d{4}-\d{2}-\d{2}$/, {
-            message: "La fecha de reunión debe estar en el formato YYYY-MM-DD",
+            message: "La fecha de reunión es obligatoria",
         }),
 });
 
