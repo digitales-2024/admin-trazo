@@ -158,8 +158,8 @@ export const useObservation = (options: UseObservationProps = {}) => {
             });
 
         toast.promise(promise(), {
-            loading: "Eliminando...",
-            success: "Observaciones eliminadas con éxito",
+            loading: "Eliminando observación...",
+            success: "Observación eliminado exitosamente",
             error: (error) => {
                 return error.message;
             },
