@@ -1,5 +1,8 @@
 import { QuotationSummary } from "@/types";
-import { DesignProjectSummaryData } from "@/types/designProject";
+import {
+    DesignProjectCreate,
+    DesignProjectSummaryData,
+} from "@/types/designProject";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 import baseQueryWithReauth from "../baseQuery";
@@ -27,8 +30,23 @@ export const designProjectApi = createApi({
                 credentials: "include",
             }),
         }),
+        // Crea un projecto de diseño
+        createDesignProject: build.mutation<
+            DesignProjectCreate,
+            DesignProjectCreate
+        >({
+            query: (body) => ({
+                url: "/design-project",
+                method: "POST",
+                body,
+                credentials: "include",
+            }),
+        }),
     }),
 });
 
-export const { useGetDesignProjectsQuery, useGetCreatableQuotationsQuery } =
-    designProjectApi;
+export const {
+    useGetDesignProjectsQuery,
+    useGetCreatableQuotationsQuery,
+    useCreateDesignProjectMutation,
+} = designProjectApi;

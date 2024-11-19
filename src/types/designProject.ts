@@ -30,3 +30,14 @@ export type DesignProjectSummaryData = BaseDesignProject & {
         name: string;
     };
 };
+
+export type DesignProjectCreate = {
+    name: string;
+    ubicationProject: string;
+    province: string;
+    department: string;
+    clientId: string;
+    quotationId: string;
+    designerId: string;
+    startProjectDate: string;
+};

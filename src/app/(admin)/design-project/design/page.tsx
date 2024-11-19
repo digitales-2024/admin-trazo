@@ -1,8 +1,13 @@
 "use client";
 
+import { departments } from "@/data/department";
 import { useDesignProject } from "@/hooks/use-design-project";
 import { useProfile } from "@/hooks/use-profile";
-import { useGetCreatableQuotationsQuery } from "@/redux/services/designProjectApi";
+import {
+    useCreateDesignProjectMutation,
+    useGetCreatableQuotationsQuery,
+} from "@/redux/services/designProjectApi";
+import { City } from "@/types";
 import {
     DesignProjectSummaryData,
     DesignProjectStatus,
@@ -19,6 +24,7 @@ import { HeaderPage } from "@/components/common/HeaderPage";
 import { Shell } from "@/components/common/Shell";
 import { DataTable } from "@/components/data-table/DataTable";
 import { DataTableSkeleton } from "@/components/data-table/DataTableSkeleton";
+import { AutoComplete, type Option } from "@/components/ui/autocomplete";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -48,6 +54,7 @@ import {
 import {
     Select,
     SelectContent,
+    SelectGroup,
     SelectItem,
     SelectTrigger,
     SelectValue,
@@ -308,19 +315,55 @@ const FormSchema = z.object({
     quotationId: z.string({
         message: "Debes seleccionar una cotización",
     }),
+    department: z.string({
+        message: "Selecciona el departamento",
+    }),
+    province: z.string({
+        message: "Selecciona la provincia",
+    }),
 });
 
 function CreateProjectDialog() {
     const [open, setOpen] = useState(false);
-    const [createLoading, setCreateLoading] = useState(false);
     const { data, isLoading, isError } = useGetCreatableQuotationsQuery();
+    const { onCreateProject, createLoading } = useDesignProject();
+    // Estado para almacenar las ciudades del departamento seleccionado
+    const [cities, setCities] = useState<City[]>([]);
+    const [isDepartmentSelected, setIsDepartmentSelected] = useState(false);
+
+    // Prepara las opciones para el AutoComplete
+    const departmentOptions: Option[] = departments.map((department) => ({
+        value: department.name,
+        label: department.name,
+    }));
+
+    // Manejar el cambio de departamento
+    const handleDepartmentChange = (departmentName: string) => {
+        const selectedDepartment = departments.find(
+            (dept) => dept.name === departmentName,
+        );
+        const selectedCities = selectedDepartment?.cities || [];
+        setCities(selectedCities);
+        setIsDepartmentSelected(true);
+        // Resetear el campo de ciudad cuando se cambia el departamento
+        form.setValue("province", "");
+    };
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
     });
 
-    function onSubmit(data: z.infer<typeof FormSchema>) {
-        console.log("form submit :D");
+    async function onSubmit(data: z.infer<typeof FormSchema>) {
+        await onCreateProject({
+            name: "",
+            ubicationProject: "",
+            province: "",
+            department: "",
+            clientId: "",
+            quotationId: "",
+            designerId: "",
+            startProjectDate: "",
+        });
     }
 
     return (
@@ -391,6 +434,96 @@ function CreateProjectDialog() {
                                             </FormItem>
                                         )}
                                     />
+
+                                    {/* Campo de Departamento */}
+                                    <FormField
+                                        control={form.control}
+                                        name="department"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>
+                                                    Departamento
+                                                </FormLabel>
+                                                <FormControl>
+                                                    <AutoComplete
+                                                        options={
+                                                            departmentOptions
+                                                        }
+                                                        emptyMessage="No se encontró el departamento."
+                                                        placeholder="Seleccione un departamento"
+                                                        onValueChange={(selectedOption: {
+                                                            value?: string;
+                                                        }) => {
+                                                            field.onChange(
+                                                                selectedOption?.value ||
+                                                                    "",
+                                                            );
+                                                            handleDepartmentChange(
+                                                                selectedOption?.value ||
+                                                                    "",
+                                                            );
+                                                        }}
+                                                        value={
+                                                            departmentOptions.find(
+                                                                (option) =>
+                                                                    option.value ===
+                                                                    field.value,
+                                                            ) || undefined
+                                                        }
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    {/* Campo de Ciudad */}
+                                    <FormField
+                                        control={form.control}
+                                        name="province"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel htmlFor="city">
+                                                    Provincia
+                                                </FormLabel>
+                                                <Select
+                                                    onValueChange={
+                                                        field.onChange
+                                                    }
+                                                    value={field.value}
+                                                    disabled={
+                                                        !isDepartmentSelected
+                                                    }
+                                                >
+                                                    <FormControl>
+                                                        <SelectTrigger>
+                                                            <SelectValue placeholder="Seleccione una provincia" />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent>
+                                                        <SelectGroup>
+                                                            {cities.map(
+                                                                (city) => (
+                                                                    <SelectItem
+                                                                        key={city.id.toString()}
+                                                                        value={
+                                                                            city.name
+                                                                        }
+                                                                    >
+                                                                        {
+                                                                            city.name
+                                                                        }
+                                                                    </SelectItem>
+                                                                ),
+                                                            )}
+                                                        </SelectGroup>
+                                                    </SelectContent>
+                                                </Select>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
                                     <Button
                                         type="submit"
                                         className="mt-4"
