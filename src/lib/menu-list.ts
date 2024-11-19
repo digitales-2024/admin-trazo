@@ -16,6 +16,7 @@ import {
     HousePlusIcon,
     GalleryHorizontalEnd,
     PencilRuler,
+    Anvil,
 } from "lucide-react";
 
 type Submenu = {
@@ -121,6 +122,14 @@ export function getMenuList(pathname: string): Group[] {
                     icon: GalleryHorizontalEnd,
                     submenus: [],
                 },
+                {
+                    href: "/resources",
+                    label: "Recursos",
+                    active: pathname.includes("/resources"),
+                    icon: Anvil,
+                    submenus: [],
+                },
+
                 {
                     href: "/zoning",
                     label: "Zonificaciones",
