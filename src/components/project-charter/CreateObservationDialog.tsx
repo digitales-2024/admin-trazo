@@ -2,6 +2,7 @@
 
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useObservation } from "@/hooks/use-observation";
+import { useProjectCharter } from "@/hooks/use-project-charter";
 import { CreateObservationSchema, observationSchema } from "@/schemas";
 import { ProjectCharter } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -44,15 +45,18 @@ interface CreateObservationDialogProps
     projectCharter: ProjectCharter;
     open: boolean;
     onOpenChange: (open: boolean) => void;
+    amountOfObservations: number;
 }
 
 export function CreateObservationDialog({
     projectCharter,
     open,
     onOpenChange,
+    amountOfObservations,
 }: CreateObservationDialogProps) {
     const [isCreatePending, startCreateTransition] = useTransition();
     const isDesktop = useMediaQuery("(min-width: 640px)");
+    const { refetch } = useProjectCharter();
 
     const { onCreateObservation, isSuccessCreateObservation } =
         useObservation();
@@ -84,8 +88,17 @@ export function CreateObservationDialog({
         if (isSuccessCreateObservation) {
             form.reset();
             onOpenChange(false);
+            if (amountOfObservations === 0) {
+                refetch();
+            }
         }
-    }, [isSuccessCreateObservation, form, onOpenChange]);
+    }, [
+        isSuccessCreateObservation,
+        form,
+        onOpenChange,
+        amountOfObservations,
+        refetch,
+    ]);
 
     const handleClose = () => {
         form.reset();
