@@ -1,10 +1,9 @@
 "use client";
 
-import { useClients } from "@/hooks/use-client";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { Client } from "@/types";
-import { type Row } from "@tanstack/react-table";
-import { RefreshCcw, Trash } from "lucide-react";
+import { useObservation } from "@/hooks/use-observation";
+import { Observation } from "@/types";
+import { RefreshCcw } from "lucide-react";
 import { ComponentPropsWithoutRef, useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -16,7 +15,6 @@ import {
     DrawerFooter,
     DrawerHeader,
     DrawerTitle,
-    DrawerTrigger,
 } from "@/components/ui/drawer";
 
 import {
@@ -28,29 +26,27 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger,
 } from "../ui/alert-dialog";
 
-interface DeleteClientsDialogProps
+interface DeleteObservationDialogProps
     extends ComponentPropsWithoutRef<typeof AlertDialog> {
-    clients: Row<Client>["original"][];
+    observation: Observation;
     showTrigger?: boolean;
     onSuccess?: () => void;
 }
 
-export function DeleteClientsDialog({
-    clients,
-    showTrigger = true,
+export function DeleteObservationDialog({
+    observation,
     onSuccess,
     ...props
-}: DeleteClientsDialogProps) {
+}: DeleteObservationDialogProps) {
     const [isDeletePending] = useTransition();
     const isDesktop = useMediaQuery("(min-width: 640px)");
 
-    const { onDeleteClients } = useClients();
+    const { onDeleteObservation } = useObservation();
 
     const onDeleteClientsHandler = () => {
-        onDeleteClients(clients);
+        onDeleteObservation([observation]);
         props.onOpenChange?.(false);
         onSuccess?.();
     };
@@ -58,26 +54,13 @@ export function DeleteClientsDialog({
     if (isDesktop) {
         return (
             <AlertDialog {...props}>
-                {showTrigger ? (
-                    <AlertDialogTrigger asChild>
-                        <Button variant="outline" size="sm">
-                            <Trash className="mr-2 size-4" aria-hidden="true" />
-                            Eliminar ({clients.length})
-                        </Button>
-                    </AlertDialogTrigger>
-                ) : null}
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>
                             ¿Estás absolutamente seguro?
                         </AlertDialogTitle>
                         <AlertDialogDescription>
-                            Esta acción eliminará a
-                            <span className="font-medium">
-                                {" "}
-                                {clients.length}
-                            </span>
-                            {clients.length === 1 ? " cliente" : " clientes"}
+                            Esta acción eliminará una observación
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter className="gap-2 sm:space-x-0">
@@ -105,21 +88,11 @@ export function DeleteClientsDialog({
 
     return (
         <Drawer {...props}>
-            {showTrigger ? (
-                <DrawerTrigger asChild>
-                    <Button variant="outline" size="sm">
-                        <Trash className="mr-2 size-4" aria-hidden="true" />
-                        Eliminar ({clients.length})
-                    </Button>
-                </DrawerTrigger>
-            ) : null}
             <DrawerContent>
                 <DrawerHeader>
                     <DrawerTitle>¿Estás absolutamente seguro?</DrawerTitle>
                     <DrawerDescription>
-                        Esta acción eliminará a
-                        <span className="font-medium">{clients.length}</span>
-                        {clients.length === 1 ? " cliente" : " clientes"}
+                        Esta acción eliminará una observación
                     </DrawerDescription>
                 </DrawerHeader>
                 <DrawerFooter className="gap-2 sm:space-x-0">
