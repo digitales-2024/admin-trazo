@@ -39,7 +39,7 @@ const infoSheet = {
         "Gestiona las observaciones registradas del acta del proyecto.",
 };
 
-interface UpdateObservationProjectCharterSheetProps
+interface ObservationProjectCharterSheetProps
     extends Omit<
         React.ComponentPropsWithRef<typeof Sheet>,
         "open" | "onOpenChange"
@@ -49,11 +49,11 @@ interface UpdateObservationProjectCharterSheetProps
     onOpenChange: (open: boolean) => void;
 }
 
-export function UpdateObservationProjectCharterSheet({
+export function ObservationProjectCharterSheet({
     projectCharter,
     open,
     onOpenChange,
-}: UpdateObservationProjectCharterSheetProps) {
+}: ObservationProjectCharterSheetProps) {
     const { observationByProjectCharter } = useObservation({
         idProjectCharter: projectCharter.id,
     });
