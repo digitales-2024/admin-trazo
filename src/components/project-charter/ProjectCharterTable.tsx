@@ -1,6 +1,7 @@
 "use client";
 "use memo";
 
+import { useObservation } from "@/hooks/use-observation";
 import { useProfile } from "@/hooks/use-profile";
 import { ProjectCharter } from "@/types";
 import { useMemo } from "react";
@@ -11,10 +12,15 @@ import { ProjectCharterTableToolbarActions } from "./ProjectCharterTableToolbarA
 
 export function ProjectCharterTable({ data }: { data: ProjectCharter[] }) {
     const { user } = useProfile();
+    const { exportProjectCharterToPdf } = useObservation();
 
     const columns = useMemo(
-        () => projectsChartersColumns(user?.isSuperAdmin || false),
-        [user],
+        () =>
+            projectsChartersColumns(
+                user?.isSuperAdmin || false,
+                exportProjectCharterToPdf,
+            ),
+        [user, exportProjectCharterToPdf],
     );
 
     return (
