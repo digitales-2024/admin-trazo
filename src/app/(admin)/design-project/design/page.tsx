@@ -11,9 +11,9 @@ import {
     DesignProjectStatus,
 } from "@/types/designProject";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ColumnDef, Table } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import { Contact, Download, Ellipsis, Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -281,15 +281,12 @@ function DesignProjectTable({
 
 function DesignProjectTableToolbarActions() {
     // TODO: bring actual data
-    const table: Table<any> = undefined;
+    //const table: Table<DesignProjectStatus> = undefined;
     const { user } = useProfile();
     const exportFile = false;
 
     return (
         <div className="flex w-fit flex-wrap items-center gap-2">
-            {table && table.getFilteredSelectedRowModel().rows.length > 0 ? (
-                <></>
-            ) : null}
             <CreateProjectDialog />
             {exportFile ||
                 (user?.isSuperAdmin && (
@@ -297,9 +294,9 @@ function DesignProjectTableToolbarActions() {
                         variant="outline"
                         size="sm"
                         onClick={() => {
-                            if (table) {
-                                console.log("export on click :D");
-                            }
+                            //if (table) {
+                            //    console.log("export on click :D");
+                            //}
                         }}
                     >
                         <Download className="mr-2 size-4" aria-hidden="true" />
@@ -326,12 +323,16 @@ const FormSchema = z.object({
     address: z.string({
         message: "Ingresa la dirección del proyecto",
     }),
+    startDate: z.string({
+        message: "Ingresa la fecha de inicio del proyecto",
+    }),
 });
 
 function CreateProjectDialog() {
     const [open, setOpen] = useState(false);
     const { data, isLoading, isError } = useGetCreatableQuotationsQuery();
-    const { onCreateProject, createLoading } = useDesignProject();
+    const { onCreateProject, createLoading, createSuccess } =
+        useDesignProject();
     const { data: usersData } = useUsers();
 
     // Estado para almacenar las ciudades del departamento seleccionado
@@ -363,7 +364,18 @@ function CreateProjectDialog() {
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
+        defaultValues: {
+            address: "",
+            startDate: "",
+        },
     });
+
+    useEffect(() => {
+        if (createSuccess) {
+            form.reset();
+            setOpen(false);
+        }
+    }, [createSuccess, form]);
 
     async function onSubmit(formData: z.infer<typeof FormSchema>) {
         const quotation = data?.find((q) => q.id === formData.quotationId);
@@ -380,7 +392,7 @@ function CreateProjectDialog() {
             clientId: quotation.client.id,
             quotationId: formData.quotationId,
             designerId: formData.designerId,
-            startProjectDate: "",
+            startProjectDate: formData.startDate,
         });
     }
 
@@ -389,7 +401,7 @@ function CreateProjectDialog() {
             <DialogTrigger asChild>
                 <Button variant="outline" size="sm">
                     <Plus className="mr-2 size-4" aria-hidden="true" />
-                    Crear Cotización
+                    Crear Proyecto
                 </Button>
             </DialogTrigger>
             <DialogContent>
@@ -437,7 +449,7 @@ function CreateProjectDialog() {
                                                     >
                                                         <FormControl>
                                                             <SelectTrigger className="">
-                                                                <SelectValue placeholder="Cotización" />
+                                                                <SelectValue placeholder="" />
                                                             </SelectTrigger>
                                                         </FormControl>
                                                         <SelectContent>
@@ -594,6 +606,27 @@ function CreateProjectDialog() {
                                                         <Input
                                                             id="address"
                                                             placeholder="Dirección del proyecto"
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        {/* TODO: Reemplazar con componente de calendario */}
+                                        <FormField
+                                            control={form.control}
+                                            name="startDate"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel htmlFor="startDate">
+                                                        Dirección
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            id="startDate"
+                                                            placeholder="Fecha de inicio del proyecto"
                                                             {...field}
                                                         />
                                                     </FormControl>

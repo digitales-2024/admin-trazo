@@ -29,6 +29,7 @@ export const designProjectApi = createApi({
                 method: "GET",
                 credentials: "include",
             }),
+            providesTags: ["DesignProject"],
         }),
         // Crea un projecto de diseño
         createDesignProject: build.mutation<
@@ -41,6 +42,7 @@ export const designProjectApi = createApi({
                 body,
                 credentials: "include",
             }),
+            invalidatesTags: ["DesignProject"],
         }),
     }),
 });
