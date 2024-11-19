@@ -17,3 +17,8 @@ export {
     zoningSchema,
     type CreateZoningSchema,
 } from "./zoning/createZoningSchema";
+
+export {
+    resourceSchema,
+    type CreateResourceSchema,
+} from "./resources/createResourcesSchema";
