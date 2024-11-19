@@ -3,10 +3,8 @@
 import { departments } from "@/data/department";
 import { useDesignProject } from "@/hooks/use-design-project";
 import { useProfile } from "@/hooks/use-profile";
-import {
-    useCreateDesignProjectMutation,
-    useGetCreatableQuotationsQuery,
-} from "@/redux/services/designProjectApi";
+import { useUsers } from "@/hooks/use-users";
+import { useGetCreatableQuotationsQuery } from "@/redux/services/designProjectApi";
 import { City } from "@/types";
 import {
     DesignProjectSummaryData,
@@ -51,6 +49,7 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
     Select,
     SelectContent,
@@ -321,12 +320,20 @@ const FormSchema = z.object({
     province: z.string({
         message: "Selecciona la provincia",
     }),
+    designerId: z.string({
+        message: "Debes seleccionar un diseñador",
+    }),
+    address: z.string({
+        message: "Ingresa la dirección del proyecto",
+    }),
 });
 
 function CreateProjectDialog() {
     const [open, setOpen] = useState(false);
     const { data, isLoading, isError } = useGetCreatableQuotationsQuery();
     const { onCreateProject, createLoading } = useDesignProject();
+    const { data: usersData } = useUsers();
+
     // Estado para almacenar las ciudades del departamento seleccionado
     const [cities, setCities] = useState<City[]>([]);
     const [isDepartmentSelected, setIsDepartmentSelected] = useState(false);
@@ -335,6 +342,11 @@ function CreateProjectDialog() {
     const departmentOptions: Option[] = departments.map((department) => ({
         value: department.name,
         label: department.name,
+    }));
+
+    const usersOptions: Option[] = (usersData ?? []).map((user) => ({
+        value: user.id.toString(),
+        label: user.name,
     }));
 
     // Manejar el cambio de departamento
@@ -353,15 +365,21 @@ function CreateProjectDialog() {
         resolver: zodResolver(FormSchema),
     });
 
-    async function onSubmit(data: z.infer<typeof FormSchema>) {
+    async function onSubmit(formData: z.infer<typeof FormSchema>) {
+        const quotation = data?.find((q) => q.id === formData.quotationId);
+        if (!quotation) {
+            alert("Cotizacion invalida");
+            return;
+        }
+
         await onCreateProject({
-            name: "",
-            ubicationProject: "",
-            province: "",
-            department: "",
-            clientId: "",
-            quotationId: "",
-            designerId: "",
+            name: quotation.name,
+            ubicationProject: formData.address,
+            province: formData.province,
+            department: formData.department,
+            clientId: quotation.client.id,
+            quotationId: formData.quotationId,
+            designerId: formData.designerId,
             startProjectDate: "",
         });
     }
@@ -400,140 +418,201 @@ function CreateProjectDialog() {
                         <div>
                             <Form {...form}>
                                 <form onSubmit={form.handleSubmit(onSubmit)}>
-                                    <FormField
-                                        control={form.control}
-                                        name="quotationId"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>
-                                                    Cotización
-                                                </FormLabel>
-                                                <Select
-                                                    onValueChange={
-                                                        field.onChange
-                                                    }
-                                                    defaultValue={field.value}
-                                                >
-                                                    <FormControl>
-                                                        <SelectTrigger className="">
-                                                            <SelectValue placeholder="Cotización" />
-                                                        </SelectTrigger>
-                                                    </FormControl>
-                                                    <SelectContent>
-                                                        {data.map((q) => (
-                                                            <SelectItem
-                                                                key={q.id}
-                                                                value={q.id}
-                                                            >
-                                                                {q.name}
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-
-                                    {/* Campo de Departamento */}
-                                    <FormField
-                                        control={form.control}
-                                        name="department"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>
-                                                    Departamento
-                                                </FormLabel>
-                                                <FormControl>
-                                                    <AutoComplete
-                                                        options={
-                                                            departmentOptions
+                                    <div className="flex flex-col gap-6 p-4 sm:p-0">
+                                        <FormField
+                                            control={form.control}
+                                            name="quotationId"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>
+                                                        Cotización
+                                                    </FormLabel>
+                                                    <Select
+                                                        onValueChange={
+                                                            field.onChange
                                                         }
-                                                        emptyMessage="No se encontró el departamento."
-                                                        placeholder="Seleccione un departamento"
-                                                        onValueChange={(selectedOption: {
-                                                            value?: string;
-                                                        }) => {
-                                                            field.onChange(
-                                                                selectedOption?.value ||
-                                                                    "",
-                                                            );
-                                                            handleDepartmentChange(
-                                                                selectedOption?.value ||
-                                                                    "",
-                                                            );
-                                                        }}
-                                                        value={
-                                                            departmentOptions.find(
-                                                                (option) =>
-                                                                    option.value ===
-                                                                    field.value,
-                                                            ) || undefined
+                                                        defaultValue={
+                                                            field.value
                                                         }
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
+                                                    >
+                                                        <FormControl>
+                                                            <SelectTrigger className="">
+                                                                <SelectValue placeholder="Cotización" />
+                                                            </SelectTrigger>
+                                                        </FormControl>
+                                                        <SelectContent>
+                                                            {data.map((q) => (
+                                                                <SelectItem
+                                                                    key={q.id}
+                                                                    value={q.id}
+                                                                >
+                                                                    {q.name}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
 
-                                    {/* Campo de Ciudad */}
-                                    <FormField
-                                        control={form.control}
-                                        name="province"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel htmlFor="city">
-                                                    Provincia
-                                                </FormLabel>
-                                                <Select
-                                                    onValueChange={
-                                                        field.onChange
-                                                    }
-                                                    value={field.value}
-                                                    disabled={
-                                                        !isDepartmentSelected
-                                                    }
-                                                >
+                                        <FormField
+                                            control={form.control}
+                                            name="designerId"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel htmlFor="designerId">
+                                                        Diseñador
+                                                    </FormLabel>
                                                     <FormControl>
-                                                        <SelectTrigger>
-                                                            <SelectValue placeholder="Seleccione una provincia" />
-                                                        </SelectTrigger>
+                                                        <AutoComplete
+                                                            options={
+                                                                usersOptions
+                                                            }
+                                                            placeholder="Selecciona un diseñador"
+                                                            emptyMessage="No se encontraron diseñadores"
+                                                            value={
+                                                                usersOptions.find(
+                                                                    (option) =>
+                                                                        option.value ===
+                                                                        field.value,
+                                                                ) || undefined
+                                                            }
+                                                            onValueChange={(
+                                                                option,
+                                                            ) => {
+                                                                field.onChange(
+                                                                    option?.value ||
+                                                                        "",
+                                                                );
+                                                            }}
+                                                            className="z-50"
+                                                        />
                                                     </FormControl>
-                                                    <SelectContent>
-                                                        <SelectGroup>
-                                                            {cities.map(
-                                                                (city) => (
-                                                                    <SelectItem
-                                                                        key={city.id.toString()}
-                                                                        value={
-                                                                            city.name
-                                                                        }
-                                                                    >
-                                                                        {
-                                                                            city.name
-                                                                        }
-                                                                    </SelectItem>
-                                                                ),
-                                                            )}
-                                                        </SelectGroup>
-                                                    </SelectContent>
-                                                </Select>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
+                                                </FormItem>
+                                            )}
+                                        />
 
-                                    <Button
-                                        type="submit"
-                                        className="mt-4"
-                                        disabled={
-                                            !form.formState.isDirty ||
-                                            createLoading
-                                        }
-                                    >
-                                        Crear Proyecto de Diseño
-                                    </Button>
+                                        {/* Campo de Departamento */}
+                                        <FormField
+                                            control={form.control}
+                                            name="department"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>
+                                                        Departamento
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <AutoComplete
+                                                            options={
+                                                                departmentOptions
+                                                            }
+                                                            emptyMessage="No se encontró el departamento."
+                                                            placeholder="Seleccione un departamento"
+                                                            onValueChange={(selectedOption: {
+                                                                value?: string;
+                                                            }) => {
+                                                                field.onChange(
+                                                                    selectedOption?.value ||
+                                                                        "",
+                                                                );
+                                                                handleDepartmentChange(
+                                                                    selectedOption?.value ||
+                                                                        "",
+                                                                );
+                                                            }}
+                                                            value={
+                                                                departmentOptions.find(
+                                                                    (option) =>
+                                                                        option.value ===
+                                                                        field.value,
+                                                                ) || undefined
+                                                            }
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        {/* Campo de Ciudad */}
+                                        <FormField
+                                            control={form.control}
+                                            name="province"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel htmlFor="city">
+                                                        Provincia
+                                                    </FormLabel>
+                                                    <Select
+                                                        onValueChange={
+                                                            field.onChange
+                                                        }
+                                                        value={field.value}
+                                                        disabled={
+                                                            !isDepartmentSelected
+                                                        }
+                                                    >
+                                                        <FormControl>
+                                                            <SelectTrigger>
+                                                                <SelectValue placeholder="Seleccione una provincia" />
+                                                            </SelectTrigger>
+                                                        </FormControl>
+                                                        <SelectContent>
+                                                            <SelectGroup>
+                                                                {cities.map(
+                                                                    (city) => (
+                                                                        <SelectItem
+                                                                            key={city.id.toString()}
+                                                                            value={
+                                                                                city.name
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                city.name
+                                                                            }
+                                                                        </SelectItem>
+                                                                    ),
+                                                                )}
+                                                            </SelectGroup>
+                                                        </SelectContent>
+                                                    </Select>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        <FormField
+                                            control={form.control}
+                                            name="address"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel htmlFor="address">
+                                                        Dirección
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            id="address"
+                                                            placeholder="Dirección del proyecto"
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        <Button
+                                            type="submit"
+                                            className="mt-4"
+                                            disabled={
+                                                !form.formState.isDirty ||
+                                                createLoading
+                                            }
+                                        >
+                                            Crear Proyecto de Diseño
+                                        </Button>
+                                    </div>
                                 </form>
                             </Form>
                         </div>
