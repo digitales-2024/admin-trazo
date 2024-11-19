@@ -2,13 +2,17 @@
 
 import { useDesignProject } from "@/hooks/use-design-project";
 import { useProfile } from "@/hooks/use-profile";
+import { useGetCreatableQuotationsQuery } from "@/redux/services/designProjectApi";
 import {
     DesignProjectSummaryData,
     DesignProjectStatus,
 } from "@/types/designProject";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, Table } from "@tanstack/react-table";
 import { Contact, Download, Ellipsis, Plus } from "lucide-react";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { ErrorPage } from "@/components/common/ErrorPage";
 import { HeaderPage } from "@/components/common/HeaderPage";
@@ -33,6 +37,21 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 export default function Project() {
     const { data, isLoading } = useDesignProject();
@@ -216,7 +235,7 @@ function DesignProjectTable({
         {
             id: "actions",
             size: 5,
-            cell: function Cell({ row }) {
+            cell: function Cell() {
                 return (
                     <div>
                         <DropdownMenu>
@@ -285,17 +304,29 @@ function DesignProjectTableToolbarActions() {
     );
 }
 
+const FormSchema = z.object({
+    quotationId: z.string({
+        message: "Debes seleccionar una cotización",
+    }),
+});
+
 function CreateProjectDialog() {
     const [open, setOpen] = useState(false);
+    const [createLoading, setCreateLoading] = useState(false);
+    const { data, isLoading, isError } = useGetCreatableQuotationsQuery();
+
+    const form = useForm<z.infer<typeof FormSchema>>({
+        resolver: zodResolver(FormSchema),
+    });
+
+    function onSubmit(data: z.infer<typeof FormSchema>) {
+        console.log("form submit :D");
+    }
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => console.log("Create on click :D")}
-                >
+                <Button variant="outline" size="sm">
                     <Plus className="mr-2 size-4" aria-hidden="true" />
                     Crear Cotización
                 </Button>
@@ -307,6 +338,73 @@ function CreateProjectDialog() {
                         Seleccione una cotización aprobada y presione el boton
                         Crear.
                     </DialogDescription>
+                    {isLoading && <>Cargando cotizaciones</>}
+                    {isError && (
+                        <div className="text-red-500">
+                            Hubo un error cargando las cotizaciones disponibles
+                        </div>
+                    )}
+                    {data && data.length === 0 && (
+                        <div className="rounded bg-yellow-100 p-4 font-bold text-yellow-500 shadow">
+                            No hay cotizaciones que puedan pasar a fase de
+                            Proyecto de Diseño.
+                            <br />
+                            Cuando una cotización sea Aprobada, y no esté
+                            vinculada a otro Proyecto de Diseño, aparecerá aquí.
+                        </div>
+                    )}
+                    {data && data.length > 0 && (
+                        <div>
+                            <Form {...form}>
+                                <form onSubmit={form.handleSubmit(onSubmit)}>
+                                    <FormField
+                                        control={form.control}
+                                        name="quotationId"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>
+                                                    Cotización
+                                                </FormLabel>
+                                                <Select
+                                                    onValueChange={
+                                                        field.onChange
+                                                    }
+                                                    defaultValue={field.value}
+                                                >
+                                                    <FormControl>
+                                                        <SelectTrigger className="">
+                                                            <SelectValue placeholder="Cotización" />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent>
+                                                        {data.map((q) => (
+                                                            <SelectItem
+                                                                key={q.id}
+                                                                value={q.id}
+                                                            >
+                                                                {q.name}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <Button
+                                        type="submit"
+                                        className="mt-4"
+                                        disabled={
+                                            !form.formState.isDirty ||
+                                            createLoading
+                                        }
+                                    >
+                                        Crear Proyecto de Diseño
+                                    </Button>
+                                </form>
+                            </Form>
+                        </div>
+                    )}
                 </DialogHeader>
             </DialogContent>
         </Dialog>
