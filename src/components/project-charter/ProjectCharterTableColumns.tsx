@@ -2,7 +2,13 @@
 
 import { ProjectCharter } from "@/types";
 import { type ColumnDef } from "@tanstack/react-table";
-import { Contact, Ellipsis, FileDown, Plus, SquareUser } from "lucide-react";
+import {
+    Contact,
+    DraftingCompass,
+    Ellipsis,
+    FileDown,
+    Plus,
+} from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -68,16 +74,9 @@ export const projectsChartersColumns = (
             ),
             cell: ({ row }) => (
                 <div className="flex min-w-40 items-center truncate capitalize">
-                    <Badge className="text-xs font-light" variant={"outline"}>
-                        <SquareUser
-                            size={14}
-                            className="mr-2"
-                            strokeWidth={1.5}
-                        />
-                        <span className="text-xs">
-                            {row.getValue("proyecto") as string}
-                        </span>
-                    </Badge>
+                    <span className="text-xs font-light">
+                        {row.getValue("proyecto") as string}
+                    </span>
                 </div>
             ),
         },
@@ -94,7 +93,7 @@ export const projectsChartersColumns = (
                     <div className="flex items-center">
                         <Badge
                             variant="outline"
-                            className="truncate capitalize"
+                            className="truncate border-gray-500 capitalize text-gray-700"
                         >
                             <Contact
                                 size={14}
@@ -122,9 +121,9 @@ export const projectsChartersColumns = (
                     <div className="flex items-center">
                         <Badge
                             variant="outline"
-                            className="truncate capitalize"
+                            className="truncate border-blue-500 capitalize text-blue-700"
                         >
-                            <Contact
+                            <DraftingCompass
                                 size={14}
                                 className="mr-2"
                                 strokeWidth={1.5}
@@ -220,6 +219,7 @@ export const projectsChartersColumns = (
                                 open={showObservationDialog}
                                 onOpenChange={setShowObservationDialog}
                                 projectCharter={row?.original}
+                                amountOfObservations={amountOfObservations}
                             />
                             <ObservationProjectCharterSheet
                                 open={showEditDialog}
@@ -264,6 +264,7 @@ export const projectsChartersColumns = (
 
                                 <DropdownMenuItem
                                     onSelect={() => downloadPdfProjectCharter()}
+                                    disabled={amountOfObservations === 0}
                                 >
                                     Descargar
                                     <DropdownMenuShortcut>
