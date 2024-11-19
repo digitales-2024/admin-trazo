@@ -55,7 +55,7 @@ export function ObservationInformationUpdate({
                       )
                     : "Sin fecha"}
             </div>
-            <div className="mt-2 flex flex-col justify-end gap-2 sm:flex-row">
+            <div className="mt-4 flex flex-col justify-end gap-2 sm:flex-row">
                 <Button
                     size="sm"
                     variant="destructive"
