@@ -2,13 +2,7 @@
 
 import { ProjectCharter } from "@/types";
 import { type ColumnDef } from "@tanstack/react-table";
-import {
-    Contact,
-    Ellipsis,
-    RefreshCcwDot,
-    SquareUser,
-    Trash,
-} from "lucide-react";
+import { Contact, Ellipsis, FileDown, Plus, SquareUser } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -25,12 +19,11 @@ import {
 import { DataTableColumnHeader } from "../data-table/DataTableColumnHeader";
 import { Badge } from "../ui/badge";
 import { CreateObservationDialog } from "./CreateObservationDialog";
-import { DeleteClientsDialog } from "./DeleteClientDialog";
-import { ReactivateClientsDialog } from "./ReactivateClientsDialog";
-import { UpdateClientSheet } from "./UpdateClientsSheet";
+import { ObservationProjectCharterSheet } from "./ObservationProjectCharterSheet";
 
 export const projectsChartersColumns = (
     isSuperAdmin: boolean,
+    exportProjectCharterToPdf: (id: string, codeProject: string) => void,
 ): ColumnDef<ProjectCharter>[] => {
     const columns: ColumnDef<ProjectCharter>[] = [
         {
@@ -209,43 +202,29 @@ export const projectsChartersColumns = (
             id: "actions",
             size: 5,
             cell: function Cell({ row }) {
-                const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-                const [showReactivateDialog, setShowReactivateDialog] =
-                    useState(false);
+                const { amountOfObservations, designProject } = row.original;
                 const [showEditDialog, setShowEditDialog] = useState(false);
                 const [showObservationDialog, setShowObservationDialog] =
                     useState(false);
+                const downloadPdfProjectCharter = () => {
+                    exportProjectCharterToPdf(
+                        designProject.id,
+                        designProject.code,
+                    );
+                };
 
                 return (
                     <div>
                         <div>
                             <CreateObservationDialog
                                 open={showObservationDialog}
-                                onOpenChange={setShowEditDialog}
+                                onOpenChange={setShowObservationDialog}
                                 projectCharter={row?.original}
                             />
-                            <UpdateClientSheet
+                            <ObservationProjectCharterSheet
                                 open={showEditDialog}
                                 onOpenChange={setShowEditDialog}
-                                client={row?.original}
-                            />
-                            <DeleteClientsDialog
-                                open={showDeleteDialog}
-                                onOpenChange={setShowDeleteDialog}
-                                clients={[row?.original]}
-                                showTrigger={false}
-                                onSuccess={() => {
-                                    row.toggleSelected(false);
-                                }}
-                            />
-                            <ReactivateClientsDialog
-                                open={showReactivateDialog}
-                                onOpenChange={setShowReactivateDialog}
-                                clients={[row?.original]}
-                                showTrigger={false}
-                                onSuccess={() => {
-                                    row.toggleSelected(false);
-                                }}
+                                projectCharter={row?.original}
                             />
                         </div>
                         <DropdownMenu>
@@ -264,36 +243,11 @@ export const projectsChartersColumns = (
                             <DropdownMenuContent align="end" className="w-40">
                                 <DropdownMenuItem
                                     onSelect={() => setShowEditDialog(true)}
+                                    disabled={amountOfObservations === 0}
                                 >
-                                    Editar
+                                    Ver Observaciones
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                {isSuperAdmin && (
-                                    <DropdownMenuItem
-                                        onSelect={() =>
-                                            setShowReactivateDialog(true)
-                                        }
-                                    >
-                                        Reactivar
-                                        <DropdownMenuShortcut>
-                                            <RefreshCcwDot
-                                                className="size-4"
-                                                aria-hidden="true"
-                                            />
-                                        </DropdownMenuShortcut>
-                                    </DropdownMenuItem>
-                                )}
-                                <DropdownMenuItem
-                                    onSelect={() => setShowDeleteDialog(true)}
-                                >
-                                    Eliminar
-                                    <DropdownMenuShortcut>
-                                        <Trash
-                                            className="size-4"
-                                            aria-hidden="true"
-                                        />
-                                    </DropdownMenuShortcut>
-                                </DropdownMenuItem>
                                 <DropdownMenuItem
                                     onSelect={() =>
                                         setShowObservationDialog(true)
@@ -301,7 +255,19 @@ export const projectsChartersColumns = (
                                 >
                                     Añadir observación
                                     <DropdownMenuShortcut>
-                                        <Trash
+                                        <Plus
+                                            className="size-4"
+                                            aria-hidden="true"
+                                        />
+                                    </DropdownMenuShortcut>
+                                </DropdownMenuItem>
+
+                                <DropdownMenuItem
+                                    onSelect={() => downloadPdfProjectCharter()}
+                                >
+                                    Descargar
+                                    <DropdownMenuShortcut>
+                                        <FileDown
                                             className="size-4"
                                             aria-hidden="true"
                                         />
