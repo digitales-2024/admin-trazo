@@ -46,7 +46,7 @@ export const observationApi = createApi({
         }),
         //Obtener todos las observaciones de una acta de proyecto
         getAllObservation: build.query<ObservationProject[], { id: string }>({
-            query: (id) => ({
+            query: ({ id }) => ({
                 url: `/observations/project-charter/${id}`,
                 method: "GET",
                 credentials: "include",
