@@ -1,6 +1,7 @@
 "use client";
 
 import { useObservation } from "@/hooks/use-observation";
+import { useProjectCharter } from "@/hooks/use-project-charter";
 import { UpdateObservationSchema, updateObservationSchema } from "@/schemas";
 import { Observation, ProjectCharter } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -59,6 +60,7 @@ export function ObservationProjectCharterSheet({
     });
     const { onUpdateObservation, isLoadingUpdateObservation } =
         useObservation();
+    const { refetch } = useProjectCharter();
 
     const [editingId, setEditingId] = useState<string | null>(null);
     const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -120,6 +122,7 @@ export function ObservationProjectCharterSheet({
 
         if (observationByProjectCharter?.length === 1) {
             onOpenChange(false);
+            refetch();
         }
     };
 
@@ -142,7 +145,10 @@ export function ObservationProjectCharterSheet({
                     <SheetDescription>{infoSheet.description}</SheetDescription>
                 </SheetHeader>
                 <ScrollArea className="w-full gap-4 rounded-md border p-4">
-                    <div className="mt-6 space-y-4">
+                    <div className="space-y-4">
+                        <h3 className="text-lg font-medium">
+                            Observaciones Existentes
+                        </h3>
                         {observationByProjectCharter &&
                             observationByProjectCharter.map((obs) => (
                                 <Card key={obs.id}>
