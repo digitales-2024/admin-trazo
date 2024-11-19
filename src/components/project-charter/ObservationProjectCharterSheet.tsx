@@ -117,6 +117,10 @@ export function ObservationProjectCharterSheet({
         // Manejar el éxito de la eliminación
         setShowDeleteDialog(false);
         setSelectedObservation(null);
+
+        if (observationByProjectCharter?.length === 1) {
+            onOpenChange(false);
+        }
     };
 
     return (
