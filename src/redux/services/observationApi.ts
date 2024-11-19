@@ -63,6 +63,15 @@ export const observationApi = createApi({
             }),
             invalidatesTags: ["Observation"],
         }),
+        // Generar Pdf de acta de proyecto
+        genPdfProjectCharter: build.mutation<Blob, string>({
+            query: (id) => ({
+                url: `/observations/${id}/pdf`,
+                method: "GET",
+                responseHandler: (response: Response) => response.blob(),
+                credentials: "include",
+            }),
+        }),
     }),
 });
 
@@ -72,4 +81,5 @@ export const {
     useGetObservationByIdQuery,
     useGetAllObservationQuery,
     useDeleteObservationsMutation,
+    useGenPdfProjectCharterMutation,
 } = observationApi;

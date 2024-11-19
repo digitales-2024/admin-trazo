@@ -1,12 +1,14 @@
 import {
     useCreateObservationMutation,
     useDeleteObservationsMutation,
+    useGenPdfProjectCharterMutation,
     useGetAllObservationQuery,
     useGetObservationByIdQuery,
     useUpdateObservationMutation,
 } from "@/redux/services/observationApi";
 import { CustomErrorData, Observation } from "@/types";
 import { translateError } from "@/utils/translateError";
+import { format } from "date-fns";
 import { toast } from "sonner";
 
 interface UseObservationProps {
@@ -48,6 +50,8 @@ export const useObservation = (options: UseObservationProps = {}) => {
 
     const [deleteObservation, { isSuccess: isSuccessDeleteObservation }] =
         useDeleteObservationsMutation();
+
+    const [genPdfProjectCharter] = useGenPdfProjectCharterMutation();
 
     const onCreateObservation = async (input: Partial<Observation>) => {
         const promise = () =>
@@ -165,6 +169,56 @@ export const useObservation = (options: UseObservationProps = {}) => {
             },
         });
     };
+
+    const exportProjectCharterToPdf = async (
+        id: string,
+        codeProject: string,
+    ) => {
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                try {
+                    const result = await genPdfProjectCharter(id).unwrap();
+
+                    // Crear el enlace de descarga
+                    const url = window.URL.createObjectURL(result);
+                    const link = document.createElement("a");
+                    link.href = url;
+                    link.setAttribute(
+                        "download",
+                        `ACTA-PROYECTO-${codeProject}-${format(new Date(), "yyyy-MM-dd")}.pdf`,
+                    );
+
+                    // Añadir el enlace al DOM y disparar la descarga
+                    document.body.appendChild(link);
+                    link.click();
+
+                    // Eliminar el enlace temporal del DOM
+                    document.body.removeChild(link);
+                    window.URL.revokeObjectURL(url); // Limpiar el objeto URL
+
+                    resolve(result);
+                } catch (error) {
+                    if (error && typeof error === "object" && "data" in error) {
+                        const errorMessage = (error.data as CustomErrorData)
+                            .message;
+                        const message = translateError(errorMessage as string);
+                        reject(new Error(message));
+                    } else {
+                        reject(
+                            new Error(
+                                "Ocurrió un error inesperado, por favor intenta de nuevo",
+                            ),
+                        );
+                    }
+                }
+            });
+
+        return toast.promise(promise(), {
+            loading: "Descargando acta de proyecto en PDF...",
+            success: "Acta de proyecto descargada con éxito en PDF",
+            error: (err) => err.message,
+        });
+    };
     return {
         observationById,
         observationByProjectCharter,
@@ -177,5 +231,6 @@ export const useObservation = (options: UseObservationProps = {}) => {
         isLoadingUpdateObservation,
         onDeleteObservation,
         isSuccessDeleteObservation,
+        exportProjectCharterToPdf,
     };
 };
