@@ -20,4 +20,6 @@ export {
 export {
     observationSchema,
     type CreateObservationSchema,
+    type UpdateObservationSchema,
+    updateObservationSchema,
 } from "./observations/createObservationSchema";

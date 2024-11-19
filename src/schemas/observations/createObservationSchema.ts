@@ -17,3 +17,9 @@ export const observationSchema = z.object({
 });
 
 export type CreateObservationSchema = z.infer<typeof observationSchema>;
+
+export const updateObservationSchema = observationSchema.omit({
+    projectCharterId: true,
+});
+
+export type UpdateObservationSchema = z.infer<typeof updateObservationSchema>;
