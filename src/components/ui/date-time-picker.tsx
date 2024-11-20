@@ -60,7 +60,7 @@ export default function DatePicker({ value, onChange }: DatePickerProps) {
     };
 
     return (
-        <Popover>
+        <Popover modal={true}>
             <PopoverTrigger asChild>
                 <Button
                     variant={"outline"}
@@ -80,7 +80,12 @@ export default function DatePicker({ value, onChange }: DatePickerProps) {
                     )}
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="center" side="bottom">
+            <PopoverContent
+                className="w-auto p-0"
+                align="center"
+                side="bottom"
+                onOpenAutoFocus={(e) => e.preventDefault()}
+            >
                 <div className="flex items-center justify-between p-3">
                     <Select
                         value={month.toString()}
