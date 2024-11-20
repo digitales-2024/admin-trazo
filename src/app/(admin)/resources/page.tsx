@@ -1,44 +1,56 @@
 "use client";
-
 import { ResourceType } from "@/types/resource";
+import { useState } from "react";
 
 import { HeaderPage } from "@/components/common/HeaderPage";
 import { Shell } from "@/components/common/Shell";
+import { ResourceDisplay } from "@/components/resources/ResourceDisplay";
 import { CreateResourceDialog } from "@/components/resources/resources-table/CreateResourceDialog";
-import ResourcesCollapsible from "@/components/resources/ResourcesCollapsible";
+import { ResourceTypeSelector } from "@/components/resources/ResourceTypeSelector";
+
+const getTitleForType = (type: ResourceType) => {
+    const titles = {
+        [ResourceType.TOOLS]: "Herramientas",
+        [ResourceType.LABOR]: "Mano de Obra",
+        [ResourceType.SUPPLIES]: "Suministros",
+        [ResourceType.SERVICES]: "Servicios",
+    };
+    return titles[type];
+};
+
+const getDescriptionForType = (type: ResourceType) => {
+    const descriptions = {
+        [ResourceType.TOOLS]: "Lista de herramientas registradas en el sistema",
+        [ResourceType.LABOR]:
+            "Lista de recursos de mano de obra registrados en el sistema",
+        [ResourceType.SUPPLIES]:
+            "Lista de suministros registrados en el sistema",
+        [ResourceType.SERVICES]: "Lista de servicios registrados en el sistema",
+    };
+    return descriptions[type];
+};
 
 export default function ResourcesPage() {
+    const [selectedType, setSelectedType] = useState<ResourceType>(
+        ResourceType.TOOLS,
+    );
+
     return (
-        <Shell className="flex-auto gap-2">
+        <Shell className="gap-6">
             <HeaderPage
-                title="Gestion de recursos"
-                description="Lista de recursos registrados en el sistema."
+                title={getTitleForType(selectedType)}
+                description={getDescriptionForType(selectedType)}
             />
-            <div className="py-4">
+
+            <div className="flex flex-row items-center gap-4 overflow-x-auto py-4">
                 <CreateResourceDialog />
-            </div>
-
-            <div className="space-y-4">
-                <ResourcesCollapsible
-                    name="Herramientas"
-                    resourceType={ResourceType.TOOLS}
-                />
-
-                <ResourcesCollapsible
-                    name="Mano de Obra"
-                    resourceType={ResourceType.LABOR}
-                />
-
-                <ResourcesCollapsible
-                    name="Suministros"
-                    resourceType={ResourceType.SUPPLIES}
-                />
-
-                <ResourcesCollapsible
-                    name="Servicios"
-                    resourceType={ResourceType.SERVICES}
+                <ResourceTypeSelector
+                    selectedType={selectedType}
+                    onTypeChange={setSelectedType}
                 />
             </div>
+
+            <ResourceDisplay resourceType={selectedType} />
         </Shell>
     );
 }
