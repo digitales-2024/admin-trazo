@@ -16,6 +16,7 @@ import {
     HousePlusIcon,
     GalleryHorizontalEnd,
     PencilRuler,
+    ScrollText,
 } from "lucide-react";
 
 type Submenu = {
@@ -72,6 +73,12 @@ export function getMenuList(pathname: string): Group[] {
                             label: "Proyectos",
                             active: pathname.includes("/design-project/design"),
                             icon: FolderRoot,
+                        },
+                        {
+                            href: "/design-project/charter",
+                            label: "Acta de Proyecto",
+                            active: pathname.includes("/charter"),
+                            icon: ScrollText,
                         },
                     ],
                 },

@@ -154,7 +154,7 @@ export const quotationsColumns = (
                     <div className="flex items-center">
                         <Badge
                             variant="outline"
-                            className="truncate capitalize"
+                            className="truncate border-gray-500 capitalize text-gray-700"
                         >
                             <Contact
                                 size={14}

@@ -7,6 +7,8 @@ import { businessApi } from "./services/businessApi";
 import { clientsApi } from "./services/clientApi";
 import { designProjectApi } from "./services/designProjectApi";
 import { exchangeRateSunatApi } from "./services/exchangeRateSunatApi";
+import { observationApi } from "./services/observationApi";
+import { projectCharterApi } from "./services/projectCharterApi";
 import { quotationsApi } from "./services/quotationApi";
 import { rolesApi } from "./services/rolesApi";
 import { spacesApi } from "./services/spaceApi";
@@ -26,6 +28,8 @@ export const store = configureStore({
         [quotationsApi.reducerPath]: quotationsApi.reducer,
         [exchangeRateSunatApi.reducerPath]: exchangeRateSunatApi.reducer,
         [zoningApi.reducerPath]: zoningApi.reducer,
+        [projectCharterApi.reducerPath]: projectCharterApi.reducer,
+        [observationApi.reducerPath]: observationApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
@@ -35,9 +39,14 @@ export const store = configureStore({
                 ignoredActions: [
                     "quotationsApi/executeMutation/fulfilled",
                     "quotationsApi/executeMutation/rejected",
+                    "observationApi/executeMutation/fulfilled",
+                    "observationApi/executeMutation/rejected",
                 ],
                 // Ignorar las rutas en el estado que contienen valores no serializables
-                ignoredPaths: ["quotationsApi.mutations"],
+                ignoredPaths: [
+                    "quotationsApi.mutations",
+                    "observationApi.mutations",
+                ],
             },
         })
             .concat(authApi.middleware)
@@ -50,7 +59,9 @@ export const store = configureStore({
             .concat(clientsApi.middleware)
             .concat(quotationsApi.middleware)
             .concat(exchangeRateSunatApi.middleware)
-            .concat(zoningApi.middleware),
+            .concat(zoningApi.middleware)
+            .concat(projectCharterApi.middleware)
+            .concat(observationApi.middleware),
 });
 setupListeners(store.dispatch);
 
