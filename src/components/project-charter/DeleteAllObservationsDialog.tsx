@@ -62,7 +62,7 @@ export function DeleteAllObservationsDialog({
                     <AlertDialogTrigger asChild>
                         <Button variant="outline" size="sm">
                             <Trash className="mr-2 size-4" aria-hidden="true" />
-                            Eliminar ({projectCharter.length})
+                            Eliminar observaciones ({projectCharter.length})
                         </Button>
                     </AlertDialogTrigger>
                 ) : null}
@@ -72,14 +72,14 @@ export function DeleteAllObservationsDialog({
                             ¿Estás absolutamente seguro?
                         </AlertDialogTitle>
                         <AlertDialogDescription>
-                            Esta acción eliminará a
+                            Esta acción eliminará todas las observaciones de
                             <span className="font-medium">
                                 {" "}
                                 {projectCharter.length}
                             </span>
                             {projectCharter.length === 1
-                                ? " cliente"
-                                : " clientes"}
+                                ? " acta de proyecto"
+                                : " actas de proyectos"}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter className="gap-2 sm:space-x-0">
@@ -111,7 +111,7 @@ export function DeleteAllObservationsDialog({
                 <DrawerTrigger asChild>
                     <Button variant="outline" size="sm">
                         <Trash className="mr-2 size-4" aria-hidden="true" />
-                        Eliminar ({projectCharter.length})
+                        Eliminar observaciones ({projectCharter.length})
                     </Button>
                 </DrawerTrigger>
             ) : null}
@@ -119,11 +119,13 @@ export function DeleteAllObservationsDialog({
                 <DrawerHeader>
                     <DrawerTitle>¿Estás absolutamente seguro?</DrawerTitle>
                     <DrawerDescription>
-                        Esta acción eliminará a
+                        Esta acción eliminará todas las observaciones de
                         <span className="font-medium">
                             {projectCharter.length}
                         </span>
-                        {projectCharter.length === 1 ? " cliente" : " clientes"}
+                        {projectCharter.length === 1
+                            ? " acta de proyecto"
+                            : " actas de proyectos"}
                     </DrawerDescription>
                 </DrawerHeader>
                 <DrawerFooter className="gap-2 sm:space-x-0">
