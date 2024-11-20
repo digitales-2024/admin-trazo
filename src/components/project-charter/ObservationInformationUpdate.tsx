@@ -58,7 +58,8 @@ export function ObservationInformationUpdate({
             <div className="mt-4 flex flex-col justify-end gap-2 sm:flex-row">
                 <Button
                     size="sm"
-                    variant="destructive"
+                    variant="outline"
+                    className="border-destructive text-destructive hover:bg-background hover:text-destructive/90"
                     onClick={() => {
                         const observation = {
                             ...obs,
