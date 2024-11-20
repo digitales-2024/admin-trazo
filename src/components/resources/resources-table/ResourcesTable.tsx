@@ -3,13 +3,13 @@
 
 import { useProfile } from "@/hooks/use-profile";
 import { ResourceArray, ResourceType } from "@/types/resource";
+import { LucideIcon } from "lucide-react";
 import { useMemo } from "react";
 
 import { DataTable } from "@/components/data-table/DataTable";
 
 import { resourceColumns } from "./ResourceTableColumns";
 import { ResourceTableToolbarActions } from "./ResourceTableToolbarActions";
-import { LucideIcon } from "lucide-react";
 
 interface ResourcesTableProps {
     data: ResourceArray;
