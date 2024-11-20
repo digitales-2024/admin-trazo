@@ -347,9 +347,13 @@ const FormSchema = z.object({
     designerId: z.string({
         message: "Debes seleccionar un diseñador",
     }),
-    address: z.string({
-        message: "Ingresa la dirección del proyecto",
-    }),
+    address: z
+        .string({
+            message: "Ingresa la dirección del proyecto",
+        })
+        .length(2, {
+            message: "La dirección del proyecto debe tener al menos 2 letras",
+        }),
     startDate: z.string({
         message: "Ingresa la fecha de inicio del proyecto",
     }),
@@ -686,7 +690,6 @@ function CreateProjectDialog() {
                                             )}
                                         />
 
-                                        {/* TODO: Reemplazar con componente de calendario */}
                                         <Button
                                             type="submit"
                                             className="mt-4"
