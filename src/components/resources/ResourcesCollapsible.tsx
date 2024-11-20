@@ -10,7 +10,7 @@ import {
     HeartHandshake,
     LucideIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
@@ -46,6 +46,18 @@ export default function ResourcesCollapsible({
         type: resourceType,
     });
 
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 640) {
+                // 640px es el breakpoint 'sm' en Tailwind
+                setIsOpen(false);
+            }
+        };
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
     const IconComponent = iconMap[resourceType] || Wrench;
 
     const renderContent = () => {
@@ -55,7 +67,7 @@ export default function ResourcesCollapsible({
                     <div className="flex flex-col items-end justify-center gap-4">
                         <Skeleton className="h-7 w-52 justify-end" />
                         <DataTableSkeleton
-                            columnCount={5}
+                            columnCount={4}
                             searchableColumnCount={1}
                             filterableColumnCount={0}
                             cellWidths={[
