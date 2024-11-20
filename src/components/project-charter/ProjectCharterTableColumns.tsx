@@ -1,5 +1,6 @@
 "use client";
 
+import { useProjectCharter } from "@/hooks/use-project-charter";
 import { ProjectCharter } from "@/types";
 import { type ColumnDef } from "@tanstack/react-table";
 import {
@@ -8,6 +9,7 @@ import {
     Ellipsis,
     FileDown,
     Plus,
+    Trash,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -25,6 +27,7 @@ import {
 import { DataTableColumnHeader } from "../data-table/DataTableColumnHeader";
 import { Badge } from "../ui/badge";
 import { CreateObservationDialog } from "./CreateObservationDialog";
+import { DeleteAllObservationsDialog } from "./DeleteAllObservationsDialog";
 import { ObservationProjectCharterSheet } from "./ObservationProjectCharterSheet";
 
 export const projectsChartersColumns = (
@@ -205,12 +208,14 @@ export const projectsChartersColumns = (
                 const [showEditDialog, setShowEditDialog] = useState(false);
                 const [showObservationDialog, setShowObservationDialog] =
                     useState(false);
+                const [showDeleteDialog, setShowDeleteDialog] = useState(false);
                 const downloadPdfProjectCharter = () => {
                     exportProjectCharterToPdf(
                         designProject.id,
                         designProject.code,
                     );
                 };
+                const { refetch } = useProjectCharter();
 
                 return (
                     <div>
@@ -225,6 +230,16 @@ export const projectsChartersColumns = (
                                 open={showEditDialog}
                                 onOpenChange={setShowEditDialog}
                                 projectCharter={row?.original}
+                            />
+                            <DeleteAllObservationsDialog
+                                open={showDeleteDialog}
+                                onOpenChange={setShowDeleteDialog}
+                                projectCharter={[row?.original]}
+                                showTrigger={false}
+                                onSuccess={() => {
+                                    row.toggleSelected(false);
+                                    refetch();
+                                }}
                             />
                         </div>
                         <DropdownMenu>
@@ -245,7 +260,7 @@ export const projectsChartersColumns = (
                                     onSelect={() => setShowEditDialog(true)}
                                     disabled={amountOfObservations === 0}
                                 >
-                                    Ver Observaciones
+                                    Gestionar observaciones
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
@@ -256,6 +271,19 @@ export const projectsChartersColumns = (
                                     Añadir observación
                                     <DropdownMenuShortcut>
                                         <Plus
+                                            className="size-4"
+                                            aria-hidden="true"
+                                        />
+                                    </DropdownMenuShortcut>
+                                </DropdownMenuItem>
+
+                                <DropdownMenuItem
+                                    onSelect={() => setShowDeleteDialog(true)}
+                                    disabled={amountOfObservations === 0}
+                                >
+                                    Eliminar observaciones
+                                    <DropdownMenuShortcut>
+                                        <Trash
                                             className="size-4"
                                             aria-hidden="true"
                                         />

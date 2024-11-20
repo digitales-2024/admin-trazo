@@ -1,7 +1,8 @@
 "use client";
 
 import { useProfile } from "@/hooks/use-profile";
-import { Client } from "@/types";
+import { useProjectCharter } from "@/hooks/use-project-charter";
+import { ProjectCharter } from "@/types";
 import { type Table } from "@tanstack/react-table";
 import { Download } from "lucide-react";
 
@@ -9,8 +10,10 @@ import { Button } from "@/components/ui/button";
 
 import { exportTableToCSV } from "@/lib/export";
 
+import { DeleteAllObservationsDialog } from "./DeleteAllObservationsDialog";
+
 export interface ProjectCharterTableToolbarActionsProps {
-    table?: Table<Client>;
+    table?: Table<ProjectCharter>;
     exportFile?: boolean;
 }
 
@@ -19,8 +22,22 @@ export function ProjectCharterTableToolbarActions({
     exportFile = false,
 }: ProjectCharterTableToolbarActionsProps) {
     const { user } = useProfile();
+    const { refetch } = useProjectCharter();
     return (
         <div className="flex w-fit flex-wrap items-center gap-2">
+            {table && table.getFilteredSelectedRowModel().rows.length > 0 ? (
+                <>
+                    <DeleteAllObservationsDialog
+                        projectCharter={table
+                            .getFilteredSelectedRowModel()
+                            .rows.map((row) => row.original)}
+                        onSuccess={() => {
+                            table.toggleAllRowsSelected(false);
+                            refetch();
+                        }}
+                    />
+                </>
+            ) : null}
             {exportFile ||
                 (user?.isSuperAdmin && (
                     <Button
