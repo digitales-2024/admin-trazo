@@ -22,10 +22,13 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
     Sheet,
+    SheetClose,
     SheetContent,
     SheetDescription,
+    SheetFooter,
     SheetHeader,
     SheetTitle,
+    SheetTrigger,
 } from "@/components/ui/sheet";
 
 import { Card, CardContent } from "../ui/card";
@@ -146,7 +149,7 @@ export function ObservationProjectCharterSheet({
                 </SheetHeader>
                 <ScrollArea className="w-full gap-4 rounded-md border p-4">
                     <div className="space-y-4">
-                        <h3 className="text-lg font-medium">
+                        <h3 className="text-sm font-normal">
                             Observaciones Existentes
                         </h3>
                         {observationByProjectCharter &&
@@ -267,6 +270,16 @@ export function ObservationProjectCharterSheet({
                             ))}
                     </div>
                 </ScrollArea>
+                <SheetFooter className="justify-end">
+                    <div className="flex flex-row-reverse gap-2">
+                        <SheetClose asChild>
+                            <Button>Guardar</Button>
+                        </SheetClose>
+                        <SheetTrigger asChild>
+                            <Button variant="outline">Cerrar</Button>
+                        </SheetTrigger>
+                    </div>
+                </SheetFooter>
             </SheetContent>
             {selectedObservation && (
                 <DeleteObservationDialog
