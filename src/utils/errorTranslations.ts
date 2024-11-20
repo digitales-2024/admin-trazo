@@ -86,6 +86,7 @@ const errorTranslations = {
     "The sum of buildable area and open area must be 100":
         "La suma del área construible y el área libre debe ser 100",
     "Resource already exists": "Este recurso ya existe",
+    "Error updating resource": "Error actualizando recurso",
 };
 
 export default errorTranslations;
