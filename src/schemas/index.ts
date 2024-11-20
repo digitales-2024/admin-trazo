@@ -17,6 +17,12 @@ export {
     zoningSchema,
     type CreateZoningSchema,
 } from "./zoning/createZoningSchema";
+export {
+    observationSchema,
+    type CreateObservationSchema,
+    type UpdateObservationSchema,
+    updateObservationSchema,
+} from "./observations/createObservationSchema";
 
 export {
     resourceSchema,

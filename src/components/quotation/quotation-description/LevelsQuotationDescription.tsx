@@ -18,7 +18,6 @@ export default function LevelsQuotationDescription({
     levelData,
 }: LevelsQuotationDescriptionProps) {
     const [activeLevel, setActiveLevel] = useState(levelData[0].name);
-    console.log(JSON.stringify(levelData, null, 2));
 
     const totalArea = levelData.reduce(
         (sum, level) =>
