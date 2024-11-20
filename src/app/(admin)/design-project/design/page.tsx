@@ -6,6 +6,7 @@ import { useProfile } from "@/hooks/use-profile";
 import { useUsers } from "@/hooks/use-users";
 import { useGetCreatableQuotationsQuery } from "@/redux/services/designProjectApi";
 import { City } from "@/types";
+import { parse, format } from "date-fns";
 import {
     DesignProjectSummaryData,
     DesignProjectStatus,
@@ -58,6 +59,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import DatePicker from "@/components/ui/date-time-picker";
 
 export default function Project() {
     const { data, isLoading } = useDesignProject();
@@ -169,6 +171,31 @@ function DesignProjectTable({
                             />
                             <span className="text-xs font-light">
                                 {clientName}
+                            </span>
+                        </Badge>
+                    </div>
+                );
+            },
+        },
+        {
+            id: "designer",
+            accessorKey: "designer.name",
+            header: "Diseñador",
+            cell: ({ row }) => {
+                const designerName = row.getValue("designer") as string;
+                return (
+                    <div className="flex items-center">
+                        <Badge
+                            variant="outline"
+                            className="truncate capitalize"
+                        >
+                            <Contact
+                                size={14}
+                                className="mr-2"
+                                strokeWidth={1.5}
+                            />
+                            <span className="text-xs font-light">
+                                {designerName}
                             </span>
                         </Badge>
                     </div>
@@ -449,7 +476,7 @@ function CreateProjectDialog() {
                                                     >
                                                         <FormControl>
                                                             <SelectTrigger className="">
-                                                                <SelectValue placeholder="" />
+                                                                <SelectValue placeholder="Selecciona un diseño" />
                                                             </SelectTrigger>
                                                         </FormControl>
                                                         <SelectContent>
@@ -614,20 +641,44 @@ function CreateProjectDialog() {
                                             )}
                                         />
 
-                                        {/* TODO: Reemplazar con componente de calendario */}
                                         <FormField
                                             control={form.control}
                                             name="startDate"
                                             render={({ field }) => (
                                                 <FormItem>
                                                     <FormLabel htmlFor="startDate">
-                                                        Dirección
+                                                        Fecha de inicio de
+                                                        proyecto
                                                     </FormLabel>
                                                     <FormControl>
-                                                        <Input
-                                                            id="startDate"
-                                                            placeholder="Fecha de inicio del proyecto"
-                                                            {...field}
+                                                        <DatePicker
+                                                            value={
+                                                                field.value
+                                                                    ? parse(
+                                                                          field.value,
+                                                                          "yyyy-MM-dd",
+                                                                          new Date(),
+                                                                      )
+                                                                    : undefined
+                                                            }
+                                                            onChange={(
+                                                                date,
+                                                            ) => {
+                                                                if (date) {
+                                                                    const formattedDate =
+                                                                        format(
+                                                                            date,
+                                                                            "yyyy-MM-dd",
+                                                                        );
+                                                                    field.onChange(
+                                                                        formattedDate,
+                                                                    );
+                                                                } else {
+                                                                    field.onChange(
+                                                                        "",
+                                                                    );
+                                                                }
+                                                            }}
                                                         />
                                                     </FormControl>
                                                     <FormMessage />
@@ -635,6 +686,7 @@ function CreateProjectDialog() {
                                             )}
                                         />
 
+                                        {/* TODO: Reemplazar con componente de calendario */}
                                         <Button
                                             type="submit"
                                             className="mt-4"
