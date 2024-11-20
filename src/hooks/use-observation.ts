@@ -1,12 +1,13 @@
 import {
     useCreateObservationMutation,
+    useDeleteObservationsFromProjectChartersMutation,
     useDeleteObservationsMutation,
     useGenPdfProjectCharterMutation,
     useGetAllObservationQuery,
     useGetObservationByIdQuery,
     useUpdateObservationMutation,
 } from "@/redux/services/observationApi";
-import { CustomErrorData, Observation } from "@/types";
+import { CustomErrorData, Observation, ProjectCharter } from "@/types";
 import { translateError } from "@/utils/translateError";
 import { format } from "date-fns";
 import { toast } from "sonner";
@@ -52,6 +53,11 @@ export const useObservation = (options: UseObservationProps = {}) => {
         useDeleteObservationsMutation();
 
     const [genPdfProjectCharter] = useGenPdfProjectCharterMutation();
+
+    const [
+        deleteObservationsFromProjectCharters,
+        { isSuccess: isSuccessDeleteObservationsFromProjectCharters },
+    ] = useDeleteObservationsFromProjectChartersMutation();
 
     const onCreateObservation = async (input: Partial<Observation>) => {
         const promise = () =>
@@ -219,6 +225,51 @@ export const useObservation = (options: UseObservationProps = {}) => {
             error: (err) => err.message,
         });
     };
+
+    const onDeleteObservationsFromProjectCharters = async (
+        ids: ProjectCharter[],
+    ) => {
+        const onlyIds = ids.map((projectCharter) => projectCharter.id);
+        const idsString = {
+            ids: onlyIds,
+        };
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                try {
+                    const result =
+                        await deleteObservationsFromProjectCharters(idsString);
+                    if (
+                        result.error &&
+                        typeof result.error === "object" &&
+                        result.error !== null &&
+                        "data" in result.error
+                    ) {
+                        const error = (result.error.data as CustomErrorData)
+                            .message;
+                        const message = translateError(error as string);
+                        reject(new Error(message));
+                    } else if (result.error) {
+                        reject(
+                            new Error(
+                                "Ocurrió un error inesperado, por favor intenta de nuevo",
+                            ),
+                        );
+                    } else {
+                        resolve(result);
+                    }
+                } catch (error) {
+                    reject(error);
+                }
+            });
+
+        toast.promise(promise(), {
+            loading: "Eliminando todas las observaciones...",
+            success: "Observaciones eliminadas con éxito",
+            error: (error) => {
+                return error.message;
+            },
+        });
+    };
     return {
         observationById,
         observationByProjectCharter,
@@ -232,5 +283,7 @@ export const useObservation = (options: UseObservationProps = {}) => {
         onDeleteObservation,
         isSuccessDeleteObservation,
         exportProjectCharterToPdf,
+        onDeleteObservationsFromProjectCharters,
+        isSuccessDeleteObservationsFromProjectCharters,
     };
 };

@@ -53,6 +53,21 @@ export const observationApi = createApi({
             }),
             providesTags: ["Observation"],
         }),
+
+        //Eliminar todas las observaciones de un acta de proyecto
+        deleteObservationsFromProjectCharters: build.mutation<
+            void,
+            { ids: string[] }
+        >({
+            query: (ids) => ({
+                url: `/observations/project-charter/removeAll`,
+                method: "DELETE",
+                body: ids,
+                credentials: "include",
+            }),
+            invalidatesTags: ["Observation"],
+        }),
+
         //Eliminar observaciones
         deleteObservations: build.mutation<void, { ids: string[] }>({
             query: (ids) => ({
@@ -82,4 +97,5 @@ export const {
     useGetAllObservationQuery,
     useDeleteObservationsMutation,
     useGenPdfProjectCharterMutation,
+    useDeleteObservationsFromProjectChartersMutation,
 } = observationApi;
