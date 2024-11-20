@@ -276,6 +276,18 @@ export const projectsChartersColumns = (
                                         />
                                     </DropdownMenuShortcut>
                                 </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onSelect={() => downloadPdfProjectCharter()}
+                                    disabled={amountOfObservations === 0}
+                                >
+                                    Descargar
+                                    <DropdownMenuShortcut>
+                                        <FileDown
+                                            className="size-4"
+                                            aria-hidden="true"
+                                        />
+                                    </DropdownMenuShortcut>
+                                </DropdownMenuItem>
 
                                 <DropdownMenuItem
                                     onSelect={() => setShowDeleteDialog(true)}
@@ -284,19 +296,6 @@ export const projectsChartersColumns = (
                                     Eliminar observaciones
                                     <DropdownMenuShortcut>
                                         <Trash
-                                            className="size-4"
-                                            aria-hidden="true"
-                                        />
-                                    </DropdownMenuShortcut>
-                                </DropdownMenuItem>
-
-                                <DropdownMenuItem
-                                    onSelect={() => downloadPdfProjectCharter()}
-                                    disabled={amountOfObservations === 0}
-                                >
-                                    Descargar
-                                    <DropdownMenuShortcut>
-                                        <FileDown
                                             className="size-4"
                                             aria-hidden="true"
                                         />
