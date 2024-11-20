@@ -68,6 +68,7 @@ export default function DatePicker({ value, onChange }: DatePickerProps) {
                         "w-full justify-start text-left font-normal",
                         !value && "text-muted-foreground",
                     )}
+                    tabIndex={0}
                 >
                     <CalendarIcon className="mr-2 h-4 w-4" />
 
