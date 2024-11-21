@@ -85,6 +85,10 @@ const errorTranslations = {
     "This zoningCode already exists": "Este código de zonificación ya existe",
     "The sum of buildable area and open area must be 100":
         "La suma del área construible y el área libre debe ser 100",
+    "Resource already exists": "Este recurso ya existe",
+    "Error updating resource": "Error actualizando recurso",
+    "This resource is inactive, contact the superadmin to reactivate it":
+        "Este recurso esta desactivado, contactese con el administrador para reactivarlo",
 };
 
 export default errorTranslations;
