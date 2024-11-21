@@ -23,6 +23,7 @@ import {
 
 import { CreateProjectDialog } from "./CreateDesignProjectDialog";
 import { DesignProjectDescriptionDialog } from "./DesignProjectDescriptionDialog";
+import { EditDesignProjectSheet } from "./EditDesignProjectSheet";
 import { GenerateContractForm } from "./GenerateContractForm";
 
 export function DesignProjectTable({
@@ -190,12 +191,13 @@ export function DesignProjectTable({
             size: 5,
             cell: function Cell({ row }) {
                 const [showContractForm, setShowContractForm] = useState(false);
+                const [showEditSheet, setShowEditSheet] = useState(false);
                 const [showDescriptionDialog, setShowDescriptionDialog] =
                     useState(false);
 
                 return (
                     <div>
-                        {/* Componentes que crean un Dialog */}
+                        {/* Componentes que crean paneles flotantes */}
                         <div>
                             <DesignProjectDescriptionDialog
                                 open={showDescriptionDialog}
@@ -207,6 +209,12 @@ export function DesignProjectTable({
                                 publicCode={row.original.code}
                                 open={showContractForm}
                                 onOpenChange={setShowContractForm}
+                            />
+                            <EditDesignProjectSheet
+                                id={row.original.id}
+                                open={showEditSheet}
+                                onOpenChange={setShowEditSheet}
+                                project={row?.original}
                             />
                         </div>
                         <DropdownMenu>
@@ -229,6 +237,11 @@ export function DesignProjectTable({
                                     }
                                 >
                                     Ver
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onSelect={() => setShowEditSheet(true)}
+                                >
+                                    Editar
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
