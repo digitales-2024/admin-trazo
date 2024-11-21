@@ -33,8 +33,26 @@ export const designProjectApi = createApi({
             }),
             invalidatesTags: ["DesignProject"],
         }),
+        // Generar Pdf del contrato
+        genPdfContract: build.mutation<
+            Blob,
+            { id: string; signingDate: string }
+        >({
+            query: ({ id, signingDate }) => ({
+                url: `/design-project/${id}/pdf`,
+                method: "POST",
+                body: {
+                    signingDate,
+                },
+                responseHandler: (response: Response) => response.blob(),
+                credentials: "include",
+            }),
+        }),
     }),
 });
 
-export const { useGetDesignProjectsQuery, useCreateDesignProjectMutation } =
-    designProjectApi;
+export const {
+    useGetDesignProjectsQuery,
+    useCreateDesignProjectMutation,
+    useGenPdfContractMutation,
+} = designProjectApi;

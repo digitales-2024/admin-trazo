@@ -24,6 +24,7 @@ import {
 import { CreateProjectDialog } from "./CreateDesignProjectDialog";
 import {
     Dialog,
+    DialogClose,
     DialogContent,
     DialogDescription,
     DialogHeader,
@@ -42,6 +43,7 @@ import DatePicker from "../ui/date-time-picker";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useDesignProject } from "@/hooks/use-design-project";
 
 export function DesignProjectTable({
     data,
@@ -206,7 +208,7 @@ export function DesignProjectTable({
         {
             id: "actions",
             size: 5,
-            cell: function Cell() {
+            cell: function Cell({ row }) {
                 return (
                     <div>
                         <Dialog>
@@ -246,7 +248,10 @@ export function DesignProjectTable({
                                     </DialogDescription>
                                 </DialogHeader>
 
-                                <ContractGenerateForm />
+                                <ContractGenerateForm
+                                    id={row.original.id}
+                                    publicCode={row.original.code}
+                                />
                             </DialogContent>
                         </Dialog>
                     </div>
@@ -271,18 +276,17 @@ const contractSchema = z.object({
     }),
 });
 
-function ContractGenerateForm() {
+function ContractGenerateForm(props: { id: string; publicCode: string }) {
     const form = useForm<z.infer<typeof contractSchema>>({
         resolver: zodResolver(contractSchema),
         defaultValues: {
             contractDate: "",
         },
     });
+    const { generateContractPdf } = useDesignProject();
 
     function onSubmit(values: z.infer<typeof contractSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values);
+        generateContractPdf(props.id, props.publicCode, values.contractDate);
     }
 
     return (
@@ -325,7 +329,9 @@ function ContractGenerateForm() {
                     )}
                 />
 
-                <Button type="submit">Generar contrato</Button>
+                <DialogClose asChild>
+                    <Button type="submit">Generar contrato</Button>
+                </DialogClose>
             </form>
         </Form>
     );
