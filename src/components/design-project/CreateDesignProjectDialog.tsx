@@ -70,7 +70,11 @@ export function CreateProjectDialog() {
     const { data, isLoading, isError } = useGetCreatableQuotationsQuery();
     const { onCreateProject, createLoading, createSuccess } =
         useDesignProject();
-    const { data: usersData } = useUsers();
+    const { data: usersDataUnfiltered } = useUsers();
+
+    // Filtrar superadmin
+    const usersData =
+        usersDataUnfiltered?.filter((user) => !user.isSuperAdmin) ?? [];
 
     // Estado para almacenar las ciudades del departamento seleccionado
     const [cities, setCities] = useState<City[]>([]);

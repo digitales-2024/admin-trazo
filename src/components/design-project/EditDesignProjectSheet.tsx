@@ -70,8 +70,11 @@ export function EditDesignProjectSheet(props: {
     onOpenChange: (open: boolean) => void;
     project: DesignProjectSummaryData;
 }) {
-    const { data: usersData } = useUsers();
+    const { data } = useUsers();
     const { designProjectById: project } = useDesignProject({ id: props.id });
+
+    // Filtrar superadmin
+    const usersData = data?.filter((user) => !user.isSuperAdmin) ?? [];
 
     return (
         <Sheet open={props.open} onOpenChange={props.onOpenChange}>
