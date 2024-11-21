@@ -1,7 +1,6 @@
 "use client";
 
 import { useProfile } from "@/hooks/use-profile";
-import { useProjectCharter } from "@/hooks/use-project-charter";
 import { ProjectCharter } from "@/types";
 import { type Table } from "@tanstack/react-table";
 import { Download } from "lucide-react";
@@ -22,7 +21,6 @@ export function ProjectCharterTableToolbarActions({
     exportFile = false,
 }: ProjectCharterTableToolbarActionsProps) {
     const { user } = useProfile();
-    const { refetch } = useProjectCharter();
     return (
         <div className="flex w-fit flex-wrap items-center gap-2">
             {table && table.getFilteredSelectedRowModel().rows.length > 0 ? (
@@ -33,7 +31,6 @@ export function ProjectCharterTableToolbarActions({
                             .rows.map((row) => row.original)}
                         onSuccess={() => {
                             table.toggleAllRowsSelected(false);
-                            refetch();
                         }}
                     />
                 </>
