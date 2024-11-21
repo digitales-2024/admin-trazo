@@ -1,6 +1,6 @@
 "use client";
 
-import { useProjectCharter } from "@/hooks/use-project-charter";
+import { useObservation } from "@/hooks/use-observation";
 import { ProjectCharter } from "@/types";
 import { type ColumnDef } from "@tanstack/react-table";
 import {
@@ -204,7 +204,11 @@ export const projectsChartersColumns = (
             id: "actions",
             size: 5,
             cell: function Cell({ row }) {
-                const { amountOfObservations, designProject } = row.original;
+                const { amountOfObservations, designProject, id } =
+                    row.original;
+                const { observationByProjectCharter } = useObservation({
+                    idProjectCharter: id,
+                });
                 const [showEditDialog, setShowEditDialog] = useState(false);
                 const [showObservationDialog, setShowObservationDialog] =
                     useState(false);
@@ -215,7 +219,6 @@ export const projectsChartersColumns = (
                         designProject.code,
                     );
                 };
-                const { refetch } = useProjectCharter();
 
                 return (
                     <div>
@@ -224,7 +227,7 @@ export const projectsChartersColumns = (
                                 open={showObservationDialog}
                                 onOpenChange={setShowObservationDialog}
                                 projectCharter={row?.original}
-                                amountOfObservations={amountOfObservations}
+                                amountOfObservations={amountOfObservations ?? 0}
                             />
                             <ObservationProjectCharterSheet
                                 open={showEditDialog}
@@ -236,10 +239,7 @@ export const projectsChartersColumns = (
                                 onOpenChange={setShowDeleteDialog}
                                 projectCharter={[row?.original]}
                                 showTrigger={false}
-                                onSuccess={() => {
-                                    row.toggleSelected(false);
-                                    refetch();
-                                }}
+                                onSuccess={() => {}}
                             />
                         </div>
                         <DropdownMenu>
@@ -258,7 +258,10 @@ export const projectsChartersColumns = (
                             <DropdownMenuContent align="end" className="w-40">
                                 <DropdownMenuItem
                                     onSelect={() => setShowEditDialog(true)}
-                                    disabled={amountOfObservations === 0}
+                                    disabled={
+                                        observationByProjectCharter?.length ===
+                                        0
+                                    }
                                 >
                                     Gestionar observaciones
                                 </DropdownMenuItem>
@@ -278,7 +281,10 @@ export const projectsChartersColumns = (
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                     onSelect={() => downloadPdfProjectCharter()}
-                                    disabled={amountOfObservations === 0}
+                                    disabled={
+                                        observationByProjectCharter?.length ===
+                                        0
+                                    }
                                 >
                                     Descargar
                                     <DropdownMenuShortcut>
@@ -291,7 +297,10 @@ export const projectsChartersColumns = (
 
                                 <DropdownMenuItem
                                     onSelect={() => setShowDeleteDialog(true)}
-                                    disabled={amountOfObservations === 0}
+                                    disabled={
+                                        observationByProjectCharter?.length ===
+                                        0
+                                    }
                                 >
                                     Eliminar observaciones
                                     <DropdownMenuShortcut>

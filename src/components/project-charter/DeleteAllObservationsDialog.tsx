@@ -49,10 +49,17 @@ export function DeleteAllObservationsDialog({
 
     const { onDeleteObservationsFromProjectCharters } = useObservation();
 
-    const onDeleteAllObservationsHandler = () => {
-        onDeleteObservationsFromProjectCharters(projectCharter);
-        props.onOpenChange?.(false);
-        onSuccess?.();
+    const onDeleteAllObservationsHandler = async () => {
+        try {
+            // Esperar a que se complete la eliminación
+            await onDeleteObservationsFromProjectCharters(projectCharter);
+
+            // Cerrar el diálogo y ejecutar la callback de éxito
+            props.onOpenChange?.(false);
+            onSuccess?.();
+        } catch (error) {
+            console.error("Error eliminando observaciones:", error);
+        }
     };
 
     if (isDesktop) {
