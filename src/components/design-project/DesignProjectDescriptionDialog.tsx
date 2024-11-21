@@ -41,7 +41,7 @@ export function DesignProjectDescriptionDialog({
     const { designProjectById: designProject } = useDesignProject({
         id: project.id,
     });
-    const isDesktop = useMediaQuery("(min-width: 1024px)");
+    const isDesktop = useMediaQuery("(min-width: 640px)");
 
     // Definimos los componentes según el dispositivo
     const Container = isDesktop ? Dialog : Drawer;
@@ -52,7 +52,7 @@ export function DesignProjectDescriptionDialog({
 
     return (
         <Container open={open} onOpenChange={onOpenChange}>
-            <ContentComponent className="w-full max-w-5xl p-4">
+            <ContentComponent className="w-full max-w-3xl p-4">
                 <Header className="text-left">
                     <div>
                         <Title className="flex flex-col items-start">
@@ -67,7 +67,7 @@ export function DesignProjectDescriptionDialog({
                     </div>
                 </Header>
                 <ScrollArea
-                    className={`${isDesktop ? "h-[80vh]" : "h-[60vh]"} gap-4 p-4`}
+                    className={`${isDesktop ? "h-[60vh]" : "h-[40vh]"} gap-4 p-4`}
                 >
                     <Accordion type="multiple" className="mb-6">
                         <AccordionItem value="info-general">
@@ -116,6 +116,15 @@ export function DesignProjectDescriptionDialog({
                                             {designProject?.province}
                                         </span>
                                     </div>
+
+                                    <div>
+                                        <span className="font-medium">
+                                            Fecha de inicio del proyecto:
+                                        </span>{" "}
+                                        <span className="font-light">
+                                            {designProject?.startProjectDate}
+                                        </span>
+                                    </div>
                                 </div>
                             </AccordionContent>
                         </AccordionItem>
@@ -127,7 +136,7 @@ export function DesignProjectDescriptionDialog({
                                         strokeWidth={1.5}
                                     />
                                     <span className="text-base font-light">
-                                        Fechas del proyecto
+                                        Charter
                                     </span>
                                 </div>
                             </AccordionTrigger>
@@ -169,15 +178,6 @@ export function DesignProjectDescriptionDialog({
                                                 "Ninguna"}
                                         </span>
                                     </div>
-
-                                    <div>
-                                        <span className="font-medium">
-                                            Fecha de inicio del proyecto:
-                                        </span>{" "}
-                                        <span className="font-light">
-                                            {designProject?.startProjectDate}
-                                        </span>
-                                    </div>
                                 </div>
                             </AccordionContent>
                         </AccordionItem>
@@ -199,7 +199,7 @@ export function DesignProjectDescriptionDialog({
                                         <span className="font-medium">
                                             Cliente:
                                         </span>{" "}
-                                        <span className="font-light">
+                                        <span className="font-light capitalize">
                                             {designProject?.client?.name}
                                         </span>
                                     </div>
