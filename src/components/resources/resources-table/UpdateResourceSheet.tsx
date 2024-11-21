@@ -130,6 +130,25 @@ export function UpdateResourceSheet({
                         >
                             <FormField
                                 control={form.control}
+                                name="name"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel htmlFor="name">
+                                            Nombre del recurso
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                id="name"
+                                                placeholder="Ingrese el nombre del recurso"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
                                 name="type"
                                 render={({ field }) => (
                                     <FormItem>
@@ -158,26 +177,6 @@ export function UpdateResourceSheet({
                                                 ))}
                                             </SelectContent>
                                         </Select>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="name"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel htmlFor="name">
-                                            Nombre del recurso
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                id="name"
-                                                placeholder="Ingrese el nombre del recurso"
-                                                {...field}
-                                            />
-                                        </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}

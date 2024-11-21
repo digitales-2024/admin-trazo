@@ -48,6 +48,25 @@ export const CreateResourceForm = ({
                 <div className="flex flex-col gap-6 p-4 sm:p-0">
                     <FormField
                         control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel htmlFor="name">
+                                    Nombre del recurso
+                                </FormLabel>
+                                <FormControl>
+                                    <Input
+                                        id="name"
+                                        placeholder="Ingrese el nombre del recurso"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
                         name="type"
                         render={({ field }) => (
                             <FormItem>
@@ -80,27 +99,6 @@ export const CreateResourceForm = ({
                             </FormItem>
                         )}
                     />
-
-                    <FormField
-                        control={form.control}
-                        name="name"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel htmlFor="name">
-                                    Nombre del recurso
-                                </FormLabel>
-                                <FormControl>
-                                    <Input
-                                        id="name"
-                                        placeholder="Ingrese el nombre del recurso"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
                     <FormField
                         control={form.control}
                         name="unit"
@@ -133,7 +131,7 @@ export const CreateResourceForm = ({
                                     <Input
                                         id="unitCost"
                                         type="number"
-                                        placeholder="Ingrese el porcentaje de área construible"
+                                        placeholder="Ingrese el costo unitario del recurso"
                                         {...field}
                                         onChange={(e) =>
                                             field.onChange(
