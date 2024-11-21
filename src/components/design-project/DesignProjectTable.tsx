@@ -1,13 +1,18 @@
 "use client";
 
+import { useDesignProject } from "@/hooks/use-design-project";
 import { useProfile } from "@/hooks/use-profile";
-import { parse, format } from "date-fns";
 import {
     DesignProjectSummaryData,
     DesignProjectStatus,
 } from "@/types/designProject";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef } from "@tanstack/react-table";
+import { parse, format } from "date-fns";
 import { Contact, Download, Ellipsis } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { DataTable } from "@/components/data-table/DataTable";
 import { Badge } from "@/components/ui/badge";
@@ -21,7 +26,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { CreateProjectDialog } from "./CreateDesignProjectDialog";
+import DatePicker from "../ui/date-time-picker";
 import {
     Dialog,
     DialogClose,
@@ -39,11 +44,8 @@ import {
     FormLabel,
     FormMessage,
 } from "../ui/form";
-import DatePicker from "../ui/date-time-picker";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useDesignProject } from "@/hooks/use-design-project";
+import { CreateProjectDialog } from "./CreateDesignProjectDialog";
+import { DesignProjectDescriptionDialog } from "./DesignProjectDescriptionDialog";
 
 export function DesignProjectTable({
     data,
@@ -209,8 +211,19 @@ export function DesignProjectTable({
             id: "actions",
             size: 5,
             cell: function Cell({ row }) {
+                const [showDescriptionDialog, setShowDescriptionDialog] =
+                    useState(false);
+
                 return (
                     <div>
+                        {/* Componentes que crean un Dialog */}
+                        <div>
+                            <DesignProjectDescriptionDialog
+                                open={showDescriptionDialog}
+                                onOpenChange={setShowDescriptionDialog}
+                                project={row?.original}
+                            />
+                        </div>
                         <Dialog>
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
@@ -229,7 +242,13 @@ export function DesignProjectTable({
                                     align="end"
                                     className="w-40"
                                 >
-                                    <DropdownMenuItem>Ver</DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        onSelect={() =>
+                                            setShowDescriptionDialog(true)
+                                        }
+                                    >
+                                        Ver
+                                    </DropdownMenuItem>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem>
                                         <DialogTrigger>
@@ -330,7 +349,9 @@ function ContractGenerateForm(props: { id: string; publicCode: string }) {
                 />
 
                 <DialogClose asChild>
-                    <Button type="submit">Generar contrato</Button>
+                    <Button disabled={!form.formState.isDirty} type="submit">
+                        Generar contrato
+                    </Button>
                 </DialogClose>
             </form>
         </Form>

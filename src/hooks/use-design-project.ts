@@ -1,6 +1,7 @@
 import {
     useCreateDesignProjectMutation,
     useGenPdfContractMutation,
+    useGetDesignProjectByIdQuery,
     useGetDesignProjectsQuery,
 } from "@/redux/services/designProjectApi";
 import { CustomErrorData } from "@/types";
@@ -9,13 +10,23 @@ import { translateError } from "@/utils/translateError";
 import { format } from "date-fns";
 import { toast } from "sonner";
 
-export const useDesignProject = () => {
+interface UseDesignProjectOptions {
+    id?: string;
+}
+
+export const useDesignProject = (options: UseDesignProjectOptions = {}) => {
     const { data, isLoading, error } = useGetDesignProjectsQuery();
+    const { id } = options;
 
     const [
         createProject,
         { isLoading: createLoading, isSuccess: createSuccess },
     ] = useCreateDesignProjectMutation();
+
+    const { data: designProjectById, refetch: refetchDesignProjectById } =
+        useGetDesignProjectByIdQuery(id ?? "", {
+            skip: !id, // Evita hacer la query si no hay id
+        });
 
     const [genPdfContract] = useGenPdfContractMutation();
 
@@ -117,5 +128,7 @@ export const useDesignProject = () => {
         createLoading,
         createSuccess,
         generateContractPdf,
+        designProjectById,
+        refetchDesignProjectById,
     };
 };

@@ -1,5 +1,6 @@
 import {
     DesignProjectCreate,
+    DesignProjectData,
     DesignProjectSummaryData,
 } from "@/types/designProject";
 import { createApi } from "@reduxjs/toolkit/query/react";
@@ -15,6 +16,15 @@ export const designProjectApi = createApi({
         getDesignProjects: build.query<Array<DesignProjectSummaryData>, void>({
             query: () => ({
                 url: "/design-project",
+                method: "GET",
+                credentials: "include",
+            }),
+            providesTags: ["DesignProject"],
+        }),
+        // Obtener proyecto por id
+        getDesignProjectById: build.query<Array<DesignProjectData>, string>({
+            query: (id) => ({
+                url: `/design-project/${id}`,
                 method: "GET",
                 credentials: "include",
             }),
@@ -53,6 +63,7 @@ export const designProjectApi = createApi({
 
 export const {
     useGetDesignProjectsQuery,
+    useGetDesignProjectByIdQuery,
     useCreateDesignProjectMutation,
     useGenPdfContractMutation,
 } = designProjectApi;

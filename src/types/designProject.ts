@@ -41,3 +41,22 @@ export type DesignProjectCreate = {
     designerId: string;
     startProjectDate: string;
 };
+
+export type DesignProjectData = BaseDesignProject & {
+    dateArchitectural: string | null;
+    dateStructural: string | null;
+    dateElectrical: string | null;
+    dateSanitary: string | null;
+    client: {
+        id: string;
+        name: string;
+    };
+    quotation: {
+        id: string;
+        publicCode: number;
+    };
+    designer: {
+        id: string;
+        name: string;
+    };
+};
