@@ -22,7 +22,7 @@ export const designProjectApi = createApi({
             providesTags: ["DesignProject"],
         }),
         // Obtener proyecto por id
-        getDesignProjectById: build.query<Array<DesignProjectData>, string>({
+        getDesignProjectById: build.query<DesignProjectData, string>({
             query: (id) => ({
                 url: `/design-project/${id}`,
                 method: "GET",
