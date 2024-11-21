@@ -39,6 +39,16 @@ export const quotationsApi = createApi({
             }),
             providesTags: ["Quotation"],
         }),
+        // Obtener las cotizaciones que se pueden utilizar para crear un proyecto de diseño:
+        // Cotizaciones aprobadas, y no vinculadas a otro proyecto de diseño
+        getCreatableQuotations: build.query<Array<QuotationSummary>, void>({
+            query: () => ({
+                url: "/design-project/quotation-for-create",
+                method: "GET",
+                credentials: "include",
+            }),
+            providesTags: ["Quotation"],
+        }),
         // Actualizar el estado de una cotización
         updateStatusQuotation: build.mutation<
             Quotation,
@@ -88,6 +98,7 @@ export const quotationsApi = createApi({
 
 export const {
     useGetAllQuotationsQuery,
+    useGetCreatableQuotationsQuery,
     useCreateQuotationMutation,
     useUpdateStatusQuotationMutation,
     useGenPdfQuotationMutation,

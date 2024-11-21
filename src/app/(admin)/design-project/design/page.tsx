@@ -4,7 +4,7 @@ import { departments } from "@/data/department";
 import { useDesignProject } from "@/hooks/use-design-project";
 import { useProfile } from "@/hooks/use-profile";
 import { useUsers } from "@/hooks/use-users";
-import { useGetCreatableQuotationsQuery } from "@/redux/services/designProjectApi";
+import { useGetCreatableQuotationsQuery } from "@/redux/services/quotationApi";
 import { City } from "@/types";
 import {
     DesignProjectSummaryData,
