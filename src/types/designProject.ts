@@ -42,6 +42,14 @@ export type DesignProjectCreate = {
     startProjectDate: string;
 };
 
+export type DesignProjectEdit = {
+    province: string;
+    department: string;
+    designerId: string;
+    ubicationProject: string;
+    startProjectDate: string;
+};
+
 export type DesignProjectData = BaseDesignProject & {
     dateArchitectural: string | null;
     dateStructural: string | null;

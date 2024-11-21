@@ -8,7 +8,7 @@ import {
 } from "@/types/designProject";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, parse } from "date-fns";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -96,7 +96,11 @@ export function EditDesignProjectSheet(props: {
 
                     {!usersData && !project && <p>Cargando recursos...</p>}
                     {!!usersData && !!project && (
-                        <FormWrapper project={project} usersData={usersData} />
+                        <FormWrapper
+                            project={project}
+                            usersData={usersData}
+                            onOpenChange={props.onOpenChange}
+                        />
                     )}
                 </SheetHeader>
             </SheetContent>
@@ -104,10 +108,14 @@ export function EditDesignProjectSheet(props: {
     );
 }
 
-function FormWrapper(props: { project: DesignProjectData; usersData: User[] }) {
-    const { project, usersData } = props;
+function FormWrapper(props: {
+    project: DesignProjectData;
+    usersData: User[];
+    onOpenChange: (open: boolean) => void;
+}) {
+    const { project, usersData, onOpenChange } = props;
+    const { onEditProject, editLoading, editSuccess } = useDesignProject();
 
-    //
     // Estado para almacenar las ciudades del departamento seleccionado
     const [cities, setCities] = useState<City[]>(
         departments.find((dept) => dept.name === project.department)?.cities ??
@@ -150,9 +158,23 @@ function FormWrapper(props: { project: DesignProjectData; usersData: User[] }) {
     };
 
     async function onSubmit(formData: z.infer<typeof FormSchema>) {
-        // TODO: this
-        console.log(formData);
+        await onEditProject({
+            body: {
+                province: formData.province,
+                department: formData.department,
+                designerId: formData.designerId,
+                ubicationProject: formData.address,
+                startProjectDate: formData.startDate,
+            },
+            id: project.id,
+        });
     }
+
+    useEffect(() => {
+        if (editSuccess) {
+            onOpenChange(false);
+        }
+    }, [editSuccess, form, onOpenChange]);
 
     return (
         <Form {...form}>
@@ -324,7 +346,7 @@ function FormWrapper(props: { project: DesignProjectData; usersData: User[] }) {
                     <Button
                         type="submit"
                         className="mt-4"
-                        disabled={!form.formState.isDirty}
+                        disabled={!form.formState.isDirty || editLoading}
                     >
                         Crear Proyecto de Diseño
                     </Button>
