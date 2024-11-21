@@ -25,19 +25,19 @@ export function ResourceTypeSelector({
             name: "Mano de Obra",
             type: ResourceType.LABOR,
             icon: Users,
-            tooltipText: "Herramientas",
+            tooltipText: "Mano de Obra",
         },
         {
             name: "Suministros",
             type: ResourceType.SUPPLIES,
             icon: Package,
-            tooltipText: "Herramientas",
+            tooltipText: "Suministros",
         },
         {
             name: "Servicios",
             type: ResourceType.SERVICES,
             icon: HeartHandshake,
-            tooltipText: "Herramientas",
+            tooltipText: "Servicios",
         },
     ];
 
