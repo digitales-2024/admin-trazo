@@ -77,7 +77,7 @@ export const resourceColumns = (
             ),
             cell: ({ row }) => {
                 return (
-                    <div className="flex items-center space-x-2 truncate">
+                    <div className="flex items-center space-x-2 truncate capitalize">
                         <IconComponent
                             size={16}
                             className="text-slate-700"

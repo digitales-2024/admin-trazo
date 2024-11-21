@@ -54,7 +54,7 @@ export function ResourceTypeSelector({
                     onClick={() => onTypeChange(button.type)}
                     className={cn(
                         // Solo mantenemos las clases necesarias para el responsive
-                        "sm:w-auto",
+                        "sm:max-w-sm",
                         { "w-8": !button.name }, // width cuadrado solo en móvil
                     )}
                 >
