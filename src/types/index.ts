@@ -20,6 +20,9 @@ export type {
     QuotationSummary,
 } from "./quotation";
 export { QuotationStatusType } from "./quotation";
+
+export { ResourceType, type Resource } from "./resource";
+
 export type { Space, Floor } from "./floor";
 export type {
     IntegralProjectItem,

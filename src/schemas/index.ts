@@ -23,3 +23,8 @@ export {
     type UpdateObservationSchema,
     updateObservationSchema,
 } from "./observations/createObservationSchema";
+
+export {
+    resourceSchema,
+    type CreateResourceSchema,
+} from "./resources/createResourcesSchema";
