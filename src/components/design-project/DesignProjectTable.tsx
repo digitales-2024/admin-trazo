@@ -1,6 +1,7 @@
 "use client";
 
 import { useProfile } from "@/hooks/use-profile";
+import { parse, format } from "date-fns";
 import {
     DesignProjectSummaryData,
     DesignProjectStatus,
@@ -21,6 +22,26 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { CreateProjectDialog } from "./CreateDesignProjectDialog";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "../ui/dialog";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "../ui/form";
+import DatePicker from "../ui/date-time-picker";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export function DesignProjectTable({
     data,
@@ -188,25 +209,46 @@ export function DesignProjectTable({
             cell: function Cell() {
                 return (
                     <div>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button
-                                    aria-label="Open menu"
-                                    variant="ghost"
-                                    className="flex size-8 p-0 data-[state=open]:bg-muted"
+                        <Dialog>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        aria-label="Open menu"
+                                        variant="ghost"
+                                        className="flex size-8 p-0 data-[state=open]:bg-muted"
+                                    >
+                                        <Ellipsis
+                                            className="size-4"
+                                            aria-hidden="true"
+                                        />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent
+                                    align="end"
+                                    className="w-40"
                                 >
-                                    <Ellipsis
-                                        className="size-4"
-                                        aria-hidden="true"
-                                    />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-40">
-                                <DropdownMenuItem>Ver</DropdownMenuItem>
+                                    <DropdownMenuItem>Ver</DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem>
+                                        <DialogTrigger>
+                                            Generar contrato
+                                        </DialogTrigger>
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
 
-                                <DropdownMenuSeparator />
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Generar contrato</DialogTitle>
+                                    <DialogDescription>
+                                        Ingresa la fecha en la que se firmará el
+                                        contrato:
+                                    </DialogDescription>
+                                </DialogHeader>
+
+                                <ContractGenerateForm />
+                            </DialogContent>
+                        </Dialog>
                     </div>
                 );
             },
@@ -220,6 +262,72 @@ export function DesignProjectTable({
             placeholder="Buscar proyectos..."
             toolbarActions={<DesignProjectTableToolbarActions />}
         />
+    );
+}
+
+const contractSchema = z.object({
+    contractDate: z.string().min(1, {
+        message: "Debes seleccionar una fecha",
+    }),
+});
+
+function ContractGenerateForm() {
+    const form = useForm<z.infer<typeof contractSchema>>({
+        resolver: zodResolver(contractSchema),
+        defaultValues: {
+            contractDate: "",
+        },
+    });
+
+    function onSubmit(values: z.infer<typeof contractSchema>) {
+        // Do something with the form values.
+        // ✅ This will be type-safe and validated.
+        console.log(values);
+    }
+
+    return (
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                <FormField
+                    control={form.control}
+                    name="contractDate"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel htmlFor="startDate">
+                                Fecha de inicio de proyecto
+                            </FormLabel>
+                            <FormControl>
+                                <DatePicker
+                                    value={
+                                        field.value
+                                            ? parse(
+                                                  field.value,
+                                                  "yyyy-MM-dd",
+                                                  new Date(),
+                                              )
+                                            : undefined
+                                    }
+                                    onChange={(date) => {
+                                        if (date) {
+                                            const formattedDate = format(
+                                                date,
+                                                "yyyy-MM-dd",
+                                            );
+                                            field.onChange(formattedDate);
+                                        } else {
+                                            field.onChange("");
+                                        }
+                                    }}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <Button type="submit">Generar contrato</Button>
+            </form>
+        </Form>
     );
 }
 

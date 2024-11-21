@@ -57,7 +57,7 @@ const FormSchema = z.object({
         .string({
             message: "Ingresa la dirección del proyecto",
         })
-        .length(2, {
+        .min(2, {
             message: "La dirección del proyecto debe tener al menos 2 letras",
         }),
     startDate: z.string({
