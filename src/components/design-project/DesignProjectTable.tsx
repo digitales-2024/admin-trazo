@@ -9,7 +9,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef } from "@tanstack/react-table";
 import { parse, format } from "date-fns";
-import { Contact, Download, Ellipsis } from "lucide-react";
+import { Contact, Download, Ellipsis, FileDown } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -23,6 +23,7 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuSeparator,
+    DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -34,7 +35,6 @@ import {
     DialogDescription,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "../ui/dialog";
 import {
     Form,
@@ -211,6 +211,7 @@ export function DesignProjectTable({
             id: "actions",
             size: 5,
             cell: function Cell({ row }) {
+                const [showContractForm, setShowContractForm] = useState(false);
                 const [showDescriptionDialog, setShowDescriptionDialog] =
                     useState(false);
 
@@ -223,56 +224,48 @@ export function DesignProjectTable({
                                 onOpenChange={setShowDescriptionDialog}
                                 project={row?.original}
                             />
+                            <ContractGenerateForm
+                                id={row.original.id}
+                                publicCode={row.original.code}
+                                open={showContractForm}
+                                onOpenChange={setShowContractForm}
+                            />
                         </div>
-                        <Dialog>
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button
-                                        aria-label="Open menu"
-                                        variant="ghost"
-                                        className="flex size-8 p-0 data-[state=open]:bg-muted"
-                                    >
-                                        <Ellipsis
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button
+                                    aria-label="Open menu"
+                                    variant="ghost"
+                                    className="flex size-8 p-0 data-[state=open]:bg-muted"
+                                >
+                                    <Ellipsis
+                                        className="size-4"
+                                        aria-hidden="true"
+                                    />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-40">
+                                <DropdownMenuItem
+                                    onSelect={() =>
+                                        setShowDescriptionDialog(true)
+                                    }
+                                >
+                                    Ver
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
+                                    onSelect={() => setShowContractForm(true)}
+                                >
+                                    Generar contrato
+                                    <DropdownMenuShortcut>
+                                        <FileDown
                                             className="size-4"
                                             aria-hidden="true"
                                         />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <DropdownMenuItem
-                                        onSelect={() =>
-                                            setShowDescriptionDialog(true)
-                                        }
-                                    >
-                                        Ver
-                                    </DropdownMenuItem>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem>
-                                        <DialogTrigger>
-                                            Generar contrato
-                                        </DialogTrigger>
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>Generar contrato</DialogTitle>
-                                    <DialogDescription>
-                                        Ingresa la fecha en la que se firmará el
-                                        contrato:
-                                    </DialogDescription>
-                                </DialogHeader>
-
-                                <ContractGenerateForm
-                                    id={row.original.id}
-                                    publicCode={row.original.code}
-                                />
-                            </DialogContent>
-                        </Dialog>
+                                    </DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
                 );
             },
@@ -295,7 +288,12 @@ const contractSchema = z.object({
     }),
 });
 
-function ContractGenerateForm(props: { id: string; publicCode: string }) {
+function ContractGenerateForm(props: {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    id: string;
+    publicCode: string;
+}) {
     const form = useForm<z.infer<typeof contractSchema>>({
         resolver: zodResolver(contractSchema),
         defaultValues: {
@@ -309,52 +307,71 @@ function ContractGenerateForm(props: { id: string; publicCode: string }) {
     }
 
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <FormField
-                    control={form.control}
-                    name="contractDate"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel htmlFor="startDate">
-                                Fecha de inicio de proyecto
-                            </FormLabel>
-                            <FormControl>
-                                <DatePicker
-                                    value={
-                                        field.value
-                                            ? parse(
-                                                  field.value,
-                                                  "yyyy-MM-dd",
-                                                  new Date(),
-                                              )
-                                            : undefined
-                                    }
-                                    onChange={(date) => {
-                                        if (date) {
-                                            const formattedDate = format(
-                                                date,
-                                                "yyyy-MM-dd",
-                                            );
-                                            field.onChange(formattedDate);
-                                        } else {
-                                            field.onChange("");
-                                        }
-                                    }}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+        <Dialog open={props.open} onOpenChange={props.onOpenChange}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Generar contrato</DialogTitle>
+                    <DialogDescription>
+                        Ingresa la fecha en la que se firmará el contrato:
+                    </DialogDescription>
+                    <Form {...form}>
+                        <form
+                            onSubmit={form.handleSubmit(onSubmit)}
+                            className="space-y-8"
+                        >
+                            <FormField
+                                control={form.control}
+                                name="contractDate"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel htmlFor="startDate">
+                                            Fecha de inicio de proyecto
+                                        </FormLabel>
+                                        <FormControl>
+                                            <DatePicker
+                                                value={
+                                                    field.value
+                                                        ? parse(
+                                                              field.value,
+                                                              "yyyy-MM-dd",
+                                                              new Date(),
+                                                          )
+                                                        : undefined
+                                                }
+                                                onChange={(date) => {
+                                                    if (date) {
+                                                        const formattedDate =
+                                                            format(
+                                                                date,
+                                                                "yyyy-MM-dd",
+                                                            );
+                                                        field.onChange(
+                                                            formattedDate,
+                                                        );
+                                                    } else {
+                                                        field.onChange("");
+                                                    }
+                                                }}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
-                <DialogClose asChild>
-                    <Button disabled={!form.formState.isDirty} type="submit">
-                        Generar contrato
-                    </Button>
-                </DialogClose>
-            </form>
-        </Form>
+                            <DialogClose asChild>
+                                <Button
+                                    disabled={!form.formState.isDirty}
+                                    type="submit"
+                                >
+                                    Generar contrato
+                                </Button>
+                            </DialogClose>
+                        </form>
+                    </Form>
+                </DialogHeader>
+            </DialogContent>
+        </Dialog>
     );
 }
 
