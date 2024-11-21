@@ -1,6 +1,8 @@
 import { useDesignProject } from "@/hooks/use-design-project";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { DesignProjectSummaryData } from "@/types/designProject";
+import { PersonIcon } from "@radix-ui/react-icons";
+import { Clock, Info } from "lucide-react";
 
 import {
     Dialog,
@@ -17,15 +19,13 @@ import {
     DrawerTitle,
 } from "@/components/ui/drawer";
 
-import { ScrollArea } from "../ui/scroll-area";
 import {
     Accordion,
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
 } from "../ui/accordion";
-import { Clock, Info } from "lucide-react";
-import { PersonIcon } from "@radix-ui/react-icons";
+import { ScrollArea } from "../ui/scroll-area";
 
 interface Props {
     project: DesignProjectSummaryData;
