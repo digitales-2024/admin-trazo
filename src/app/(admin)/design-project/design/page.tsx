@@ -6,14 +6,15 @@ import { useProfile } from "@/hooks/use-profile";
 import { useUsers } from "@/hooks/use-users";
 import { useGetCreatableQuotationsQuery } from "@/redux/services/designProjectApi";
 import { City } from "@/types";
-import { parse, format } from "date-fns";
 import {
     DesignProjectSummaryData,
     DesignProjectStatus,
 } from "@/types/designProject";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef } from "@tanstack/react-table";
+import { parse, format } from "date-fns";
 import { Contact, Download, Ellipsis, Plus } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -27,6 +28,7 @@ import { AutoComplete, type Option } from "@/components/ui/autocomplete";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import DatePicker from "@/components/ui/date-time-picker";
 import {
     Dialog,
     DialogContent,
@@ -59,7 +61,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import DatePicker from "@/components/ui/date-time-picker";
 
 export default function Project() {
     const { data, isLoading } = useDesignProject();
@@ -436,277 +437,318 @@ function CreateProjectDialog() {
                 </Button>
             </DialogTrigger>
             <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Crear un proyecto de diseño</DialogTitle>
-                    <DialogDescription>
-                        Seleccione una cotización aprobada y presione el boton
-                        Crear.
-                    </DialogDescription>
-                    {isLoading && <>Cargando cotizaciones</>}
-                    {isError && (
-                        <div className="text-red-500">
-                            Hubo un error cargando las cotizaciones disponibles
-                        </div>
-                    )}
-                    {data && data.length === 0 && (
-                        <div className="rounded bg-yellow-100 p-4 font-bold text-yellow-500 shadow">
-                            No hay cotizaciones que puedan pasar a fase de
-                            Proyecto de Diseño.
-                            <br />
-                            Cuando una cotización sea Aprobada, y no esté
-                            vinculada a otro Proyecto de Diseño, aparecerá aquí.
-                        </div>
-                    )}
-                    {data && data.length > 0 && (
-                        <div>
-                            <Form {...form}>
-                                <form onSubmit={form.handleSubmit(onSubmit)}>
-                                    <div className="flex flex-col gap-6 p-4 sm:p-0">
-                                        <FormField
-                                            control={form.control}
-                                            name="quotationId"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>
-                                                        Cotización
-                                                    </FormLabel>
-                                                    <Select
-                                                        onValueChange={
-                                                            field.onChange
-                                                        }
-                                                        defaultValue={
-                                                            field.value
-                                                        }
-                                                    >
-                                                        <FormControl>
-                                                            <SelectTrigger className="">
-                                                                <SelectValue placeholder="Selecciona un diseño" />
-                                                            </SelectTrigger>
-                                                        </FormControl>
-                                                        <SelectContent>
-                                                            {data.map((q) => (
-                                                                <SelectItem
-                                                                    key={q.id}
-                                                                    value={q.id}
-                                                                >
-                                                                    {q.name}
-                                                                </SelectItem>
-                                                            ))}
-                                                        </SelectContent>
-                                                    </Select>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-
-                                        <FormField
-                                            control={form.control}
-                                            name="designerId"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel htmlFor="designerId">
-                                                        Diseñador
-                                                    </FormLabel>
-                                                    <FormControl>
-                                                        <AutoComplete
-                                                            options={
-                                                                usersOptions
+                {isLoading && <DialogLoading />}
+                {isError && <DialogError />}
+                {data && data.length === 0 && <DialogEmpty />}
+                {data && data.length > 0 && (
+                    <DialogHeader>
+                        <DialogTitle>Crear un proyecto de diseño</DialogTitle>
+                        <DialogDescription>
+                            Seleccione una cotización aprobada y presione el
+                            boton Crear.
+                        </DialogDescription>
+                        {data && data.length > 0 && (
+                            <div>
+                                <Form {...form}>
+                                    <form
+                                        onSubmit={form.handleSubmit(onSubmit)}
+                                    >
+                                        <div className="flex flex-col gap-6 p-4 sm:p-0">
+                                            <FormField
+                                                control={form.control}
+                                                name="quotationId"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>
+                                                            Cotización
+                                                        </FormLabel>
+                                                        <Select
+                                                            onValueChange={
+                                                                field.onChange
                                                             }
-                                                            placeholder="Selecciona un diseñador"
-                                                            emptyMessage="No se encontraron diseñadores"
-                                                            value={
-                                                                usersOptions.find(
-                                                                    (option) =>
-                                                                        option.value ===
-                                                                        field.value,
-                                                                ) || undefined
+                                                            defaultValue={
+                                                                field.value
                                                             }
-                                                            onValueChange={(
-                                                                option,
-                                                            ) => {
-                                                                field.onChange(
-                                                                    option?.value ||
-                                                                        "",
-                                                                );
-                                                            }}
-                                                            className="z-50"
-                                                        />
-                                                    </FormControl>
-                                                </FormItem>
-                                            )}
-                                        />
-
-                                        {/* Campo de Departamento */}
-                                        <FormField
-                                            control={form.control}
-                                            name="department"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>
-                                                        Departamento
-                                                    </FormLabel>
-                                                    <FormControl>
-                                                        <AutoComplete
-                                                            options={
-                                                                departmentOptions
-                                                            }
-                                                            emptyMessage="No se encontró el departamento."
-                                                            placeholder="Seleccione un departamento"
-                                                            onValueChange={(selectedOption: {
-                                                                value?: string;
-                                                            }) => {
-                                                                field.onChange(
-                                                                    selectedOption?.value ||
-                                                                        "",
-                                                                );
-                                                                handleDepartmentChange(
-                                                                    selectedOption?.value ||
-                                                                        "",
-                                                                );
-                                                            }}
-                                                            value={
-                                                                departmentOptions.find(
-                                                                    (option) =>
-                                                                        option.value ===
-                                                                        field.value,
-                                                                ) || undefined
-                                                            }
-                                                        />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-
-                                        {/* Campo de Ciudad */}
-                                        <FormField
-                                            control={form.control}
-                                            name="province"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel htmlFor="city">
-                                                        Provincia
-                                                    </FormLabel>
-                                                    <Select
-                                                        onValueChange={
-                                                            field.onChange
-                                                        }
-                                                        value={field.value}
-                                                        disabled={
-                                                            !isDepartmentSelected
-                                                        }
-                                                    >
-                                                        <FormControl>
-                                                            <SelectTrigger>
-                                                                <SelectValue placeholder="Seleccione una provincia" />
-                                                            </SelectTrigger>
-                                                        </FormControl>
-                                                        <SelectContent>
-                                                            <SelectGroup>
-                                                                {cities.map(
-                                                                    (city) => (
+                                                        >
+                                                            <FormControl>
+                                                                <SelectTrigger className="">
+                                                                    <SelectValue placeholder="Selecciona un diseño" />
+                                                                </SelectTrigger>
+                                                            </FormControl>
+                                                            <SelectContent>
+                                                                {data.map(
+                                                                    (q) => (
                                                                         <SelectItem
-                                                                            key={city.id.toString()}
+                                                                            key={
+                                                                                q.id
+                                                                            }
                                                                             value={
-                                                                                city.name
+                                                                                q.id
                                                                             }
                                                                         >
                                                                             {
-                                                                                city.name
+                                                                                q.name
                                                                             }
                                                                         </SelectItem>
                                                                     ),
                                                                 )}
-                                                            </SelectGroup>
-                                                        </SelectContent>
-                                                    </Select>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
+                                                            </SelectContent>
+                                                        </Select>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
 
-                                        <FormField
-                                            control={form.control}
-                                            name="address"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel htmlFor="address">
-                                                        Dirección
-                                                    </FormLabel>
-                                                    <FormControl>
-                                                        <Input
-                                                            id="address"
-                                                            placeholder="Dirección del proyecto"
-                                                            {...field}
-                                                        />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-
-                                        <FormField
-                                            control={form.control}
-                                            name="startDate"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel htmlFor="startDate">
-                                                        Fecha de inicio de
-                                                        proyecto
-                                                    </FormLabel>
-                                                    <FormControl>
-                                                        <DatePicker
-                                                            value={
-                                                                field.value
-                                                                    ? parse(
-                                                                          field.value,
-                                                                          "yyyy-MM-dd",
-                                                                          new Date(),
-                                                                      )
-                                                                    : undefined
-                                                            }
-                                                            onChange={(
-                                                                date,
-                                                            ) => {
-                                                                if (date) {
-                                                                    const formattedDate =
-                                                                        format(
-                                                                            date,
-                                                                            "yyyy-MM-dd",
-                                                                        );
-                                                                    field.onChange(
-                                                                        formattedDate,
-                                                                    );
-                                                                } else {
-                                                                    field.onChange(
-                                                                        "",
-                                                                    );
+                                            <FormField
+                                                control={form.control}
+                                                name="designerId"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel htmlFor="designerId">
+                                                            Diseñador
+                                                        </FormLabel>
+                                                        <FormControl>
+                                                            <AutoComplete
+                                                                options={
+                                                                    usersOptions
                                                                 }
-                                                            }}
-                                                        />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
+                                                                placeholder="Selecciona un diseñador"
+                                                                emptyMessage="No se encontraron diseñadores"
+                                                                value={
+                                                                    usersOptions.find(
+                                                                        (
+                                                                            option,
+                                                                        ) =>
+                                                                            option.value ===
+                                                                            field.value,
+                                                                    ) ||
+                                                                    undefined
+                                                                }
+                                                                onValueChange={(
+                                                                    option,
+                                                                ) => {
+                                                                    field.onChange(
+                                                                        option?.value ||
+                                                                            "",
+                                                                    );
+                                                                }}
+                                                                className="z-50"
+                                                            />
+                                                        </FormControl>
+                                                    </FormItem>
+                                                )}
+                                            />
 
-                                        <Button
-                                            type="submit"
-                                            className="mt-4"
-                                            disabled={
-                                                !form.formState.isDirty ||
-                                                createLoading
-                                            }
-                                        >
-                                            Crear Proyecto de Diseño
-                                        </Button>
-                                    </div>
-                                </form>
-                            </Form>
-                        </div>
-                    )}
-                </DialogHeader>
+                                            {/* Campo de Departamento */}
+                                            <FormField
+                                                control={form.control}
+                                                name="department"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>
+                                                            Departamento
+                                                        </FormLabel>
+                                                        <FormControl>
+                                                            <AutoComplete
+                                                                options={
+                                                                    departmentOptions
+                                                                }
+                                                                emptyMessage="No se encontró el departamento."
+                                                                placeholder="Seleccione un departamento"
+                                                                onValueChange={(selectedOption: {
+                                                                    value?: string;
+                                                                }) => {
+                                                                    field.onChange(
+                                                                        selectedOption?.value ||
+                                                                            "",
+                                                                    );
+                                                                    handleDepartmentChange(
+                                                                        selectedOption?.value ||
+                                                                            "",
+                                                                    );
+                                                                }}
+                                                                value={
+                                                                    departmentOptions.find(
+                                                                        (
+                                                                            option,
+                                                                        ) =>
+                                                                            option.value ===
+                                                                            field.value,
+                                                                    ) ||
+                                                                    undefined
+                                                                }
+                                                            />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+
+                                            {/* Campo de Ciudad */}
+                                            <FormField
+                                                control={form.control}
+                                                name="province"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel htmlFor="city">
+                                                            Provincia
+                                                        </FormLabel>
+                                                        <Select
+                                                            onValueChange={
+                                                                field.onChange
+                                                            }
+                                                            value={field.value}
+                                                            disabled={
+                                                                !isDepartmentSelected
+                                                            }
+                                                        >
+                                                            <FormControl>
+                                                                <SelectTrigger>
+                                                                    <SelectValue placeholder="Seleccione una provincia" />
+                                                                </SelectTrigger>
+                                                            </FormControl>
+                                                            <SelectContent>
+                                                                <SelectGroup>
+                                                                    {cities.map(
+                                                                        (
+                                                                            city,
+                                                                        ) => (
+                                                                            <SelectItem
+                                                                                key={city.id.toString()}
+                                                                                value={
+                                                                                    city.name
+                                                                                }
+                                                                            >
+                                                                                {
+                                                                                    city.name
+                                                                                }
+                                                                            </SelectItem>
+                                                                        ),
+                                                                    )}
+                                                                </SelectGroup>
+                                                            </SelectContent>
+                                                        </Select>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+
+                                            <FormField
+                                                control={form.control}
+                                                name="address"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel htmlFor="address">
+                                                            Dirección
+                                                        </FormLabel>
+                                                        <FormControl>
+                                                            <Input
+                                                                id="address"
+                                                                placeholder="Dirección del proyecto"
+                                                                {...field}
+                                                            />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+
+                                            <FormField
+                                                control={form.control}
+                                                name="startDate"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel htmlFor="startDate">
+                                                            Fecha de inicio de
+                                                            proyecto
+                                                        </FormLabel>
+                                                        <FormControl>
+                                                            <DatePicker
+                                                                value={
+                                                                    field.value
+                                                                        ? parse(
+                                                                              field.value,
+                                                                              "yyyy-MM-dd",
+                                                                              new Date(),
+                                                                          )
+                                                                        : undefined
+                                                                }
+                                                                onChange={(
+                                                                    date,
+                                                                ) => {
+                                                                    if (date) {
+                                                                        const formattedDate =
+                                                                            format(
+                                                                                date,
+                                                                                "yyyy-MM-dd",
+                                                                            );
+                                                                        field.onChange(
+                                                                            formattedDate,
+                                                                        );
+                                                                    } else {
+                                                                        field.onChange(
+                                                                            "",
+                                                                        );
+                                                                    }
+                                                                }}
+                                                            />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+
+                                            <Button
+                                                type="submit"
+                                                className="mt-4"
+                                                disabled={
+                                                    !form.formState.isDirty ||
+                                                    createLoading
+                                                }
+                                            >
+                                                Crear Proyecto de Diseño
+                                            </Button>
+                                        </div>
+                                    </form>
+                                </Form>
+                            </div>
+                        )}
+                    </DialogHeader>
+                )}
             </DialogContent>
         </Dialog>
+    );
+}
+
+function DialogLoading() {
+    return <>Loading...</>;
+}
+
+function DialogError() {
+    return (
+        <div className="text-red-500">
+            Hubo un error cargando las cotizaciones disponibles
+        </div>
+    );
+}
+
+function DialogEmpty() {
+    return (
+        <>
+            <h2 className="text-lg font-semibold">
+                No hay cotizaciones listas
+            </h2>
+            <p className="text-sm text-muted-foreground">
+                No hay ninguna cotizacion aprobada y que no esté vinculada a
+                otro proyecto de diseño.
+            </p>
+            <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2">
+                <Button>
+                    <Link href="/design-project/quotation">
+                        Ir a cotizaciones
+                    </Link>
+                </Button>
+            </div>
+        </>
     );
 }
