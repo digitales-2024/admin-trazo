@@ -19,8 +19,8 @@ export const resourceSchema = z.object({
         .string({
             required_error: "La unidad del recurso es obligatorio",
         })
-        .min(2, {
-            message: "La unidad del recurso debe tener al menos 2 caracteres",
+        .min(1, {
+            message: "La unidad del recurso debe tener al menos 1 caracteres",
         }),
 
     unitCost: z
