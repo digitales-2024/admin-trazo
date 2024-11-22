@@ -5,6 +5,7 @@ import {
     DesignProjectSummaryData,
 } from "@/types/designProject";
 import { MoveRight } from "lucide-react";
+import { useEffect } from "react";
 
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
@@ -17,12 +18,13 @@ import {
 } from "../ui/dialog";
 
 interface Props {
+    id: string;
     project: DesignProjectSummaryData;
     open: boolean;
     onOpenChange: (open: boolean) => void;
 }
 
-export function UpdateStatusDialog({ project, open, onOpenChange }: Props) {
+export function UpdateStatusDialog({ id, project, open, onOpenChange }: Props) {
     const status = project.status;
     const close = () => onOpenChange(false);
     const {
@@ -36,6 +38,7 @@ export function UpdateStatusDialog({ project, open, onOpenChange }: Props) {
             <DialogContent>
                 {status === "APPROVED" && (
                     <ApprovedStatusContent
+                        id={id}
                         close={close}
                         updateStatus={updateStatus}
                         loading={updateStatusLoading}
@@ -44,6 +47,7 @@ export function UpdateStatusDialog({ project, open, onOpenChange }: Props) {
                 )}
                 {status === "ENGINEERING" && (
                     <EngineeringStatusContent
+                        id={id}
                         close={close}
                         updateStatus={updateStatus}
                         loading={updateStatusLoading}
@@ -52,6 +56,7 @@ export function UpdateStatusDialog({ project, open, onOpenChange }: Props) {
                 )}
                 {status === "CONFIRMATION" && (
                     <ConfirmationStatusContent
+                        id={id}
                         close={close}
                         updateStatus={updateStatus}
                         loading={updateStatusLoading}
@@ -60,6 +65,7 @@ export function UpdateStatusDialog({ project, open, onOpenChange }: Props) {
                 )}
                 {status === "PRESENTATION" && (
                     <PresentationStatusContent
+                        id={id}
                         close={close}
                         updateStatus={updateStatus}
                         loading={updateStatusLoading}
@@ -72,6 +78,7 @@ export function UpdateStatusDialog({ project, open, onOpenChange }: Props) {
 }
 
 type PropsT = {
+    id: string;
     close: () => void;
     updateStatus: (data: {
         body: DesignProjectStatusUpdate;
@@ -82,11 +89,27 @@ type PropsT = {
 };
 
 function ApprovedStatusContent({
+    id,
     close,
     updateStatus,
     loading,
     success,
 }: PropsT) {
+    const update = async () => {
+        updateStatus({
+            body: {
+                newStatus: "ENGINEERING",
+            },
+            id,
+        });
+    };
+
+    useEffect(() => {
+        if (success) {
+            close();
+        }
+    }, [success, close]);
+
     return (
         <DialogHeader>
             <DialogTitle>Cambiar estado de la cotización</DialogTitle>
@@ -103,13 +126,16 @@ function ApprovedStatusContent({
                 <Button variant="secondary" onClick={close}>
                     Cancelar
                 </Button>
-                <Button>Cambiar estado</Button>
+                <Button onClick={update} disabled={loading}>
+                    Cambiar estado
+                </Button>
             </div>
         </DialogHeader>
     );
 }
 
 function EngineeringStatusContent({
+    id,
     close,
     updateStatus,
     loading,
@@ -131,11 +157,27 @@ function EngineeringStatusContent({
 }
 
 function ConfirmationStatusContent({
+    id,
     close,
     updateStatus,
     loading,
     success,
 }: PropsT) {
+    const update = async () => {
+        updateStatus({
+            body: {
+                newStatus: "ENGINEERING",
+            },
+            id,
+        });
+    };
+
+    useEffect(() => {
+        if (success) {
+            close();
+        }
+    }, [success, close]);
+
     return (
         <DialogHeader>
             <DialogTitle>Cambiar estado de la cotización</DialogTitle>
@@ -152,18 +194,36 @@ function ConfirmationStatusContent({
                 <Button variant="secondary" onClick={close}>
                     Cancelar
                 </Button>
-                <Button>Cambiar estado</Button>
+                <Button onClick={update} disabled={loading}>
+                    Cambiar estado
+                </Button>
             </div>
         </DialogHeader>
     );
 }
 
 function PresentationStatusContent({
+    id,
     close,
     updateStatus,
     loading,
     success,
 }: PropsT) {
+    const update = async () => {
+        updateStatus({
+            body: {
+                newStatus: "ENGINEERING",
+            },
+            id,
+        });
+    };
+
+    useEffect(() => {
+        if (success) {
+            close();
+        }
+    }, [success, close]);
+
     return (
         <DialogHeader>
             <DialogTitle>Cambiar estado de la cotización</DialogTitle>
@@ -180,7 +240,9 @@ function PresentationStatusContent({
                 <Button variant="secondary" onClick={close}>
                     Cancelar
                 </Button>
-                <Button>Cambiar estado</Button>
+                <Button onClick={update} disabled={loading}>
+                    Cambiar estado
+                </Button>
             </div>
         </DialogHeader>
     );

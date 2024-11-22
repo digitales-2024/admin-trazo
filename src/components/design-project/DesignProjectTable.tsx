@@ -222,6 +222,7 @@ export function DesignProjectTable({
                                 project={row?.original}
                             />
                             <UpdateStatusDialog
+                                id={row?.original?.id ?? -1}
                                 open={showUpdateStatusDialog}
                                 onOpenChange={setShowUpdateStatusDialog}
                                 project={row?.original}
