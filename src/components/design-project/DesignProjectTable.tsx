@@ -5,7 +5,7 @@ import {
     DesignProjectStatus,
 } from "@/types/designProject";
 import { ColumnDef } from "@tanstack/react-table";
-import { Contact, Ellipsis, FileDown } from "lucide-react";
+import { Contact, Ellipsis, FileDown, MonitorCog } from "lucide-react";
 import { useState } from "react";
 
 import { DataTable } from "@/components/data-table/DataTable";
@@ -25,6 +25,7 @@ import { CreateProjectDialog } from "./CreateDesignProjectDialog";
 import { DesignProjectDescriptionDialog } from "./DesignProjectDescriptionDialog";
 import { EditDesignProjectSheet } from "./EditDesignProjectSheet";
 import { GenerateContractForm } from "./GenerateContractForm";
+import { UpdateStatusDialog } from "./UpdateStatusDialog";
 
 export function DesignProjectTable({
     data,
@@ -135,7 +136,7 @@ export function DesignProjectTable({
                         badge = (
                             <Badge
                                 variant="secondary"
-                                className="bg-emerald-100 text-emerald-500"
+                                className="bg-yellow-200 text-yellow-600"
                             >
                                 Aprobado
                             </Badge>
@@ -145,7 +146,7 @@ export function DesignProjectTable({
                         badge = (
                             <Badge
                                 variant="secondary"
-                                className="bg-emerald-100 text-emerald-500"
+                                className="bg-green-200 text-green-700"
                             >
                                 Completado
                             </Badge>
@@ -155,7 +156,7 @@ export function DesignProjectTable({
                         badge = (
                             <Badge
                                 variant="secondary"
-                                className="bg-emerald-100 text-emerald-500"
+                                className="bg-blue-200 text-blue-600"
                             >
                                 En ingeniería
                             </Badge>
@@ -165,7 +166,7 @@ export function DesignProjectTable({
                         badge = (
                             <Badge
                                 variant="secondary"
-                                className="bg-emerald-100 text-emerald-500"
+                                className="bg-cyan-200 text-cyan-600"
                             >
                                 Confirmado
                             </Badge>
@@ -175,7 +176,7 @@ export function DesignProjectTable({
                         badge = (
                             <Badge
                                 variant="secondary"
-                                className="bg-emerald-100 text-emerald-500"
+                                className="bg-teal-200 text-teal-600"
                             >
                                 En presentacion
                             </Badge>
@@ -192,8 +193,12 @@ export function DesignProjectTable({
             cell: function Cell({ row }) {
                 const [showContractForm, setShowContractForm] = useState(false);
                 const [showEditSheet, setShowEditSheet] = useState(false);
+                const [showUpdateStatusDialog, setShowUpdateStatusDialog] =
+                    useState(false);
                 const [showDescriptionDialog, setShowDescriptionDialog] =
                     useState(false);
+
+                const status = row.original.status;
 
                 return (
                     <div>
@@ -214,6 +219,11 @@ export function DesignProjectTable({
                                 id={row.original.id}
                                 open={showEditSheet}
                                 onOpenChange={setShowEditSheet}
+                                project={row?.original}
+                            />
+                            <UpdateStatusDialog
+                                open={showUpdateStatusDialog}
+                                onOpenChange={setShowUpdateStatusDialog}
                                 project={row?.original}
                             />
                         </div>
@@ -244,8 +254,24 @@ export function DesignProjectTable({
                                     Editar
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
+
+                                <DropdownMenuItem
+                                    onSelect={() =>
+                                        setShowUpdateStatusDialog(true)
+                                    }
+                                    disabled={false}
+                                >
+                                    Actualizar
+                                    <DropdownMenuShortcut>
+                                        <MonitorCog
+                                            className="size-4"
+                                            aria-hidden="true"
+                                        />
+                                    </DropdownMenuShortcut>
+                                </DropdownMenuItem>
                                 <DropdownMenuItem
                                     onSelect={() => setShowContractForm(true)}
+                                    disabled={status !== "COMPLETED"}
                                 >
                                     Generar contrato
                                     <DropdownMenuShortcut>

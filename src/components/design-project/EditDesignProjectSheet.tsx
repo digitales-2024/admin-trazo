@@ -348,7 +348,7 @@ function FormWrapper(props: {
                         className="mt-4"
                         disabled={!form.formState.isDirty || editLoading}
                     >
-                        Crear Proyecto de Diseño
+                        Editar Proyecto de Diseño
                     </Button>
                 </div>
             </form>
