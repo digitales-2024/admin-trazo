@@ -1,4 +1,5 @@
 import {
+    DesignProjectChecklistUpdate,
     DesignProjectCreate,
     DesignProjectData,
     DesignProjectEdit,
@@ -71,6 +72,19 @@ export const designProjectApi = createApi({
             }),
             invalidatesTags: ["DesignProject"],
         }),
+        // editar checklist del proyecto
+        editProjectChecklist: build.mutation<
+            void,
+            { body: DesignProjectChecklistUpdate; id: string }
+        >({
+            query: ({ body, id }) => ({
+                url: `/design-project/${id}/checklist`,
+                method: "PATCH",
+                body,
+                credentials: "include",
+            }),
+            invalidatesTags: ["DesignProject"],
+        }),
         // Generar Pdf del contrato
         genPdfContract: build.mutation<
             Blob,
@@ -96,4 +110,5 @@ export const {
     useGenPdfContractMutation,
     useEditDesignProjectMutation,
     useEditDesignProjectStatusMutation,
+    useEditProjectChecklistMutation,
 } = designProjectApi;

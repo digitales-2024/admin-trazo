@@ -54,6 +54,13 @@ export type DesignProjectStatusUpdate = {
     newStatus: DesignProjectStatus;
 };
 
+export type DesignProjectChecklistUpdate = {
+    dateArchitectural?: string;
+    dateStructural?: string;
+    dateElectrical?: string;
+    dateSanitary?: string;
+};
+
 export type DesignProjectData = BaseDesignProject & {
     dateArchitectural: string | null;
     dateStructural: string | null;

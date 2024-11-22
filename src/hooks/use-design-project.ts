@@ -2,12 +2,14 @@ import {
     useCreateDesignProjectMutation,
     useEditDesignProjectMutation,
     useEditDesignProjectStatusMutation,
+    useEditProjectChecklistMutation,
     useGenPdfContractMutation,
     useGetDesignProjectByIdQuery,
     useGetDesignProjectsQuery,
 } from "@/redux/services/designProjectApi";
 import { CustomErrorData } from "@/types";
 import {
+    DesignProjectChecklistUpdate,
     DesignProjectCreate,
     DesignProjectEdit,
     DesignProjectStatusUpdate,
@@ -37,10 +39,21 @@ export const useDesignProject = (options: UseDesignProjectOptions = {}) => {
         { isLoading: updateStatusLoading, isSuccess: updateStatusSuccess },
     ] = useEditDesignProjectStatusMutation();
 
-    const { data: designProjectById, refetch: refetchDesignProjectById } =
-        useGetDesignProjectByIdQuery(id ?? "", {
-            skip: !id, // Evita hacer la query si no hay id
-        });
+    const [
+        editChecklist,
+        {
+            isLoading: updateChecklistLoading,
+            isSuccess: updateChecklistSuccess,
+        },
+    ] = useEditProjectChecklistMutation();
+
+    const {
+        data: designProjectById,
+        isLoading: designProjectByIdLoading,
+        refetch: refetchDesignProjectById,
+    } = useGetDesignProjectByIdQuery(id ?? "", {
+        skip: !id, // Evita hacer la query si no hay id
+    });
 
     const [genPdfContract] = useGenPdfContractMutation();
 
@@ -158,6 +171,45 @@ export const useDesignProject = (options: UseDesignProjectOptions = {}) => {
         });
     };
 
+    const onChecklistUpdate = async (data: {
+        body: DesignProjectChecklistUpdate;
+        id: string;
+    }) => {
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                try {
+                    const result = await editChecklist(data);
+                    if (result.error) {
+                        if (
+                            typeof result.error === "object" &&
+                            "data" in result.error
+                        ) {
+                            const error = (result.error.data as CustomErrorData)
+                                .message;
+                            const message = translateError(error as string);
+                            reject(new Error(message));
+                        } else {
+                            reject(
+                                new Error(
+                                    "Ocurrió un error inesperado, por favor intenta de nuevo",
+                                ),
+                            );
+                        }
+                    } else {
+                        resolve(result);
+                    }
+                } catch (error) {
+                    reject(error);
+                }
+            });
+
+        return toast.promise(promise(), {
+            loading: "Editando checklist...",
+            success: "Checklist del proyecto editado con éxito",
+            error: (err) => err.message,
+        });
+    };
+
     const generateContractPdf = async (
         id: string,
         publicCode: string,
@@ -224,9 +276,13 @@ export const useDesignProject = (options: UseDesignProjectOptions = {}) => {
         editSuccess,
         generateContractPdf,
         designProjectById,
+        designProjectByIdLoading,
         refetchDesignProjectById,
         onStatusUpdate,
         updateStatusLoading,
         updateStatusSuccess,
+        onChecklistUpdate,
+        updateChecklistLoading,
+        updateChecklistSuccess,
     };
 };
