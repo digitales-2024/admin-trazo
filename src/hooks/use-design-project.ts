@@ -1,12 +1,17 @@
 import {
     useCreateDesignProjectMutation,
     useEditDesignProjectMutation,
+    useEditDesignProjectStatusMutation,
     useGenPdfContractMutation,
     useGetDesignProjectByIdQuery,
     useGetDesignProjectsQuery,
 } from "@/redux/services/designProjectApi";
 import { CustomErrorData } from "@/types";
-import { DesignProjectCreate, DesignProjectEdit } from "@/types/designProject";
+import {
+    DesignProjectCreate,
+    DesignProjectEdit,
+    DesignProjectStatusUpdate,
+} from "@/types/designProject";
 import { translateError } from "@/utils/translateError";
 import { format } from "date-fns";
 import { toast } from "sonner";
@@ -26,6 +31,11 @@ export const useDesignProject = (options: UseDesignProjectOptions = {}) => {
 
     const [editProject, { isLoading: editLoading, isSuccess: editSuccess }] =
         useEditDesignProjectMutation();
+
+    const [
+        editStatus,
+        { isLoading: updateStatusLoading, isSuccess: updateStatusSuccess },
+    ] = useEditDesignProjectStatusMutation();
 
     const { data: designProjectById, refetch: refetchDesignProjectById } =
         useGetDesignProjectByIdQuery(id ?? "", {
@@ -109,6 +119,45 @@ export const useDesignProject = (options: UseDesignProjectOptions = {}) => {
         });
     };
 
+    const onStatusUpdate = async (data: {
+        body: DesignProjectStatusUpdate;
+        id: string;
+    }) => {
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                try {
+                    const result = await editStatus(data);
+                    if (result.error) {
+                        if (
+                            typeof result.error === "object" &&
+                            "data" in result.error
+                        ) {
+                            const error = (result.error.data as CustomErrorData)
+                                .message;
+                            const message = translateError(error as string);
+                            reject(new Error(message));
+                        } else {
+                            reject(
+                                new Error(
+                                    "Ocurrió un error inesperado, por favor intenta de nuevo",
+                                ),
+                            );
+                        }
+                    } else {
+                        resolve(result);
+                    }
+                } catch (error) {
+                    reject(error);
+                }
+            });
+
+        return toast.promise(promise(), {
+            loading: "Editando estado...",
+            success: "Estado del proyecto editado con éxito",
+            error: (err) => err.message,
+        });
+    };
+
     const generateContractPdf = async (
         id: string,
         publicCode: string,
@@ -176,5 +225,8 @@ export const useDesignProject = (options: UseDesignProjectOptions = {}) => {
         generateContractPdf,
         designProjectById,
         refetchDesignProjectById,
+        onStatusUpdate,
+        updateStatusLoading,
+        updateStatusSuccess,
     };
 };

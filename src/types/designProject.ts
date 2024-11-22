@@ -50,6 +50,10 @@ export type DesignProjectEdit = {
     startProjectDate: string;
 };
 
+export type DesignProjectStatusUpdate = {
+    newStatus: DesignProjectStatus;
+};
+
 export type DesignProjectData = BaseDesignProject & {
     dateArchitectural: string | null;
     dateStructural: string | null;

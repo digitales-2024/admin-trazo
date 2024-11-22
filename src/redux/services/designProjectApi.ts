@@ -2,6 +2,7 @@ import {
     DesignProjectCreate,
     DesignProjectData,
     DesignProjectEdit,
+    DesignProjectStatusUpdate,
     DesignProjectSummaryData,
 } from "@/types/designProject";
 import { createApi } from "@reduxjs/toolkit/query/react";
@@ -57,6 +58,19 @@ export const designProjectApi = createApi({
             }),
             invalidatesTags: ["DesignProject"],
         }),
+        // Editar estado del proyecto
+        editDesignProjectStatus: build.mutation<
+            void,
+            { body: DesignProjectStatusUpdate; id: string }
+        >({
+            query: ({ body, id }) => ({
+                url: `/design-project/${id}/status`,
+                method: "PATCH",
+                body,
+                credentials: "include",
+            }),
+            invalidatesTags: ["DesignProject"],
+        }),
         // Generar Pdf del contrato
         genPdfContract: build.mutation<
             Blob,
@@ -81,4 +95,5 @@ export const {
     useCreateDesignProjectMutation,
     useGenPdfContractMutation,
     useEditDesignProjectMutation,
+    useEditDesignProjectStatusMutation,
 } = designProjectApi;
