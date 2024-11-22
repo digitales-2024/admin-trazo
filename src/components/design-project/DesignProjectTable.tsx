@@ -259,7 +259,7 @@ export function DesignProjectTable({
                                     onSelect={() =>
                                         setShowUpdateStatusDialog(true)
                                     }
-                                    disabled={false}
+                                    disabled={status === "COMPLETED"}
                                 >
                                     Actualizar
                                     <DropdownMenuShortcut>

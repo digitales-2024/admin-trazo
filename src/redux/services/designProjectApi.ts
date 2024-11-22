@@ -11,7 +11,7 @@ import baseQueryWithReauth from "../baseQuery";
 export const designProjectApi = createApi({
     reducerPath: "designProjectApi",
     baseQuery: baseQueryWithReauth,
-    tagTypes: ["DesignProject"],
+    tagTypes: ["DesignProject", "Quotation"],
     endpoints: (build) => ({
         // Obtener todos los proyectos
         getDesignProjects: build.query<Array<DesignProjectSummaryData>, void>({
@@ -42,7 +42,7 @@ export const designProjectApi = createApi({
                 body,
                 credentials: "include",
             }),
-            invalidatesTags: ["DesignProject"],
+            invalidatesTags: ["DesignProject", "Quotation"],
         }),
         // Editar proyecto de diseño
         editDesignProject: build.mutation<
