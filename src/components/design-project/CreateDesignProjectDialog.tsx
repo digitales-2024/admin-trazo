@@ -444,9 +444,7 @@ function DialogError() {
 function DialogEmpty() {
     return (
         <>
-            <h2 className="text-lg font-semibold">
-                No hay cotizaciones listas
-            </h2>
+            <DialogTitle>No hay cotizaciones listas</DialogTitle>
             <p className="text-sm text-muted-foreground">
                 No hay ninguna cotizacion aprobada y que no esté vinculada a
                 otro proyecto de diseño.

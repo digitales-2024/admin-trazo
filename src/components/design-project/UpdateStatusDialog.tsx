@@ -6,11 +6,16 @@ import {
     DesignProjectStatusUpdate,
     DesignProjectSummaryData,
 } from "@/types/designProject";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { format, parse } from "date-fns";
 import { MoveRight } from "lucide-react";
 import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import DatePicker from "../ui/date-time-picker";
 import {
     Dialog,
     DialogContent,
@@ -18,9 +23,6 @@ import {
     DialogHeader,
     DialogTitle,
 } from "../ui/dialog";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Form,
     FormControl,
@@ -29,8 +31,6 @@ import {
     FormLabel,
     FormMessage,
 } from "../ui/form";
-import DatePicker from "../ui/date-time-picker";
-import { format, parse } from "date-fns";
 
 interface Props {
     id: string;
@@ -170,9 +170,18 @@ const formSchema = z.object({
 
 function EngineeringStatusContent({
     id,
+    updateStatus,
+    success,
+    loading,
     project,
     close,
 }: PropsT & { project: DesignProjectData }) {
+    const checklistFinished =
+        !!project.dateSanitary &&
+        !!project.dateElectrical &&
+        !!project.dateArchitectural &&
+        !!project.dateStructural;
+
     // update checklist mutation
     const {
         onChecklistUpdate,
@@ -220,6 +229,21 @@ function EngineeringStatusContent({
         }
     }, [updateChecklistSuccess, close]);
 
+    const update = async () => {
+        updateStatus({
+            body: {
+                newStatus: "CONFIRMATION",
+            },
+            id,
+        });
+    };
+
+    useEffect(() => {
+        if (success) {
+            close();
+        }
+    }, [success, close]);
+
     return (
         <DialogHeader>
             <DialogTitle>Cambiar estado de la cotización</DialogTitle>
@@ -229,8 +253,9 @@ function EngineeringStatusContent({
                 <StatusBadge status="CONFIRMATION" />
             </div>
             <DialogDescription>
-                Completa el checklist de planos antes de pasar a la siguiente
-                fase.
+                {checklistFinished
+                    ? "Checklist completo. Puedes pasar a estado de Confirmación, o modificar las fechas."
+                    : "                Completa el checklist de planos antes de pasar a la siguiente fase."}
             </DialogDescription>
             <div>
                 <p className="mt-4 font-bold">
@@ -405,17 +430,36 @@ function EngineeringStatusContent({
                             )}
                         />
 
-                        <Button
-                            type="submit"
-                            disabled={
-                                !form.formState.isDirty ||
-                                updateChecklistLoading
-                            }
-                        >
-                            Actualizar fechas
-                        </Button>
+                        <div className="text-right">
+                            <Button
+                                type="submit"
+                                disabled={
+                                    !form.formState.isDirty ||
+                                    updateChecklistLoading
+                                }
+                            >
+                                Actualizar fechas
+                            </Button>
+                        </div>
                     </form>
                 </Form>
+
+                {checklistFinished && (
+                    <>
+                        <p className="mt-4 font-bold">
+                            Continuar a fase de Confirmación
+                        </p>
+                        <p className="mb-4 text-muted-foreground">
+                            Presiona el boton para pasar el proyecto a la fase
+                            de Confirmación.
+                        </p>
+                        <div className="flex justify-end gap-2">
+                            <Button onClick={update} disabled={loading}>
+                                Cambiar estado
+                            </Button>
+                        </div>
+                    </>
+                )}
             </div>
         </DialogHeader>
     );
@@ -431,7 +475,7 @@ function ConfirmationStatusContent({
     const update = async () => {
         updateStatus({
             body: {
-                newStatus: "ENGINEERING",
+                newStatus: "PRESENTATION",
             },
             id,
         });
@@ -477,7 +521,7 @@ function PresentationStatusContent({
     const update = async () => {
         updateStatus({
             body: {
-                newStatus: "ENGINEERING",
+                newStatus: "COMPLETED",
             },
             id,
         });
