@@ -1,12 +1,23 @@
 "use client";
 
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { useObservation } from "@/hooks/use-observation";
-import { ProjectCharter } from "@/types";
+import { useResource } from "@/hooks/use-resource";
+import { Resource } from "@/types";
 import { type Row } from "@tanstack/react-table";
 import { RefreshCcw, Trash } from "lucide-react";
 import { ComponentPropsWithoutRef, useTransition } from "react";
 
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
     Drawer,
@@ -19,47 +30,28 @@ import {
     DrawerTrigger,
 } from "@/components/ui/drawer";
 
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from "../ui/alert-dialog";
-
-interface DeleteAllObservationsDialogProps
+interface DeleteResourceDialogProps
     extends ComponentPropsWithoutRef<typeof AlertDialog> {
-    projectCharter: Row<ProjectCharter>["original"][];
+    resource: Row<Resource>["original"][];
     showTrigger?: boolean;
     onSuccess?: () => void;
 }
 
-export function DeleteAllObservationsDialog({
-    projectCharter,
+export function DeleteResourceDialog({
+    resource,
     showTrigger = true,
     onSuccess,
     ...props
-}: DeleteAllObservationsDialogProps) {
+}: DeleteResourceDialogProps) {
     const [isDeletePending] = useTransition();
     const isDesktop = useMediaQuery("(min-width: 640px)");
 
-    const { onDeleteObservationsFromProjectCharters } = useObservation();
+    const { onDeleteResources } = useResource();
 
-    const onDeleteAllObservationsHandler = async () => {
-        try {
-            // Esperar a que se complete la eliminación
-            await onDeleteObservationsFromProjectCharters(projectCharter);
-
-            // Cerrar el diálogo y ejecutar la callback de éxito
-            props.onOpenChange?.(false);
-            onSuccess?.();
-        } catch (error) {
-            console.error("Error eliminando observaciones:", error);
-        }
+    const onDeleteResourceHandler = () => {
+        onDeleteResources(resource);
+        props.onOpenChange?.(false);
+        onSuccess?.();
     };
 
     if (isDesktop) {
@@ -69,7 +61,7 @@ export function DeleteAllObservationsDialog({
                     <AlertDialogTrigger asChild>
                         <Button variant="outline" size="sm">
                             <Trash className="mr-2 size-4" aria-hidden="true" />
-                            Eliminar observaciones ({projectCharter.length})
+                            Eliminar ({resource.length})
                         </Button>
                     </AlertDialogTrigger>
                 ) : null}
@@ -79,14 +71,12 @@ export function DeleteAllObservationsDialog({
                             ¿Estás absolutamente seguro?
                         </AlertDialogTitle>
                         <AlertDialogDescription>
-                            Esta acción eliminará todas las observaciones de
+                            Esta acción eliminará a
                             <span className="font-medium">
                                 {" "}
-                                {projectCharter.length}
+                                {resource.length}
                             </span>
-                            {projectCharter.length === 1
-                                ? " acta de proyecto"
-                                : " actas de proyectos"}
+                            {resource.length === 1 ? " recurso" : " recursos"}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter className="gap-2 sm:space-x-0">
@@ -95,7 +85,7 @@ export function DeleteAllObservationsDialog({
                         </AlertDialogCancel>
                         <AlertDialogAction
                             aria-label="Delete selected rows"
-                            onClick={onDeleteAllObservationsHandler}
+                            onClick={onDeleteResourceHandler}
                             disabled={isDeletePending}
                         >
                             {isDeletePending && (
@@ -118,7 +108,7 @@ export function DeleteAllObservationsDialog({
                 <DrawerTrigger asChild>
                     <Button variant="outline" size="sm">
                         <Trash className="mr-2 size-4" aria-hidden="true" />
-                        Eliminar observaciones ({projectCharter.length})
+                        Eliminar ({resource.length})
                     </Button>
                 </DrawerTrigger>
             ) : null}
@@ -126,19 +116,15 @@ export function DeleteAllObservationsDialog({
                 <DrawerHeader>
                     <DrawerTitle>¿Estás absolutamente seguro?</DrawerTitle>
                     <DrawerDescription>
-                        Esta acción eliminará todas las observaciones de
-                        <span className="font-medium">
-                            {projectCharter.length}
-                        </span>
-                        {projectCharter.length === 1
-                            ? " acta de proyecto"
-                            : " actas de proyectos"}
+                        Esta acción eliminará a
+                        <span className="font-medium">{resource.length}</span>
+                        {resource.length === 1 ? " recurso" : " recursos"}
                     </DrawerDescription>
                 </DrawerHeader>
                 <DrawerFooter className="gap-2 sm:space-x-0">
                     <Button
                         aria-label="Delete selected rows"
-                        onClick={onDeleteAllObservationsHandler}
+                        onClick={onDeleteResourceHandler}
                         disabled={isDeletePending}
                     >
                         {isDeletePending && (

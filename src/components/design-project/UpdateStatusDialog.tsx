@@ -282,10 +282,10 @@ function EngineeringStatusContent({
                                             value={
                                                 field.value
                                                     ? parse(
-                                                        field.value,
-                                                        "yyyy-MM-dd",
-                                                        new Date(),
-                                                    )
+                                                          field.value,
+                                                          "yyyy-MM-dd",
+                                                          new Date(),
+                                                      )
                                                     : undefined
                                             }
                                             onChange={(date) => {
@@ -322,10 +322,10 @@ function EngineeringStatusContent({
                                             value={
                                                 field.value
                                                     ? parse(
-                                                        field.value,
-                                                        "yyyy-MM-dd",
-                                                        new Date(),
-                                                    )
+                                                          field.value,
+                                                          "yyyy-MM-dd",
+                                                          new Date(),
+                                                      )
                                                     : undefined
                                             }
                                             onChange={(date) => {
@@ -362,10 +362,10 @@ function EngineeringStatusContent({
                                             value={
                                                 field.value
                                                     ? parse(
-                                                        field.value,
-                                                        "yyyy-MM-dd",
-                                                        new Date(),
-                                                    )
+                                                          field.value,
+                                                          "yyyy-MM-dd",
+                                                          new Date(),
+                                                      )
                                                     : undefined
                                             }
                                             onChange={(date) => {
@@ -402,10 +402,10 @@ function EngineeringStatusContent({
                                             value={
                                                 field.value
                                                     ? parse(
-                                                        field.value,
-                                                        "yyyy-MM-dd",
-                                                        new Date(),
-                                                    )
+                                                          field.value,
+                                                          "yyyy-MM-dd",
+                                                          new Date(),
+                                                      )
                                                     : undefined
                                             }
                                             onChange={(date) => {

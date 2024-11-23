@@ -89,6 +89,10 @@ const errorTranslations = {
         "La fecha de inicio de proyecto debe ser una fecha ISO 8601",
     "A design project already exists for this quotation":
         "Ya existe un proyecto de diseño para esta cotizacion",
+    "Resource already exists": "Este recurso ya existe",
+    "Error updating resource": "Error actualizando recurso",
+    "This resource is inactive, contact the superadmin to reactivate it":
+        "Este recurso esta desactivado, contactese con el administrador para reactivarlo",
 };
 
 export default errorTranslations;

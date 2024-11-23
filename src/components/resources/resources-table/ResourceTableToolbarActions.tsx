@@ -1,7 +1,7 @@
 "use client";
 
 import { useProfile } from "@/hooks/use-profile";
-import { ProjectCharter } from "@/types";
+import { Resource } from "@/types";
 import { type Table } from "@tanstack/react-table";
 import { Download } from "lucide-react";
 
@@ -9,30 +9,37 @@ import { Button } from "@/components/ui/button";
 
 import { exportTableToCSV } from "@/lib/export";
 
-import { DeleteAllObservationsDialog } from "./DeleteAllObservationsDialog";
+import { DeleteResourceDialog } from "./DeleteResourceDialog";
+import { ReactivateResourceDialog } from "./ReactivateResourceDialog";
 
-export interface ProjectCharterTableToolbarActionsProps {
-    table?: Table<ProjectCharter>;
+export interface ResourceTableToolbarActionsProps {
+    table?: Table<Resource>;
     exportFile?: boolean;
 }
 
-export function ProjectCharterTableToolbarActions({
+export function ResourceTableToolbarActions({
     table,
     exportFile = false,
-}: ProjectCharterTableToolbarActionsProps) {
+}: ResourceTableToolbarActionsProps) {
     const { user } = useProfile();
     return (
         <div className="flex w-fit flex-wrap items-center gap-2">
             {table && table.getFilteredSelectedRowModel().rows.length > 0 ? (
                 <>
-                    <DeleteAllObservationsDialog
-                        projectCharter={table
+                    <DeleteResourceDialog
+                        resource={table
                             .getFilteredSelectedRowModel()
                             .rows.map((row) => row.original)}
-                        onSuccess={() => {
-                            table.toggleAllRowsSelected(false);
-                        }}
+                        onSuccess={() => table.toggleAllRowsSelected(false)}
                     />
+                    {user?.isSuperAdmin && (
+                        <ReactivateResourceDialog
+                            resource={table
+                                .getFilteredSelectedRowModel()
+                                .rows.map((row) => row.original)}
+                            onSuccess={() => table.toggleAllRowsSelected(false)}
+                        />
+                    )}
                 </>
             ) : null}
             {exportFile ||
@@ -43,7 +50,7 @@ export function ProjectCharterTableToolbarActions({
                         onClick={() => {
                             if (table) {
                                 exportTableToCSV(table, {
-                                    filename: "products",
+                                    filename: "resources",
                                     excludeColumns: ["select", "actions"],
                                 });
                             }

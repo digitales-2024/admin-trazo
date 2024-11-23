@@ -1,12 +1,21 @@
-"use client";
-
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { useObservation } from "@/hooks/use-observation";
-import { ProjectCharter } from "@/types";
-import { type Row } from "@tanstack/react-table";
-import { RefreshCcw, Trash } from "lucide-react";
-import { ComponentPropsWithoutRef, useTransition } from "react";
+import { useResource } from "@/hooks/use-resource";
+import { Resource } from "@/types";
+import { Row } from "@tanstack/react-table";
+import { RefreshCcw, RefreshCcwDot } from "lucide-react";
+import { ComponentPropsWithoutRef } from "react";
 
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
     Drawer,
@@ -19,47 +28,28 @@ import {
     DrawerTrigger,
 } from "@/components/ui/drawer";
 
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from "../ui/alert-dialog";
-
-interface DeleteAllObservationsDialogProps
+interface ReactivateResourceDialogProps
     extends ComponentPropsWithoutRef<typeof AlertDialog> {
-    projectCharter: Row<ProjectCharter>["original"][];
+    resource: Row<Resource>["original"][];
     showTrigger?: boolean;
     onSuccess?: () => void;
 }
 
-export function DeleteAllObservationsDialog({
-    projectCharter,
+export const ReactivateResourceDialog = ({
+    resource,
     showTrigger = true,
     onSuccess,
     ...props
-}: DeleteAllObservationsDialogProps) {
-    const [isDeletePending] = useTransition();
+}: ReactivateResourceDialogProps) => {
     const isDesktop = useMediaQuery("(min-width: 640px)");
 
-    const { onDeleteObservationsFromProjectCharters } = useObservation();
+    const { onReactivateResources, isLoadingReactivateResource } =
+        useResource();
 
-    const onDeleteAllObservationsHandler = async () => {
-        try {
-            // Esperar a que se complete la eliminación
-            await onDeleteObservationsFromProjectCharters(projectCharter);
-
-            // Cerrar el diálogo y ejecutar la callback de éxito
-            props.onOpenChange?.(false);
-            onSuccess?.();
-        } catch (error) {
-            console.error("Error eliminando observaciones:", error);
-        }
+    const onReactivateResourceHandler = () => {
+        onReactivateResources(resource);
+        props.onOpenChange?.(false);
+        onSuccess?.();
     };
 
     if (isDesktop) {
@@ -68,8 +58,11 @@ export function DeleteAllObservationsDialog({
                 {showTrigger ? (
                     <AlertDialogTrigger asChild>
                         <Button variant="outline" size="sm">
-                            <Trash className="mr-2 size-4" aria-hidden="true" />
-                            Eliminar observaciones ({projectCharter.length})
+                            <RefreshCcwDot
+                                className="mr-2 size-4"
+                                aria-hidden="true"
+                            />
+                            Reactivar ({resource.length})
                         </Button>
                     </AlertDialogTrigger>
                 ) : null}
@@ -79,14 +72,12 @@ export function DeleteAllObservationsDialog({
                             ¿Estás absolutamente seguro?
                         </AlertDialogTitle>
                         <AlertDialogDescription>
-                            Esta acción eliminará todas las observaciones de
+                            Esta acción reactivará a{" "}
                             <span className="font-medium">
                                 {" "}
-                                {projectCharter.length}
+                                {resource.length}
                             </span>
-                            {projectCharter.length === 1
-                                ? " acta de proyecto"
-                                : " actas de proyectos"}
+                            {resource.length === 1 ? " recurso" : " recursos"}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter className="gap-2 sm:space-x-0">
@@ -94,31 +85,33 @@ export function DeleteAllObservationsDialog({
                             <Button variant="outline">Cancelar</Button>
                         </AlertDialogCancel>
                         <AlertDialogAction
-                            aria-label="Delete selected rows"
-                            onClick={onDeleteAllObservationsHandler}
-                            disabled={isDeletePending}
+                            aria-label="Reactivate selected rows"
+                            onClick={onReactivateResourceHandler}
+                            disabled={isLoadingReactivateResource}
                         >
-                            {isDeletePending && (
+                            {isLoadingReactivateResource && (
                                 <RefreshCcw
                                     className="mr-2 size-4 animate-spin"
                                     aria-hidden="true"
                                 />
                             )}
-                            Eliminar
+                            Reactivar
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
         );
     }
-
     return (
         <Drawer {...props}>
             {showTrigger ? (
                 <DrawerTrigger asChild>
                     <Button variant="outline" size="sm">
-                        <Trash className="mr-2 size-4" aria-hidden="true" />
-                        Eliminar observaciones ({projectCharter.length})
+                        <RefreshCcwDot
+                            className="mr-2 size-4"
+                            aria-hidden="true"
+                        />
+                        Reactivar ({resource.length})
                     </Button>
                 </DrawerTrigger>
             ) : null}
@@ -126,28 +119,24 @@ export function DeleteAllObservationsDialog({
                 <DrawerHeader>
                     <DrawerTitle>¿Estás absolutamente seguro?</DrawerTitle>
                     <DrawerDescription>
-                        Esta acción eliminará todas las observaciones de
-                        <span className="font-medium">
-                            {projectCharter.length}
-                        </span>
-                        {projectCharter.length === 1
-                            ? " acta de proyecto"
-                            : " actas de proyectos"}
+                        Esta acción reactivará a
+                        <span className="font-medium">{resource.length}</span>
+                        {resource.length === 1 ? " recurso" : " recursos"}
                     </DrawerDescription>
                 </DrawerHeader>
                 <DrawerFooter className="gap-2 sm:space-x-0">
                     <Button
-                        aria-label="Delete selected rows"
-                        onClick={onDeleteAllObservationsHandler}
-                        disabled={isDeletePending}
+                        aria-label="Reactivate selected rows"
+                        onClick={onReactivateResourceHandler}
+                        disabled={isLoadingReactivateResource}
                     >
-                        {isDeletePending && (
+                        {isLoadingReactivateResource && (
                             <RefreshCcw
                                 className="mr-2 size-4 animate-spin"
                                 aria-hidden="true"
                             />
                         )}
-                        Eliminar
+                        Reactivar
                     </Button>
                     <DrawerClose asChild>
                         <Button variant="outline">Cancelar</Button>
@@ -156,4 +145,4 @@ export function DeleteAllObservationsDialog({
             </DrawerContent>
         </Drawer>
     );
-}
+};

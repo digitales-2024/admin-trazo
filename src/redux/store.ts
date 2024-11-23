@@ -10,6 +10,7 @@ import { exchangeRateSunatApi } from "./services/exchangeRateSunatApi";
 import { observationApi } from "./services/observationApi";
 import { projectCharterApi } from "./services/projectCharterApi";
 import { quotationsApi } from "./services/quotationApi";
+import { resourceApi } from "./services/resourceApi";
 import { rolesApi } from "./services/rolesApi";
 import { spacesApi } from "./services/spaceApi";
 import { usersApi } from "./services/usersApi";
@@ -30,6 +31,7 @@ export const store = configureStore({
         [zoningApi.reducerPath]: zoningApi.reducer,
         [projectCharterApi.reducerPath]: projectCharterApi.reducer,
         [observationApi.reducerPath]: observationApi.reducer,
+        [resourceApi.reducerPath]: resourceApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
@@ -64,7 +66,8 @@ export const store = configureStore({
             .concat(exchangeRateSunatApi.middleware)
             .concat(zoningApi.middleware)
             .concat(projectCharterApi.middleware)
-            .concat(observationApi.middleware),
+            .concat(observationApi.middleware)
+            .concat(resourceApi.middleware),
 });
 setupListeners(store.dispatch);
 
