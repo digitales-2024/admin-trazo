@@ -2,7 +2,6 @@ import { useDesignProject } from "@/hooks/use-design-project";
 import {
     DesignProjectChecklistUpdate,
     DesignProjectData,
-    DesignProjectStatus,
     DesignProjectStatusUpdate,
     DesignProjectSummaryData,
 } from "@/types/designProject";
@@ -13,7 +12,6 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import DatePicker from "../ui/date-time-picker";
 import {
@@ -31,6 +29,7 @@ import {
     FormLabel,
     FormMessage,
 } from "../ui/form";
+import { StatusBadge } from "./Badges";
 
 interface Props {
     id: string;
@@ -53,7 +52,7 @@ export function UpdateStatusDialog({ id, project, open, onOpenChange }: Props) {
     if (designProjectByIdLoading) {
         return (
             <Dialog open={open} onOpenChange={onOpenChange}>
-                <DialogContent>carregando..</DialogContent>
+                <DialogContent>Cargando..</DialogContent>
             </Dialog>
         );
     }
@@ -283,10 +282,10 @@ function EngineeringStatusContent({
                                             value={
                                                 field.value
                                                     ? parse(
-                                                          field.value,
-                                                          "yyyy-MM-dd",
-                                                          new Date(),
-                                                      )
+                                                        field.value,
+                                                        "yyyy-MM-dd",
+                                                        new Date(),
+                                                    )
                                                     : undefined
                                             }
                                             onChange={(date) => {
@@ -323,10 +322,10 @@ function EngineeringStatusContent({
                                             value={
                                                 field.value
                                                     ? parse(
-                                                          field.value,
-                                                          "yyyy-MM-dd",
-                                                          new Date(),
-                                                      )
+                                                        field.value,
+                                                        "yyyy-MM-dd",
+                                                        new Date(),
+                                                    )
                                                     : undefined
                                             }
                                             onChange={(date) => {
@@ -363,10 +362,10 @@ function EngineeringStatusContent({
                                             value={
                                                 field.value
                                                     ? parse(
-                                                          field.value,
-                                                          "yyyy-MM-dd",
-                                                          new Date(),
-                                                      )
+                                                        field.value,
+                                                        "yyyy-MM-dd",
+                                                        new Date(),
+                                                    )
                                                     : undefined
                                             }
                                             onChange={(date) => {
@@ -403,10 +402,10 @@ function EngineeringStatusContent({
                                             value={
                                                 field.value
                                                     ? parse(
-                                                          field.value,
-                                                          "yyyy-MM-dd",
-                                                          new Date(),
-                                                      )
+                                                        field.value,
+                                                        "yyyy-MM-dd",
+                                                        new Date(),
+                                                    )
                                                     : undefined
                                             }
                                             onChange={(date) => {
@@ -555,61 +554,4 @@ function PresentationStatusContent({
             </div>
         </DialogHeader>
     );
-}
-
-function StatusBadge(props: { status: DesignProjectStatus }) {
-    let badge = <></>;
-    switch (props.status) {
-        case "APPROVED":
-            badge = (
-                <Badge
-                    variant="secondary"
-                    className="bg-yellow-200 text-yellow-600"
-                >
-                    Aprobado
-                </Badge>
-            );
-            break;
-        case "COMPLETED":
-            badge = (
-                <Badge
-                    variant="secondary"
-                    className="bg-green-200 text-green-700"
-                >
-                    Completado
-                </Badge>
-            );
-            break;
-        case "ENGINEERING":
-            badge = (
-                <Badge
-                    variant="secondary"
-                    className="bg-blue-200 text-blue-600"
-                >
-                    En ingeniería
-                </Badge>
-            );
-            break;
-        case "CONFIRMATION":
-            badge = (
-                <Badge
-                    variant="secondary"
-                    className="bg-cyan-200 text-cyan-600"
-                >
-                    Confirmado
-                </Badge>
-            );
-            break;
-        case "PRESENTATION":
-            badge = (
-                <Badge
-                    variant="secondary"
-                    className="bg-teal-200 text-teal-600"
-                >
-                    En presentacion
-                </Badge>
-            );
-            break;
-    }
-    return badge;
 }
