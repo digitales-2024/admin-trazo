@@ -51,7 +51,7 @@ export const useLogin = () => {
         if (isSuccess && data) {
             router.replace("/");
         }
-    }, [data, isSuccess]);
+    }, [router, data, isSuccess]);
 
     return { onLogin, isLoading, error };
 };

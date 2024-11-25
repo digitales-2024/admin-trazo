@@ -174,7 +174,7 @@ export const useQuotations = (options: UseQuotationsProps = {}) => {
             });
 
         return toast.promise(promise(), {
-            loading: "Descargando clases en PDF...",
+            loading: "Descargando cotización en PDF...",
             success: "Cotización descargada con éxito en PDF",
             error: (err) => err.message,
         });

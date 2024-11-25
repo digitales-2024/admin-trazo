@@ -5,7 +5,12 @@ export const createQuotationSchema = z.object({
     description: z
         .string()
         .min(1, { message: "La descripción es obligatoria" }),
-    clientId: z.string().uuid({ message: "El cliente es obligatorio" }),
+    clientId: z
+        .string({ message: "El cliente es obligatorio" })
+        .uuid({ message: "El cliente es obligatorio" }),
+    zoningId: z
+        .string({ message: "La zonificación es obligatoria" })
+        .uuid({ message: "La zonificación es obligatoria" }),
     deliveryTime: z
         .number()
         .min(1, { message: "El plazo de entrega debe ser al menos 1 mes" }),

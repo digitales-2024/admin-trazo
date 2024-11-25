@@ -2,7 +2,14 @@
 
 import { QuotationStatusType, QuotationSummary } from "@/types";
 import { type ColumnDef } from "@tanstack/react-table";
-import { Contact, Ellipsis, FileDown, MonitorCog, Ruler } from "lucide-react";
+import {
+    Contact,
+    Ellipsis,
+    FileDown,
+    Grid3X3,
+    MonitorCog,
+    Ruler,
+} from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -18,7 +25,7 @@ import {
 
 import { DataTableColumnHeader } from "../data-table/DataTableColumnHeader";
 import { Badge } from "../ui/badge";
-import QuotationDescriptionDialog from "./QuotationDescriptionDialog";
+import QuotationDescriptionDialog from "./quotation-description/QuotationDescriptionDialog";
 import UpdateStatusQuotationDialog from "./UpdateStatusQuotationDialog";
 
 export const quotationsColumns = (
@@ -112,6 +119,30 @@ export const quotationsColumns = (
         },
 
         {
+            id: "Zonificación",
+            accessorKey: "zoning.zoneCode",
+            header: ({ column }) => (
+                <DataTableColumnHeader column={column} title="Zonificación" />
+            ),
+            cell: ({ row }) => {
+                return (
+                    <div className="flex items-center space-x-2 truncate">
+                        <Grid3X3
+                            size={16}
+                            className="text-slate-700"
+                            strokeWidth={1.5}
+                        />
+                        <div className="flex flex-col leading-tight">
+                            <span className="text-xs font-normal">
+                                {row.getValue("Zonificación")}
+                            </span>
+                        </div>
+                    </div>
+                );
+            },
+        },
+
+        {
             id: "cliente",
             accessorKey: "client.name",
             header: ({ column }) => (
@@ -123,7 +154,7 @@ export const quotationsColumns = (
                     <div className="flex items-center">
                         <Badge
                             variant="outline"
-                            className="truncate capitalize"
+                            className="truncate border-gray-500 capitalize text-gray-700"
                         >
                             <Contact
                                 size={14}

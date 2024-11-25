@@ -20,6 +20,9 @@ export type {
     QuotationSummary,
 } from "./quotation";
 export { QuotationStatusType } from "./quotation";
+
+export { ResourceType, type Resource } from "./resource";
+
 export type { Space, Floor } from "./floor";
 export type {
     IntegralProjectItem,
@@ -28,3 +31,5 @@ export type {
 } from "./integralProjectQuotation";
 export type { Credentials, UserLogin } from "./login";
 export type { Zoning } from "./zoning";
+export type { ProjectCharter } from "./projectCharter";
+export type { Observation, ObservationProject } from "./observation";

@@ -7,7 +7,7 @@ import {
     spacesSchema,
 } from "@/schemas/spaces/createSpacesSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus, RefreshCcw } from "lucide-react";
+import { Plus, RefreshCcw, SquarePlus } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
@@ -43,7 +43,13 @@ const dataForm = {
         "Complete los detalles a continuación para crear nuevos ambientes.",
 };
 
-export function CreateSpaceDialog() {
+interface CreateSpaceDialogSheetProps {
+    diferentPage?: boolean;
+}
+
+export function CreateSpaceDialog({
+    diferentPage,
+}: CreateSpaceDialogSheetProps) {
     const [open, setOpen] = useState(false);
     const [isCreatePending, startCreateTransition] = useTransition();
     const isDesktop = useMediaQuery("(min-width: 640px)");
@@ -85,7 +91,14 @@ export function CreateSpaceDialog() {
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
                     <Button variant="outline" size="sm">
-                        <Plus className="mr-2 size-4" aria-hidden="true" />
+                        {diferentPage ? (
+                            <SquarePlus
+                                className="mr-2 size-4"
+                                aria-hidden="true"
+                            />
+                        ) : (
+                            <Plus className="mr-2 size-4" aria-hidden="true" />
+                        )}
                         {dataForm.button}
                     </Button>
                 </DialogTrigger>

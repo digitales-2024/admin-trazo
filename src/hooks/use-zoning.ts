@@ -2,6 +2,7 @@ import {
     useCreateZoningMutation,
     useDeleteZoningMutation,
     useGetAllZoningQuery,
+    useGetZoningByIdQuery,
     useReactivateZoningMutation,
     useUpdateZoningMutation,
 } from "@/redux/services/zoningApi";
@@ -9,7 +10,13 @@ import { CustomErrorData, Zoning } from "@/types";
 import { translateError } from "@/utils/translateError";
 import { toast } from "sonner";
 
-export const useZoning = () => {
+interface UseZoningProps {
+    id?: string;
+}
+
+export const useZoning = (options: UseZoningProps = {}) => {
+    const { id } = options;
+
     const {
         data: dataZoningAll,
         error,
@@ -17,6 +24,14 @@ export const useZoning = () => {
         isSuccess,
         refetch,
     } = useGetAllZoningQuery();
+
+    const { data: zoningById, refetch: refetchZoningById } =
+        useGetZoningByIdQuery(
+            { id: id as string },
+            {
+                skip: !id, // Evita hacer la query si no hay id
+            },
+        );
 
     const [createZoning, { isSuccess: isSuccessCreateZoning }] =
         useCreateZoningMutation();
@@ -199,6 +214,8 @@ export const useZoning = () => {
         isLoading,
         isSuccess,
         refetch,
+        zoningById,
+        refetchZoningById,
         onCreateZoning,
         isSuccessCreateZoning,
         onUpdateZoning,

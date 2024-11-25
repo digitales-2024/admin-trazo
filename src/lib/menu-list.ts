@@ -16,6 +16,8 @@ import {
     HousePlusIcon,
     GalleryHorizontalEnd,
     PencilRuler,
+    ScrollText,
+    Anvil,
 } from "lucide-react";
 
 type Submenu = {
@@ -68,10 +70,16 @@ export function getMenuList(pathname: string): Group[] {
                             icon: FileSpreadsheet,
                         },
                         {
-                            href: "/design-project/projects",
+                            href: "/design-project/design",
                             label: "Proyectos",
-                            active: pathname.includes("/projects"),
+                            active: pathname.includes("/design-project/design"),
                             icon: FolderRoot,
+                        },
+                        {
+                            href: "/design-project/charter",
+                            label: "Acta de Proyecto",
+                            active: pathname.includes("/charter"),
+                            icon: ScrollText,
                         },
                     ],
                 },
@@ -121,6 +129,14 @@ export function getMenuList(pathname: string): Group[] {
                     icon: GalleryHorizontalEnd,
                     submenus: [],
                 },
+                {
+                    href: "/resources",
+                    label: "Recursos",
+                    active: pathname.includes("/resources"),
+                    icon: Anvil,
+                    submenus: [],
+                },
+
                 {
                     href: "/zoning",
                     label: "Zonificaciones",

@@ -3,6 +3,10 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 
 import baseQueryWithReauth from "../baseQuery";
 
+interface GetZoningByIdProps {
+    id: string;
+}
+
 export const zoningApi = createApi({
     reducerPath: "zoningApi",
     baseQuery: baseQueryWithReauth,
@@ -29,13 +33,13 @@ export const zoningApi = createApi({
             invalidatesTags: ["Zoning"],
         }),
         //Obtener zonificación por id
-        getZoningById: build.query<Zoning, string>({
-            query: (id) => ({
+        getZoningById: build.query<Zoning, GetZoningByIdProps>({
+            query: ({ id }) => ({
                 url: `/zoning/${id}`,
                 method: "GET",
                 credentials: "include",
             }),
-            providesTags: (result, error, id) => [{ type: "Zoning", id }],
+            providesTags: ["Zoning"],
         }),
         //Obtener todos los zonificaciones
         getAllZoning: build.query<Zoning[], void>({
