@@ -5,7 +5,7 @@ import {
     DesignProjectStatus,
 } from "@/types/designProject";
 import { ColumnDef } from "@tanstack/react-table";
-import { Contact, Ellipsis, FileDown, MonitorCog } from "lucide-react";
+import { Contact, Ellipsis, FileDown, MonitorCog, Trash } from "lucide-react";
 import { useState } from "react";
 
 import { DataTable } from "@/components/data-table/DataTable";
@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { CreateProjectDialog } from "./CreateDesignProjectDialog";
+import { DeleteProjectDialog } from "./DeleteProjectDialog";
 import { DesignProjectDescriptionDialog } from "./DesignProjectDescriptionDialog";
 import { EditDesignProjectSheet } from "./EditDesignProjectSheet";
 import { GenerateContractForm } from "./GenerateContractForm";
@@ -197,6 +198,7 @@ export function DesignProjectTable({
                     useState(false);
                 const [showDescriptionDialog, setShowDescriptionDialog] =
                     useState(false);
+                const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
                 const status = row.original.status;
 
@@ -225,6 +227,12 @@ export function DesignProjectTable({
                                 id={row?.original?.id ?? -1}
                                 open={showUpdateStatusDialog}
                                 onOpenChange={setShowUpdateStatusDialog}
+                                project={row?.original}
+                            />
+                            <DeleteProjectDialog
+                                id={row?.original?.id ?? -1}
+                                open={showDeleteDialog}
+                                onOpenChange={setShowDeleteDialog}
                                 project={row?.original}
                             />
                         </div>
@@ -277,6 +285,18 @@ export function DesignProjectTable({
                                     Generar contrato
                                     <DropdownMenuShortcut>
                                         <FileDown
+                                            className="size-4"
+                                            aria-hidden="true"
+                                        />
+                                    </DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    className="text-red-700"
+                                    onSelect={() => setShowDeleteDialog(true)}
+                                >
+                                    Eliminar
+                                    <DropdownMenuShortcut>
+                                        <Trash
                                             className="size-4"
                                             aria-hidden="true"
                                         />
