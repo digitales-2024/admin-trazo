@@ -1,5 +1,4 @@
 "use client";
-"use memo";
 
 import { useProjectCharter } from "@/hooks/use-project-charter";
 

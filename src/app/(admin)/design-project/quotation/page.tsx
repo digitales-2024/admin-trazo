@@ -1,5 +1,4 @@
 "use client";
-"use memo";
 
 import { useQuotations } from "@/hooks/use-quotation";
 

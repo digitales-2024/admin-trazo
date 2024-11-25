@@ -85,6 +85,10 @@ const errorTranslations = {
     "This zoningCode already exists": "Este código de zonificación ya existe",
     "The sum of buildable area and open area must be 100":
         "La suma del área construible y el área libre debe ser 100",
+    "startProjectDate must be a valid ISO 8601 date string":
+        "La fecha de inicio de proyecto debe ser una fecha ISO 8601",
+    "A design project already exists for this quotation":
+        "Ya existe un proyecto de diseño para esta cotizacion",
     "Resource already exists": "Este recurso ya existe",
     "Error updating resource": "Error actualizando recurso",
     "This resource is inactive, contact the superadmin to reactivate it":
