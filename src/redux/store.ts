@@ -14,6 +14,7 @@ import { resourceApi } from "./services/resourceApi";
 import { rolesApi } from "./services/rolesApi";
 import { spacesApi } from "./services/spaceApi";
 import { usersApi } from "./services/usersApi";
+import { workitemApi } from "./services/workitemApi";
 import { zoningApi } from "./services/zoningApi";
 
 export const store = configureStore({
@@ -32,6 +33,7 @@ export const store = configureStore({
         [projectCharterApi.reducerPath]: projectCharterApi.reducer,
         [observationApi.reducerPath]: observationApi.reducer,
         [resourceApi.reducerPath]: resourceApi.reducer,
+        [workitemApi.reducerPath]: workitemApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
@@ -67,7 +69,8 @@ export const store = configureStore({
             .concat(zoningApi.middleware)
             .concat(projectCharterApi.middleware)
             .concat(observationApi.middleware)
-            .concat(resourceApi.middleware),
+            .concat(resourceApi.middleware)
+            .concat(workitemApi.middleware),
 });
 setupListeners(store.dispatch);
 
