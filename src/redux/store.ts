@@ -3,6 +3,7 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 
 import { adminApi } from "./services/adminApi";
 import { authApi } from "./services/authApi";
+import { budgetsApi } from "./services/budgetApi";
 import { businessApi } from "./services/businessApi";
 import { clientsApi } from "./services/clientApi";
 import { designProjectApi } from "./services/designProjectApi";
@@ -32,6 +33,7 @@ export const store = configureStore({
         [projectCharterApi.reducerPath]: projectCharterApi.reducer,
         [observationApi.reducerPath]: observationApi.reducer,
         [resourceApi.reducerPath]: resourceApi.reducer,
+        [budgetsApi.reducerPath]: budgetsApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
@@ -67,7 +69,8 @@ export const store = configureStore({
             .concat(zoningApi.middleware)
             .concat(projectCharterApi.middleware)
             .concat(observationApi.middleware)
-            .concat(resourceApi.middleware),
+            .concat(resourceApi.middleware)
+            .concat(budgetsApi.middleware),
 });
 setupListeners(store.dispatch);
 
