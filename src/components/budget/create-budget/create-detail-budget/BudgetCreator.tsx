@@ -1,6 +1,14 @@
 "use client";
 
-import { Plus, DollarSign, Percent, BarChart2, Sheet } from "lucide-react";
+import { useCategory } from "@/hooks/use-category";
+import {
+    Plus,
+    DollarSign,
+    Percent,
+    BarChart2,
+    Sheet,
+    Trash2,
+} from "lucide-react";
 import React, { useState } from "react";
 
 import {
@@ -9,6 +17,7 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion";
+import { AutoComplete, Option } from "@/components/ui/autocomplete";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -25,10 +34,25 @@ export default function BudgetCreator() {
         taxPercentage: 18,
     });
 
-    const addCategory = () => {
+    const [isAddingCategory, setIsAddingCategory] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState<
+        Option | undefined
+    >(undefined);
+
+    const { dataCategoryAll } = useCategory();
+
+    // Obtener opciones para AutoComplete
+    const categoryOptions: Option[] = (dataCategoryAll ?? []).map(
+        (category) => ({
+            value: category.id.toString(),
+            label: category.name,
+        }),
+    );
+
+    const addCategory = (selectedOption: Option) => {
         const newCategory: CategoryType = {
-            id: "",
-            name: "Nueva Categoría",
+            id: selectedOption.value,
+            name: selectedOption.label,
             subcategories: [],
         };
         setBudget((prev) => ({
@@ -106,6 +130,58 @@ export default function BudgetCreator() {
                             <h2 className="mb-4 flex items-center text-xl font-semibold">
                                 <BarChart2 className="mr-2" /> Categorías
                             </h2>
+                            {isAddingCategory ? (
+                                <div className="mt-3 flex flex-col gap-2">
+                                    <AutoComplete
+                                        options={categoryOptions}
+                                        placeholder="Selecciona una categoría"
+                                        emptyMessage="No se encontraron categorías"
+                                        value={selectedCategory}
+                                        onValueChange={(option) =>
+                                            setSelectedCategory(option)
+                                        }
+                                        className="z-50"
+                                    />
+                                    <div className="mb-4 flex gap-2">
+                                        <Button
+                                            type="button"
+                                            onClick={() => {
+                                                if (selectedCategory) {
+                                                    addCategory(
+                                                        selectedCategory,
+                                                    );
+                                                    setIsAddingCategory(false);
+                                                    setSelectedCategory(
+                                                        undefined,
+                                                    );
+                                                }
+                                            }}
+                                            className="w-full"
+                                        >
+                                            Confirmar
+                                        </Button>
+                                        <Button
+                                            type="button"
+                                            variant="secondary"
+                                            onClick={() =>
+                                                setIsAddingCategory(false)
+                                            }
+                                            className="w-full"
+                                        >
+                                            Cancelar
+                                        </Button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <Button
+                                    type="button"
+                                    onClick={() => setIsAddingCategory(true)}
+                                    className="mb-4 w-full"
+                                >
+                                    <Plus className="mr-2 h-4 w-4" /> Agregar
+                                    Categoría
+                                </Button>
+                            )}
                             <ScrollArea className="h-[400px] w-full rounded-md border p-4">
                                 <Accordion
                                     type="single"
@@ -118,15 +194,29 @@ export default function BudgetCreator() {
                                                 value={`item-${index}`}
                                                 key={category.id}
                                             >
-                                                <AccordionTrigger className="capitalize">
-                                                    {category.name}
-                                                </AccordionTrigger>
+                                                <div className="mb-2 flex items-center justify-between gap-4">
+                                                    <div className="w-full">
+                                                        <AccordionTrigger className="capitalize">
+                                                            {category.name}
+                                                        </AccordionTrigger>
+                                                    </div>
+
+                                                    <Button
+                                                        type="button"
+                                                        variant="destructive"
+                                                        size="icon"
+                                                        onClick={() =>
+                                                            deleteCategory(
+                                                                category.id,
+                                                            )
+                                                        }
+                                                    >
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </Button>
+                                                </div>
                                                 <AccordionContent>
                                                     <Category
                                                         category={category}
-                                                        onDelete={
-                                                            deleteCategory
-                                                        }
                                                         onUpdate={
                                                             updateCategory
                                                         }
@@ -137,14 +227,6 @@ export default function BudgetCreator() {
                                     )}
                                 </Accordion>
                             </ScrollArea>
-                            <Button
-                                type="button"
-                                onClick={addCategory}
-                                className="mt-4 w-full"
-                            >
-                                <Plus className="mr-2 h-4 w-4" /> Agregar
-                                Categoría
-                            </Button>
                         </div>
                         <div>
                             <h2 className="mb-4 flex items-center text-xl font-semibold">
