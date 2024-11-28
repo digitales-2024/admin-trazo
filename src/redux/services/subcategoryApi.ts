@@ -44,6 +44,20 @@ export const subcategoryApi = createApi({
             }),
             providesTags: ["Subcategory"],
         }),
+
+        //Obtener todas las subcategorias de una categoria
+        getSubcategoryByIdCategory: build.query<
+            Subcategory,
+            GetSubcategoryByIdProps
+        >({
+            query: ({ id }) => ({
+                url: `/subcategory/category/${id}`,
+                method: "GET",
+                credentials: "include",
+            }),
+            providesTags: ["Subcategory"],
+        }),
+
         //Obtener todos los subcategorias
         getAllSubcategory: build.query<Subcategory[], void>({
             query: () => ({
@@ -83,4 +97,5 @@ export const {
     useGetAllSubcategoryQuery,
     useDeleteSubcategoryMutation,
     useReactivateSubcategoryMutation,
+    useGetSubcategoryByIdCategoryQuery,
 } = subcategoryApi;
