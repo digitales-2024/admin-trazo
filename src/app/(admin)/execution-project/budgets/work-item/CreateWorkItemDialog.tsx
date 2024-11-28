@@ -110,6 +110,9 @@ export function CreateWorkItemDialog() {
             createData.apu = {
                 performance: apuPerformanceNumber,
                 workHours: apuWorkHoursNumber,
+                // Resources are always empty on create,
+                // those are added in another interface.
+                resources: [],
             };
         } else if (selectedTab === "subworkitem") {
             // if SUB is selected, continue
