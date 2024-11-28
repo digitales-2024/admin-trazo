@@ -137,7 +137,7 @@ export function DesignProjectDescriptionDialog({
                                 <span className="font-semibold">Cliente</span>
                             </div>
                             <span className="pl-8 capitalize">
-                                pablito de los
+                                {project.client.name}
                             </span>
                         </CardContent>
                     </Card>
