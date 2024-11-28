@@ -5,6 +5,7 @@ import { adminApi } from "./services/adminApi";
 import { authApi } from "./services/authApi";
 import { budgetsApi } from "./services/budgetApi";
 import { businessApi } from "./services/businessApi";
+import { categoryApi } from "./services/categoryApi";
 import { clientsApi } from "./services/clientApi";
 import { designProjectApi } from "./services/designProjectApi";
 import { exchangeRateSunatApi } from "./services/exchangeRateSunatApi";
@@ -34,6 +35,7 @@ export const store = configureStore({
         [observationApi.reducerPath]: observationApi.reducer,
         [resourceApi.reducerPath]: resourceApi.reducer,
         [budgetsApi.reducerPath]: budgetsApi.reducer,
+        [categoryApi.reducerPath]: categoryApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
@@ -70,7 +72,8 @@ export const store = configureStore({
             .concat(projectCharterApi.middleware)
             .concat(observationApi.middleware)
             .concat(resourceApi.middleware)
-            .concat(budgetsApi.middleware),
+            .concat(budgetsApi.middleware)
+            .concat(categoryApi.middleware),
 });
 setupListeners(store.dispatch);
 
