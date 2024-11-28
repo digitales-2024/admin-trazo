@@ -76,4 +76,11 @@ export const subcategoryApi = createApi({
     }),
 });
 
-export const {} = subcategoryApi;
+export const {
+    useCreateSubcategoryMutation,
+    useUpdateSubcategoryMutation,
+    useGetSubcategoryByIdQuery,
+    useGetAllSubcategoryQuery,
+    useDeleteSubcategoryMutation,
+    useReactivateSubcategoryMutation,
+} = subcategoryApi;
