@@ -6,8 +6,8 @@ export type Budget = {
     ubication: string;
     status: string;
     dateProject: string;
-    client: Client;
-    designProject?: DesignProject;
+    clientBudget: Client;
+    designProjectBudget?: DesignProject;
     budgetDetails: BudgetDetail[];
     category: CategoryBudget[];
 };
@@ -20,8 +20,8 @@ export type BudgetSummary = {
     ubication: string;
     status: string;
     dateProject: string;
-    client: Client;
-    designProject?: DesignProject;
+    clientBudget: Client;
+    designProjectBudget?: DesignProject;
 };
 
 export type Client = {
