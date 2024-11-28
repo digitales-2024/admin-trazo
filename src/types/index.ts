@@ -40,3 +40,4 @@ export {
     BudgetStatusType,
 } from "./budget";
 export type { Category } from "./category";
+export type { Subcategory } from "./subcategory";
