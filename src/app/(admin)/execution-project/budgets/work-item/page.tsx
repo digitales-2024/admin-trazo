@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { ChildrenDataTable } from "./ChildrenDataTable";
+import { CreateWorkItemDialog } from "./CreateWorkItemDialog";
 
 export default function WorkItemPage() {
     const { data, isLoading } = useGetWorkitemQuery();
@@ -237,9 +238,18 @@ function WorkItemTable({ data }: { data: Array<any> }) {
             columns={columns}
             getSubRows={(row) => row.children as unknown as Array<TMock>}
             placeholder="Buscar partidas"
+            toolbarActions={<WorkItemToolbarActions />}
             renderExpandedRow={(subrow) => {
                 return <ChildrenDataTable data={subrow.children} />;
             }}
         />
+    );
+}
+
+function WorkItemToolbarActions() {
+    return (
+        <div className="flex w-fit flex-wrap items-center gap-2">
+            <CreateWorkItemDialog />
+        </div>
     );
 }
