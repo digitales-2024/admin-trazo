@@ -1,6 +1,8 @@
+import { useWorkItem } from "@/hooks/use-workitem";
+import { WorkItemCreate } from "@/types/workitem";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -44,9 +46,11 @@ const formSchema = z.object({
 });
 
 export function CreateWorkItemDialog() {
+    const [open, setOpen] = useState(false);
     // Used to show a custom error in the form.
     const [errorMsg, setErrorMsg] = useState("");
     const [selectedTab, setSelectedTab] = useState("apu");
+    const { onCreate, createLoading, createSuccess } = useWorkItem();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -58,9 +62,13 @@ export function CreateWorkItemDialog() {
         },
     });
 
-    // 2. Define a submit handler.
     function onSubmit(values: z.infer<typeof formSchema>) {
         setErrorMsg("");
+        const createData: WorkItemCreate = {
+            unit: values.unit,
+            name: values.name,
+        };
+
         if (selectedTab === "apu") {
             // if APU is selected, both fields should be filled, and be numbers
             const apuPerformance = values.apuPerformance;
@@ -91,14 +99,35 @@ export function CreateWorkItemDialog() {
                 return;
             }
 
-            // Create the workitem
+            if (apuWorkHoursNumber <= 0 || apuPerformanceNumber <= 0) {
+                setErrorMsg(
+                    "El rendimiento y horas de trabajo del APU deben ser mayores a 0.",
+                );
+                return;
+            }
+
+            // Insert APU data
+            createData.apu = {
+                performance: apuPerformanceNumber,
+                workHours: apuWorkHoursNumber,
+            };
         } else if (selectedTab === "subworkitem") {
             // if SUB is selected, continue
         }
+
+        // do create
+        onCreate(createData);
     }
 
+    useEffect(() => {
+        if (createSuccess) {
+            form.reset();
+            setOpen(false);
+        }
+    }, [createSuccess, form]);
+
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button variant="outline" size="sm">
                     <Plus className="mr-2 size-4" aria-hidden="true" />
@@ -246,7 +275,13 @@ export function CreateWorkItemDialog() {
 
                         {/* Boton para crear partida */}
                         <div className="text-right">
-                            <Button>Crear partida</Button>
+                            <Button
+                                disabled={
+                                    !form.formState.isDirty || createLoading
+                                }
+                            >
+                                Crear partida
+                            </Button>
                         </div>
                     </form>
                 </Form>
