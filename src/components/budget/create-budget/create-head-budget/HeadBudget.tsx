@@ -34,20 +34,22 @@ export const HeadBudget = ({
     designProjectIdUpdate,
 }: HeadBudgetProps) => {
     const { dataClientsAll } = useClients();
-    const { data } = useDesignProject();
+    const { dataDesignProjectCompleted } = useDesignProject();
     const isExistingDesignProject = form.watch("isExistingDesignProject");
 
     // Obtener opciones de cliente
-    const designProjectOptions: Option[] = (data ?? []).map((project) => ({
+    const designProjectOptions: Option[] = (
+        dataDesignProjectCompleted ?? []
+    ).map((project) => ({
         value: project.id.toString(),
         label: project.code,
     }));
 
     const handleDesignProjectChange = useCallback(
         (designProjectId: string) => {
-            const selectedDesignProject = (data ?? []).find(
-                (project) => project.id.toString() === designProjectId,
-            );
+            const selectedDesignProject = (
+                dataDesignProjectCompleted ?? []
+            ).find((project) => project.id.toString() === designProjectId);
 
             if (selectedDesignProject) {
                 // Completar los campos automáticamente
@@ -63,10 +65,9 @@ export const HeadBudget = ({
                 form.setValue("name", "");
                 form.setValue("ubication", "");
                 form.setValue("clientId", "");
-                form.setValue("dateProject", ""); // Limpiar la fecha también
             }
         },
-        [data, form],
+        [dataDesignProjectCompleted, form],
     );
 
     useEffect(() => {
@@ -219,7 +220,7 @@ export const HeadBudget = ({
                                 <div className="relative">
                                     <MapPinIcon className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                                     <Input
-                                        placeholder="Ingrese la ubicación"
+                                        placeholder="Ingrese la ubicación del proyecto"
                                         className="pl-8"
                                         value={field.value || ""}
                                         onChange={field.onChange}
