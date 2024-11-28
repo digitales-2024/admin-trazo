@@ -2,6 +2,7 @@ import {
     useCreateSubcategoryMutation,
     useDeleteSubcategoryMutation,
     useGetAllSubcategoryQuery,
+    useGetSubcategoryByIdCategoryQuery,
     useGetSubcategoryByIdQuery,
     useReactivateSubcategoryMutation,
     useUpdateSubcategoryMutation,
@@ -24,6 +25,16 @@ export const useSubcategory = (options: UseSubcategoryProps = {}) => {
         isSuccess,
         refetch,
     } = useGetAllSubcategoryQuery();
+
+    const {
+        data: subcategoriesByIdCategory,
+        refetch: refetchSubcategoriesByIdCategory,
+    } = useGetSubcategoryByIdCategoryQuery(
+        { id: id as string },
+        {
+            skip: !id, // Evita hacer la query si no hay id
+        },
+    );
 
     const { data: subcategoryById, refetch: refetchSubcategoryById } =
         useGetSubcategoryByIdQuery(
@@ -231,5 +242,7 @@ export const useSubcategory = (options: UseSubcategoryProps = {}) => {
         reactivateSubcategory: onReactivateSubcategory,
         isSuccessReactivateSubcategory,
         isLoadingReactivateSubcategory,
+        subcategoriesByIdCategory,
+        refetchSubcategoriesByIdCategory,
     };
 };
