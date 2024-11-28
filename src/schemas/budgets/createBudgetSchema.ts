@@ -13,6 +13,11 @@ export const createBudgetSchema = z.object({
     dateProject: z
         .string()
         .min(1, { message: "La fecha del proyecto es obligatoria" }),
+    isExistingDesignProject: z.boolean().optional(),
+    designProjectId: z
+        .string()
+        .min(1, { message: "Debe seleccionar un proyecto de diseño" })
+        .optional(),
 });
 
 export type CreateBudgetSchema = z.infer<typeof createBudgetSchema>;
