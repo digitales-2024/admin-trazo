@@ -2,14 +2,15 @@
 
 import { useGetWorkitemQuery } from "@/redux/services/workitemApi";
 import { ColumnDef } from "@tanstack/react-table";
-import { Ellipsis } from "lucide-react";
-import { Button } from "react-day-picker";
+import { ChevronDown, ChevronUp, Ellipsis } from "lucide-react";
 
 import { ErrorPage } from "@/components/common/ErrorPage";
 import { HeaderPage } from "@/components/common/HeaderPage";
 import { Shell } from "@/components/common/Shell";
+import { DataTableColumnHeader } from "@/components/data-table/DataTableColumnHeader";
 import { DataTableExpanded } from "@/components/data-table/DataTableExpanded";
 import { DataTableSkeleton } from "@/components/data-table/DataTableSkeleton";
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
     DropdownMenu,
@@ -17,6 +18,8 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+import { ChildrenDataTable } from "./ChildrenDataTable";
 
 export default function WorkItemPage() {
     const { data, isLoading } = useGetWorkitemQuery();
@@ -62,8 +65,68 @@ export default function WorkItemPage() {
     );
 }
 
+type TMock = {
+    id: string;
+    name: string;
+    unit: string;
+    children: Array<TMockChildren>;
+};
+
+type TMockChildren = {
+    name: string;
+    unit: string;
+};
+
+const mockData: Array<TMock> = [
+    {
+        id: "ff01",
+        name: "padre 01",
+        unit: "m3",
+        children: [
+            {
+                name: "sub 01",
+                unit: "cm3",
+            },
+            {
+                name: "sub 02",
+                unit: "cm3",
+            },
+        ],
+    },
+    {
+        id: "ff02",
+        name: "padre 02",
+        unit: "m2",
+        children: [],
+    },
+    {
+        id: "ff03",
+        name: "padre 02",
+        unit: "cc",
+        children: [],
+    },
+    {
+        id: "ff04",
+        name: "padre 04",
+        unit: "cm2",
+        children: [],
+    },
+    {
+        id: "ff05",
+        name: "padre 05",
+        unit: "pies",
+        children: [],
+    },
+    {
+        id: "ff06",
+        name: "padre 06",
+        unit: "nm",
+        children: [],
+    },
+];
+
 function WorkItemTable({ data }: { data: Array<any> }) {
-    const columns: ColumnDef<any>[] = [
+    const columns: ColumnDef<TMock>[] = [
         {
             id: "select",
             size: 10,
@@ -98,15 +161,48 @@ function WorkItemTable({ data }: { data: Array<any> }) {
             enablePinning: true,
         },
         {
+            accessorKey: "id",
+            header: "Identificador",
+        },
+        {
             accessorKey: "name",
             header: "Nombre",
+        },
+        {
+            accessorKey: "unit",
+            header: "Unidad de medida",
+        },
+        {
+            size: 10,
+            accessorKey: "children",
+            header: ({ column }) => {
+                return (
+                    <DataTableColumnHeader
+                        column={column}
+                        title="Descripción"
+                    />
+                );
+            },
+            cell: ({ row }) => {
+                return row.getCanExpand() ? (
+                    <Button
+                        variant="ghost"
+                        {...{
+                            onClick: row.getToggleExpandedHandler(),
+                        }}
+                    >
+                        {row.getIsExpanded() ? <ChevronUp /> : <ChevronDown />}
+                    </Button>
+                ) : null;
+            },
+            enableSorting: false,
+            enableHiding: false,
+            enablePinning: true,
         },
         {
             id: "actions",
             size: 5,
             cell: function Cell({ row }) {
-                const status = row.original.status;
-
                 return (
                     <div>
                         {/* Componentes que crean paneles flotantes */}
@@ -137,11 +233,13 @@ function WorkItemTable({ data }: { data: Array<any> }) {
     ];
     return (
         <DataTableExpanded
-            data={data}
+            data={mockData}
             columns={columns}
-            getSubRows={(row) => row.description as unknown as any[]}
+            getSubRows={(row) => row.children as unknown as Array<TMock>}
             placeholder="Buscar partidas"
-            renderExpandedRow={(subrow) => <div>:D</div>}
+            renderExpandedRow={(subrow) => {
+                return <ChildrenDataTable data={subrow.children} />;
+            }}
         />
     );
 }
