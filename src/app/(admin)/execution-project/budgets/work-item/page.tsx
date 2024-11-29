@@ -1,14 +1,15 @@
 "use client";
 
 import { useGetWorkitemQuery } from "@/redux/services/workitemApi";
+import { WorkItemGetAll } from "@/types/workitem";
 import { ColumnDef } from "@tanstack/react-table";
 import { ChevronDown, ChevronUp, Ellipsis } from "lucide-react";
 
 import { ErrorPage } from "@/components/common/ErrorPage";
 import { HeaderPage } from "@/components/common/HeaderPage";
 import { Shell } from "@/components/common/Shell";
+import { DataTable } from "@/components/data-table/DataTable";
 import { DataTableColumnHeader } from "@/components/data-table/DataTableColumnHeader";
-import { DataTableExpanded } from "@/components/data-table/DataTableExpanded";
 import { DataTableSkeleton } from "@/components/data-table/DataTableSkeleton";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -19,8 +20,108 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { ChildrenDataTable } from "./ChildrenDataTable";
 import { CreateWorkItemDialog } from "./CreateWorkItemDialog";
+const mock = [
+    {
+        name: "Partida 01",
+        id: "0000-ffff-abc1",
+        unit: "m2",
+        unitCost: 322,
+        apuId: "ffff-ffff-ffff",
+        subWorkItem: [
+            {
+                name: "SubPartida 01",
+                id: "0000-cccc-f0f1",
+                unit: "m2",
+                unitCost: 322,
+                apuId: "ffff-ffff-ffff",
+                subWorkItem: [],
+            },
+            {
+                name: "SubPartida 01",
+                id: "0000-cccc-f0f1",
+                unit: "m2",
+                unitCost: 322,
+                apuId: "ffff-ffff-ffff",
+                subWorkItem: [],
+            },
+        ],
+    },
+    {
+        name: "Partida 01",
+        id: "0000-ffff-abc1",
+        unit: "m2",
+        unitCost: 322,
+        apuId: "ffff-ffff-ffff",
+        subWorkItem: [
+            {
+                name: "SubPartida 01",
+                id: "0000-cccc-f0f1",
+                unit: "m2",
+                unitCost: 322,
+                apuId: "ffff-ffff-ffff",
+                subWorkItem: [],
+            },
+            {
+                name: "SubPartida 01",
+                id: "0000-cccc-f0f1",
+                unit: "m2",
+                unitCost: 322,
+                apuId: "ffff-ffff-ffff",
+                subWorkItem: [],
+            },
+            {
+                name: "SubPartida 01",
+                id: "0000-cccc-f0f1",
+                unit: "m2",
+                unitCost: 322,
+                apuId: "ffff-ffff-ffff",
+                subWorkItem: [],
+            },
+        ],
+    },
+    {
+        name: "Partida 01",
+        id: "0000-ffff-abc1",
+        unit: "m2",
+        unitCost: 322,
+        apuId: "ffff-ffff-ffff",
+        subWorkItem: [],
+    },
+    {
+        name: "Partida 01",
+        id: "0000-ffff-abc1",
+        unit: "m2",
+        unitCost: 322,
+        apuId: "ffff-ffff-ffff",
+        subWorkItem: [],
+    },
+    {
+        name: "Partida 01",
+        id: "0000-ffff-abc1",
+        unit: "m2",
+        unitCost: 322,
+        apuId: "ffff-ffff-ffff",
+        subWorkItem: [
+            {
+                name: "SubPartida 01",
+                id: "0000-cccc-f0f1",
+                unit: "m2",
+                unitCost: 322,
+                apuId: "ffff-ffff-ffff",
+                subWorkItem: [],
+            },
+            {
+                name: "SubPartida 01",
+                id: "0000-cccc-f0f1",
+                unit: "m2",
+                unitCost: 322,
+                apuId: "ffff-ffff-ffff",
+                subWorkItem: [],
+            },
+        ],
+    },
+];
 
 export default function WorkItemPage() {
     const { data, isLoading } = useGetWorkitemQuery();
@@ -66,68 +167,9 @@ export default function WorkItemPage() {
     );
 }
 
-type TMock = {
-    id: string;
-    name: string;
-    unit: string;
-    children: Array<TMockChildren>;
-};
-
-type TMockChildren = {
-    name: string;
-    unit: string;
-};
-
-const mockData: Array<TMock> = [
-    {
-        id: "ff01",
-        name: "padre 01",
-        unit: "m3",
-        children: [
-            {
-                name: "sub 01",
-                unit: "cm3",
-            },
-            {
-                name: "sub 02",
-                unit: "cm3",
-            },
-        ],
-    },
-    {
-        id: "ff02",
-        name: "padre 02",
-        unit: "m2",
-        children: [],
-    },
-    {
-        id: "ff03",
-        name: "padre 02",
-        unit: "cc",
-        children: [],
-    },
-    {
-        id: "ff04",
-        name: "padre 04",
-        unit: "cm2",
-        children: [],
-    },
-    {
-        id: "ff05",
-        name: "padre 05",
-        unit: "pies",
-        children: [],
-    },
-    {
-        id: "ff06",
-        name: "padre 06",
-        unit: "nm",
-        children: [],
-    },
-];
-
-function WorkItemTable({ data }: { data: Array<any> }) {
-    const columns: ColumnDef<TMock>[] = [
+function WorkItemTable({ data }: { data: Array<WorkItemGetAll> }) {
+    console.log("unused:", data);
+    const columns: ColumnDef<WorkItemGetAll>[] = [
         {
             id: "select",
             size: 10,
@@ -148,22 +190,43 @@ function WorkItemTable({ data }: { data: Array<any> }) {
                 </div>
             ),
             cell: ({ row }) => (
-                <div className="px-2">
+                <div
+                    className="flex gap-2 px-2"
+                    style={{
+                        // Since rows are flattened by default,
+                        // we can use the row.depth property
+                        // and paddingLeft to visually indicate the depth
+                        // of the row
+                        paddingLeft: `${row.depth * 1}rem`,
+                    }}
+                >
                     <Checkbox
                         checked={row.getIsSelected()}
                         onCheckedChange={(value) => row.toggleSelected(!!value)}
                         aria-label="Select row"
                         className="translate-y-0.5"
                     />
+                    {row.getCanExpand() ? (
+                        <button
+                            {...{
+                                onClick: row.getToggleExpandedHandler(),
+                                style: { cursor: "pointer" },
+                            }}
+                        >
+                            {row.getIsExpanded() ? (
+                                <ChevronUp />
+                            ) : (
+                                <ChevronDown />
+                            )}
+                        </button>
+                    ) : (
+                        ""
+                    )}{" "}
                 </div>
             ),
             enableSorting: false,
             enableHiding: false,
             enablePinning: true,
-        },
-        {
-            accessorKey: "id",
-            header: "Identificador",
         },
         {
             accessorKey: "name",
@@ -172,6 +235,12 @@ function WorkItemTable({ data }: { data: Array<any> }) {
         {
             accessorKey: "unit",
             header: "Unidad de medida",
+            cell: ({ row }) => <div>{row.original.unit ?? "-"}</div>,
+        },
+        {
+            accessorKey: "unitCost",
+            header: "Costo unitario",
+            cell: ({ row }) => <div>{row.original.unitCost ?? "-"}</div>,
         },
         {
             size: 10,
@@ -180,21 +249,34 @@ function WorkItemTable({ data }: { data: Array<any> }) {
                 return (
                     <DataTableColumnHeader
                         column={column}
-                        title="Descripción"
+                        title="APU/Subpartidas"
                     />
                 );
             },
             cell: ({ row }) => {
-                return row.getCanExpand() ? (
-                    <Button
-                        variant="ghost"
-                        {...{
-                            onClick: row.getToggleExpandedHandler(),
-                        }}
-                    >
-                        {row.getIsExpanded() ? <ChevronUp /> : <ChevronDown />}
-                    </Button>
-                ) : null;
+                const hasApu = !!row.original.apuId;
+
+                if (hasApu) {
+                    return <Button>APU :D</Button>;
+                } else {
+                    return (
+                        <Button
+                            variant="ghost"
+                            {...{
+                                onClick: row.getToggleExpandedHandler(),
+                            }}
+                        >
+                            {row.getIsExpanded()
+                                ? "Ocultar subpartidas"
+                                : "Ver subpartidas"}{" "}
+                            {row.getIsExpanded() ? (
+                                <ChevronUp />
+                            ) : (
+                                <ChevronDown />
+                            )}
+                        </Button>
+                    );
+                }
             },
             enableSorting: false,
             enableHiding: false,
@@ -203,7 +285,7 @@ function WorkItemTable({ data }: { data: Array<any> }) {
         {
             id: "actions",
             size: 5,
-            cell: function Cell({ row }) {
+            cell: function Cell() {
                 return (
                     <div>
                         {/* Componentes que crean paneles flotantes */}
@@ -233,16 +315,16 @@ function WorkItemTable({ data }: { data: Array<any> }) {
         },
     ];
     return (
-        <DataTableExpanded
-            data={mockData}
-            columns={columns}
-            getSubRows={(row) => row.children as unknown as Array<TMock>}
-            placeholder="Buscar partidas"
-            toolbarActions={<WorkItemToolbarActions />}
-            renderExpandedRow={(subrow) => {
-                return <ChildrenDataTable data={subrow.children} />;
-            }}
-        />
+        <>
+            <DataTable
+                data={mock}
+                columns={columns}
+                getSubRows={(row) => row.subWorkItem}
+                placeholder="Buscar partidas"
+                toolbarActions={<WorkItemToolbarActions />}
+            />
+            <hr />
+        </>
     );
 }
 

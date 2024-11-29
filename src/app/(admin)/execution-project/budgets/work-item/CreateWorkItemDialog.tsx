@@ -88,9 +88,9 @@ function CreateWithApuForm({ setOpen }: { setOpen: (v: boolean) => void }) {
         defaultValues: {
             name: "",
             unit: "",
-            // @ts-ignore
+            // @ts-expect-error this should be a number, but its a string cause form uses strings
             apuPerformance: "",
-            // @ts-ignore
+            // @ts-expect-error this should be a number, but its a string cause form uses strings
             apuWorkHours: "",
         },
     });
@@ -111,7 +111,7 @@ function CreateWithApuForm({ setOpen }: { setOpen: (v: boolean) => void }) {
             form.reset();
             setOpen(false);
         }
-    }, [createSuccess, form]);
+    }, [createSuccess, form, setOpen]);
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -245,7 +245,7 @@ function CreateWithSubitemsForm({
             form.reset();
             setOpen(false);
         }
-    }, [createSuccess, form]);
+    }, [createSuccess, form, setOpen]);
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
