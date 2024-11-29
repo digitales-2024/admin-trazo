@@ -13,10 +13,11 @@ import { toast } from "sonner";
 
 interface UseSubcategoryProps {
     id?: string;
+    idCategory?: string;
 }
 
 export const useSubcategory = (options: UseSubcategoryProps = {}) => {
-    const { id } = options;
+    const { id, idCategory } = options;
 
     const {
         data: dataSubcategoryAll,
@@ -30,9 +31,9 @@ export const useSubcategory = (options: UseSubcategoryProps = {}) => {
         data: subcategoriesByIdCategory,
         refetch: refetchSubcategoriesByIdCategory,
     } = useGetSubcategoryByIdCategoryQuery(
-        { id: id as string },
+        { id: idCategory as string },
         {
-            skip: !id, // Evita hacer la query si no hay id
+            skip: !idCategory, // Evita hacer la query si no hay id
         },
     );
 
