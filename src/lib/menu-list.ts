@@ -92,7 +92,13 @@ export function getMenuList(pathname: string): Group[] {
                         {
                             href: "/execution-project/budgets",
                             label: "Presupuestos",
-                            active: pathname.includes("/budgets"),
+                            active: pathname.endsWith("/budgets"),
+                            icon: FileChartColumnIncreasing,
+                        },
+                        {
+                            href: "/execution-project/budgets/work-item",
+                            label: "Partidas",
+                            active: pathname.endsWith("/budgets/work-item"),
                             icon: FileChartColumnIncreasing,
                         },
                         {
