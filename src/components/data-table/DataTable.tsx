@@ -3,8 +3,10 @@ import {
     ColumnDef,
     ColumnFiltersState,
     ColumnPinningState,
+    ExpandedState,
     flexRender,
     getCoreRowModel,
+    getExpandedRowModel,
     getFacetedRowModel,
     getFacetedUniqueValues,
     getFilteredRowModel,
@@ -36,6 +38,7 @@ interface DataTableProps<TData, TValue> {
     placeholder?: string;
     toolbarActions?: ReactElement;
     viewOptions?: boolean;
+    getSubRows?: (row: TData) => TData[] | undefined;
 }
 
 export function DataTable<TData, TValue>({
@@ -44,7 +47,9 @@ export function DataTable<TData, TValue>({
     placeholder,
     toolbarActions,
     viewOptions,
+    getSubRows,
 }: DataTableProps<TData, TValue>) {
+    const [expanded, setExpanded] = useState<ExpandedState>({});
     const [rowSelection, setRowSelection] = useState({});
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
         {},
@@ -67,7 +72,10 @@ export function DataTable<TData, TValue>({
             columnFilters,
             globalFilter,
             columnPinning,
+            expanded,
         },
+        onExpandedChange: setExpanded,
+        getSubRows,
         enableRowSelection: true,
         onRowSelectionChange: setRowSelection,
         onSortingChange: setSorting,
@@ -81,6 +89,7 @@ export function DataTable<TData, TValue>({
         getSortedRowModel: getSortedRowModel(),
         getFacetedRowModel: getFacetedRowModel(),
         getFacetedUniqueValues: getFacetedUniqueValues(),
+        getExpandedRowModel: getExpandedRowModel(),
     });
 
     const getCommonPinningStyles = (column: Column<TData>): CSSProperties => {
