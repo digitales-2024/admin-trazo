@@ -8,6 +8,8 @@ export interface SubWorkItemType {
 export interface WorkItemType {
     id: string;
     name: string;
+    quantity: number;
+    unitCost: number;
     subItems: SubWorkItemType[];
 }
 
