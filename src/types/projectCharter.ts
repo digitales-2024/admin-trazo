@@ -2,6 +2,7 @@ import { Client } from "./quotation";
 
 export type ProjectCharter = {
     id: string;
+    preProjectApproval: boolean;
     amountOfObservations?: number;
     designProject: DesignProject;
 };
