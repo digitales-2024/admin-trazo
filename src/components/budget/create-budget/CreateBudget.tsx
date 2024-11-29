@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import { Form } from "../../ui/form";
+import BudgetCreator from "./create-detail-budget/BudgetCreator";
 import { HeadBudget } from "./create-head-budget/HeadBudget";
 
 export default function CreateBudget() {
@@ -30,6 +31,7 @@ export default function CreateBudget() {
                     className="space-y-8 p-1"
                 >
                     <HeadBudget form={form} />
+                    <BudgetCreator />
                 </form>
             </Form>
         </>
