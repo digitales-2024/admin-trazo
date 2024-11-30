@@ -39,5 +39,5 @@ export {
     type CategoryBudget,
     BudgetStatusType,
 } from "./budget";
-export type { Category } from "./category";
+export type { Category, FullCategory } from "./category";
 export type { Subcategory } from "./subcategory";
