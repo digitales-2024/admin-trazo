@@ -1,108 +1,51 @@
 "use client";
 
-import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
+import { useCategory } from "@/hooks/use-category";
 import {
-    BarChart2,
-    ChevronRight,
-    Trash2,
-    Package,
-    Layers,
-    FileText,
-    List,
-} from "lucide-react";
+    DragCategoriesItem,
+    FullCategory,
+    SubcategoryDragCategory,
+    SubworkItemDragCategory,
+    WorkItemDragCategory,
+} from "@/types";
+import { DragDropContext } from "@hello-pangea/dnd";
+import { BarChart2 } from "lucide-react";
 import React, { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-    Collapsible,
-    CollapsibleContent,
-    CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
 
+import { AvailableItems } from "./AvailableItems";
+import { BudgetTable } from "./BudgetTable";
 import PercentageBudget from "./PercentageBudget";
 import SummaryBudget from "./SummaryBudget";
-import {
-    Budget,
-    CategoryType,
-    SubcategoryType,
-    WorkItemType,
-    SubWorkItemType,
-} from "./types";
+import { Budget } from "./types";
 
-const calculateSubWorkItemTotal = (subItem: SubWorkItemType) =>
-    subItem.quantity * subItem.unitPrice;
+const calculateSubWorkItemTotal = (subItem: SubworkItemDragCategory) =>
+    (subItem.quantity || 0) * (subItem.unitCost || 0);
 
-const calculateWorkItemTotal = (item: WorkItemType) =>
-    item.subItems.length > 0
-        ? item.subItems.reduce(
+const calculateWorkItemTotal = (item: WorkItemDragCategory) =>
+    item.subworkItem && item.subworkItem.length > 0
+        ? item.subworkItem.reduce(
               (total, subItem) => total + calculateSubWorkItemTotal(subItem),
               0,
           )
         : (item.quantity || 0) * (item.unitCost || 0);
 
-const calculateSubcategoryTotal = (subcategory: SubcategoryType) =>
-    subcategory.items.reduce(
+const calculateSubcategoryTotal = (subcategory: SubcategoryDragCategory) => {
+    if (!subcategory.workItems) {
+        return 0;
+    }
+    return subcategory.workItems.reduce(
         (total, item) => total + calculateWorkItemTotal(item),
         0,
     );
+};
 
-const calculateCategoryTotal = (category: CategoryType) =>
+const calculateCategoryTotal = (category: FullCategory) =>
     category.subcategories.reduce(
         (total, subcategory) => total + calculateSubcategoryTotal(subcategory),
         0,
     );
-
-const ItemTypes = {
-    CATEGORY: "Categoría",
-    SUBCATEGORY: "Subcategoría",
-    ITEM: "Ítem",
-    SUBITEM: "Sub-Ítem",
-};
-
-const ItemIcons = {
-    [ItemTypes.CATEGORY]: Package,
-    [ItemTypes.SUBCATEGORY]: Layers,
-    [ItemTypes.ITEM]: FileText,
-    [ItemTypes.SUBITEM]: List,
-};
-
-interface DraggableItemProps {
-    id: string;
-    name: string;
-    icon: React.ComponentType<{ className?: string }>;
-}
-
-const DraggableItem: React.FC<DraggableItemProps> = ({
-    id,
-    name,
-    icon: Icon,
-}) => (
-    <Draggable draggableId={id} index={parseInt(id)}>
-        {(provided) => (
-            <div
-                ref={provided.innerRef}
-                {...provided.draggableProps}
-                {...provided.dragHandleProps}
-                className="flex items-center space-x-2 rounded-md border bg-white p-2 shadow-sm"
-            >
-                <Icon className="h-5 w-5 text-gray-500" />
-                <span>{name}</span>
-            </div>
-        )}
-    </Draggable>
-);
 
 export default function BudgetCreator() {
     const [budget, setBudget] = useState<Budget>({
@@ -112,27 +55,19 @@ export default function BudgetCreator() {
         taxPercentage: 18,
     });
 
-    const [dragItems] = useState([
-        { id: "1", type: ItemTypes.CATEGORY, name: "Materiales" },
-        { id: "2", type: ItemTypes.CATEGORY, name: "Mano de Obra" },
-        { id: "3", type: ItemTypes.CATEGORY, name: "Equipos" },
-        { id: "4", type: ItemTypes.SUBCATEGORY, name: "Concreto" },
-        { id: "5", type: ItemTypes.SUBCATEGORY, name: "Acero" },
-        { id: "6", type: ItemTypes.ITEM, name: "Cemento" },
-        { id: "7", type: ItemTypes.ITEM, name: "Arena" },
-        { id: "8", type: ItemTypes.SUBITEM, name: "Operario" },
-        { id: "9", type: ItemTypes.SUBITEM, name: "Peón" },
-    ]);
+    const { fullCategoryData } = useCategory();
 
     interface DragResult {
-        destination: {
-            droppableId: string;
-            index: number;
-        } | null;
         source: {
             droppableId: string;
             index: number;
         };
+        destination: {
+            droppableId: string;
+            index: number;
+        } | null;
+        draggableId: string;
+        type: string;
     }
 
     const onDragEnd = (result: DragResult) => {
@@ -144,75 +79,85 @@ export default function BudgetCreator() {
             source.droppableId === "items" &&
             destination.droppableId === "budget"
         ) {
-            const draggedItem = dragItems[source.index];
+            const draggedItemId = result.draggableId;
+            const draggedItem = findDragItemById(
+                fullCategoryData || [],
+                draggedItemId,
+            );
 
-            switch (draggedItem.type) {
-                case ItemTypes.CATEGORY:
-                    addCategory(draggedItem.name);
-                    break;
-                case ItemTypes.SUBCATEGORY:
-                    if (budget.categories.length > 0) {
-                        addSubcategory(
-                            budget.categories[budget.categories.length - 1].id,
-                            draggedItem.name,
-                        );
-                    }
-                    break;
-                case ItemTypes.ITEM:
-                    if (
-                        budget.categories.length > 0 &&
-                        budget.categories[budget.categories.length - 1]
-                            .subcategories.length > 0
-                    ) {
-                        const lastCategory =
-                            budget.categories[budget.categories.length - 1];
-                        const lastSubcategory =
-                            lastCategory.subcategories[
-                                lastCategory.subcategories.length - 1
-                            ];
-                        addWorkItem(
-                            lastCategory.id,
-                            lastSubcategory.id,
-                            draggedItem.name,
-                        );
-                    }
-                    break;
-                case ItemTypes.SUBITEM:
-                    if (
-                        budget.categories.length > 0 &&
-                        budget.categories[budget.categories.length - 1]
-                            .subcategories.length > 0 &&
-                        budget.categories[budget.categories.length - 1]
-                            .subcategories[
+            if (draggedItem) {
+                switch (draggedItem.type) {
+                    case "category":
+                        addCategory(draggedItem.name, draggedItem.id);
+                        break;
+                    case "subcategory":
+                        if (budget.categories.length > 0) {
+                            addSubcategory(
+                                budget.categories[budget.categories.length - 1]
+                                    .id,
+                                draggedItem.name,
+                                draggedItem.id,
+                            );
+                        }
+                        break;
+                    case "workItem":
+                        if (
+                            budget.categories.length > 0 &&
                             budget.categories[budget.categories.length - 1]
-                                .subcategories.length - 1
-                        ].items.length > 0
-                    ) {
-                        const lastCategory =
-                            budget.categories[budget.categories.length - 1];
-                        const lastSubcategory =
-                            lastCategory.subcategories[
-                                lastCategory.subcategories.length - 1
-                            ];
-                        const lastItem =
-                            lastSubcategory.items[
-                                lastSubcategory.items.length - 1
-                            ];
-                        addSubWorkItem(
-                            lastCategory.id,
-                            lastSubcategory.id,
-                            lastItem.id,
-                            draggedItem.name,
-                        );
-                    }
-                    break;
+                                .subcategories.length > 0
+                        ) {
+                            const lastCategory =
+                                budget.categories[budget.categories.length - 1];
+                            const lastSubcategory =
+                                lastCategory.subcategories[
+                                    lastCategory.subcategories.length - 1
+                                ];
+                            addWorkItem(
+                                lastCategory.id,
+                                lastSubcategory.id,
+                                draggedItem.name,
+                                draggedItem.id,
+                            );
+                        }
+                        break;
+                    case "subWorkItem":
+                        if (
+                            budget.categories.length > 0 &&
+                            budget.categories[budget.categories.length - 1]
+                                .subcategories.length > 0 &&
+                            budget.categories[budget.categories.length - 1]
+                                .subcategories[
+                                budget.categories[budget.categories.length - 1]
+                                    .subcategories.length - 1
+                            ].workItems.length > 0
+                        ) {
+                            const lastCategory =
+                                budget.categories[budget.categories.length - 1];
+                            const lastSubcategory =
+                                lastCategory.subcategories[
+                                    lastCategory.subcategories.length - 1
+                                ];
+                            const lastItem =
+                                lastSubcategory.workItems[
+                                    lastSubcategory.workItems.length - 1
+                                ];
+                            addSubWorkItem(
+                                lastCategory.id,
+                                lastSubcategory.id,
+                                lastItem.id,
+                                draggedItem.name,
+                                draggedItem.id,
+                            );
+                        }
+                        break;
+                }
             }
         }
     };
 
-    const addCategory = (name: string) => {
-        const newCategory: CategoryType = {
-            id: uuidv4(),
+    const addCategory = (name: string, id: string) => {
+        const newCategory: FullCategory = {
+            id: id,
             name,
             subcategories: [],
         };
@@ -222,11 +167,11 @@ export default function BudgetCreator() {
         }));
     };
 
-    const addSubcategory = (categoryId: string, name: string) => {
-        const newSubcategory: SubcategoryType = {
-            id: uuidv4(),
+    const addSubcategory = (categoryId: string, name: string, id: string) => {
+        const newSubcategory: SubcategoryDragCategory = {
+            id: id,
             name,
-            items: [],
+            workItems: [],
         };
         setBudget((prev) => ({
             ...prev,
@@ -245,11 +190,12 @@ export default function BudgetCreator() {
         categoryId: string,
         subcategoryId: string,
         name: string,
+        id: string,
     ) => {
-        const newWorkItem: WorkItemType = {
-            id: uuidv4(),
+        const newWorkItem: WorkItemDragCategory = {
+            id: id,
             name,
-            subItems: [],
+            subworkItem: [],
             quantity: 0,
             unitCost: 0,
         };
@@ -263,7 +209,10 @@ export default function BudgetCreator() {
                               subcat.id === subcategoryId
                                   ? {
                                         ...subcat,
-                                        items: [...subcat.items, newWorkItem],
+                                        workItems: [
+                                            ...subcat.workItems,
+                                            newWorkItem,
+                                        ],
                                     }
                                   : subcat,
                           ),
@@ -278,12 +227,13 @@ export default function BudgetCreator() {
         subcategoryId: string,
         workItemId: string,
         name: string,
+        id: string,
     ) => {
-        const newSubWorkItem: SubWorkItemType = {
-            id: uuidv4(),
+        const newSubWorkItem: SubworkItemDragCategory = {
+            id: id,
             name,
             quantity: 0,
-            unitPrice: 0,
+            unitCost: 0,
         };
         setBudget((prev) => ({
             ...prev,
@@ -295,16 +245,18 @@ export default function BudgetCreator() {
                               subcat.id === subcategoryId
                                   ? {
                                         ...subcat,
-                                        items: subcat.items.map((item) =>
-                                            item.id === workItemId
-                                                ? {
-                                                      ...item,
-                                                      subItems: [
-                                                          ...item.subItems,
-                                                          newSubWorkItem,
-                                                      ],
-                                                  }
-                                                : item,
+                                        workItems: subcat.workItems.map(
+                                            (item) =>
+                                                item.id === workItemId
+                                                    ? {
+                                                          ...item,
+                                                          subworkItem: [
+                                                              ...(item.subworkItem ||
+                                                                  []),
+                                                              newSubWorkItem,
+                                                          ],
+                                                      }
+                                                    : item,
                                         ),
                                     }
                                   : subcat,
@@ -353,7 +305,7 @@ export default function BudgetCreator() {
                               subcat.id === subcategoryId
                                   ? {
                                         ...subcat,
-                                        items: subcat.items.filter(
+                                        workItems: subcat.workItems.filter(
                                             (item) => item.id !== itemId,
                                         ),
                                     }
@@ -381,18 +333,19 @@ export default function BudgetCreator() {
                               subcat.id === subcategoryId
                                   ? {
                                         ...subcat,
-                                        items: subcat.items.map((item) =>
-                                            item.id === itemId
-                                                ? {
-                                                      ...item,
-                                                      subItems:
-                                                          item.subItems.filter(
-                                                              (subItem) =>
-                                                                  subItem.id !==
-                                                                  subItemId,
-                                                          ),
-                                                  }
-                                                : item,
+                                        workItems: subcat.workItems.map(
+                                            (item) =>
+                                                item.id === itemId
+                                                    ? {
+                                                          ...item,
+                                                          subworkItem:
+                                                              item.subworkItem?.filter(
+                                                                  (subItem) =>
+                                                                      subItem.id !==
+                                                                      subItemId,
+                                                              ),
+                                                      }
+                                                    : item,
                                         ),
                                     }
                                   : subcat,
@@ -419,10 +372,11 @@ export default function BudgetCreator() {
                               subcat.id === subcategoryId
                                   ? {
                                         ...subcat,
-                                        items: subcat.items.map((item) =>
-                                            item.id === itemId
-                                                ? { ...item, quantity }
-                                                : item,
+                                        workItems: subcat.workItems.map(
+                                            (item) =>
+                                                item.id === itemId
+                                                    ? { ...item, quantity }
+                                                    : item,
                                         ),
                                     }
                                   : subcat,
@@ -449,13 +403,55 @@ export default function BudgetCreator() {
                               subcat.id === subcategoryId
                                   ? {
                                         ...subcat,
-                                        items: subcat.items.map((item) =>
-                                            item.id === itemId
-                                                ? { ...item, unitPrice }
-                                                : item,
+                                        workItems: subcat.workItems.map(
+                                            (item) =>
+                                                item.id === itemId
+                                                    ? { ...item, unitPrice }
+                                                    : item,
                                         ),
                                     }
                                   : subcat,
+                          ),
+                      }
+                    : cat,
+            ),
+        }));
+    };
+
+    const updateSubWorkItem = (
+        categoryId: string,
+        subcategoryId: string,
+        itemId: string,
+        subItemId: string,
+        updatedSubItem: SubworkItemDragCategory,
+    ) => {
+        setBudget((prev) => ({
+            ...prev,
+            categories: prev.categories.map((cat) =>
+                cat.id === categoryId
+                    ? {
+                          ...cat,
+                          subcategories: cat.subcategories.map((sc) =>
+                              sc.id === subcategoryId
+                                  ? {
+                                        ...sc,
+                                        workItems: sc.workItems.map((i) =>
+                                            i.id === itemId
+                                                ? {
+                                                      ...i,
+                                                      subworkItem:
+                                                          i.subworkItem?.map(
+                                                              (si) =>
+                                                                  si.id ===
+                                                                  subItemId
+                                                                      ? updatedSubItem
+                                                                      : si,
+                                                          ),
+                                                  }
+                                                : i,
+                                        ),
+                                    }
+                                  : sc,
                           ),
                       }
                     : cat,
@@ -489,490 +485,51 @@ export default function BudgetCreator() {
                     </CardHeader>
                     <CardContent className="p-6">
                         <div className="grid grid-cols-1 gap-6">
-                            <div>
+                            <div className="lg:col-span-2">
                                 <h2 className="mb-4 flex items-center text-xl font-semibold">
                                     <BarChart2 className="mr-2" /> Estructura
                                     del Presupuesto
                                 </h2>
                                 <div className="flex space-x-4">
-                                    <Droppable droppableId="items">
-                                        {(provided) => (
-                                            <div
-                                                {...provided.droppableProps}
-                                                ref={provided.innerRef}
-                                                className="w-1/3 rounded-md bg-gray-100 p-4"
-                                            >
-                                                <h3 className="mb-2 font-semibold">
-                                                    Elementos Disponibles
-                                                </h3>
-                                                {dragItems.map((item) => (
-                                                    <DraggableItem
-                                                        key={item.id}
-                                                        id={item.id}
-                                                        name={item.name}
-                                                        icon={
-                                                            ItemIcons[item.type]
-                                                        }
-                                                    />
-                                                ))}
-                                                {provided.placeholder}
-                                            </div>
-                                        )}
-                                    </Droppable>
-                                    <Droppable droppableId="budget">
-                                        {(provided) => (
-                                            <div
-                                                {...provided.droppableProps}
-                                                ref={provided.innerRef}
-                                                className="w-2/3 rounded-md border bg-white p-4"
-                                            >
-                                                <h3 className="mb-2 font-semibold">
-                                                    Presupuesto
-                                                </h3>
-                                                <ScrollArea className="h-[500px] w-full rounded-md border p-4">
-                                                    <Table>
-                                                        <TableHeader>
-                                                            <TableRow>
-                                                                <TableHead className="w-[50px]">
-                                                                    ID
-                                                                </TableHead>
-                                                                <TableHead className="w-[250px]">
-                                                                    Nombre
-                                                                </TableHead>
-                                                                <TableHead>
-                                                                    Detalles
-                                                                </TableHead>
-                                                                <TableHead className="w-[100px]">
-                                                                    Subtotal
-                                                                </TableHead>
-                                                                <TableHead className="w-[100px]">
-                                                                    Acciones
-                                                                </TableHead>
-                                                            </TableRow>
-                                                        </TableHeader>
-                                                        <TableBody>
-                                                            {budget.categories.map(
-                                                                (
-                                                                    category,
-                                                                    catIndex,
-                                                                ) => (
-                                                                    <Collapsible
-                                                                        key={
-                                                                            category.id
-                                                                        }
-                                                                    >
-                                                                        <TableRow>
-                                                                            <TableCell>
-                                                                                {catIndex +
-                                                                                    1}
-                                                                            </TableCell>
-                                                                            <TableCell>
-                                                                                <CollapsibleTrigger className="flex items-center">
-                                                                                    <ChevronRight className="mr-2 h-4 w-4" />
-                                                                                    {
-                                                                                        category.name
-                                                                                    }
-                                                                                </CollapsibleTrigger>
-                                                                            </TableCell>
-                                                                            <TableCell>
-                                                                                {
-                                                                                    category
-                                                                                        .subcategories
-                                                                                        .length
-                                                                                }{" "}
-                                                                                subcategorías
-                                                                            </TableCell>
-                                                                            <TableCell>
-                                                                                S/.{" "}
-                                                                                {calculateCategoryTotal(
-                                                                                    category,
-                                                                                ).toFixed(
-                                                                                    2,
-                                                                                )}
-                                                                            </TableCell>
-                                                                            <TableCell>
-                                                                                <Button
-                                                                                    size="sm"
-                                                                                    variant="destructive"
-                                                                                    onClick={() =>
-                                                                                        deleteCategory(
-                                                                                            category.id,
-                                                                                        )
-                                                                                    }
-                                                                                >
-                                                                                    <Trash2 className="h-4 w-4" />
-                                                                                </Button>
-                                                                            </TableCell>
-                                                                        </TableRow>
-                                                                        <CollapsibleContent>
-                                                                            {category.subcategories.map(
-                                                                                (
-                                                                                    subcategory,
-                                                                                    subIndex,
-                                                                                ) => (
-                                                                                    <Collapsible
-                                                                                        key={
-                                                                                            subcategory.id
-                                                                                        }
-                                                                                    >
-                                                                                        <TableRow className="bg-muted/50">
-                                                                                            <TableCell>{`${catIndex + 1}.${subIndex + 1}`}</TableCell>
-                                                                                            <TableCell className="pl-8">
-                                                                                                <CollapsibleTrigger className="flex items-center">
-                                                                                                    <ChevronRight className="mr-2 h-4 w-4" />
-                                                                                                    {
-                                                                                                        subcategory.name
-                                                                                                    }
-                                                                                                </CollapsibleTrigger>
-                                                                                            </TableCell>
-                                                                                            <TableCell>
-                                                                                                {
-                                                                                                    subcategory
-                                                                                                        .items
-                                                                                                        .length
-                                                                                                }{" "}
-                                                                                                ítems
-                                                                                            </TableCell>
-                                                                                            <TableCell>
-                                                                                                S/.{" "}
-                                                                                                {calculateSubcategoryTotal(
-                                                                                                    subcategory,
-                                                                                                ).toFixed(
-                                                                                                    2,
-                                                                                                )}
-                                                                                            </TableCell>
-                                                                                            <TableCell>
-                                                                                                <Button
-                                                                                                    size="sm"
-                                                                                                    variant="destructive"
-                                                                                                    onClick={() =>
-                                                                                                        deleteSubcategory(
-                                                                                                            category.id,
-                                                                                                            subcategory.id,
-                                                                                                        )
-                                                                                                    }
-                                                                                                >
-                                                                                                    <Trash2 className="h-4 w-4" />
-                                                                                                </Button>
-                                                                                            </TableCell>
-                                                                                        </TableRow>
-                                                                                        <CollapsibleContent>
-                                                                                            {subcategory.items.map(
-                                                                                                (
-                                                                                                    item,
-                                                                                                    itemIndex,
-                                                                                                ) => (
-                                                                                                    <Collapsible
-                                                                                                        key={
-                                                                                                            item.id
-                                                                                                        }
-                                                                                                    >
-                                                                                                        <TableRow className="bg-muted/20">
-                                                                                                            <TableCell>{`${catIndex + 1}.${subIndex + 1}.${itemIndex + 1}`}</TableCell>
-                                                                                                            <TableCell className="pl-12">
-                                                                                                                <CollapsibleTrigger className="flex items-center">
-                                                                                                                    <ChevronRight className="mr-2 h-4 w-4" />
-                                                                                                                    {
-                                                                                                                        item.name
-                                                                                                                    }
-                                                                                                                </CollapsibleTrigger>
-                                                                                                            </TableCell>
-                                                                                                            <TableCell>
-                                                                                                                {item
-                                                                                                                    .subItems
-                                                                                                                    .length >
-                                                                                                                0 ? (
-                                                                                                                    `${item.subItems.length} sub-ítems`
-                                                                                                                ) : (
-                                                                                                                    <div className="flex space-x-2">
-                                                                                                                        <Input
-                                                                                                                            type="number"
-                                                                                                                            value={
-                                                                                                                                item.quantity ||
-                                                                                                                                0
-                                                                                                                            }
-                                                                                                                            onChange={(
-                                                                                                                                e,
-                                                                                                                            ) =>
-                                                                                                                                updateWorkItemQuantity(
-                                                                                                                                    category.id,
-                                                                                                                                    subcategory.id,
-                                                                                                                                    item.id,
-                                                                                                                                    Number(
-                                                                                                                                        e
-                                                                                                                                            .target
-                                                                                                                                            .value,
-                                                                                                                                    ),
-                                                                                                                                )
-                                                                                                                            }
-                                                                                                                            className="w-20"
-                                                                                                                            placeholder="Cantidad"
-                                                                                                                        />
-                                                                                                                        <Input
-                                                                                                                            type="number"
-                                                                                                                            value={
-                                                                                                                                item.unitCost ||
-                                                                                                                                0
-                                                                                                                            }
-                                                                                                                            onChange={(
-                                                                                                                                e,
-                                                                                                                            ) =>
-                                                                                                                                updateWorkItemUnitPrice(
-                                                                                                                                    category.id,
-                                                                                                                                    subcategory.id,
-                                                                                                                                    item.id,
-                                                                                                                                    Number(
-                                                                                                                                        e
-                                                                                                                                            .target
-                                                                                                                                            .value,
-                                                                                                                                    ),
-                                                                                                                                )
-                                                                                                                            }
-                                                                                                                            className="w-20"
-                                                                                                                            placeholder="Precio"
-                                                                                                                        />
-                                                                                                                    </div>
-                                                                                                                )}
-                                                                                                            </TableCell>
-                                                                                                            <TableCell>
-                                                                                                                S/.{" "}
-                                                                                                                {calculateWorkItemTotal(
-                                                                                                                    item,
-                                                                                                                ).toFixed(
-                                                                                                                    2,
-                                                                                                                )}
-                                                                                                            </TableCell>
-                                                                                                            <TableCell>
-                                                                                                                <Button
-                                                                                                                    size="sm"
-                                                                                                                    variant="destructive"
-                                                                                                                    onClick={() =>
-                                                                                                                        deleteWorkItem(
-                                                                                                                            category.id,
-                                                                                                                            subcategory.id,
-                                                                                                                            item.id,
-                                                                                                                        )
-                                                                                                                    }
-                                                                                                                >
-                                                                                                                    <Trash2 className="h-4 w-4" />
-                                                                                                                </Button>
-                                                                                                            </TableCell>
-                                                                                                        </TableRow>
-                                                                                                        <CollapsibleContent>
-                                                                                                            {item.subItems.map(
-                                                                                                                (
-                                                                                                                    subItem,
-                                                                                                                    subItemIndex,
-                                                                                                                ) => (
-                                                                                                                    <TableRow
-                                                                                                                        key={
-                                                                                                                            subItem.id
-                                                                                                                        }
-                                                                                                                        className="bg-muted/10"
-                                                                                                                    >
-                                                                                                                        <TableCell>{`${catIndex + 1}.${subIndex + 1}.${itemIndex + 1}.${subItemIndex + 1}`}</TableCell>
-                                                                                                                        <TableCell className="pl-16">
-                                                                                                                            {
-                                                                                                                                subItem.name
-                                                                                                                            }
-                                                                                                                        </TableCell>
-                                                                                                                        <TableCell>
-                                                                                                                            <div className="flex space-x-2">
-                                                                                                                                <Input
-                                                                                                                                    type="number"
-                                                                                                                                    value={
-                                                                                                                                        subItem.quantity
-                                                                                                                                    }
-                                                                                                                                    onChange={(
-                                                                                                                                        e,
-                                                                                                                                    ) => {
-                                                                                                                                        const updatedSubItem =
-                                                                                                                                            {
-                                                                                                                                                ...subItem,
-                                                                                                                                                quantity:
-                                                                                                                                                    Number(
-                                                                                                                                                        e
-                                                                                                                                                            .target
-                                                                                                                                                            .value,
-                                                                                                                                                    ),
-                                                                                                                                            };
-                                                                                                                                        setBudget(
-                                                                                                                                            (
-                                                                                                                                                prev,
-                                                                                                                                            ) => ({
-                                                                                                                                                ...prev,
-                                                                                                                                                categories:
-                                                                                                                                                    prev.categories.map(
-                                                                                                                                                        (
-                                                                                                                                                            cat,
-                                                                                                                                                        ) =>
-                                                                                                                                                            cat.id ===
-                                                                                                                                                            category.id
-                                                                                                                                                                ? {
-                                                                                                                                                                      ...cat,
-                                                                                                                                                                      subcategories:
-                                                                                                                                                                          cat.subcategories.map(
-                                                                                                                                                                              (
-                                                                                                                                                                                  sc,
-                                                                                                                                                                              ) =>
-                                                                                                                                                                                  sc.id ===
-                                                                                                                                                                                  subcategory.id
-                                                                                                                                                                                      ? {
-                                                                                                                                                                                            ...sc,
-                                                                                                                                                                                            items: sc.items.map(
-                                                                                                                                                                                                (
-                                                                                                                                                                                                    i,
-                                                                                                                                                                                                ) =>
-                                                                                                                                                                                                    i.id ===
-                                                                                                                                                                                                    item.id
-                                                                                                                                                                                                        ? {
-                                                                                                                                                                                                              ...i,
-                                                                                                                                                                                                              subItems:
-                                                                                                                                                                                                                  i.subItems.map(
-                                                                                                                                                                                                                      (
-                                                                                                                                                                                                                          si,
-                                                                                                                                                                                                                      ) =>
-                                                                                                                                                                                                                          si.id ===
-                                                                                                                                                                                                                          subItem.id
-                                                                                                                                                                                                                              ? updatedSubItem
-                                                                                                                                                                                                                              : si,
-                                                                                                                                                                                                                  ),
-                                                                                                                                                                                                          }
-                                                                                                                                                                                                        : i,
-                                                                                                                                                                                            ),
-                                                                                                                                                                                        }
-                                                                                                                                                                                      : sc,
-                                                                                                                                                                          ),
-                                                                                                                                                                  }
-                                                                                                                                                                : cat,
-                                                                                                                                                    ),
-                                                                                                                                            }),
-                                                                                                                                        );
-                                                                                                                                    }}
-                                                                                                                                    placeholder="Cantidad"
-                                                                                                                                />
-                                                                                                                                <Input
-                                                                                                                                    type="number"
-                                                                                                                                    value={
-                                                                                                                                        subItem.unitPrice
-                                                                                                                                    }
-                                                                                                                                    onChange={(
-                                                                                                                                        e,
-                                                                                                                                    ) => {
-                                                                                                                                        const updatedSubItem =
-                                                                                                                                            {
-                                                                                                                                                ...subItem,
-                                                                                                                                                unitPrice:
-                                                                                                                                                    Number(
-                                                                                                                                                        e
-                                                                                                                                                            .target
-                                                                                                                                                            .value,
-                                                                                                                                                    ),
-                                                                                                                                            };
-                                                                                                                                        setBudget(
-                                                                                                                                            (
-                                                                                                                                                prev,
-                                                                                                                                            ) => ({
-                                                                                                                                                ...prev,
-                                                                                                                                                categories:
-                                                                                                                                                    prev.categories.map(
-                                                                                                                                                        (
-                                                                                                                                                            cat,
-                                                                                                                                                        ) =>
-                                                                                                                                                            cat.id ===
-                                                                                                                                                            category.id
-                                                                                                                                                                ? {
-                                                                                                                                                                      ...cat,
-                                                                                                                                                                      subcategories:
-                                                                                                                                                                          cat.subcategories.map(
-                                                                                                                                                                              (
-                                                                                                                                                                                  sc,
-                                                                                                                                                                              ) =>
-                                                                                                                                                                                  sc.id ===
-                                                                                                                                                                                  subcategory.id
-                                                                                                                                                                                      ? {
-                                                                                                                                                                                            ...sc,
-                                                                                                                                                                                            items: sc.items.map(
-                                                                                                                                                                                                (
-                                                                                                                                                                                                    i,
-                                                                                                                                                                                                ) =>
-                                                                                                                                                                                                    i.id ===
-                                                                                                                                                                                                    item.id
-                                                                                                                                                                                                        ? {
-                                                                                                                                                                                                              ...i,
-                                                                                                                                                                                                              subItems:
-                                                                                                                                                                                                                  i.subItems.map(
-                                                                                                                                                                                                                      (
-                                                                                                                                                                                                                          si,
-                                                                                                                                                                                                                      ) =>
-                                                                                                                                                                                                                          si.id ===
-                                                                                                                                                                                                                          subItem.id
-                                                                                                                                                                                                                              ? updatedSubItem
-                                                                                                                                                                                                                              : si,
-                                                                                                                                                                                                                  ),
-                                                                                                                                                                                                          }
-                                                                                                                                                                                                        : i,
-                                                                                                                                                                                            ),
-                                                                                                                                                                                        }
-                                                                                                                                                                                      : sc,
-                                                                                                                                                                          ),
-                                                                                                                                                                  }
-                                                                                                                                                                : cat,
-                                                                                                                                                    ),
-                                                                                                                                            }),
-                                                                                                                                        );
-                                                                                                                                    }}
-                                                                                                                                    placeholder="Precio"
-                                                                                                                                />
-                                                                                                                            </div>
-                                                                                                                        </TableCell>
-                                                                                                                        <TableCell>
-                                                                                                                            S/.{" "}
-                                                                                                                            {(
-                                                                                                                                subItem.quantity *
-                                                                                                                                subItem.unitPrice
-                                                                                                                            ).toFixed(
-                                                                                                                                2,
-                                                                                                                            )}
-                                                                                                                        </TableCell>
-                                                                                                                        <TableCell>
-                                                                                                                            <Button
-                                                                                                                                size="sm"
-                                                                                                                                variant="destructive"
-                                                                                                                                onClick={() =>
-                                                                                                                                    deleteSubWorkItem(
-                                                                                                                                        category.id,
-                                                                                                                                        subcategory.id,
-                                                                                                                                        item.id,
-                                                                                                                                        subItem.id,
-                                                                                                                                    )
-                                                                                                                                }
-                                                                                                                            >
-                                                                                                                                <Trash2 className="h-4 w-4" />
-                                                                                                                            </Button>
-                                                                                                                        </TableCell>
-                                                                                                                    </TableRow>
-                                                                                                                ),
-                                                                                                            )}
-                                                                                                        </CollapsibleContent>
-                                                                                                    </Collapsible>
-                                                                                                ),
-                                                                                            )}
-                                                                                        </CollapsibleContent>
-                                                                                    </Collapsible>
-                                                                                ),
-                                                                            )}
-                                                                        </CollapsibleContent>
-                                                                    </Collapsible>
-                                                                ),
-                                                            )}
-                                                        </TableBody>
-                                                    </Table>
-                                                </ScrollArea>
-                                                {provided.placeholder}
-                                            </div>
-                                        )}
-                                    </Droppable>
+                                    {fullCategoryData && (
+                                        <AvailableItems
+                                            items={fullCategoryData}
+                                        />
+                                    )}
+                                    <BudgetTable
+                                        budget={budget}
+                                        onDeleteCategory={deleteCategory}
+                                        onDeleteSubcategory={deleteSubcategory}
+                                        onDeleteWorkItem={deleteWorkItem}
+                                        onDeleteSubWorkItem={deleteSubWorkItem}
+                                        onUpdateWorkItemQuantity={
+                                            updateWorkItemQuantity
+                                        }
+                                        onUpdateWorkItemUnitPrice={
+                                            updateWorkItemUnitPrice
+                                        }
+                                        onUpdateSubWorkItem={(
+                                            categoryId,
+                                            subcategoryId,
+                                            itemId,
+                                            subItemId,
+                                            quantity,
+                                            unitCost,
+                                        ) =>
+                                            updateSubWorkItem(
+                                                categoryId,
+                                                subcategoryId,
+                                                itemId,
+                                                subItemId,
+                                                {
+                                                    id: subItemId,
+                                                    name: "",
+                                                    quantity,
+                                                    unitCost,
+                                                },
+                                            )
+                                        }
+                                    />
                                 </div>
                             </div>
                             <div>
@@ -994,4 +551,26 @@ export default function BudgetCreator() {
             </div>
         </DragDropContext>
     );
+}
+
+function findDragItemById(
+    items: DragCategoriesItem[],
+    id: string,
+): DragCategoriesItem | undefined {
+    for (const item of items) {
+        if (item.id === id) return item;
+        if (item.subcategories) {
+            const found = findDragItemById(item.subcategories, id);
+            if (found) return found;
+        }
+        if (item.workItems) {
+            const found = findDragItemById(item.workItems, id);
+            if (found) return found;
+        }
+        if (item.subWorkItems) {
+            const found = findDragItemById(item.subWorkItems, id);
+            if (found) return found;
+        }
+    }
+    return undefined;
 }

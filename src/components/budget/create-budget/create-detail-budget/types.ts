@@ -1,3 +1,5 @@
+import { FullCategory } from "@/types";
+
 export interface SubWorkItemType {
     id: string;
     name: string;
@@ -8,9 +10,9 @@ export interface SubWorkItemType {
 export interface WorkItemType {
     id: string;
     name: string;
-    quantity: number;
-    unitCost: number;
     subItems: SubWorkItemType[];
+    quantity?: number;
+    unitPrice?: number;
 }
 
 export interface SubcategoryType {
@@ -26,7 +28,7 @@ export interface CategoryType {
 }
 
 export interface Budget {
-    categories: CategoryType[];
+    categories: FullCategory[];
     overheadPercentage: number;
     profitPercentage: number;
     taxPercentage: number;

@@ -76,7 +76,7 @@ export const categoryApi = createApi({
         // Data completa de todas las categorías, subcategorías, partidas y subpartidas
         getFullCategory: build.query<FullCategory[], void>({
             query: () => ({
-                url: "/category/all",
+                url: "/category/full/category",
                 method: "GET",
                 credentials: "include",
             }),
