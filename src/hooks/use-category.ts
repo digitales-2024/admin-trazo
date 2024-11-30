@@ -3,6 +3,7 @@ import {
     useDeleteCategoryMutation,
     useGetAllCategoryQuery,
     useGetCategoryByIdQuery,
+    useGetFullCategoryQuery,
     useReactivateCategoryMutation,
     useUpdateCategoryMutation,
 } from "@/redux/services/categoryApi";
@@ -24,6 +25,8 @@ export const useCategory = (options: UseCategoryProps = {}) => {
         isSuccess,
         refetch,
     } = useGetAllCategoryQuery();
+
+    const { data: fullCategoryData } = useGetFullCategoryQuery();
 
     const { data: categoryById, refetch: refetchCategoryById } =
         useGetCategoryByIdQuery(
@@ -231,5 +234,6 @@ export const useCategory = (options: UseCategoryProps = {}) => {
         isSuccessDeleteCategory,
         isSuccessReactivateCategory,
         isLoadingReactivateCategory,
+        fullCategoryData,
     };
 };

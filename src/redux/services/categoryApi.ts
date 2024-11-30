@@ -1,4 +1,4 @@
-import { Category } from "@/types";
+import { Category, FullCategory } from "@/types";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 import baseQueryWithReauth from "../baseQuery";
@@ -73,6 +73,15 @@ export const categoryApi = createApi({
             }),
             invalidatesTags: ["Category"],
         }),
+        // Data completa de todas las categorías, subcategorías, partidas y subpartidas
+        getFullCategory: build.query<FullCategory[], void>({
+            query: () => ({
+                url: "/category/all",
+                method: "GET",
+                credentials: "include",
+            }),
+            providesTags: ["Category"],
+        }),
     }),
 });
 
@@ -83,4 +92,5 @@ export const {
     useGetAllCategoryQuery,
     useDeleteCategoryMutation,
     useReactivateCategoryMutation,
+    useGetFullCategoryQuery,
 } = categoryApi;
