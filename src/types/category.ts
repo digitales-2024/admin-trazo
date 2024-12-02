@@ -29,7 +29,7 @@ export type WorkItemDragCategory = {
     quantity?: number;
     type?: "category" | "subcategory" | "workItem" | "subWorkItem";
     isActive?: boolean;
-    subworkItem: SubworkItemDragCategory[];
+    subWorkItems: SubworkItemDragCategory[];
 };
 
 export type SubworkItemDragCategory = {
