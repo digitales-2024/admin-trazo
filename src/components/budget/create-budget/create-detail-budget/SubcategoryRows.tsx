@@ -24,19 +24,29 @@ const SubcategoryRow: React.FC<SubcategoryRowProps> = ({
 }) => {
     return (
         <TableRow>
-            <TableCell>{`${catIndex + 1}.${subIndex + 1}`}</TableCell>
+            <TableCell>
+                <span className="text-sm font-light">{`${catIndex + 1}.${subIndex + 1}`}</span>
+            </TableCell>
             <TableCell className="pl-8">
                 <div className="flex items-center">
-                    <Layers className="mr-2 h-5 w-5 text-green-500" />
-                    {subcategory.name}
+                    <Layers
+                        className="mr-2 h-4 w-4 text-green-500"
+                        strokeWidth={1.5}
+                    />
+                    <span className="text-sm font-light capitalize">
+                        {subcategory.name}
+                    </span>
                 </div>
             </TableCell>
-            <TableCell>{subcategory.workItems.length} ítems</TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
             <TableCell>
                 S/. {calculateSubcategoryTotal(subcategory).toFixed(2)}
             </TableCell>
             <TableCell>
                 <Button
+                    type="button"
                     size="sm"
                     variant="destructive"
                     onClick={() =>

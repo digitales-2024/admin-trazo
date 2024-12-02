@@ -4,11 +4,13 @@ import {
     FullCategory,
 } from "@/types";
 import { FileText, Trash2 } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TableCell, TableRow } from "@/components/ui/table";
+
+import { ApuDialog } from "./ApuBudgetDialog";
 
 interface WorkItemRowProps {
     catIndex: number;
@@ -49,20 +51,35 @@ const WorkItemRow: React.FC<WorkItemRowProps> = ({
     onUpdateWorkItemUnitPrice,
     onDeleteWorkItem,
 }) => {
+    const [showApuDialog, setShowApuDialog] = useState(false);
     return (
         <TableRow>
-            <TableCell>{`${catIndex + 1}.${subIndex + 1}.${itemIndex + 1}`}</TableCell>
+            <TableCell>
+                <span className="text-sm font-light">{`${catIndex + 1}.${subIndex + 1}.${itemIndex + 1}`}</span>
+            </TableCell>
             <TableCell className="pl-12">
                 <div className="flex items-center">
-                    <FileText className="mr-2 h-5 w-5 text-yellow-500" />
-                    {item.name}
+                    <FileText
+                        className="mr-2 h-4 w-4 text-yellow-500"
+                        strokeWidth={1.5}
+                    />
+                    <span className="text-sm font-light capitalize">
+                        {item.name}
+                    </span>
                 </div>
             </TableCell>
             <TableCell>
                 {item.subWorkItems.length > 0 ? (
-                    `${item.subWorkItems.length} sub-ítems`
+                    ``
                 ) : (
-                    <div className="flex space-x-2">
+                    <span className="text-sm font-light">{item.unit}</span>
+                )}
+            </TableCell>
+            <TableCell>
+                {item.subWorkItems.length > 0 ? (
+                    ``
+                ) : (
+                    <div className="flex items-center space-x-2">
                         <Input
                             type="number"
                             value={item.quantity || 0}
@@ -77,6 +94,14 @@ const WorkItemRow: React.FC<WorkItemRowProps> = ({
                             className="w-20"
                             placeholder="Cantidad"
                         />
+                    </div>
+                )}
+            </TableCell>
+            <TableCell>
+                {item.subWorkItems.length > 0 ? (
+                    ``
+                ) : (
+                    <div className="flex items-center space-x-2">
                         <Input
                             type="number"
                             value={item.unitCost || 0}
@@ -91,12 +116,27 @@ const WorkItemRow: React.FC<WorkItemRowProps> = ({
                             className="w-20"
                             placeholder="Precio"
                         />
+                        <ApuDialog
+                            open={showApuDialog}
+                            onOpenChange={setShowApuDialog}
+                            id={item.id}
+                        />
+                        <Button
+                            type="button"
+                            size="sm"
+                            variant="default"
+                            onClick={() => setShowApuDialog(true)}
+                        >
+                            APU
+                        </Button>
                     </div>
                 )}
             </TableCell>
+
             <TableCell>S/. {calculateWorkItemTotal(item).toFixed(2)}</TableCell>
             <TableCell>
                 <Button
+                    type="button"
                     size="sm"
                     variant="destructive"
                     onClick={() =>

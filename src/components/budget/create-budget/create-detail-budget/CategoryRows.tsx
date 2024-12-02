@@ -19,19 +19,29 @@ export const CategoryRow: React.FC<CategoryRowProps> = ({
 }) => {
     return (
         <TableRow>
-            <TableCell>{catIndex + 1}</TableCell>
+            <TableCell>
+                <span className="text-sm font-light">{catIndex + 1}</span>
+            </TableCell>
             <TableCell>
                 <div className="flex items-center">
-                    <Package className="mr-2 h-5 w-5 text-blue-500" />
-                    {category.name}
+                    <Package
+                        className="mr-2 h-4 w-4 text-blue-500"
+                        strokeWidth={1.5}
+                    />
+                    <span className="text-sm font-light capitalize">
+                        {category.name}
+                    </span>
                 </div>
             </TableCell>
-            <TableCell>{category.subcategories.length} subcategorías</TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
             <TableCell>
                 S/. {calculateCategoryTotal(category).toFixed(2)}
             </TableCell>
             <TableCell>
                 <Button
+                    type="button"
                     size="sm"
                     variant="destructive"
                     onClick={() => onDeleteCategory(category.id)}

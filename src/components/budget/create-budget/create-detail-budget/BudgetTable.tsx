@@ -93,36 +93,43 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                 total + calculateSubcategoryTotal(subcategory),
             0,
         );
-
     return (
         <Droppable droppableId="budget">
             {(provided) => (
                 <div
                     {...provided.droppableProps}
                     ref={provided.innerRef}
-                    className="w-2/3 rounded-md border bg-white p-4"
+                    className="w-3/4 overflow-auto rounded-md border bg-white p-4"
                 >
                     <h3 className="mb-2 font-semibold">Presupuesto</h3>
                     <ScrollArea className="h-[500px] w-full rounded-md border p-4">
-                        <Table>
+                        <Table className="w-full">
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead className="w-[50px]">
+                                    <TableHead className="w-[50px] text-center">
                                         ID
                                     </TableHead>
-                                    <TableHead className="w-[250px]">
+                                    <TableHead className="w-[250px] text-center">
                                         Nombre
                                     </TableHead>
-                                    <TableHead>Detalles</TableHead>
-                                    <TableHead className="w-[100px]">
+                                    <TableHead className="w-[50px] text-center">
+                                        Unidad
+                                    </TableHead>
+                                    <TableHead className="text-center">
+                                        Cantidad
+                                    </TableHead>
+                                    <TableHead className="w-[250px] text-center">
+                                        Precio
+                                    </TableHead>
+                                    <TableHead className="w-[200px] text-center">
                                         Subtotal
                                     </TableHead>
-                                    <TableHead className="w-[100px]">
+                                    <TableHead className="w-[100px] text-center">
                                         Acciones
                                     </TableHead>
                                 </TableRow>
                             </TableHeader>
-                            <TableBody>
+                            <TableBody className="w-full">
                                 {budget.categories.map((category, catIndex) => (
                                     <React.Fragment key={category.id}>
                                         <CategoryRow

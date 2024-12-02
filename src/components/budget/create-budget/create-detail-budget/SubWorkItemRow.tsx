@@ -50,13 +50,24 @@ const SubWorkItemRow: React.FC<SubWorkItemRowProps> = ({
 }) => {
     return (
         <TableRow key={subItem.id}>
-            <TableCell>{`${catIndex + 1}.${subIndex + 1}.${itemIndex + 1}.${subItemIndex + 1}`}</TableCell>
+            <TableCell>
+                <span className="text-sm font-light">{`${catIndex + 1}.${subIndex + 1}.${itemIndex + 1}.${subItemIndex + 1}`}</span>
+            </TableCell>
             <TableCell className="pl-16">
                 <div className="flex items-center">
-                    <List className="mr-2 h-5 w-5 text-red-500" />
-                    {subItem.name}
+                    <List
+                        className="mr-2 h-4 w-4 text-red-500"
+                        strokeWidth={1.5}
+                    />
+                    <span className="text-sm font-light capitalize">
+                        {subItem.name}
+                    </span>
                 </div>
             </TableCell>
+            <TableCell>
+                <span className="text-sm font-light">{subItem.unit}</span>
+            </TableCell>
+
             <TableCell>
                 <div className="flex space-x-2">
                     <Input
@@ -74,9 +85,15 @@ const SubWorkItemRow: React.FC<SubWorkItemRowProps> = ({
                         }
                         placeholder="Cantidad"
                     />
+                </div>
+            </TableCell>
+
+            <TableCell>
+                <div className="flex items-center space-x-2">
                     <Input
                         type="number"
                         value={subItem.unitCost}
+                        className="w-28"
                         onChange={(e) =>
                             onUpdateSubWorkItem(
                                 category.id,
@@ -89,14 +106,19 @@ const SubWorkItemRow: React.FC<SubWorkItemRowProps> = ({
                         }
                         placeholder="Precio"
                     />
+                    <Button type="button" size="sm" variant="default">
+                        APU
+                    </Button>
                 </div>
             </TableCell>
+
             <TableCell>
                 S/.{" "}
                 {((subItem.quantity || 0) * (subItem.unitCost || 0)).toFixed(2)}
             </TableCell>
             <TableCell>
                 <Button
+                    type="button"
                     size="sm"
                     variant="destructive"
                     onClick={() =>

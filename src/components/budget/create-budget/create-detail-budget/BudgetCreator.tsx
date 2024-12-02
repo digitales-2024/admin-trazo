@@ -106,7 +106,12 @@ export default function BudgetCreator() {
                             budget.categories[budget.categories.length - 1]
                                 .subcategories.length > 0
                         ) {
-                            addWorkItem(draggedItem.name, draggedItem.id);
+                            addWorkItem(
+                                draggedItem.name,
+                                draggedItem.id,
+                                draggedItem.unit || "",
+                                draggedItem.unitCost || 0,
+                            );
                         }
                         break;
                     case "subWorkItem":
@@ -120,7 +125,12 @@ export default function BudgetCreator() {
                                     .subcategories.length - 1
                             ].workItems.length > 0
                         ) {
-                            addSubWorkItem(draggedItem.name, draggedItem.id);
+                            addSubWorkItem(
+                                draggedItem.name,
+                                draggedItem.id,
+                                draggedItem.unit || "",
+                                draggedItem.unitCost || 0,
+                            );
                         }
                         break;
                 }
@@ -198,13 +208,19 @@ export default function BudgetCreator() {
         }));
     };
 
-    const addWorkItem = (name: string, id: string) => {
+    const addWorkItem = (
+        name: string,
+        id: string,
+        unit: string,
+        unitCost: number,
+    ) => {
         const newWorkItem: WorkItemDragCategory = {
             id: id,
             name,
             subWorkItems: [],
             quantity: 0,
-            unitCost: 0,
+            unitCost: unitCost,
+            unit: unit,
         };
 
         const { categoryId, subcategoryId } = getParentIDs("workItem", id) as {
@@ -235,12 +251,18 @@ export default function BudgetCreator() {
         }));
     };
 
-    const addSubWorkItem = (name: string, id: string) => {
+    const addSubWorkItem = (
+        name: string,
+        id: string,
+        unit: string,
+        unitCost: number,
+    ) => {
         const newSubWorkItem: SubworkItemDragCategory = {
             id: id,
             name,
             quantity: 0,
-            unitCost: 0,
+            unitCost: unitCost,
+            unit: unit,
         };
         const { categoryId, subcategoryId, workItemId } = getParentIDs(
             "subWorkItem",
@@ -353,7 +375,7 @@ export default function BudgetCreator() {
                                                 item.id === itemId
                                                     ? {
                                                           ...item,
-                                                          subworkItem:
+                                                          subWorkItems:
                                                               item.subWorkItems?.filter(
                                                                   (subItem) =>
                                                                       subItem.id !==
@@ -492,7 +514,7 @@ export default function BudgetCreator() {
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <div className="min-h-screen">
-                <Card className="mx-auto w-full max-w-6xl shadow-lg">
+                <Card className="mx-auto w-full max-w-6xl">
                     <CardHeader>
                         <div className="flex w-full justify-between">
                             <div className="flex w-full cursor-pointer items-center justify-between">
