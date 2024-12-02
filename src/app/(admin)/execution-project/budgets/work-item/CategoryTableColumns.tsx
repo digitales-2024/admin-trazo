@@ -69,7 +69,7 @@ export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
                     className="translate-y-0.5"
                 />
                 <div
-                    className={`${entityTypeToColor(row.original.entityName, row.original.children.length > 0)} uppercase`}
+                    className={`${entityTypeToColor(row.original.entityName, !row.original.apuId)} uppercase`}
                 >
                     {getValue() as string}
                 </div>
