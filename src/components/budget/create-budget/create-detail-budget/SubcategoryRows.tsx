@@ -1,6 +1,5 @@
 import { SubcategoryDragCategory, FullCategory } from "@/types";
-import { CollapsibleTrigger } from "@radix-ui/react-collapsible";
-import { ChevronRight, Layers, Trash2 } from "lucide-react";
+import { Layers, Trash2 } from "lucide-react";
 import React from "react";
 
 import { Button } from "@/components/ui/button";
@@ -24,14 +23,13 @@ const SubcategoryRow: React.FC<SubcategoryRowProps> = ({
     onDeleteSubcategory,
 }) => {
     return (
-        <TableRow className="bg-green-50">
+        <TableRow>
             <TableCell>{`${catIndex + 1}.${subIndex + 1}`}</TableCell>
             <TableCell className="pl-8">
-                <CollapsibleTrigger className="flex items-center">
-                    <ChevronRight className="mr-2 h-4 w-4" />
+                <div className="flex items-center">
                     <Layers className="mr-2 h-5 w-5 text-green-500" />
                     {subcategory.name}
-                </CollapsibleTrigger>
+                </div>
             </TableCell>
             <TableCell>{subcategory.workItems.length} ítems</TableCell>
             <TableCell>

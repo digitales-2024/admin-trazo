@@ -49,7 +49,7 @@ const SubWorkItemRow: React.FC<SubWorkItemRowProps> = ({
     onDeleteSubWorkItem,
 }) => {
     return (
-        <TableRow key={subItem.id} className="bg-red-50">
+        <TableRow key={subItem.id}>
             <TableCell>{`${catIndex + 1}.${subIndex + 1}.${itemIndex + 1}.${subItemIndex + 1}`}</TableCell>
             <TableCell className="pl-16">
                 <div className="flex items-center">
@@ -61,7 +61,7 @@ const SubWorkItemRow: React.FC<SubWorkItemRowProps> = ({
                 <div className="flex space-x-2">
                     <Input
                         type="number"
-                        value={subItem.quantity || 0}
+                        value={subItem.quantity}
                         onChange={(e) =>
                             onUpdateSubWorkItem(
                                 category.id,
@@ -76,7 +76,7 @@ const SubWorkItemRow: React.FC<SubWorkItemRowProps> = ({
                     />
                     <Input
                         type="number"
-                        value={subItem.unitCost || 0}
+                        value={subItem.unitCost}
                         onChange={(e) =>
                             onUpdateSubWorkItem(
                                 category.id,

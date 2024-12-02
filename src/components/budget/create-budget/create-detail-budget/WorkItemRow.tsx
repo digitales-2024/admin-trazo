@@ -3,8 +3,7 @@ import {
     SubcategoryDragCategory,
     FullCategory,
 } from "@/types";
-import { CollapsibleTrigger } from "@radix-ui/react-collapsible";
-import { ChevronRight, FileText, Trash2 } from "lucide-react";
+import { FileText, Trash2 } from "lucide-react";
 import React from "react";
 
 import { Button } from "@/components/ui/button";
@@ -51,18 +50,17 @@ const WorkItemRow: React.FC<WorkItemRowProps> = ({
     onDeleteWorkItem,
 }) => {
     return (
-        <TableRow className="bg-yellow-50">
+        <TableRow>
             <TableCell>{`${catIndex + 1}.${subIndex + 1}.${itemIndex + 1}`}</TableCell>
             <TableCell className="pl-12">
-                <CollapsibleTrigger className="flex items-center">
-                    <ChevronRight className="mr-2 h-4 w-4" />
+                <div className="flex items-center">
                     <FileText className="mr-2 h-5 w-5 text-yellow-500" />
                     {item.name}
-                </CollapsibleTrigger>
+                </div>
             </TableCell>
             <TableCell>
-                {item.subworkItem.length > 0 ? (
-                    `${item.subworkItem.length} sub-ítems`
+                {item.subWorkItems.length > 0 ? (
+                    `${item.subWorkItems.length} sub-ítems`
                 ) : (
                     <div className="flex space-x-2">
                         <Input

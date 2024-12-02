@@ -1,8 +1,7 @@
 import { FullCategory } from "@/types";
-import { ChevronRight, Package, Trash2 } from "lucide-react";
+import { Package, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { CollapsibleTrigger } from "@/components/ui/collapsible";
 import { TableCell, TableRow } from "@/components/ui/table";
 
 type CategoryRowProps = {
@@ -19,24 +18,18 @@ export const CategoryRow: React.FC<CategoryRowProps> = ({
     calculateCategoryTotal,
 }) => {
     return (
-        <TableRow className="bg-blue-50">
-            {/* ID - Primera columna */}
+        <TableRow>
             <TableCell>{catIndex + 1}</TableCell>
-            {/* Nombre - Segunda columna */}
             <TableCell>
-                <CollapsibleTrigger className="flex items-center">
-                    <ChevronRight className="mr-2 h-4 w-4" />
+                <div className="flex items-center">
                     <Package className="mr-2 h-5 w-5 text-blue-500" />
                     {category.name}
-                </CollapsibleTrigger>
+                </div>
             </TableCell>
-            {/* Detalles - Tercera columna */}
             <TableCell>{category.subcategories.length} subcategorías</TableCell>
-            {/* Subtotal - Cuarta columna */}
             <TableCell>
                 S/. {calculateCategoryTotal(category).toFixed(2)}
             </TableCell>
-            {/* Acciones - Quinta columna */}
             <TableCell>
                 <Button
                     size="sm"
