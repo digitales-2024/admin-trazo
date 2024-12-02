@@ -26,7 +26,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-export function CreateWorkItemDialog() {
+export function CreateCategoryDialog() {
     const [open, setOpen] = useState(false);
 
     return (
@@ -34,7 +34,7 @@ export function CreateWorkItemDialog() {
             <DialogTrigger asChild>
                 <Button variant="outline" size="sm">
                     <Plus className="mr-2 size-4" aria-hidden="true" />
-                    Crear Partida
+                    Crear Categoría
                 </Button>
             </DialogTrigger>
             <DialogContent>

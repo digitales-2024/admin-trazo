@@ -44,6 +44,9 @@ export type GenericTableItem = {
     children: Array<GenericTableItem>;
 };
 
+/**
+ * Keeps track of what type of entity was the original data.
+ */
 export type EntityType =
     | "Category"
     | "Subcategory"

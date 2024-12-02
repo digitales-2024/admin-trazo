@@ -4,6 +4,7 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import { adminApi } from "./services/adminApi";
 import { authApi } from "./services/authApi";
 import { businessApi } from "./services/businessApi";
+import { categoryApi } from "./services/categoryApi";
 import { clientsApi } from "./services/clientApi";
 import { designProjectApi } from "./services/designProjectApi";
 import { exchangeRateSunatApi } from "./services/exchangeRateSunatApi";
@@ -22,6 +23,7 @@ export const store = configureStore({
         [authApi.reducerPath]: authApi.reducer,
         [adminApi.reducerPath]: adminApi.reducer,
         [businessApi.reducerPath]: businessApi.reducer,
+        [categoryApi.reducerPath]: categoryApi.reducer,
         [designProjectApi.reducerPath]: designProjectApi.reducer,
         [usersApi.reducerPath]: usersApi.reducer,
         [rolesApi.reducerPath]: rolesApi.reducer,
@@ -59,6 +61,7 @@ export const store = configureStore({
             .concat(authApi.middleware)
             .concat(adminApi.middleware)
             .concat(businessApi.middleware)
+            .concat(categoryApi.middleware)
             .concat(designProjectApi.middleware)
             .concat(rolesApi.middleware)
             .concat(usersApi.middleware)

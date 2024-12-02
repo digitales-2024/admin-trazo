@@ -1,10 +1,10 @@
 "use client";
 
-import { useGetWorkitemQuery } from "@/redux/services/workitemApi";
-import { CategoryGet, GenericTableItem } from "@/types/category";
-import { WorkItemGetAll } from "@/types/workitem";
+import { useCategory } from "@/hooks/use-category";
+import { CategoryGet, EntityType, GenericTableItem } from "@/types/category";
 import { ColumnDef } from "@tanstack/react-table";
 import { ChevronDown, ChevronRight, Ellipsis } from "lucide-react";
+import { useMemo } from "react";
 
 import { ErrorPage } from "@/components/common/ErrorPage";
 import { HeaderPage } from "@/components/common/HeaderPage";
@@ -20,67 +20,12 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { CreateWorkItemDialog } from "./CreateWorkItemDialog";
+import { CreateCategoryDialog } from "./CreateCategoryDialog";
 
-const mock: Array<CategoryGet> = [
-    {
-        id: "202daf9d-32ba-444f-b875-13266916c450",
-        name: "primera categoria",
-        isActive: true,
-        subcategories: [
-            {
-                id: "11119324-5081-4443-8f01-25837d5c2daa",
-                name: "primera subcategoria",
-                isActive: true,
-                workItems: [
-                    {
-                        id: "19499dbc-e65d-4077-9000-276b598bac84",
-                        name: "Partida-sub-01",
-                        unit: null,
-                        unitCost: null,
-                        apuId: null,
-                        isActive: true,
-                        subWorkItems: [
-                            {
-                                id: "19499dbc-e65d-4077-9000-276b598bac84",
-                                name: "Partida-sub-01",
-                                unit: "m2",
-                                unitCost: 322,
-                                apuId: "aaad39-234-23-2ff0c",
-                                isActive: true,
-                            },
-                        ],
-                    },
-                    {
-                        id: "c53a2b8c-7f64-4261-bf88-2165231c6170",
-                        name: "Mi partida :D",
-                        unit: null,
-                        unitCost: null,
-                        apuId: null,
-                        isActive: true,
-                        subWorkItems: [],
-                    },
-                    {
-                        id: "a442c884-f75e-41db-840c-431d5903afef",
-                        name: "Mi partida normal",
-                        unit: "m2",
-                        unitCost: 0,
-                        apuId: "f04ff782-7d05-43e8-9b1e-f84747310601",
-                        isActive: true,
-                        subWorkItems: [],
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        id: "b82b1888-3789-42ff-85cb-082046eded19",
-        name: "ejemplo",
-        isActive: true,
-        subcategories: [],
-    },
-];
-
+/**
+ * Transforma la data que llega del backend (categorias, subcategorias, partidas, subpartidas)
+ * a un formato que el DataTableNested acepta (un unico tipo de dato recursivo)
+ */
 function transformData(data: Array<CategoryGet>): Array<GenericTableItem> {
     return data.map(
         (category): GenericTableItem => ({
@@ -123,17 +68,15 @@ function transformData(data: Array<CategoryGet>): Array<GenericTableItem> {
     );
 }
 
-const mockData = transformData(mock);
-
 export default function WorkItemPage() {
-    const { data, isLoading } = useGetWorkitemQuery();
+    const { nestedData: data, nestedDataLoading: isLoading } = useCategory();
 
     if (isLoading) {
         return (
             <Shell>
                 <HeaderPage
-                    title="Partidas y Subpartidas"
-                    description="Gestiona las partidas y subpartidas"
+                    title="Categorías"
+                    description="Gestiona las categorías, subcategorías, partidas y subpartidas"
                 />
                 <DataTableSkeleton
                     columnCount={5}
@@ -150,8 +93,8 @@ export default function WorkItemPage() {
         return (
             <Shell>
                 <HeaderPage
-                    title="Partidas y Subpartidas"
-                    description="Gestiona las partidas y subpartidas"
+                    title="Categorías"
+                    description="Gestiona las categorías, subcategorías, partidas y subpartidas"
                 />
                 <ErrorPage />
             </Shell>
@@ -161,16 +104,20 @@ export default function WorkItemPage() {
     return (
         <Shell>
             <HeaderPage
-                title="Partidas y Subpartidas"
-                description="Gestiona las partidas y subpartidas"
+                title="Categorías"
+                description="Gestiona las categorías, subcategorías, partidas y subpartidas"
             />
             <WorkItemTable data={data} />
         </Shell>
     );
 }
 
-function WorkItemTable({ data }: { data: Array<WorkItemGetAll> }) {
-    console.log("unused:", data);
+function WorkItemTable({ data }: { data: Array<CategoryGet> }) {
+    // preprocess the data
+    const dataMemo = useMemo(() => {
+        return transformData(data);
+    }, [data]);
+
     const columns: ColumnDef<GenericTableItem>[] = [
         {
             id: "select",
@@ -190,7 +137,7 @@ function WorkItemTable({ data }: { data: Array<WorkItemGetAll> }) {
                         aria-label="Select all"
                         className="translate-y-0.5"
                     />
-                    <span>Nombre</span>
+                    <span className="inline-block">Nombre</span>
                 </div>
             ),
             cell: ({ row, getValue }) => (
@@ -201,31 +148,34 @@ function WorkItemTable({ data }: { data: Array<WorkItemGetAll> }) {
                             width: `${row.depth * 1.25}rem`,
                         }}
                     ></div>
-                    <div className="w-6">
-                        {row.getCanExpand() ? (
-                            <button
-                                {...{
-                                    onClick: row.getToggleExpandedHandler(),
-                                    style: { cursor: "pointer" },
-                                }}
-                            >
-                                {row.getIsExpanded() ? (
-                                    <ChevronDown />
-                                ) : (
-                                    <ChevronRight />
-                                )}
-                            </button>
-                        ) : (
-                            ""
-                        )}{" "}
-                    </div>
+                    {row.getCanExpand() ? (
+                        <button
+                            className="w-6"
+                            {...{
+                                onClick: row.getToggleExpandedHandler(),
+                                style: { cursor: "pointer" },
+                            }}
+                        >
+                            {row.getIsExpanded() ? (
+                                <ChevronDown />
+                            ) : (
+                                <ChevronRight />
+                            )}
+                        </button>
+                    ) : (
+                        <span className="w-6" />
+                    )}
                     <Checkbox
                         checked={row.getIsSelected()}
                         onCheckedChange={(value) => row.toggleSelected(!!value)}
                         aria-label="Select row"
                         className="translate-y-0.5"
                     />
-                    <div>{getValue() as string}</div>
+                    <div
+                        className={`${entityTypeToColor(row.original.entityName, row.original.children.length > 0)} uppercase`}
+                    >
+                        {getValue() as string}
+                    </div>
                 </div>
             ),
             enableSorting: false,
@@ -277,7 +227,7 @@ function WorkItemTable({ data }: { data: Array<WorkItemGetAll> }) {
     return (
         <>
             <DataTableNested
-                data={mockData}
+                data={dataMemo}
                 columns={columns}
                 getSubRows={(row) => row.children}
                 placeholder="Buscar partidas"
@@ -291,7 +241,29 @@ function WorkItemTable({ data }: { data: Array<WorkItemGetAll> }) {
 function WorkItemToolbarActions() {
     return (
         <div className="flex w-fit flex-wrap items-center gap-2">
-            <CreateWorkItemDialog />
+            <CreateCategoryDialog />
         </div>
     );
+}
+
+/**
+ * Returns a tailwind color from an entity type
+ *
+ * @param e Entity type to color
+ * @param shouldColorWorkitem Used only with Workitem. If true, returns a bold, green color.
+ */
+function entityTypeToColor(
+    e: EntityType,
+    shouldColorWorkitem: boolean,
+): string {
+    switch (e) {
+        case "Category":
+            return "text-black font-bold";
+        case "Subcategory":
+            return "text-blue-600 font-bold";
+        case "Workitem":
+            return shouldColorWorkitem ? "text-green-600 font-bold" : "";
+        case "Subworkitem":
+            return "";
+    }
 }
