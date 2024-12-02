@@ -1,6 +1,7 @@
 import { ApuCreate } from "./apu";
 
 export type WorkItemCreate = {
+    subcategoryId: string;
     name: string;
     unit?: string;
     apu?: ApuCreate;
