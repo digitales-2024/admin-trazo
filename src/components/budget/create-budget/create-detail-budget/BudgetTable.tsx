@@ -1,4 +1,9 @@
-import { SubworkItemDragCategory, WorkItemDragCategory } from "@/types";
+import {
+    FullCategory,
+    SubcategoryDragCategory,
+    SubworkItemDragCategory,
+    WorkItemDragCategory,
+} from "@/types";
 import { Droppable } from "@hello-pangea/dnd";
 import { Trash2, Package, Layers, FileText, List } from "lucide-react";
 import React from "react";
@@ -65,24 +70,24 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
     onUpdateSubWorkItem,
 }) => {
     const calculateSubWorkItemTotal = (subItem: SubworkItemDragCategory) =>
-        subItem.quantity * subItem.unitPrice;
+        (subItem.quantity || 0) * (subItem.unitCost || 0);
 
     const calculateWorkItemTotal = (item: WorkItemDragCategory) =>
-        item.subItems.length > 0
-            ? item.subItems.reduce(
+        item.subworkItem.length > 0
+            ? item.subworkItem.reduce(
                   (total, subItem) =>
                       total + calculateSubWorkItemTotal(subItem),
                   0,
               )
-            : (item.quantity || 0) * (item.unitPrice || 0);
+            : (item.quantity || 0) * (item.unitCost || 0);
 
-    const calculateSubcategoryTotal = (subcategory: SubcategoryType) =>
-        subcategory.items.reduce(
+    const calculateSubcategoryTotal = (subcategory: SubcategoryDragCategory) =>
+        subcategory.workItems.reduce(
             (total, item) => total + calculateWorkItemTotal(item),
             0,
         );
 
-    const calculateCategoryTotal = (category: CategoryType) =>
+    const calculateCategoryTotal = (category: FullCategory) =>
         category.subcategories.reduce(
             (total, subcategory) =>
                 total + calculateSubcategoryTotal(subcategory),
@@ -172,7 +177,7 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                                                         <TableCell>
                                                             {
                                                                 subcategory
-                                                                    .items
+                                                                    .workItems
                                                                     .length
                                                             }{" "}
                                                             ítems
@@ -198,7 +203,7 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                                                             </Button>
                                                         </TableCell>
                                                     </TableRow>
-                                                    {subcategory.items.map(
+                                                    {subcategory.workItems.map(
                                                         (item, itemIndex) => (
                                                             <React.Fragment
                                                                 key={item.id}
@@ -215,10 +220,10 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                                                                     </TableCell>
                                                                     <TableCell>
                                                                         {item
-                                                                            .subItems
+                                                                            .subworkItem
                                                                             .length >
                                                                         0 ? (
-                                                                            `${item.subItems.length} sub-ítems`
+                                                                            `${item.subworkItem.length} sub-ítems`
                                                                         ) : (
                                                                             <div className="flex space-x-2">
                                                                                 <Input
@@ -247,7 +252,7 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                                                                                 <Input
                                                                                     type="number"
                                                                                     value={
-                                                                                        item.unitPrice ||
+                                                                                        item.unitCost ||
                                                                                         0
                                                                                     }
                                                                                     onChange={(
@@ -294,7 +299,7 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                                                                         </Button>
                                                                     </TableCell>
                                                                 </TableRow>
-                                                                {item.subItems.map(
+                                                                {item.subworkItem.map(
                                                                     (
                                                                         subItem,
                                                                         subItemIndex,
@@ -334,7 +339,8 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                                                                                                         .target
                                                                                                         .value,
                                                                                                 ),
-                                                                                                subItem.unitPrice,
+                                                                                                subItem.unitCost ||
+                                                                                                    0,
                                                                                             )
                                                                                         }
                                                                                         placeholder="Cantidad"
@@ -342,7 +348,7 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                                                                                     <Input
                                                                                         type="number"
                                                                                         value={
-                                                                                            subItem.unitPrice
+                                                                                            subItem.unitCost
                                                                                         }
                                                                                         onChange={(
                                                                                             e,
@@ -352,7 +358,8 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                                                                                                 subcategory.id,
                                                                                                 item.id,
                                                                                                 subItem.id,
-                                                                                                subItem.quantity,
+                                                                                                subItem.quantity ||
+                                                                                                    0,
                                                                                                 Number(
                                                                                                     e
                                                                                                         .target
@@ -367,8 +374,10 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                                                                             <TableCell>
                                                                                 S/.{" "}
                                                                                 {(
-                                                                                    subItem.quantity *
-                                                                                    subItem.unitPrice
+                                                                                    (subItem.quantity ||
+                                                                                        0) *
+                                                                                    (subItem.unitCost ||
+                                                                                        0)
                                                                                 ).toFixed(
                                                                                     2,
                                                                                 )}
