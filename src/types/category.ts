@@ -48,6 +48,8 @@ export interface DragCategoriesItem {
     name: string;
     isActive?: boolean;
     type?: "category" | "subcategory" | "workItem" | "subWorkItem";
+    unit?: string;
+    unitCost?: number;
     subcategories?: DragCategoriesItem[];
     workItems?: DragCategoriesItem[];
     subWorkItems?: DragCategoriesItem[];

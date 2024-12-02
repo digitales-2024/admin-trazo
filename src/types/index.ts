@@ -21,7 +21,7 @@ export type {
 } from "./quotation";
 export { QuotationStatusType } from "./quotation";
 
-export { ResourceType, type Resource } from "./resource";
+export { ResourceType, type Resource, type ResourceApu } from "./resource";
 
 export type { Space, Floor } from "./floor";
 export type {
