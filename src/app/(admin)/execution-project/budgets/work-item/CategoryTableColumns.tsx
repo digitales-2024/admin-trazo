@@ -38,9 +38,9 @@ export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
             </div>
         ),
         cell: ({ row, getValue }) => (
-            <div className="flex h-10 items-center gap-2">
+            <div className="flex h-16 items-center gap-2">
                 <div
-                    className="h-10 bg-slate-100"
+                    className="h-16 bg-slate-100"
                     style={{
                         width: `${row.depth * 1.25}rem`,
                     }}

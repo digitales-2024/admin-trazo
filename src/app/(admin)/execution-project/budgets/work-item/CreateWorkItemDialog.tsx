@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useCategory } from "@/hooks/use-category";
 
 export function CreateWorkItemDialog({
     open,
@@ -93,6 +94,7 @@ function CreateWithApuForm({
     setOpen: (v: boolean) => void;
     subcategoryId: string;
 }) {
+    const { nestedRefetch } = useCategory();
     const { onCreate, createLoading, createSuccess } = useWorkItem();
     const form = useForm<z.infer<typeof withApuSchema>>({
         resolver: zodResolver(withApuSchema),
@@ -122,6 +124,7 @@ function CreateWithApuForm({
     useEffect(() => {
         if (createSuccess) {
             form.reset();
+            nestedRefetch();
             setOpen(false);
         }
     }, [createSuccess, form, setOpen]);
@@ -243,6 +246,7 @@ function CreateWithSubitemsForm({
     setOpen: (v: boolean) => void;
     subcategoryId: string;
 }) {
+    const { nestedRefetch } = useCategory();
     const { onCreate, createLoading, createSuccess } = useWorkItem();
     const form = useForm<z.infer<typeof withSubitemsSchema>>({
         resolver: zodResolver(withSubitemsSchema),
@@ -260,6 +264,7 @@ function CreateWithSubitemsForm({
     useEffect(() => {
         if (createSuccess) {
             form.reset();
+            nestedRefetch();
             setOpen(false);
         }
     }, [createSuccess, form, setOpen]);
