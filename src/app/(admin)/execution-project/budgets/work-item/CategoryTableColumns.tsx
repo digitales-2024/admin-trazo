@@ -54,9 +54,15 @@ export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
                         }}
                     >
                         {row.getIsExpanded() ? (
-                            <ChevronDown />
+                            <ChevronDown
+                                strokeWidth={1.5}
+                                className="h-5 w-5"
+                            />
                         ) : (
-                            <ChevronRight />
+                            <ChevronRight
+                                strokeWidth={1.5}
+                                className="h-5 w-5"
+                            />
                         )}
                     </button>
                 ) : (
