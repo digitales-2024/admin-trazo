@@ -1,7 +1,6 @@
 import { useWorkItem } from "@/hooks/use-workitem";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -12,7 +11,6 @@ import {
     DialogDescription,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog";
 import {
     Form,
@@ -25,18 +23,19 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useCategory } from "@/hooks/use-category";
 
-export function CreateWorkItemDialog() {
-    const [open, setOpen] = useState(false);
-
+export function CreateWorkItemDialog({
+    open,
+    onOpenChange,
+    subcategoryId,
+}: {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    subcategoryId: string;
+}) {
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <Button variant="outline" size="sm">
-                    <Plus className="mr-2 size-4" aria-hidden="true" />
-                    Crear Partida
-                </Button>
-            </DialogTrigger>
+        <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Crear una partida</DialogTitle>
@@ -54,10 +53,16 @@ export function CreateWorkItemDialog() {
                     </TabsList>
 
                     <TabsContent value="apu" className="space-y-4">
-                        <CreateWithApuForm setOpen={setOpen} />
+                        <CreateWithApuForm
+                            setOpen={onOpenChange}
+                            subcategoryId={subcategoryId}
+                        />
                     </TabsContent>
                     <TabsContent value="subworkitem">
-                        <CreateWithSubitemsForm setOpen={setOpen} />
+                        <CreateWithSubitemsForm
+                            setOpen={onOpenChange}
+                            subcategoryId={subcategoryId}
+                        />
                     </TabsContent>
                 </Tabs>
             </DialogContent>
@@ -81,21 +86,31 @@ const withApuSchema = z.object({
     apuPerformance: z.coerce.number().min(0),
     apuWorkHours: z.coerce.number().min(0),
 });
-function CreateWithApuForm({ setOpen }: { setOpen: (v: boolean) => void }) {
+
+function CreateWithApuForm({
+    setOpen,
+    subcategoryId,
+}: {
+    setOpen: (v: boolean) => void;
+    subcategoryId: string;
+}) {
+    const { nestedRefetch } = useCategory();
     const { onCreate, createLoading, createSuccess } = useWorkItem();
     const form = useForm<z.infer<typeof withApuSchema>>({
         resolver: zodResolver(withApuSchema),
         defaultValues: {
             name: "",
             unit: "",
-            // @ts-ignore
+            // @ts-expect-error this should be a number, but its a string cause form uses strings
             apuPerformance: "",
-            // @ts-ignore
+            // @ts-expect-error this should be a number, but its a string cause form uses strings
             apuWorkHours: "",
         },
     });
+
     function onSubmit(values: z.infer<typeof withApuSchema>) {
         onCreate({
+            subcategoryId,
             name: values.name,
             unit: values.unit,
             apu: {
@@ -109,9 +124,10 @@ function CreateWithApuForm({ setOpen }: { setOpen: (v: boolean) => void }) {
     useEffect(() => {
         if (createSuccess) {
             form.reset();
+            nestedRefetch();
             setOpen(false);
         }
-    }, [createSuccess, form]);
+    }, [createSuccess, form, setOpen]);
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -222,11 +238,15 @@ const withSubitemsSchema = z.object({
         })
         .max(50),
 });
+
 function CreateWithSubitemsForm({
     setOpen,
+    subcategoryId,
 }: {
     setOpen: (v: boolean) => void;
+    subcategoryId: string;
 }) {
+    const { nestedRefetch } = useCategory();
     const { onCreate, createLoading, createSuccess } = useWorkItem();
     const form = useForm<z.infer<typeof withSubitemsSchema>>({
         resolver: zodResolver(withSubitemsSchema),
@@ -236,6 +256,7 @@ function CreateWithSubitemsForm({
     });
     function onSubmit(values: z.infer<typeof withSubitemsSchema>) {
         onCreate({
+            subcategoryId,
             name: values.name,
         });
     }
@@ -243,9 +264,10 @@ function CreateWithSubitemsForm({
     useEffect(() => {
         if (createSuccess) {
             form.reset();
+            nestedRefetch();
             setOpen(false);
         }
-    }, [createSuccess, form]);
+    }, [createSuccess, form, setOpen]);
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
