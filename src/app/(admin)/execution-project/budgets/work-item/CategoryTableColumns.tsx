@@ -22,7 +22,6 @@ export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
     {
         id: "select",
         accessorKey: "name",
-        size: 10,
         header: ({ table }) => (
             <div className="flex gap-4 px-2">
                 <Checkbox
@@ -39,53 +38,64 @@ export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
                 <span className="inline-block">Nombre</span>
             </div>
         ),
-        cell: ({ row, getValue }) => (
-            <div className="flex h-16 items-center gap-2">
-                <div
-                    className="h-16 bg-slate-100"
-                    style={{
-                        width: `${row.depth * 1.25}rem`,
-                    }}
-                ></div>
-                {row.getCanExpand() ? (
-                    <button
-                        className="w-6"
-                        {...{
-                            onClick: row.getToggleExpandedHandler(),
-                            style: { cursor: "pointer" },
-                        }}
+        cell: ({ row, getValue }) => {
+            let indentationClass = "";
+            switch (row.depth) {
+                case 1: {
+                    indentationClass = "w-1 md:w-3";
+                    break;
+                }
+                case 2: {
+                    indentationClass = "w-2 md:w-6";
+                    break;
+                }
+                case 3: {
+                    indentationClass = "w-3 md:w-9";
+                    break;
+                }
+            }
+            return (
+                <div className="flex h-16 items-center gap-2">
+                    <div className={`h-16 bg-slate-100 ${indentationClass}`} />
+                    {row.getCanExpand() ? (
+                        <button
+                            className="w-6"
+                            {...{
+                                onClick: row.getToggleExpandedHandler(),
+                                style: { cursor: "pointer" },
+                            }}
+                        >
+                            {row.getIsExpanded() ? (
+                                <ChevronDown
+                                    strokeWidth={1.5}
+                                    className="h-5 w-5"
+                                />
+                            ) : (
+                                <ChevronRight
+                                    strokeWidth={1.5}
+                                    className="h-5 w-5"
+                                />
+                            )}
+                        </button>
+                    ) : (
+                        <span className="w-6" />
+                    )}
+                    <Checkbox
+                        checked={row.getIsSelected()}
+                        onCheckedChange={(value) => row.toggleSelected(!!value)}
+                        aria-label="Select row"
+                        className="translate-y-0.5"
+                    />
+                    <div
+                        className={`${entityTypeToColor(row.original.entityName, !row.original.apuId)} uppercase`}
                     >
-                        {row.getIsExpanded() ? (
-                            <ChevronDown
-                                strokeWidth={1.5}
-                                className="h-5 w-5"
-                            />
-                        ) : (
-                            <ChevronRight
-                                strokeWidth={1.5}
-                                className="h-5 w-5"
-                            />
-                        )}
-                    </button>
-                ) : (
-                    <span className="w-6" />
-                )}
-                <Checkbox
-                    checked={row.getIsSelected()}
-                    onCheckedChange={(value) => row.toggleSelected(!!value)}
-                    aria-label="Select row"
-                    className="translate-y-0.5"
-                />
-                <div
-                    className={`${entityTypeToColor(row.original.entityName, !row.original.apuId)} uppercase`}
-                >
-                    {getValue() as string}
+                        {getValue() as string}
+                    </div>
                 </div>
-            </div>
-        ),
+            );
+        },
         enableSorting: false,
         enableHiding: false,
-        enablePinning: true,
     },
     {
         accessorKey: "unit",
@@ -96,6 +106,21 @@ export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
         accessorKey: "unitCost",
         header: "Costo unitario",
         cell: ({ row }) => <div>{row.original.unitCost ?? "-"}</div>,
+    },
+    {
+        id: "buttons",
+        header: () => <div className="text-center">Acciones</div>,
+        cell: ({ row }) => {
+            return (
+                <div className="text-center">
+                    {!!row.original.apuId ? (
+                        <Button variant="secondary">Gestionar APU</Button>
+                    ) : (
+                        <></>
+                    )}
+                </div>
+            );
+        },
     },
     {
         id: "actions",
