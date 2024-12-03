@@ -23,25 +23,24 @@ export default function ApuResourceRow({
         const updatedResource = {
             ...editForm,
             [name]:
-                name === "quantity" || name === "unitPrice"
+                name === "quantity" || name === "unitCost"
                     ? Number(value)
                     : value,
         };
+        updatedResource.totalCost =
+            updatedResource.quantity * updatedResource.unitCost;
         setEditForm(updatedResource);
-        onUpdate({
-            ...updatedResource,
-            totalCost: updatedResource.quantity * updatedResource.unitCost,
-        });
+        onUpdate(updatedResource);
     };
 
     return (
         <div className="flex items-center gap-2 rounded-md bg-white p-2 shadow-sm">
             <Input
-                name="description"
+                name="name"
                 value={editForm.name}
                 onChange={handleChange}
-                className="flex-grow"
-                readOnly={!isEditable}
+                className="flex-grow capitalize"
+                readOnly
             />
             <Input
                 name="quantity"
@@ -56,10 +55,10 @@ export default function ApuResourceRow({
                 value={editForm.unit}
                 onChange={handleChange}
                 className="w-20"
-                readOnly={!isEditable}
+                readOnly
             />
             <Input
-                name="unitPrice"
+                name="unitCost"
                 type="number"
                 value={editForm.unitCost}
                 onChange={handleChange}
