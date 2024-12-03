@@ -9,6 +9,8 @@ import ApuResourceRow from "./ApuResourceRow";
 
 interface ResourceTypeCardProps {
     name: string;
+    performance: number;
+    workHours: number;
     icon: React.ElementType;
     color: string;
     expandedType: string | null;
@@ -27,6 +29,8 @@ interface ResourceTypeCardProps {
 
 const ResourceTypeCard: React.FC<ResourceTypeCardProps> = ({
     name,
+    performance,
+    workHours,
     icon: Icon,
     color,
     expandedType,
@@ -77,12 +81,16 @@ const ResourceTypeCard: React.FC<ResourceTypeCardProps> = ({
                                     handleAddResource(name, resource)
                                 }
                                 resourceType={expandedType}
+                                performance={performance}
+                                workHours={workHours}
                             />
                         )}
                         <div className="mt-6">
-                            <h4 className="mb-3 text-lg font-semibold">
-                                Recursos Agregados
-                            </h4>
+                            {resources.length > 0 && (
+                                <h4 className="mb-3 text-lg font-semibold">
+                                    Recursos Agregados
+                                </h4>
+                            )}
                             <div className="space-y-2">
                                 {resources.map((resource) => (
                                     <ApuResourceRow
