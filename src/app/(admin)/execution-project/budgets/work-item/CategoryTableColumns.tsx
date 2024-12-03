@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 
+import { ApuDialog } from "./ApuDialog";
 import { CreateSubWorkItemDialog } from "./CreateSubWorkItemDialog";
 import { CreateWorkItemDialog } from "./CreateWorkItemDialog";
 
@@ -112,13 +113,16 @@ export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
         id: "buttons",
         header: () => <div className="text-center">Acciones</div>,
         cell: ({ row }) => {
+            if (!row.original.apuId) {
+                return <div />;
+            }
+
             return (
                 <div className="text-center">
-                    {!!row.original.apuId ? (
-                        <Button variant="normal">APU</Button>
-                    ) : (
-                        <></>
-                    )}
+                    <ApuDialog
+                        apuId={row.original.apuId}
+                        parentName={row.original.name}
+                    />
                 </div>
             );
         },
@@ -140,7 +144,12 @@ export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
                     break;
                 }
                 case "Workitem": {
-                    actions = <WorkItemActions parentId={row.original.id} hasApu={!!row.original.apuId} />;
+                    actions = (
+                        <WorkItemActions
+                            parentId={row.original.id}
+                            hasApu={!!row.original.apuId}
+                        />
+                    );
                     break;
                 }
                 case "Subworkitem": {
@@ -168,7 +177,7 @@ function CategoryActions() {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
-                <DropdownMenuItem onSelect={() => { }}>
+                <DropdownMenuItem onSelect={() => {}}>
                     Crear Subcategoría
                 </DropdownMenuItem>
             </DropdownMenuContent>
@@ -212,7 +221,13 @@ function SubCategoryActions({ subcategoryId }: { subcategoryId: string }) {
     );
 }
 
-function WorkItemActions({ parentId, hasApu }: { parentId: string, hasApu: boolean }) {
+function WorkItemActions({
+    parentId,
+    hasApu,
+}: {
+    parentId: string;
+    hasApu: boolean;
+}) {
     const [showCreate, setShowCreate] = useState(false);
     const [showEditSheet, setShowEditSheet] = useState(false);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -251,9 +266,7 @@ function WorkItemActions({ parentId, hasApu }: { parentId: string, hasApu: boole
                         </>
                     )}
 
-                    <DropdownMenuItem
-                        onSelect={() => setShowEditSheet(true)}
-                    >
+                    <DropdownMenuItem onSelect={() => setShowEditSheet(true)}>
                         Editar
                     </DropdownMenuItem>
                     <DropdownMenuItem
@@ -262,10 +275,7 @@ function WorkItemActions({ parentId, hasApu }: { parentId: string, hasApu: boole
                     >
                         Eliminar
                         <DropdownMenuShortcut>
-                            <Trash
-                                className="size-4"
-                                aria-hidden="true"
-                            />
+                            <Trash className="size-4" aria-hidden="true" />
                         </DropdownMenuShortcut>
                     </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -293,9 +303,7 @@ function SubWorkItemActions({ parentId }: { parentId: string }) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-40">
-                    <DropdownMenuItem
-                        onSelect={() => setShowEditSheet(true)}
-                    >
+                    <DropdownMenuItem onSelect={() => setShowEditSheet(true)}>
                         Editar
                     </DropdownMenuItem>
                     <DropdownMenuItem
@@ -304,10 +312,7 @@ function SubWorkItemActions({ parentId }: { parentId: string }) {
                     >
                         Eliminar
                         <DropdownMenuShortcut>
-                            <Trash
-                                className="size-4"
-                                aria-hidden="true"
-                            />
+                            <Trash className="size-4" aria-hidden="true" />
                         </DropdownMenuShortcut>
                     </DropdownMenuItem>
                 </DropdownMenuContent>
