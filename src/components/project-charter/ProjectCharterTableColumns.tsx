@@ -1,9 +1,12 @@
 "use client";
 
 import { useObservation } from "@/hooks/use-observation";
+import { useProjectCharter } from "@/hooks/use-project-charter";
 import { ProjectCharter } from "@/types";
 import { type ColumnDef } from "@tanstack/react-table";
 import {
+    CircleCheck,
+    CircleX,
     Contact,
     DraftingCompass,
     Ellipsis,
@@ -26,6 +29,7 @@ import {
 
 import { DataTableColumnHeader } from "../data-table/DataTableColumnHeader";
 import { Badge } from "../ui/badge";
+import { Switch } from "../ui/switch";
 import { CreateObservationDialog } from "./CreateObservationDialog";
 import { DeleteAllObservationsDialog } from "./DeleteAllObservationsDialog";
 import { ObservationProjectCharterSheet } from "./ObservationProjectCharterSheet";
@@ -135,6 +139,57 @@ export const projectsChartersColumns = (
                                 {userName}
                             </span>
                         </Badge>
+                    </div>
+                );
+            },
+        },
+
+        {
+            id: "anteproyecto",
+            accessorKey: "preProjectApproval",
+            header: ({ column }) => (
+                <DataTableColumnHeader column={column} title="Anteproyecto" />
+            ),
+            cell: function Cell({ row }) {
+                const { onToggleProjectCharterApprovation } =
+                    useProjectCharter();
+                const [isAvailable, setIsAvailable] = useState(
+                    row.original.preProjectApproval,
+                );
+
+                const handleToggle = async () => {
+                    const productId = row.original.id;
+                    await onToggleProjectCharterApprovation(productId);
+                    setIsAvailable((prev) => !prev);
+                };
+                return (
+                    <div className="flex w-56 gap-4">
+                        <>
+                            <div className="flex flex-col items-center">
+                                <Switch
+                                    checked={isAvailable}
+                                    onCheckedChange={handleToggle}
+                                    className="translate-y-0.5"
+                                />
+                            </div>
+                            {row.getValue("anteproyecto") ? (
+                                <span className="inline-flex items-center gap-2 text-emerald-500">
+                                    <CircleCheck
+                                        className="size-4 flex-shrink-0"
+                                        aria-hidden="true"
+                                    />
+                                    Aprobado
+                                </span>
+                            ) : (
+                                <span className="inline-flex items-center gap-2 truncate text-red-500">
+                                    <CircleX
+                                        className="size-4"
+                                        aria-hidden="true"
+                                    />
+                                    Desaprobado
+                                </span>
+                            )}
+                        </>
                     </div>
                 );
             },

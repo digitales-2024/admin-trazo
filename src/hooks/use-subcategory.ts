@@ -1,68 +1,77 @@
 import {
-    useCreateCategoryMutation,
-    useDeleteCategoryMutation,
-    useGetAllCategoryQuery,
-    useGetCategoryByIdQuery,
-    useGetFullCategoryQuery,
-    useReactivateCategoryMutation,
-    useUpdateCategoryMutation,
-} from "@/redux/services/categoryApi";
-import { Category, CustomErrorData } from "@/types";
+    useCreateSubcategoryMutation,
+    useDeleteSubcategoryMutation,
+    useGetAllSubcategoryQuery,
+    useGetSubcategoryByIdCategoryQuery,
+    useGetSubcategoryByIdQuery,
+    useReactivateSubcategoryMutation,
+    useUpdateSubcategoryMutation,
+} from "@/redux/services/subcategoryApi";
+import { CustomErrorData, Subcategory } from "@/types";
 import { translateError } from "@/utils/translateError";
 import { toast } from "sonner";
 
-interface UseCategoryProps {
+interface UseSubcategoryProps {
     id?: string;
+    idCategory?: string;
 }
 
-export const useCategory = (options: UseCategoryProps = {}) => {
-    const { id } = options;
+export const useSubcategory = (options: UseSubcategoryProps = {}) => {
+    const { id, idCategory } = options;
 
     const {
-        data: dataCategoryAll,
+        data: dataSubcategoryAll,
         error,
         isLoading,
         isSuccess,
         refetch,
-    } = useGetAllCategoryQuery();
+    } = useGetAllSubcategoryQuery();
 
-    const { data: fullCategoryData } = useGetFullCategoryQuery();
+    const {
+        data: subcategoriesByIdCategory,
+        refetch: refetchSubcategoriesByIdCategory,
+    } = useGetSubcategoryByIdCategoryQuery(
+        { id: idCategory as string },
+        {
+            skip: !idCategory, // Evita hacer la query si no hay id
+        },
+    );
 
-    const { data: categoryById, refetch: refetchCategoryById } =
-        useGetCategoryByIdQuery(
+    const { data: subcategoryById, refetch: refetchSubcategoryById } =
+        useGetSubcategoryByIdQuery(
             { id: id as string },
             {
                 skip: !id, // Evita hacer la query si no hay id
             },
         );
 
-    const [createCategory, { isSuccess: isSuccessCreateCategory }] =
-        useCreateCategoryMutation();
+    const [createSubcategory, { isSuccess: isSuccessCreateSubcategory }] =
+        useCreateSubcategoryMutation();
 
     const [
-        updateCategory,
+        updateSubcategory,
         {
-            isSuccess: isSuccessUpdateCategory,
-            isLoading: isLoadingUpdateCategory,
+            isSuccess: isSuccessUpdateSubcategory,
+            isLoading: isLoadingUpdateSubcategory,
         },
-    ] = useUpdateCategoryMutation();
+    ] = useUpdateSubcategoryMutation();
 
-    const [deleteCategory, { isSuccess: isSuccessDeleteCategory }] =
-        useDeleteCategoryMutation();
+    const [deleteSubcategory, { isSuccess: isSuccessDeleteSubcategory }] =
+        useDeleteSubcategoryMutation();
 
     const [
-        reactivateCategory,
+        reactivateSubcategory,
         {
-            isSuccess: isSuccessReactivateCategory,
-            isLoading: isLoadingReactivateCategory,
+            isSuccess: isSuccessReactivateSubcategory,
+            isLoading: isLoadingReactivateSubcategory,
         },
-    ] = useReactivateCategoryMutation();
+    ] = useReactivateSubcategoryMutation();
 
-    const onCreateCategory = async (input: Partial<Category>) => {
+    const onCreateSubcategory = async (input: Partial<Subcategory>) => {
         const promise = () =>
             new Promise(async (resolve, reject) => {
                 try {
-                    const result = await createCategory(input);
+                    const result = await createSubcategory(input);
                     if (result.error) {
                         if (
                             typeof result.error === "object" &&
@@ -88,19 +97,19 @@ export const useCategory = (options: UseCategoryProps = {}) => {
             });
 
         return toast.promise(promise(), {
-            loading: "Creando categoría...",
-            success: "Categoría creado con éxito",
+            loading: "Creando subcategoría...",
+            success: "Subcategoría creado con éxito",
             error: (err) => err.message,
         });
     };
 
-    const onUpdateCategory = async (
-        input: Partial<Category> & { id: string },
+    const onUpdateSubcategory = async (
+        input: Partial<Subcategory> & { id: string },
     ) => {
         const promise = () =>
             new Promise(async (resolve, reject) => {
                 try {
-                    const result = await updateCategory(input);
+                    const result = await updateSubcategory(input);
                     if (
                         result.error &&
                         typeof result.error === "object" &&
@@ -125,23 +134,23 @@ export const useCategory = (options: UseCategoryProps = {}) => {
                 }
             });
         toast.promise(promise(), {
-            loading: "Actualizando categoría...",
-            success: "Categoría actualizado exitosamente",
+            loading: "Actualizando subcategoría...",
+            success: "Subcategoría actualizado exitosamente",
             error: (error) => {
                 return error.message;
             },
         });
     };
 
-    const onReactivateCategory = async (ids: Category[]) => {
-        const onlyIds = ids.map((categoryType) => categoryType.id);
+    const onReactivateSubcategory = async (ids: Subcategory[]) => {
+        const onlyIds = ids.map((subcategoryType) => subcategoryType.id);
         const idsString = {
             ids: onlyIds,
         };
         const promise = () =>
             new Promise(async (resolve, reject) => {
                 try {
-                    const result = await reactivateCategory(idsString);
+                    const result = await reactivateSubcategory(idsString);
                     if (result.error) {
                         if (
                             typeof result.error === "object" &&
@@ -168,22 +177,22 @@ export const useCategory = (options: UseCategoryProps = {}) => {
 
         toast.promise(promise(), {
             loading: "Reactivando...",
-            success: "Categorias reactivadas con éxito",
+            success: "Subcategorias reactivadas con éxito",
             error: (error) => {
                 return error.message;
             },
         });
     };
 
-    const onDeleteCategory = async (ids: Category[]) => {
-        const onlyIds = ids.map((categoryType) => categoryType.id);
+    const onDeleteSubcategory = async (ids: Subcategory[]) => {
+        const onlyIds = ids.map((subcategoryType) => subcategoryType.id);
         const idsString = {
             ids: onlyIds,
         };
         const promise = () =>
             new Promise(async (resolve, reject) => {
                 try {
-                    const result = await deleteCategory(idsString);
+                    const result = await deleteSubcategory(idsString);
                     if (
                         result.error &&
                         typeof result.error === "object" &&
@@ -210,30 +219,31 @@ export const useCategory = (options: UseCategoryProps = {}) => {
 
         toast.promise(promise(), {
             loading: "Eliminando...",
-            success: "Categorias eliminadas con éxito",
+            success: "Subcategorias eliminadas con éxito",
             error: (error) => {
                 return error.message;
             },
         });
     };
     return {
-        dataCategoryAll,
+        dataSubcategoryAll,
         error,
         isLoading,
         isSuccess,
         refetch,
-        categoryById,
-        refetchCategoryById,
-        createCategory: onCreateCategory,
-        updateCategory: onUpdateCategory,
-        deleteCategory: onDeleteCategory,
-        reactivateCategory: onReactivateCategory,
-        isSuccessCreateCategory,
-        isSuccessUpdateCategory,
-        isLoadingUpdateCategory,
-        isSuccessDeleteCategory,
-        isSuccessReactivateCategory,
-        isLoadingReactivateCategory,
-        fullCategoryData,
+        subcategoryById,
+        refetchSubcategoryById,
+        createSubcategory: onCreateSubcategory,
+        isSuccessCreateSubcategory,
+        updateSubcategory: onUpdateSubcategory,
+        isSuccessUpdateSubcategory,
+        isLoadingUpdateSubcategory,
+        deleteSubcategory: onDeleteSubcategory,
+        isSuccessDeleteSubcategory,
+        reactivateSubcategory: onReactivateSubcategory,
+        isSuccessReactivateSubcategory,
+        isLoadingReactivateSubcategory,
+        subcategoriesByIdCategory,
+        refetchSubcategoriesByIdCategory,
     };
 };

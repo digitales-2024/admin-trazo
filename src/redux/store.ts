@@ -3,6 +3,7 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 
 import { adminApi } from "./services/adminApi";
 import { authApi } from "./services/authApi";
+import { budgetsApi } from "./services/budgetApi";
 import { businessApi } from "./services/businessApi";
 import { categoryApi } from "./services/categoryApi";
 import { clientsApi } from "./services/clientApi";
@@ -14,6 +15,7 @@ import { quotationsApi } from "./services/quotationApi";
 import { resourceApi } from "./services/resourceApi";
 import { rolesApi } from "./services/rolesApi";
 import { spacesApi } from "./services/spaceApi";
+import { subcategoryApi } from "./services/subcategoryApi";
 import { usersApi } from "./services/usersApi";
 import { workitemApi } from "./services/workitemApi";
 import { zoningApi } from "./services/zoningApi";
@@ -35,6 +37,8 @@ export const store = configureStore({
         [projectCharterApi.reducerPath]: projectCharterApi.reducer,
         [observationApi.reducerPath]: observationApi.reducer,
         [resourceApi.reducerPath]: resourceApi.reducer,
+        [budgetsApi.reducerPath]: budgetsApi.reducer,
+        [subcategoryApi.reducerPath]: subcategoryApi.reducer,
         [workitemApi.reducerPath]: workitemApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
@@ -73,7 +77,10 @@ export const store = configureStore({
             .concat(projectCharterApi.middleware)
             .concat(observationApi.middleware)
             .concat(resourceApi.middleware)
-            .concat(workitemApi.middleware),
+            .concat(workitemApi.middleware)
+            .concat(budgetsApi.middleware)
+            .concat(categoryApi.middleware)
+            .concat(subcategoryApi.middleware),
 });
 setupListeners(store.dispatch);
 

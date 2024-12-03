@@ -33,8 +33,23 @@ export const projectCharterApi = createApi({
             }),
             providesTags: ["Project Charter"],
         }),
+
+        toggleProjectCharterApproved: build.mutation<
+            ProjectCharter,
+            { id: string }
+        >({
+            query: ({ id }) => ({
+                url: `/project-charter/toggleapproved/${id}`,
+                method: "PATCH",
+                credentials: "include",
+            }),
+            invalidatesTags: ["Project Charter"],
+        }),
     }),
 });
 
-export const { useGetAllProjectCharterQuery, useGetProjectCharterByIdQuery } =
-    projectCharterApi;
+export const {
+    useGetAllProjectCharterQuery,
+    useGetProjectCharterByIdQuery,
+    useToggleProjectCharterApprovedMutation,
+} = projectCharterApi;
