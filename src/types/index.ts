@@ -47,4 +47,5 @@ export type {
     WorkItemDragCategory,
     SubworkItemDragCategory,
 } from "./category";
+export type { FullWorkItem } from "./workitem";
 export type { Subcategory } from "./subcategory";
