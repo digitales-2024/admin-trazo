@@ -3,8 +3,8 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 
 import baseQueryWithReauth from "../baseQuery";
 
-export const workitemApi = createApi({
-    reducerPath: "workitemApi",
+export const subworkitemApi = createApi({
+    reducerPath: "subworkitemApi",
     baseQuery: baseQueryWithReauth,
     tagTypes: ["SubWorkItem"],
     endpoints: (build) => ({
@@ -23,4 +23,4 @@ export const workitemApi = createApi({
     }),
 });
 
-export const { useCreateSubWorkItemMutation } = workitemApi;
+export const { useCreateSubWorkItemMutation } = subworkitemApi;

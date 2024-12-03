@@ -79,8 +79,8 @@ const withApuSchema = z.object({
         .max(50),
     unit: z
         .string()
-        .min(2, {
-            message: "La unidad de la partida debe tener al menos 2 caracteres",
+        .min(1, {
+            message: "La unidad de la partida debe tener al menos 1 caracter",
         })
         .max(50),
     apuPerformance: z.coerce.number().min(0),
@@ -94,7 +94,7 @@ function CreateWithApuForm({
     setOpen: (v: boolean) => void;
     subcategoryId: string;
 }) {
-    const { nestedRefetch } = useCategory();
+    const { fullCategoryRefetch: nestedRefetch } = useCategory();
     const { onCreate, createLoading, createSuccess } = useWorkItem();
     const form = useForm<z.infer<typeof withApuSchema>>({
         resolver: zodResolver(withApuSchema),
@@ -233,8 +233,8 @@ function CreateWithApuForm({
 const withSubitemsSchema = z.object({
     name: z
         .string()
-        .min(2, {
-            message: "El nombre de la partida debe tener al menos 2 caracteres",
+        .min(1, {
+            message: "El nombre de la partida debe tener al menos 1 caracter",
         })
         .max(50),
 });
@@ -246,7 +246,7 @@ function CreateWithSubitemsForm({
     setOpen: (v: boolean) => void;
     subcategoryId: string;
 }) {
-    const { nestedRefetch } = useCategory();
+    const { fullCategoryRefetch: nestedRefetch } = useCategory();
     const { onCreate, createLoading, createSuccess } = useWorkItem();
     const form = useForm<z.infer<typeof withSubitemsSchema>>({
         resolver: zodResolver(withSubitemsSchema),

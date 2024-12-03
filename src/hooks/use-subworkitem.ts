@@ -13,6 +13,7 @@ export const useSubWorkItem = () => {
             new Promise(async (resolve, reject) => {
                 try {
                     const result = await create(input);
+                    console.log(result);
                     if (
                         result.error &&
                         typeof result.error === "object" &&

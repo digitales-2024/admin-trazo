@@ -16,6 +16,7 @@ import { resourceApi } from "./services/resourceApi";
 import { rolesApi } from "./services/rolesApi";
 import { spacesApi } from "./services/spaceApi";
 import { subcategoryApi } from "./services/subcategoryApi";
+import { subworkitemApi } from "./services/subworkitemApi";
 import { usersApi } from "./services/usersApi";
 import { workitemApi } from "./services/workitemApi";
 import { zoningApi } from "./services/zoningApi";
@@ -40,6 +41,7 @@ export const store = configureStore({
         [budgetsApi.reducerPath]: budgetsApi.reducer,
         [subcategoryApi.reducerPath]: subcategoryApi.reducer,
         [workitemApi.reducerPath]: workitemApi.reducer,
+        [subworkitemApi.reducerPath]: subworkitemApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
@@ -78,6 +80,7 @@ export const store = configureStore({
             .concat(observationApi.middleware)
             .concat(resourceApi.middleware)
             .concat(workitemApi.middleware)
+            .concat(subworkitemApi.middleware)
             .concat(budgetsApi.middleware)
             .concat(categoryApi.middleware)
             .concat(subcategoryApi.middleware),
