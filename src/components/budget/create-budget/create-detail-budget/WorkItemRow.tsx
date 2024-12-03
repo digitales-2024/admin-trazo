@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TableCell, TableRow } from "@/components/ui/table";
 
-import { ApuDialog } from "./ApuBudgetDialog";
+import { ApuDialog } from "./create-apu-budget/ApuBudgetDialog";
 
 interface WorkItemRowProps {
     catIndex: number;
