@@ -1,4 +1,3 @@
-// src/components/budget/create-budget/create-detail-budget/create-apu-budget/ApuResourceForm.tsx
 import { useResource } from "@/hooks/use-resource";
 import { ResourceApu, ResourceType } from "@/types";
 import React from "react";
