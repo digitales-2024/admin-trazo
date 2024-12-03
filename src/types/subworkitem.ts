@@ -7,6 +7,11 @@ export type SubWorkItemCreate = {
     apu: ApuCreate;
 };
 
+export type SubWorkItemEdit = {
+    name: string;
+    unit: string;
+};
+
 export type WorkItemGetSubItem = {
     name: string;
     id: string;

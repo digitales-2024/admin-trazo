@@ -1,4 +1,4 @@
-import { SubWorkItemCreate } from "@/types/subworkitem";
+import { SubWorkItemCreate, SubWorkItemEdit } from "@/types/subworkitem";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 import baseQueryWithReauth from "../baseQuery";
@@ -20,7 +20,21 @@ export const subworkitemApi = createApi({
                 invalidatesTags: ["SubWorkItem"],
             },
         ),
+        // editar partida
+        editSubWorkItem: build.mutation<
+            void,
+            { body: SubWorkItemEdit; id: string }
+        >({
+            query: ({ body, id }) => ({
+                url: `/work-item/${id}`,
+                method: "PATCH",
+                body,
+                credentials: "include",
+            }),
+            invalidatesTags: ["SubWorkItem"],
+        }),
     }),
 });
 
-export const { useCreateSubWorkItemMutation } = subworkitemApi;
+export const { useCreateSubWorkItemMutation, useEditSubWorkItemMutation } =
+    subworkitemApi;

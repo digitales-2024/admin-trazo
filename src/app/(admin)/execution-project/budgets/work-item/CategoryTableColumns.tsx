@@ -19,7 +19,7 @@ import { Separator } from "@/components/ui/separator";
 import { ApuDialog } from "./ApuDialog";
 import { CreateSubWorkItemDialog } from "./CreateSubWorkItemDialog";
 import { CreateWorkItemDialog } from "./CreateWorkItemDialog";
-import { EditWorkItemSheet } from "./EditWorkItemSheet";
+import { EditWorkItemSheetWrapper } from "./EditWorkItemSheet";
 
 export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
     {
@@ -155,7 +155,12 @@ export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
                     break;
                 }
                 case "Subworkitem": {
-                    actions = <SubWorkItemActions parentId={row.original.id} />;
+                    actions = (
+                        <SubWorkItemActions
+                            parentId={row.original.id}
+                            data={row.original}
+                        />
+                    );
                     break;
                 }
             }
@@ -245,7 +250,7 @@ function WorkItemActions({
                     onOpenChange={setShowCreate}
                     workitemId={parentId}
                 />
-                <EditWorkItemSheet
+                <EditWorkItemSheetWrapper
                     open={showEditSheet}
                     onOpenChange={setShowEditSheet}
                     data={data}
@@ -294,16 +299,28 @@ function WorkItemActions({
     );
 }
 
-function SubWorkItemActions({ parentId }: { parentId: string }) {
+function SubWorkItemActions({
+    parentId,
+    data,
+}: {
+    parentId: string;
+    data: GenericTableItem;
+}) {
     const [showEditSheet, setShowEditSheet] = useState(false);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     console.log(parentId);
-    console.log(showEditSheet);
     console.log(showDeleteDialog);
 
     return (
         <div>
-            <div></div>
+            <div>
+                <EditWorkItemSheetWrapper
+                    open={showEditSheet}
+                    onOpenChange={setShowEditSheet}
+                    data={data}
+                    isSub={true}
+                />
+            </div>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button
