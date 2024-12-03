@@ -1,10 +1,27 @@
-import { useCreateWorkItemMutation } from "@/redux/services/workitemApi";
+import {
+    useCreateWorkItemMutation,
+    useGetWorkItemByIdQuery,
+} from "@/redux/services/workitemApi";
 import { CustomErrorData } from "@/types";
 import { WorkItemCreate } from "@/types/workitem";
 import { translateError } from "@/utils/translateError";
 import { toast } from "sonner";
 
-export const useWorkItem = () => {
+interface UseWorkItemsProps {
+    id?: string;
+}
+
+export const useWorkItem = (options: UseWorkItemsProps = {}) => {
+    const { id } = options;
+
+    const { data: workItemById, refetch: refetchWorkItemById } =
+        useGetWorkItemByIdQuery(
+            { id: id as string },
+            {
+                skip: !id, // Evita hacer la query si no hay id
+            },
+        );
+
     const [create, { isLoading: createLoading, isSuccess: createSuccess }] =
         useCreateWorkItemMutation();
 
@@ -47,5 +64,7 @@ export const useWorkItem = () => {
         onCreate,
         createLoading,
         createSuccess,
+        workItemById,
+        refetchWorkItemById,
     };
 };
