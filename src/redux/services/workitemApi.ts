@@ -1,4 +1,4 @@
-import { WorkItemCreate, WorkItemGetAll } from "@/types/workitem";
+import { WorkItemCreate, WorkItemEdit, WorkItemGetAll } from "@/types/workitem";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 import baseQueryWithReauth from "../baseQuery";
@@ -27,7 +27,21 @@ export const workitemApi = createApi({
             }),
             invalidatesTags: ["WorkItem"],
         }),
+        // editar partida
+        editWorkItem: build.mutation<void, { body: WorkItemEdit; id: string }>({
+            query: ({ body, id }) => ({
+                url: `/work-item/${id}`,
+                method: "PATCH",
+                body,
+                credentials: "include",
+            }),
+            invalidatesTags: ["WorkItem"],
+        }),
     }),
 });
 
-export const { useGetWorkitemQuery, useCreateWorkItemMutation } = workitemApi;
+export const {
+    useGetWorkitemQuery,
+    useCreateWorkItemMutation,
+    useEditWorkItemMutation,
+} = workitemApi;

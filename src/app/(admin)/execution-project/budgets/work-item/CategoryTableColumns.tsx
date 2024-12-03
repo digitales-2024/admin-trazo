@@ -19,6 +19,7 @@ import { Separator } from "@/components/ui/separator";
 import { ApuDialog } from "./ApuDialog";
 import { CreateSubWorkItemDialog } from "./CreateSubWorkItemDialog";
 import { CreateWorkItemDialog } from "./CreateWorkItemDialog";
+import { EditWorkItemSheet } from "./EditWorkItemSheet";
 
 export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
     {
@@ -57,11 +58,11 @@ export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
                 }
             }
             return (
-                <div className="flex h-16 items-center gap-2">
+                <div className="flex h-16 items-center">
                     <div className={`h-16 bg-slate-100 ${indentationClass}`} />
                     {row.getCanExpand() ? (
                         <button
-                            className="w-6"
+                            className="inline-block h-16 w-9 px-2"
                             {...{
                                 onClick: row.getToggleExpandedHandler(),
                                 style: { cursor: "pointer" },
@@ -80,7 +81,7 @@ export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
                             )}
                         </button>
                     ) : (
-                        <span className="w-6" />
+                        <span className="w-9" />
                     )}
                     <Checkbox
                         checked={row.getIsSelected()}
@@ -89,7 +90,7 @@ export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
                         className="translate-y-0.5"
                     />
                     <div
-                        className={`${entityTypeToColor(row.original.entityName, !row.original.apuId)} uppercase`}
+                        className={`${entityTypeToColor(row.original.entityName, !row.original.apuId)} pl-2 uppercase`}
                     >
                         {getValue() as string}
                     </div>
@@ -148,6 +149,7 @@ export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
                         <WorkItemActions
                             parentId={row.original.id}
                             hasApu={!!row.original.apuId}
+                            data={row.original}
                         />
                     );
                     break;
@@ -224,13 +226,16 @@ function SubCategoryActions({ subcategoryId }: { subcategoryId: string }) {
 function WorkItemActions({
     parentId,
     hasApu,
+    data,
 }: {
     parentId: string;
     hasApu: boolean;
+    data: GenericTableItem;
 }) {
     const [showCreate, setShowCreate] = useState(false);
     const [showEditSheet, setShowEditSheet] = useState(false);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    console.log(showDeleteDialog);
 
     return (
         <div>
@@ -239,6 +244,11 @@ function WorkItemActions({
                     open={showCreate}
                     onOpenChange={setShowCreate}
                     workitemId={parentId}
+                />
+                <EditWorkItemSheet
+                    open={showEditSheet}
+                    onOpenChange={setShowEditSheet}
+                    data={data}
                 />
             </div>
             <DropdownMenu>
@@ -288,6 +298,8 @@ function SubWorkItemActions({ parentId }: { parentId: string }) {
     const [showEditSheet, setShowEditSheet] = useState(false);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     console.log(parentId);
+    console.log(showEditSheet);
+    console.log(showDeleteDialog);
 
     return (
         <div>

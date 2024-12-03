@@ -1,12 +1,17 @@
-import { useCreateWorkItemMutation } from "@/redux/services/workitemApi";
+import {
+    useCreateWorkItemMutation,
+    useEditWorkItemMutation,
+} from "@/redux/services/workitemApi";
 import { CustomErrorData } from "@/types";
-import { WorkItemCreate } from "@/types/workitem";
+import { WorkItemCreate, WorkItemEdit } from "@/types/workitem";
 import { translateError } from "@/utils/translateError";
 import { toast } from "sonner";
 
 export const useWorkItem = () => {
     const [create, { isLoading: createLoading, isSuccess: createSuccess }] =
         useCreateWorkItemMutation();
+    const [edit, { isLoading: editLoading, isSuccess: editSuccess }] =
+        useEditWorkItemMutation();
 
     const onCreate = async (input: WorkItemCreate) => {
         const promise = () =>
@@ -43,9 +48,49 @@ export const useWorkItem = () => {
         });
     };
 
+    const onEditWorkItem = async (data: { body: WorkItemEdit; id: string }) => {
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                try {
+                    const result = await edit(data);
+                    console.log(result);
+                    if (result.error) {
+                        if (
+                            typeof result.error === "object" &&
+                            "data" in result.error
+                        ) {
+                            const error = (result.error.data as CustomErrorData)
+                                .message;
+                            const message = translateError(error as string);
+                            reject(new Error(message));
+                        } else {
+                            reject(
+                                new Error(
+                                    "Ocurrió un error inesperado, por favor intenta de nuevo",
+                                ),
+                            );
+                        }
+                    } else {
+                        resolve(result);
+                    }
+                } catch (error) {
+                    reject(error);
+                }
+            });
+
+        return toast.promise(promise(), {
+            loading: "Editando partida...",
+            success: "Partida editada con éxito",
+            error: (err) => err.message,
+        });
+    };
+
     return {
         onCreate,
         createLoading,
         createSuccess,
+        onEditWorkItem,
+        editLoading,
+        editSuccess,
     };
 };
