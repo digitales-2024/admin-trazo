@@ -1,7 +1,15 @@
 "use client";
 
+import { useWorkItem } from "@/hooks/use-workitem";
 import { ResourceApu, ResourceType } from "@/types";
-import { Package, Wrench, HeartHandshake, Users } from "lucide-react";
+import {
+    Package,
+    Wrench,
+    HeartHandshake,
+    Users,
+    SquarePlus,
+    Pin,
+} from "lucide-react";
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
@@ -13,6 +21,8 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -76,7 +86,16 @@ interface ApuDialogProps {
 }
 
 export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
-    console.log(id);
+    const { workItemById } = useWorkItem({ id });
+    const [performance, setPerformance] = React.useState(0);
+    const [workHours, setWorkHours] = React.useState(0);
+
+    React.useEffect(() => {
+        if (workItemById?.apu) {
+            setPerformance(workItemById.apu.performance || 0);
+            setWorkHours(workItemById.apu.workHours || 0);
+        }
+    }, [workItemById]);
     const [activeTab, setActiveTab] = React.useState("plantilla");
     const [resourceTypes, setResourceTypes] =
         React.useState<ResourceExpanded[]>(initialResourceTypes);
@@ -190,12 +209,69 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
                     >
                         <TabsList className="grid w-full grid-cols-2">
                             <TabsTrigger value="plantilla">
-                                Plantilla
+                                <Pin className="mr-2 h-4 w-4 flex-shrink-0" />
+                                <span className="truncate text-ellipsis">
+                                    Plantilla
+                                </span>
                             </TabsTrigger>
-                            <TabsTrigger value="nuevo">Nuevo</TabsTrigger>
+                            <TabsTrigger value="nuevo">
+                                <SquarePlus className="mr-2 h-4 w-4 flex-shrink-0" />
+                                <span className="truncate text-ellipsis">
+                                    Nuevo
+                                </span>
+                            </TabsTrigger>
                         </TabsList>
                     </Tabs>
-
+                    <div className="mb-6 grid grid-cols-3 gap-4">
+                        <div>
+                            <Label
+                                htmlFor="itemName"
+                                className="text-sm font-medium text-gray-700"
+                            >
+                                Nombre de la Partida
+                            </Label>
+                            <Input
+                                id="itemName"
+                                value={workItemById?.name}
+                                className="mt-1"
+                                readOnly
+                            />
+                        </div>
+                        <div>
+                            <Label
+                                htmlFor="performance"
+                                className="text-sm font-medium text-gray-700"
+                            >
+                                Rendimiento
+                            </Label>
+                            <Input
+                                id="performance"
+                                type="number"
+                                value={performance}
+                                onChange={(e) =>
+                                    setPerformance(Number(e.target.value))
+                                }
+                                className="mt-1"
+                            />
+                        </div>
+                        <div>
+                            <Label
+                                htmlFor="workHours"
+                                className="text-sm font-medium text-gray-700"
+                            >
+                                Horas de Trabajo
+                            </Label>
+                            <Input
+                                id="workHours"
+                                type="number"
+                                value={workHours}
+                                onChange={(e) =>
+                                    setWorkHours(Number(e.target.value))
+                                }
+                                className="mt-1"
+                            />
+                        </div>
+                    </div>
                     <div className="space-y-4">
                         {activeTab === "nuevo" && (
                             <div className="mb-6 space-y-4">
@@ -220,6 +296,8 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
                             <ResourceTypeCard
                                 key={name}
                                 name={name}
+                                performance={performance}
+                                workHours={workHours}
                                 icon={icon}
                                 color={color}
                                 expandedType={expandedType}
