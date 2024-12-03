@@ -17,6 +17,7 @@ import { rolesApi } from "./services/rolesApi";
 import { spacesApi } from "./services/spaceApi";
 import { subcategoryApi } from "./services/subcategoryApi";
 import { usersApi } from "./services/usersApi";
+import { workitemApi } from "./services/workitemApi";
 import { zoningApi } from "./services/zoningApi";
 
 export const store = configureStore({
@@ -24,6 +25,7 @@ export const store = configureStore({
         [authApi.reducerPath]: authApi.reducer,
         [adminApi.reducerPath]: adminApi.reducer,
         [businessApi.reducerPath]: businessApi.reducer,
+        [categoryApi.reducerPath]: categoryApi.reducer,
         [designProjectApi.reducerPath]: designProjectApi.reducer,
         [usersApi.reducerPath]: usersApi.reducer,
         [rolesApi.reducerPath]: rolesApi.reducer,
@@ -36,8 +38,8 @@ export const store = configureStore({
         [observationApi.reducerPath]: observationApi.reducer,
         [resourceApi.reducerPath]: resourceApi.reducer,
         [budgetsApi.reducerPath]: budgetsApi.reducer,
-        [categoryApi.reducerPath]: categoryApi.reducer,
         [subcategoryApi.reducerPath]: subcategoryApi.reducer,
+        [workitemApi.reducerPath]: workitemApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
@@ -63,6 +65,7 @@ export const store = configureStore({
             .concat(authApi.middleware)
             .concat(adminApi.middleware)
             .concat(businessApi.middleware)
+            .concat(categoryApi.middleware)
             .concat(designProjectApi.middleware)
             .concat(rolesApi.middleware)
             .concat(usersApi.middleware)
@@ -74,6 +77,7 @@ export const store = configureStore({
             .concat(projectCharterApi.middleware)
             .concat(observationApi.middleware)
             .concat(resourceApi.middleware)
+            .concat(workitemApi.middleware)
             .concat(budgetsApi.middleware)
             .concat(categoryApi.middleware)
             .concat(subcategoryApi.middleware),
