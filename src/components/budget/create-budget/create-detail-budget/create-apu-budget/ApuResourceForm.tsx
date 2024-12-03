@@ -1,28 +1,45 @@
 import { useResource } from "@/hooks/use-resource";
 import { ResourceApu, ResourceType } from "@/types";
 import React from "react";
+import { useForm } from "react-hook-form";
 
 import { AutoComplete, Option } from "@/components/ui/autocomplete";
 import { Button } from "@/components/ui/button";
+import {
+    Form,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormControl,
+    FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+
+type ApuResourceFormProps = {
+    onSubmit: (resource: Omit<ResourceApu, "id" | "totalCost">) => void;
+    resourceType: string;
+};
 
 export default function ApuResourceForm({
     onSubmit,
     resourceType,
-}: {
-    onSubmit: (resource: Omit<ResourceApu, "id" | "totalCost">) => void;
-    resourceType: string;
-}) {
-    const [form, setForm] = React.useState<
-        Omit<ResourceApu, "id" | "totalCost">
-    >({
-        name: "",
-        quantity: 0,
-        unit: "",
-        unitCost: 0,
-        type: ResourceType.LABOR,
+}: ApuResourceFormProps) {
+    const form = useForm<Omit<ResourceApu, "id" | "totalCost">>({
+        defaultValues: {
+            name: "",
+            unit: "",
+            unitCost: 0,
+            type: ResourceType.LABOR,
+        },
     });
+    const [isAddingResource, setIsAddingResource] = React.useState(false);
+    const handleCancelAddResource = () => {
+        setIsAddingResource(false);
+        form.reset();
+    };
+    const handleAddResource = () => {
+        setIsAddingResource(true);
+    };
 
     const resourceNameToType: { [key: string]: ResourceType } = {
         Equipos: ResourceType.TOOLS,
@@ -30,11 +47,12 @@ export default function ApuResourceForm({
         Insumos: ResourceType.SUPPLIES,
         Servicios: ResourceType.SERVICES,
     };
+
     const { resourceByType } = useResource({
         type: resourceNameToType[resourceType],
     });
 
-    // Obtener opciones de cliente
+    // Obtener opciones de recurso con solo value y label
     const resourceOptions: Option[] = (resourceByType ?? []).map(
         (resource) => ({
             value: resource.id.toString(),
@@ -42,103 +60,181 @@ export default function ApuResourceForm({
         }),
     );
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (form.name && form.quantity > 0 && form.unit && form.unitCost > 0) {
-            onSubmit(form);
-            setForm({
-                name: "",
-                quantity: 0,
-                unit: "",
-                unitCost: 0,
-                type: ResourceType.LABOR,
-            });
+    const handleFormSubmit = (data: Omit<ResourceApu, "id" | "totalCost">) => {
+        if (data.name && data.quantity > 0 && data.unit && data.unitCost > 0) {
+            onSubmit(data);
+            form.reset();
+        }
+    };
+
+    const handleResourceChange = (selectedOption: Option | undefined) => {
+        if (selectedOption) {
+            // Encontrar el recurso correspondiente por ID
+            const selectedResource = resourceByType.find(
+                (resource) => resource.id === selectedOption.value,
+            );
+
+            if (selectedResource) {
+                form.setValue("name", selectedResource.name);
+                form.setValue("unit", selectedResource.unit);
+                form.setValue("unitCost", selectedResource.unitCost);
+            }
+        } else {
+            // Si no hay selección, limpiar los campos
+            form.setValue("name", "");
+            form.setValue("unit", "");
+            form.setValue("unitCost", 0);
         }
     };
 
     return (
-        <form onSubmit={handleSubmit} className="relative overflow-hidden px-3">
-            <div className="grid grid-cols-2 gap-4">
-                <div className="col-span-2">
-                    <Label
-                        htmlFor="description"
-                        className="mb-2 block text-base font-medium"
-                    >
-                        Nombre
-                    </Label>
-                    <AutoComplete
-                        options={resourceOptions}
-                        placeholder="Selecciona un recurso"
-                        emptyMessage="No se encontraron recursos"
-                        className="z-50"
-                    />
-                </div>
-                <div>
-                    <Label
-                        htmlFor="quantity"
-                        className="mb-2 block text-base font-medium"
-                    >
-                        Cantidad
-                    </Label>
-                    <Input
-                        id="quantity"
-                        type="number"
-                        placeholder="Ej: 50"
-                        value={form.quantity || ""}
-                        onChange={(e) =>
-                            setForm({
-                                ...form,
-                                quantity: Number(e.target.value),
-                            })
-                        }
-                        className="w-full rounded-lg border-2"
-                    />
-                </div>
-                <div>
-                    <Label
-                        htmlFor="unit"
-                        className="mb-2 block text-base font-medium"
-                    >
-                        Unidad
-                    </Label>
-                    <Input
-                        id="unit"
-                        placeholder="Ej: kg"
-                        value={form.unit}
-                        onChange={(e) =>
-                            setForm({ ...form, unit: e.target.value })
-                        }
-                        className="w-full rounded-lg border-2 p-3"
-                    />
-                </div>
-                <div className="col-span-2">
-                    <Label
-                        htmlFor="unitPrice"
-                        className="mb-2 block text-base font-medium"
-                    >
-                        Precio Unitario
-                    </Label>
-                    <Input
-                        id="unitPrice"
-                        type="number"
-                        placeholder="Ej: 2.50"
-                        value={form.unitCost || ""}
-                        onChange={(e) =>
-                            setForm({
-                                ...form,
-                                unitCost: Number(e.target.value),
-                            })
-                        }
-                        className="w-full rounded-lg border-2"
-                    />
-                </div>
-            </div>
-            <Button
-                type="submit"
-                className="mt-6 w-full transform rounded-lg px-4 py-3 font-bold text-white"
+        <Form {...form}>
+            <form
+                onSubmit={form.handleSubmit(handleFormSubmit)}
+                className="relative overflow-hidden px-3"
             >
-                Agregar Recurso
-            </Button>
-        </form>
+                {isAddingResource ? (
+                    <>
+                        <div className="grid grid-cols-2 gap-4">
+                            {/* Campo Nombre con AutoComplete */}
+                            <FormField
+                                control={form.control}
+                                name="name"
+                                rules={{ required: "El nombre es requerido." }}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Nombre</FormLabel>
+                                        <FormControl>
+                                            <AutoComplete
+                                                {...field}
+                                                options={resourceOptions}
+                                                placeholder="Selecciona un recurso"
+                                                emptyMessage="No se encontraron recursos"
+                                                onValueChange={(
+                                                    selectedOption,
+                                                ) => {
+                                                    handleResourceChange(
+                                                        selectedOption,
+                                                    );
+                                                }}
+                                                value={
+                                                    resourceOptions.find(
+                                                        (option) =>
+                                                            option.value ===
+                                                            field.value,
+                                                    ) || undefined
+                                                }
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* Campo Cantidad */}
+                            <FormField
+                                control={form.control}
+                                name="quantity"
+                                rules={{
+                                    required: "La cantidad es requerida.",
+                                    min: {
+                                        value: 1,
+                                        message:
+                                            "La cantidad debe ser al menos 1.",
+                                    },
+                                }}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Cantidad</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="number"
+                                                placeholder="Ej: 50"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* Campo Unidad */}
+                            <FormField
+                                control={form.control}
+                                name="unit"
+                                rules={{ required: "La unidad es requerida." }}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Unidad</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="Ej: kg"
+                                                {...field}
+                                                disabled
+                                                readOnly
+                                                className="cursor-not-allowed bg-gray-100"
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* Campo Precio Unitario */}
+                            <FormField
+                                control={form.control}
+                                name="unitCost"
+                                rules={{
+                                    required:
+                                        "El precio unitario es requerido.",
+                                    min: {
+                                        value: 0.01,
+                                        message:
+                                            "El precio unitario debe ser mayor a 0.",
+                                    },
+                                }}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Precio Unitario</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="number"
+                                                placeholder="Ej: 2.50"
+                                                step="0.01"
+                                                {...field}
+                                                disabled
+                                                readOnly
+                                                className="cursor-not-allowed bg-gray-100"
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                        <div className="flex justify-end gap-2">
+                            <Button
+                                onClick={handleCancelAddResource}
+                                variant="destructive"
+                                className="mt-6"
+                            >
+                                Cancelar
+                            </Button>
+                            <Button
+                                type="button"
+                                onClick={() =>
+                                    form.handleSubmit(handleFormSubmit)()
+                                }
+                                className="mt-6"
+                            >
+                                Agregar
+                            </Button>
+                        </div>
+                    </>
+                ) : (
+                    <Button onClick={handleAddResource}>Agregar Recurso</Button>
+                )}
+            </form>
+        </Form>
     );
 }
