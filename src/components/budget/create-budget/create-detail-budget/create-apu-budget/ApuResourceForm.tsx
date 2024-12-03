@@ -1,7 +1,8 @@
+// src/components/budget/create-budget/create-detail-budget/create-apu-budget/ApuResourceForm.tsx
 import { useResource } from "@/hooks/use-resource";
 import { ResourceApu, ResourceType } from "@/types";
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 
 import { AutoComplete, Option } from "@/components/ui/autocomplete";
 import { Button } from "@/components/ui/button";
@@ -18,11 +19,15 @@ import { Input } from "@/components/ui/input";
 type ApuResourceFormProps = {
     onSubmit: (resource: Omit<ResourceApu, "id" | "totalCost">) => void;
     resourceType: string;
+    performance: number;
+    workHours: number;
 };
 
 export default function ApuResourceForm({
     onSubmit,
     resourceType,
+    performance,
+    workHours,
 }: ApuResourceFormProps) {
     const form = useForm<Omit<ResourceApu, "id" | "totalCost">>({
         defaultValues: {
@@ -30,8 +35,25 @@ export default function ApuResourceForm({
             unit: "",
             unitCost: 0,
             type: ResourceType.LABOR,
+            group: 0,
+            quantity: 0,
         },
     });
+
+    const groupValue = useWatch({
+        control: form.control,
+        name: "group",
+        defaultValue: 0,
+    });
+
+    React.useEffect(() => {
+        if (resourceType === "Mano de Obra") {
+            const calculatedQuantity =
+                (Number(groupValue) * workHours) / performance || 0;
+            form.setValue("quantity", calculatedQuantity);
+        }
+    }, [resourceType, groupValue, workHours, performance, form]);
+
     const [isAddingResource, setIsAddingResource] = React.useState(false);
     const handleCancelAddResource = () => {
         setIsAddingResource(false);
@@ -64,6 +86,7 @@ export default function ApuResourceForm({
         if (data.name && data.quantity > 0 && data.unit && data.unitCost > 0) {
             onSubmit(data);
             form.reset();
+            setIsAddingResource(false);
         }
     };
 
@@ -71,7 +94,7 @@ export default function ApuResourceForm({
         if (selectedOption) {
             // Encontrar el recurso correspondiente por ID
             const selectedResource = resourceByType.find(
-                (resource) => resource.id === selectedOption.value,
+                (resource) => resource.id.toString() === selectedOption.value,
             );
 
             if (selectedResource) {
@@ -130,34 +153,6 @@ export default function ApuResourceForm({
                                     </FormItem>
                                 )}
                             />
-
-                            {/* Campo Cantidad */}
-                            <FormField
-                                control={form.control}
-                                name="quantity"
-                                rules={{
-                                    required: "La cantidad es requerida.",
-                                    min: {
-                                        value: 1,
-                                        message:
-                                            "La cantidad debe ser al menos 1.",
-                                    },
-                                }}
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Cantidad</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                type="number"
-                                                placeholder="Ej: 50"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
                             {/* Campo Unidad */}
                             <FormField
                                 control={form.control}
@@ -168,11 +163,81 @@ export default function ApuResourceForm({
                                         <FormLabel>Unidad</FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="Ej: kg"
+                                                placeholder="Ingrese la unidad"
                                                 {...field}
                                                 disabled
                                                 readOnly
                                                 className="cursor-not-allowed bg-gray-100"
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* Campo Cuadrilla */}
+                            {resourceType === "Mano de Obra" && (
+                                <FormField
+                                    control={form.control}
+                                    name="group"
+                                    rules={{
+                                        required: "La cuadrilla es requerida.",
+                                        min: {
+                                            value: 1,
+                                            message:
+                                                "La cuadrilla debe ser al menos 1.",
+                                        },
+                                    }}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Cuadrilla</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="number"
+                                                    placeholder="Ingrese la cuadrilla"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            )}
+
+                            {/* Campo Cantidad */}
+                            <FormField
+                                control={form.control}
+                                name="quantity"
+                                rules={{
+                                    required: "La cantidad es requerida.",
+                                    min: {
+                                        value: 0,
+                                        message:
+                                            "La cantidad debe ser al menos 1.",
+                                    },
+                                }}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Cantidad</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="number"
+                                                placeholder="Ingrese la cantidad"
+                                                {...field}
+                                                disabled={
+                                                    resourceType ===
+                                                    "Mano de Obra"
+                                                }
+                                                readOnly={
+                                                    resourceType ===
+                                                    "Mano de Obra"
+                                                }
+                                                className={
+                                                    resourceType ===
+                                                    "Mano de Obra"
+                                                        ? "cursor-not-allowed bg-gray-100"
+                                                        : ""
+                                                }
                                             />
                                         </FormControl>
                                         <FormMessage />
