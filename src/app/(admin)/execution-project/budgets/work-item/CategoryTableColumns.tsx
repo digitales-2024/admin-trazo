@@ -2,7 +2,7 @@
 
 import { EntityType, GenericTableItem } from "@/types/category";
 import { ColumnDef } from "@tanstack/react-table";
-import { ChevronDown, ChevronRight, Ellipsis } from "lucide-react";
+import { ChevronDown, ChevronRight, Ellipsis, Trash } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
+    DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
@@ -114,7 +115,7 @@ export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
             return (
                 <div className="text-center">
                     {!!row.original.apuId ? (
-                        <Button variant="secondary">Gestionar APU</Button>
+                        <Button variant="normal">APU</Button>
                     ) : (
                         <></>
                     )}
@@ -139,7 +140,7 @@ export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
                     break;
                 }
                 case "Workitem": {
-                    actions = <WorkItemActions parentId={row.original.id} />;
+                    actions = <WorkItemActions parentId={row.original.id} hasApu={!!row.original.apuId} />;
                     break;
                 }
                 case "Subworkitem": {
@@ -167,7 +168,7 @@ function CategoryActions() {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
-                <DropdownMenuItem onSelect={() => {}}>
+                <DropdownMenuItem onSelect={() => { }}>
                     Crear Subcategoría
                 </DropdownMenuItem>
             </DropdownMenuContent>
@@ -211,8 +212,10 @@ function SubCategoryActions({ subcategoryId }: { subcategoryId: string }) {
     );
 }
 
-function WorkItemActions({ parentId }: { parentId: string }) {
+function WorkItemActions({ parentId, hasApu }: { parentId: string, hasApu: boolean }) {
     const [showCreate, setShowCreate] = useState(false);
+    const [showEditSheet, setShowEditSheet] = useState(false);
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
     return (
         <div>
@@ -234,16 +237,36 @@ function WorkItemActions({ parentId }: { parentId: string }) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-40">
-                    <DropdownMenuItem onSelect={() => {}}>
-                        Ver APU
-                    </DropdownMenuItem>
-                    <Separator />
+                    {!hasApu && (
+                        <>
+                            <DropdownMenuItem
+                                onSelect={() => {
+                                    setShowCreate(true);
+                                }}
+                            >
+                                Crear Subpartida
+                            </DropdownMenuItem>
+
+                            <Separator />
+                        </>
+                    )}
+
                     <DropdownMenuItem
-                        onSelect={() => {
-                            setShowCreate(true);
-                        }}
+                        onSelect={() => setShowEditSheet(true)}
                     >
-                        Crear Subpartida
+                        Editar
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        className="text-red-700"
+                        onSelect={() => setShowDeleteDialog(true)}
+                    >
+                        Eliminar
+                        <DropdownMenuShortcut>
+                            <Trash
+                                className="size-4"
+                                aria-hidden="true"
+                            />
+                        </DropdownMenuShortcut>
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
@@ -252,7 +275,10 @@ function WorkItemActions({ parentId }: { parentId: string }) {
 }
 
 function SubWorkItemActions({ parentId }: { parentId: string }) {
+    const [showEditSheet, setShowEditSheet] = useState(false);
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     console.log(parentId);
+
     return (
         <div>
             <div></div>
@@ -267,11 +293,22 @@ function SubWorkItemActions({ parentId }: { parentId: string }) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-40">
-                    <DropdownMenuItem onSelect={() => {}}>
-                        Ver Subcategoria
+                    <DropdownMenuItem
+                        onSelect={() => setShowEditSheet(true)}
+                    >
+                        Editar
                     </DropdownMenuItem>
-                    <DropdownMenuItem onSelect={() => {}}>
-                        Crear Partida
+                    <DropdownMenuItem
+                        className="text-red-700"
+                        onSelect={() => setShowDeleteDialog(true)}
+                    >
+                        Eliminar
+                        <DropdownMenuShortcut>
+                            <Trash
+                                className="size-4"
+                                aria-hidden="true"
+                            />
+                        </DropdownMenuShortcut>
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
