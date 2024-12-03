@@ -5,6 +5,7 @@ import {
     useEditProjectChecklistMutation,
     useGenPdfContractMutation,
     useGetDesignProjectByIdQuery,
+    useGetDesignProjectsCompletedQuery,
     useGetDesignProjectsQuery,
 } from "@/redux/services/designProjectApi";
 import { CustomErrorData } from "@/types";
@@ -24,6 +25,9 @@ interface UseDesignProjectOptions {
 
 export const useDesignProject = (options: UseDesignProjectOptions = {}) => {
     const { data, isLoading, error } = useGetDesignProjectsQuery();
+
+    const { data: dataDesignProjectCompleted } =
+        useGetDesignProjectsCompletedQuery();
     const { id } = options;
 
     const [
@@ -284,5 +288,6 @@ export const useDesignProject = (options: UseDesignProjectOptions = {}) => {
         onChecklistUpdate,
         updateChecklistLoading,
         updateChecklistSuccess,
+        dataDesignProjectCompleted,
     };
 };

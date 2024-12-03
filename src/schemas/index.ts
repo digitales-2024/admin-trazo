@@ -28,3 +28,8 @@ export {
     resourceSchema,
     type CreateResourceSchema,
 } from "./resources/createResourcesSchema";
+
+export {
+    createBudgetSchema,
+    type CreateBudgetSchema,
+} from "./budgets/createBudgetSchema";

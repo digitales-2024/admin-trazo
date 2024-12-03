@@ -21,7 +21,7 @@ export type {
 } from "./quotation";
 export { QuotationStatusType } from "./quotation";
 
-export { ResourceType, type Resource } from "./resource";
+export { ResourceType, type Resource, type ResourceApu } from "./resource";
 
 export type { Space, Floor } from "./floor";
 export type {
@@ -33,3 +33,18 @@ export type { Credentials, UserLogin } from "./login";
 export type { Zoning } from "./zoning";
 export type { ProjectCharter } from "./projectCharter";
 export type { Observation, ObservationProject } from "./observation";
+export {
+    type Budget,
+    type BudgetSummary,
+    type CategoryBudget,
+    BudgetStatusType,
+} from "./budget";
+export type {
+    Category,
+    FullCategory,
+    DragCategoriesItem,
+    SubcategoryDragCategory,
+    WorkItemDragCategory,
+    SubworkItemDragCategory,
+} from "./category";
+export type { Subcategory } from "./subcategory";

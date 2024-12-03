@@ -24,6 +24,19 @@ export const designProjectApi = createApi({
             }),
             providesTags: ["DesignProject"],
         }),
+
+        // Obtener todos los proyectos de diseño completados
+        getDesignProjectsCompleted: build.query<
+            Array<DesignProjectSummaryData>,
+            void
+        >({
+            query: () => ({
+                url: "/design-project/status/completed",
+                method: "GET",
+                credentials: "include",
+            }),
+            providesTags: ["DesignProject"],
+        }),
         // Obtener proyecto por id
         getDesignProjectById: build.query<DesignProjectData, string>({
             query: (id) => ({
@@ -105,6 +118,7 @@ export const designProjectApi = createApi({
 
 export const {
     useGetDesignProjectsQuery,
+    useGetDesignProjectsCompletedQuery,
     useGetDesignProjectByIdQuery,
     useCreateDesignProjectMutation,
     useGenPdfContractMutation,

@@ -31,3 +31,13 @@ export interface UpdateResourceDto extends Partial<CreateResourceDto> {
 export interface DeleteResourcesDto {
     ids: string[];
 }
+
+export interface ResourceApu {
+    id: string;
+    type: ResourceType;
+    name: string;
+    unit: string;
+    quantity: number;
+    unitCost: number;
+    totalCost: number;
+}
