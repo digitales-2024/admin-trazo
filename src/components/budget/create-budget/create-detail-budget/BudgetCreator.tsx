@@ -514,7 +514,7 @@ export default function BudgetCreator() {
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <div className="min-h-screen">
-                <Card className="mx-auto w-full max-w-6xl">
+                <Card className="w-full">
                     <CardHeader>
                         <div className="flex w-full justify-between">
                             <div className="flex w-full cursor-pointer items-center justify-between">
