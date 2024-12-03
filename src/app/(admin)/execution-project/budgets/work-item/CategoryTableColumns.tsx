@@ -13,7 +13,9 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Separator } from "@/components/ui/separator";
 
+import { CreateSubWorkItemDialog } from "./CreateSubWorkItemDialog";
 import { CreateWorkItemDialog } from "./CreateWorkItemDialog";
 
 export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
@@ -112,11 +114,11 @@ export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
                     break;
                 }
                 case "Workitem": {
-                    actions = <CategoryActions />;
+                    actions = <WorkItemActions parentId={row.original.id} />;
                     break;
                 }
                 case "Subworkitem": {
-                    actions = <CategoryActions />;
+                    actions = <SubWorkItemActions parentId={row.original.id} />;
                     break;
                 }
             }
@@ -141,7 +143,7 @@ function CategoryActions() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
                 <DropdownMenuItem onSelect={() => {}}>
-                    Ver Categoria
+                    Crear Subcategoría
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
@@ -171,14 +173,79 @@ function SubCategoryActions({ subcategoryId }: { subcategoryId: string }) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-40">
-                    <DropdownMenuItem onSelect={() => {}}>
-                        Ver Subcategoria
-                    </DropdownMenuItem>
                     <DropdownMenuItem
                         onSelect={() => {
                             setShowCreateWorkItem(true);
                         }}
                     >
+                        Crear Partida
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </div>
+    );
+}
+
+function WorkItemActions({ parentId }: { parentId: string }) {
+    const [showCreate, setShowCreate] = useState(false);
+
+    return (
+        <div>
+            <div>
+                <CreateSubWorkItemDialog
+                    open={showCreate}
+                    onOpenChange={setShowCreate}
+                    workitemId={parentId}
+                />
+            </div>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button
+                        aria-label="Open menu"
+                        variant="ghost"
+                        className="flex size-8 p-0 data-[state=open]:bg-muted"
+                    >
+                        <Ellipsis className="size-4" aria-hidden="true" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-40">
+                    <DropdownMenuItem onSelect={() => {}}>
+                        Ver APU
+                    </DropdownMenuItem>
+                    <Separator />
+                    <DropdownMenuItem
+                        onSelect={() => {
+                            setShowCreate(true);
+                        }}
+                    >
+                        Crear Subpartida
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </div>
+    );
+}
+
+function SubWorkItemActions({ parentId }: { parentId: string }) {
+    console.log(parentId);
+    return (
+        <div>
+            <div></div>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button
+                        aria-label="Open menu"
+                        variant="ghost"
+                        className="flex size-8 p-0 data-[state=open]:bg-muted"
+                    >
+                        <Ellipsis className="size-4" aria-hidden="true" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-40">
+                    <DropdownMenuItem onSelect={() => {}}>
+                        Ver Subcategoria
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => {}}>
                         Crear Partida
                     </DropdownMenuItem>
                 </DropdownMenuContent>
