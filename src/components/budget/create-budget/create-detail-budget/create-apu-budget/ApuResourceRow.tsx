@@ -1,4 +1,3 @@
-// src/components/budget/create-budget/create-detail-budget/create-apu-budget/ApuResourceRow.tsx
 import { ResourceApu, ResourceType } from "@/types";
 import { Trash2 } from "lucide-react";
 import React from "react";

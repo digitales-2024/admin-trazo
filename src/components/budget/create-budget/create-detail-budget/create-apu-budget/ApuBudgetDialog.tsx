@@ -56,29 +56,6 @@ type ResourceExpanded = {
     color: string;
 };
 
-const initialResourceTypes: ResourceExpanded[] = [
-    {
-        name: resourceTypeNames[ResourceType.LABOR],
-        icon: Users,
-        color: "border-blue-500",
-    },
-    {
-        name: resourceTypeNames[ResourceType.SUPPLIES],
-        icon: Package,
-        color: "border-green-500",
-    },
-    {
-        name: resourceTypeNames[ResourceType.TOOLS],
-        icon: Wrench,
-        color: "border-yellow-500",
-    },
-    {
-        name: resourceTypeNames[ResourceType.SERVICES],
-        icon: HeartHandshake,
-        color: "border-purple-500",
-    },
-];
-
 interface ApuDialogProps {
     id: string;
     open: boolean;
@@ -87,6 +64,19 @@ interface ApuDialogProps {
 
 export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
     const { workItemById } = useWorkItem({ id });
+    console.log(JSON.stringify(workItemById, null, 2));
+    const resourceTypesSet = new Set(
+        workItemById?.apu.apuOnResource.map((item) => item.resource.type),
+    );
+
+    const initialResourceTypes: ResourceExpanded[] = Array.from(
+        resourceTypesSet,
+    ).map((type) => ({
+        name: resourceTypeNames[type as ResourceType],
+        icon: resourceTypeIcons[type as ResourceType],
+        color: resourceTypeColors[type as ResourceType],
+    }));
+
     const [performance, setPerformance] = React.useState(0);
     const [workHours, setWorkHours] = React.useState(0);
 
@@ -96,6 +86,7 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
             setWorkHours(workItemById.apu.workHours || 0);
         }
     }, [workItemById]);
+
     const [activeTab, setActiveTab] = React.useState("plantilla");
     const [resourceTypes, setResourceTypes] =
         React.useState<ResourceExpanded[]>(initialResourceTypes);
@@ -111,7 +102,6 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
         type: string,
         resource: Omit<ResourceApu, "id" | "totalCost">,
     ) => {
-        console.log(type, resource);
         if (
             resource.name &&
             resource.quantity > 0 &&
