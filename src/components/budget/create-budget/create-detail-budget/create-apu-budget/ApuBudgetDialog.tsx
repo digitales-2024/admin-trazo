@@ -233,7 +233,7 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
                             <Input
                                 id="itemName"
                                 value={workItemById?.name}
-                                className="mt-1"
+                                className="mt-1 capitalize"
                                 readOnly
                             />
                         </div>
