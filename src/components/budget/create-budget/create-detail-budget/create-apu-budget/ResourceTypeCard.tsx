@@ -109,6 +109,8 @@ const ResourceTypeCard: React.FC<ResourceTypeCardProps> = ({
                                             )
                                         }
                                         isEditable={activeTab === "nuevo"}
+                                        performance={performance}
+                                        workHours={workHours}
                                     />
                                 ))}
                             </div>
