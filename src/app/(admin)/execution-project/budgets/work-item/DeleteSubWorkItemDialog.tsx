@@ -9,6 +9,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
+import { useCategory } from "@/hooks/use-category";
 
 export function DeleteSubWorkItemDialog({
     open,
@@ -19,11 +20,13 @@ export function DeleteSubWorkItemDialog({
     onOpenChange: (v: boolean) => void;
     data: GenericTableItem;
 }) {
+    const { fullCategoryRefetch } = useCategory();
     const { onDelete } = useSubWorkItem();
 
     async function deleteFn() {
         await onDelete(data.id);
         onOpenChange(false);
+        fullCategoryRefetch();
     }
 
     return (
