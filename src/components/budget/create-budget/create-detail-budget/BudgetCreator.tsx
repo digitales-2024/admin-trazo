@@ -32,6 +32,11 @@ export default function BudgetCreator() {
         taxPercentage: 18,
     });
 
+    console.log(
+        "este es el budget de creator",
+        JSON.stringify(budget, null, 2),
+    );
+
     const { fullCategoryData } = useCategory();
 
     const onDragEnd = (result: DragResult) => {
@@ -388,6 +393,37 @@ export default function BudgetCreator() {
         }));
     };
 
+    const updateWorkItemApuId = (
+        categoryId: string,
+        subcategoryId: string,
+        itemId: string,
+        apuId: string,
+    ) => {
+        setBudget((prev) => ({
+            ...prev,
+            categories: prev.categories.map((cat) =>
+                cat.id === categoryId
+                    ? {
+                          ...cat,
+                          subcategories: cat.subcategories.map((subcat) =>
+                              subcat.id === subcategoryId
+                                  ? {
+                                        ...subcat,
+                                        workItems: subcat.workItems.map(
+                                            (item) =>
+                                                item.id === itemId
+                                                    ? { ...item, apuId }
+                                                    : item,
+                                        ),
+                                    }
+                                  : subcat,
+                          ),
+                      }
+                    : cat,
+            ),
+        }));
+    };
+
     const updateWorkItemUnitPrice = (
         categoryId: string,
         subcategoryId: string,
@@ -440,7 +476,7 @@ export default function BudgetCreator() {
                                             i.id === itemId
                                                 ? {
                                                       ...i,
-                                                      subworkItem:
+                                                      subWorkItems:
                                                           i.subWorkItems?.map(
                                                               (si) =>
                                                                   si.id ===
@@ -511,6 +547,9 @@ export default function BudgetCreator() {
                                         }
                                         onUpdateWorkItemUnitPrice={
                                             updateWorkItemUnitPrice
+                                        }
+                                        onUpdateWorkItemApuId={
+                                            updateWorkItemApuId
                                         }
                                         onUpdateSubWorkItem={(
                                             categoryId,
