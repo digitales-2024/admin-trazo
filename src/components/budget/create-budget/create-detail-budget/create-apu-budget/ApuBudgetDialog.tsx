@@ -21,11 +21,10 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+import ApuHeadInformation from "./ApuHeadInformation";
 import ResourceTypeCard from "./ResourceTypeCard";
 import { ResourceTypeSelectorApu } from "./ResourceTypeSelectorApu";
 
@@ -89,14 +88,14 @@ interface ApuDialogProps {
 
 export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
     const { workItemById } = useWorkItem({ id });
-    console.log("workItemById", JSON.stringify(workItemById, null, 2));
-    const [performance, setPerformance] = React.useState(0);
-    const [workHours, setWorkHours] = React.useState(0);
     const [activeTab, setActiveTab] = React.useState("new");
     const [resourceTypes, setResourceTypes] = React.useState<
         ResourceExpanded[]
     >([]);
-    const [resources, setResources] = React.useState<
+    const [templateResources, setTemplateResources] = React.useState<
+        Record<string, ResourceApu[]>
+    >({});
+    const [newResources, setNewResources] = React.useState<
         Record<string, ResourceApu[]>
     >({});
     const [expandedType, setExpandedType] = React.useState<string | null>(null);
@@ -104,37 +103,46 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
     const [isAddingResourceType, setIsAddingResourceType] =
         React.useState(false);
 
-    React.useEffect(() => {
-        if (workItemById?.apu) {
-            setPerformance(workItemById.apu.performance || 0);
-            setWorkHours(workItemById.apu.workHours || 0);
-        }
-    }, [workItemById]);
+    const [templatePerformance, setTemplatePerformance] = React.useState(0);
+    const [templateWorkHours, setTemplateWorkHours] = React.useState(0);
+    const [newPerformance, setNewPerformance] = React.useState(0);
+    const [newWorkHours, setNewWorkHours] = React.useState(0);
 
     React.useEffect(() => {
         if (workItemById) {
+            console.log("workItemById:", workItemById);
             const uniqueTypes = extractUniqueTypes(workItemById);
+            console.log("uniqueTypes:", uniqueTypes);
             const resourceExpandedList = convertToResourceExpanded(uniqueTypes);
+            console.log("resourceExpandedList:", resourceExpandedList);
             setResourceTypes(resourceExpandedList);
-            setResources(
-                Object.fromEntries(
-                    resourceExpandedList.map((type) => [type.name, []]),
-                ),
-            );
-            setActiveTab(uniqueTypes.length > 0 ? "template" : "new");
 
-            // Llenar los recursos
+            const initialResources: Record<string, ResourceApu[]> = {};
             workItemById.apu.apuOnResource.forEach((apuResource) => {
                 const { resource, quantity, group } = apuResource;
-                handleAddResource(resourceTypeNames[resource.type], {
+                const typeName = resourceTypeNames[resource.type];
+                if (!initialResources[typeName]) {
+                    initialResources[typeName] = [];
+                }
+                initialResources[typeName].push({
                     id: apuResource.id,
                     name: resource.name,
                     unit: resource.unit,
                     quantity,
                     group,
                     unitCost: resource.unitCost,
+                    totalCost: quantity * resource.unitCost,
+                    type: resource.type,
                 });
             });
+            console.log("initialResources:", initialResources);
+            setTemplateResources(initialResources);
+            setNewResources(initialResources);
+            setTemplatePerformance(workItemById.apu.performance || 0);
+            setTemplateWorkHours(workItemById.apu.workHours || 0);
+            setNewPerformance(workItemById.apu.performance || 0);
+            setNewWorkHours(workItemById.apu.workHours || 0);
+            setActiveTab(uniqueTypes.length > 0 ? "template" : "new");
         }
     }, [workItemById]);
 
@@ -154,30 +162,58 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
                 totalCost: resource.quantity * resource.unitCost,
             };
 
-            setResources((prev) => {
-                const updatedResources = {
-                    ...prev,
-                    [type]: [...prev[type], newResource],
-                };
-                return updatedResources;
-            });
+            if (activeTab === "template") {
+                setTemplateResources((prev) => {
+                    const updatedResources = {
+                        ...prev,
+                        [type]: [...(prev[type] || []), newResource],
+                    };
+                    return updatedResources;
+                });
+            } else {
+                setNewResources((prev) => {
+                    const updatedResources = {
+                        ...prev,
+                        [type]: [...(prev[type] || []), newResource],
+                    };
+                    return updatedResources;
+                });
+            }
         }
     };
 
     const handleRemoveResource = (type: string, id: string) => {
-        setResources((prev) => ({
-            ...prev,
-            [type]: prev[type].filter((resource) => resource.id !== id),
-        }));
+        if (activeTab === "template") {
+            setTemplateResources((prev) => ({
+                ...prev,
+                [type]: (prev[type] || []).filter(
+                    (resource) => resource.id !== id,
+                ),
+            }));
+        } else {
+            setNewResources((prev) => ({
+                ...prev,
+                [type]: (prev[type] || []).filter(
+                    (resource) => resource.id !== id,
+                ),
+            }));
+        }
     };
 
     const handleRemoveResourceType = (name: string) => {
-        setResourceTypes((prev) => prev.filter((type) => type.name !== name));
-        setResources((prev) => {
-            const rest = { ...prev };
-            delete rest[name];
-            return rest;
-        });
+        if (activeTab === "template") {
+            setTemplateResources((prev) => {
+                const rest = { ...prev };
+                delete rest[name];
+                return rest;
+            });
+        } else {
+            setNewResources((prev) => {
+                const rest = { ...prev };
+                delete rest[name];
+                return rest;
+            });
+        }
     };
 
     const handleAddResourceType = () => {
@@ -199,10 +235,17 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
                 color: resourceTypeColors[newResourceType as ResourceType],
             };
             setResourceTypes((prev) => [...prev, newType]);
-            setResources((prev) => ({
-                ...prev,
-                [resourceTypeNames[newResourceType as ResourceType]]: [],
-            }));
+            if (activeTab === "template") {
+                setTemplateResources((prev) => ({
+                    ...prev,
+                    [resourceTypeNames[newResourceType as ResourceType]]: [],
+                }));
+            } else {
+                setNewResources((prev) => ({
+                    ...prev,
+                    [resourceTypeNames[newResourceType as ResourceType]]: [],
+                }));
+            }
             setNewResourceType("");
             setIsAddingResourceType(false);
         }
@@ -214,16 +257,15 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
     };
 
     const calculateSubtotal = (type: string) =>
-        resources[type]?.reduce(
-            (acc, resource) => acc + resource.totalCost,
-            0,
-        ) || 0;
+        (activeTab === "template"
+            ? templateResources[type]
+            : newResources[type]
+        )?.reduce((acc, resource) => acc + resource.totalCost, 0) || 0;
 
     const calculateTotal = () =>
-        Object.keys(resources).reduce(
-            (acc, type) => acc + calculateSubtotal(type),
-            0,
-        );
+        Object.keys(
+            activeTab === "template" ? templateResources : newResources,
+        ).reduce((acc, type) => acc + calculateSubtotal(type), 0);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -256,56 +298,30 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
                             </TabsTrigger>
                         </TabsList>
                     </Tabs>
-                    <div className="mb-6 grid grid-cols-3 gap-4">
-                        <div>
-                            <Label
-                                htmlFor="itemName"
-                                className="text-sm font-medium text-gray-700"
-                            >
-                                Nombre de la Partida
-                            </Label>
-                            <Input
-                                id="itemName"
-                                value={workItemById?.name}
-                                className="mt-1 capitalize"
-                                readOnly
-                            />
-                        </div>
-                        <div>
-                            <Label
-                                htmlFor="performance"
-                                className="text-sm font-medium text-gray-700"
-                            >
-                                Rendimiento
-                            </Label>
-                            <Input
-                                id="performance"
-                                type="number"
-                                value={performance}
-                                onChange={(e) =>
-                                    setPerformance(Number(e.target.value))
-                                }
-                                className="mt-1"
-                            />
-                        </div>
-                        <div>
-                            <Label
-                                htmlFor="workHours"
-                                className="text-sm font-medium text-gray-700"
-                            >
-                                Horas de Trabajo
-                            </Label>
-                            <Input
-                                id="workHours"
-                                type="number"
-                                value={workHours}
-                                onChange={(e) =>
-                                    setWorkHours(Number(e.target.value))
-                                }
-                                className="mt-1"
-                            />
-                        </div>
-                    </div>
+                    <ApuHeadInformation
+                        name={workItemById?.name || ""}
+                        performance={
+                            activeTab === "template"
+                                ? templatePerformance
+                                : newPerformance
+                        }
+                        setPerformance={
+                            activeTab === "template"
+                                ? setTemplatePerformance
+                                : setNewPerformance
+                        }
+                        workHours={
+                            activeTab === "template"
+                                ? templateWorkHours
+                                : newWorkHours
+                        }
+                        setWorkHours={
+                            activeTab === "template"
+                                ? setTemplateWorkHours
+                                : setNewWorkHours
+                        }
+                        activeTab={activeTab}
+                    />
                     <div className="space-y-4">
                         {activeTab === "new" && (
                             <div className="mb-6 space-y-4">
@@ -330,8 +346,16 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
                             <ResourceTypeCard
                                 key={name}
                                 name={name}
-                                performance={performance}
-                                workHours={workHours}
+                                performance={
+                                    activeTab === "template"
+                                        ? templatePerformance
+                                        : newPerformance
+                                }
+                                workHours={
+                                    activeTab === "template"
+                                        ? templateWorkHours
+                                        : newWorkHours
+                                }
                                 icon={icon}
                                 color={color}
                                 expandedType={expandedType}
@@ -342,20 +366,35 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
                                     handleRemoveResourceType
                                 }
                                 handleAddResource={handleAddResource}
-                                resources={resources[name] || []}
+                                resources={
+                                    activeTab === "template"
+                                        ? templateResources[name]
+                                        : newResources[name] || []
+                                }
                                 handleRemoveResource={handleRemoveResource}
                                 handleUpdateResource={(
                                     type,
                                     updatedResource,
                                 ) => {
-                                    setResources((prev) => ({
-                                        ...prev,
-                                        [type]: prev[type].map((r) =>
-                                            r.id === updatedResource.id
-                                                ? updatedResource
-                                                : r,
-                                        ),
-                                    }));
+                                    if (activeTab === "template") {
+                                        setTemplateResources((prev) => ({
+                                            ...prev,
+                                            [type]: prev[type].map((r) =>
+                                                r.id === updatedResource.id
+                                                    ? updatedResource
+                                                    : r,
+                                            ),
+                                        }));
+                                    } else {
+                                        setNewResources((prev) => ({
+                                            ...prev,
+                                            [type]: prev[type].map((r) =>
+                                                r.id === updatedResource.id
+                                                    ? updatedResource
+                                                    : r,
+                                            ),
+                                        }));
+                                    }
                                 }}
                             />
                         ))}
