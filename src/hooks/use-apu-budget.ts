@@ -4,8 +4,10 @@ import { translateError } from "@/utils/translateError";
 import { toast } from "sonner";
 
 export const useApuBudget = () => {
-    const [createApuBudget, { isSuccess: isSuccessCreateApuBudget }] =
-        useCreateApuBudgetMutation();
+    const [
+        createApuBudget,
+        { isSuccess: isSuccessCreateApuBudget, data: dataCreateApuBudget },
+    ] = useCreateApuBudgetMutation();
 
     const onCreateApuBudget = async (input: Partial<ApuBudget>) => {
         const promise = () =>
@@ -45,5 +47,6 @@ export const useApuBudget = () => {
     return {
         onCreateApuBudget,
         isSuccessCreateApuBudget,
+        dataCreateApuBudget,
     };
 };
