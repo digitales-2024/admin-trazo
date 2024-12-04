@@ -2,7 +2,6 @@
 
 import { useCategory } from "@/hooks/use-category";
 import {
-    DragCategoriesItem,
     FullCategory,
     SubcategoryDragCategory,
     SubworkItemDragCategory,
@@ -19,33 +18,11 @@ import { BudgetTable } from "./BudgetTable";
 import PercentageBudget from "./PercentageBudget";
 import SummaryBudget from "./SummaryBudget";
 import { Budget } from "./types";
-
-const calculateSubWorkItemTotal = (subItem: SubworkItemDragCategory) =>
-    (subItem.quantity || 0) * (subItem.unitCost || 0);
-
-const calculateWorkItemTotal = (item: WorkItemDragCategory) =>
-    item.subWorkItems && item.subWorkItems.length > 0
-        ? item.subWorkItems.reduce(
-              (total, subItem) => total + calculateSubWorkItemTotal(subItem),
-              0,
-          )
-        : (item.quantity || 0) * (item.unitCost || 0);
-
-const calculateSubcategoryTotal = (subcategory: SubcategoryDragCategory) => {
-    if (!subcategory.workItems) {
-        return 0;
-    }
-    return subcategory.workItems.reduce(
-        (total, item) => total + calculateWorkItemTotal(item),
-        0,
-    );
-};
-
-const calculateCategoryTotal = (category: FullCategory) =>
-    category.subcategories.reduce(
-        (total, subcategory) => total + calculateSubcategoryTotal(subcategory),
-        0,
-    );
+import {
+    calculateCategoryTotal,
+    DragResult,
+    findDragItemById,
+} from "./utils/budget-utils";
 
 export default function BudgetCreator() {
     const [budget, setBudget] = useState<Budget>({
@@ -56,19 +33,6 @@ export default function BudgetCreator() {
     });
 
     const { fullCategoryData } = useCategory();
-
-    interface DragResult {
-        source: {
-            droppableId: string;
-            index: number;
-        };
-        destination: {
-            droppableId: string;
-            index: number;
-        } | null;
-        draggableId: string;
-        type: string;
-    }
 
     const onDragEnd = (result: DragResult) => {
         if (!result.destination) return;
@@ -591,26 +555,4 @@ export default function BudgetCreator() {
             </div>
         </DragDropContext>
     );
-}
-
-function findDragItemById(
-    items: DragCategoriesItem[],
-    id: string,
-): DragCategoriesItem | undefined {
-    for (const item of items) {
-        if (item.id === id) return item;
-        if (item.subcategories) {
-            const found = findDragItemById(item.subcategories, id);
-            if (found) return found;
-        }
-        if (item.workItems) {
-            const found = findDragItemById(item.workItems, id);
-            if (found) return found;
-        }
-        if (item.subWorkItems) {
-            const found = findDragItemById(item.subWorkItems, id);
-            if (found) return found;
-        }
-    }
-    return undefined;
 }
