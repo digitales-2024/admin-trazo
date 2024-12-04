@@ -26,6 +26,12 @@ interface WorkItemRowProps {
         itemId: string,
         quantity: number,
     ) => void;
+    onUpdateWorkItemApuId: (
+        categoryId: string,
+        subcategoryId: string,
+        itemId: string,
+        apuId: string,
+    ) => void;
     onUpdateWorkItemUnitPrice: (
         categoryId: string,
         subcategoryId: string,
@@ -48,10 +54,16 @@ const WorkItemRow: React.FC<WorkItemRowProps> = ({
     item,
     calculateWorkItemTotal,
     onUpdateWorkItemQuantity,
+    onUpdateWorkItemApuId,
     onUpdateWorkItemUnitPrice,
     onDeleteWorkItem,
 }) => {
     const [showApuDialog, setShowApuDialog] = useState(false);
+
+    const handleApuSuccess = (apuId: string) => {
+        onUpdateWorkItemApuId(category.id, subcategory.id, item.id, apuId);
+    };
+
     return (
         <TableRow>
             <TableCell>
@@ -120,6 +132,7 @@ const WorkItemRow: React.FC<WorkItemRowProps> = ({
                             open={showApuDialog}
                             onOpenChange={setShowApuDialog}
                             id={item.id}
+                            onSuccess={handleApuSuccess}
                         />
                         <Button
                             type="button"
