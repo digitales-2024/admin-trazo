@@ -53,7 +53,6 @@ export const useWorkItem = () => {
             new Promise(async (resolve, reject) => {
                 try {
                     const result = await edit(data);
-                    console.log(result);
                     if (result.error) {
                         if (
                             typeof result.error === "object" &&

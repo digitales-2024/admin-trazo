@@ -19,7 +19,7 @@ import { Separator } from "@/components/ui/separator";
 import { ApuDialog } from "./ApuDialog";
 import { CreateSubWorkItemDialog } from "./CreateSubWorkItemDialog";
 import { CreateWorkItemDialog } from "./CreateWorkItemDialog";
-import { EditWorkItemSheetWrapper } from "./EditWorkItemSheet";
+import { EditWorkItemSheet } from "./EditWorkItemSheet";
 
 export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
     {
@@ -250,7 +250,7 @@ function WorkItemActions({
                     onOpenChange={setShowCreate}
                     workitemId={parentId}
                 />
-                <EditWorkItemSheetWrapper
+                <EditWorkItemSheet
                     open={showEditSheet}
                     onOpenChange={setShowEditSheet}
                     data={data}
@@ -314,7 +314,7 @@ function SubWorkItemActions({
     return (
         <div>
             <div>
-                <EditWorkItemSheetWrapper
+                <EditWorkItemSheet
                     open={showEditSheet}
                     onOpenChange={setShowEditSheet}
                     data={data}

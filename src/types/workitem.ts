@@ -8,7 +8,7 @@ export type WorkItemCreate = {
 };
 
 export type WorkItemEdit = {
-    name: string;
+    name?: string;
     unit?: string;
 };
 
