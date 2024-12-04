@@ -25,8 +25,10 @@ export function ReactivateWorkItemDialog({
 
     async function reactivate() {
         await reactivateWorkItem(data.id);
-        onOpenChange(false);
-        fullCategoryRefetch();
+        setTimeout(() => {
+            onOpenChange(false);
+            fullCategoryRefetch();
+        }, 500);
     }
 
     return (

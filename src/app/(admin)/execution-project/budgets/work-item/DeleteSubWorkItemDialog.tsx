@@ -25,8 +25,10 @@ export function DeleteSubWorkItemDialog({
 
     async function deleteFn() {
         await onDelete(data.id);
-        onOpenChange(false);
-        fullCategoryRefetch();
+        setTimeout(() => {
+            onOpenChange(false);
+            fullCategoryRefetch();
+        }, 500);
     }
 
     return (
