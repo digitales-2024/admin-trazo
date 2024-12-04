@@ -12,10 +12,8 @@ import {
 } from "lucide-react";
 import * as React from "react";
 
-import { Button } from "@/components/ui/button";
 import {
     Dialog,
-    DialogClose,
     DialogContent,
     DialogDescription,
     DialogHeader,
@@ -24,6 +22,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+import ApuActionButtons from "./ApuActionButtons";
 import ApuHeadInformation from "./ApuHeadInformation";
 import ResourceTypeCard from "./ResourceTypeCard";
 import { ResourceTypeSelectorApu } from "./ResourceTypeSelectorApu";
@@ -110,11 +109,8 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
 
     React.useEffect(() => {
         if (workItemById) {
-            console.log("workItemById:", workItemById);
             const uniqueTypes = extractUniqueTypes(workItemById);
-            console.log("uniqueTypes:", uniqueTypes);
             const resourceExpandedList = convertToResourceExpanded(uniqueTypes);
-            console.log("resourceExpandedList:", resourceExpandedList);
             setResourceTypes(resourceExpandedList);
 
             const initialResources: Record<string, ResourceApu[]> = {};
@@ -135,7 +131,6 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
                     type: resource.type,
                 });
             });
-            console.log("initialResources:", initialResources);
             setTemplateResources(initialResources);
             setNewResources(initialResources);
             setTemplatePerformance(workItemById.apu.performance || 0);
@@ -405,31 +400,15 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
                             <span>Total General</span>
                             <span>{calculateTotal().toFixed(2)}</span>
                         </div>
-                        <div className="flex w-full flex-row-reverse gap-2">
-                            <Button
-                                className="w-full"
-                                onClick={() =>
-                                    console.log(
-                                        activeTab === "template"
-                                            ? "Usar plantilla"
-                                            : "Crear nuevo",
-                                    )
-                                }
-                            >
-                                {activeTab === "template"
-                                    ? "Usar Plantilla"
-                                    : "Crear Nuevo"}
-                            </Button>
-                            <DialogClose asChild>
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    className="w-full"
-                                >
-                                    Cancelar
-                                </Button>
-                            </DialogClose>
-                        </div>
+                        <ApuActionButtons
+                            activeTab={activeTab}
+                            templatePerformance={templatePerformance}
+                            newPerformance={newPerformance}
+                            templateWorkHours={templateWorkHours}
+                            newWorkHours={newWorkHours}
+                            templateResources={templateResources}
+                            newResources={newResources}
+                        />
                     </div>
                 </ScrollArea>
             </DialogContent>
