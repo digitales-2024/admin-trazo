@@ -20,10 +20,12 @@ const resourceTypeNamesInverted: { [key: string]: ResourceType } = {
     Insumos: ResourceType.SUPPLIES,
     Servicios: ResourceType.SERVICES,
 };
-const getResourceTypeInEnglish = (
-    typeInSpanish: string,
-): ResourceType | undefined => {
-    return resourceTypeNamesInverted[typeInSpanish];
+
+const getResourceTypeInEnglish = (typeInSpanish: string): ResourceType => {
+    return (
+        resourceTypeNamesInverted[typeInSpanish] ||
+        (typeInSpanish as ResourceType)
+    );
 };
 
 export default function ApuResourceRow({
@@ -35,11 +37,14 @@ export default function ApuResourceRow({
     workHours,
 }: ApuResourceRowProps) {
     // Estado local para manejar el formulario de edición
-    const [editForm, setEditForm] = React.useState<ResourceApu>(resource);
+    const [editForm, setEditForm] = React.useState<ResourceApu>({
+        ...resource,
+        type: getResourceTypeInEnglish(resource.type),
+    });
 
     // Efecto para recalcular la cantidad si el tipo es "Mano de Obra"
     React.useEffect(() => {
-        if (getResourceTypeInEnglish(resource.type) === ResourceType.LABOR) {
+        if (editForm.type === ResourceType.LABOR) {
             const calculatedQuantity =
                 (Number(editForm.group) * workHours) / performance || 0;
             if (calculatedQuantity !== editForm.quantity) {
@@ -53,7 +58,7 @@ export default function ApuResourceRow({
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [editForm.group, resource.type, workHours, performance]);
+    }, [editForm.group, editForm.type, workHours, performance]);
 
     // Maneja los cambios en los campos de entrada
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,6 +89,7 @@ export default function ApuResourceRow({
         setEditForm(updatedResource);
         onUpdate(updatedResource);
     };
+
     return (
         <div className="flex items-center gap-2 rounded-md bg-white p-2 shadow-sm">
             {/* Campo Nombre - Solo Lectura */}
@@ -96,7 +102,7 @@ export default function ApuResourceRow({
             />
 
             {/* Campo Cuadrilla - Solo si es Mano de Obra */}
-            {getResourceTypeInEnglish(editForm.type) === ResourceType.LABOR && (
+            {editForm.type === ResourceType.LABOR && (
                 <Input
                     name="group"
                     type="number"
@@ -116,10 +122,7 @@ export default function ApuResourceRow({
                 value={editForm.quantity}
                 onChange={handleChange}
                 className="w-20"
-                readOnly={
-                    getResourceTypeInEnglish(editForm.type) ===
-                        ResourceType.LABOR || !isEditable
-                }
+                readOnly={editForm.type === ResourceType.LABOR || !isEditable}
                 placeholder="Cantidad"
                 min={1}
                 step="0.0001"
