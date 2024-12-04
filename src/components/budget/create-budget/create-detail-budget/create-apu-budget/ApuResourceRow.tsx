@@ -107,7 +107,7 @@ export default function ApuResourceRow({
             <Input
                 name="quantity"
                 type="number"
-                value={editForm.quantity}
+                value={Number(editForm.quantity).toFixed(4)}
                 onChange={handleChange}
                 className="w-20"
                 readOnly={editForm.type === ResourceType.LABOR || !isEditable}

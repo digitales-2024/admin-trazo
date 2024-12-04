@@ -31,9 +31,15 @@ interface ApuDialogProps {
     id: string;
     open: boolean;
     onOpenChange: (open: boolean) => void;
+    onSuccess: (apuId: string) => void;
 }
 
-export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
+export function ApuDialog({
+    id,
+    open,
+    onOpenChange,
+    onSuccess,
+}: ApuDialogProps) {
     const { workItemById } = useWorkItem({ id });
     const [activeTab, setActiveTab] = React.useState("new");
     const [resourceTypes, setResourceTypes] = React.useState<
@@ -69,7 +75,7 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
                     initialResources[typeName] = [];
                 }
                 initialResources[typeName].push({
-                    id: apuResource.id,
+                    id: resource.id,
                     name: resource.name,
                     unit: resource.unit,
                     quantity,
@@ -356,6 +362,8 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
                             newWorkHours={newWorkHours}
                             templateResources={templateResources}
                             newResources={newResources}
+                            onSuccess={onSuccess}
+                            onOpenChange={onOpenChange}
                         />
                     </div>
                 </ScrollArea>
