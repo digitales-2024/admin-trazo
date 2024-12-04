@@ -42,8 +42,8 @@ export type ApuFullWorkItem = {
 
 export type ApuOnResourceFullWorkItem = {
     id: string;
-    quantity: string;
+    quantity: number;
     subtotal: number;
-    group?: string;
+    group?: number;
     resource: Resource;
 };
