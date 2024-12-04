@@ -36,7 +36,6 @@ export default function ApuResourceRow({
 }: ApuResourceRowProps) {
     // Estado local para manejar el formulario de edición
     const [editForm, setEditForm] = React.useState<ResourceApu>(resource);
-    console.log(getResourceTypeInEnglish(resource.type));
 
     // Efecto para recalcular la cantidad si el tipo es "Mano de Obra"
     React.useEffect(() => {
