@@ -1,7 +1,7 @@
 "use client";
 
 import { useWorkItem } from "@/hooks/use-workitem";
-import { ResourceApu, ResourceType } from "@/types";
+import { FullWorkItem, ResourceApu, ResourceType } from "@/types";
 import {
     Package,
     Wrench,
@@ -56,28 +56,30 @@ type ResourceExpanded = {
     color: string;
 };
 
-const initialResourceTypes: ResourceExpanded[] = [
-    {
-        name: resourceTypeNames[ResourceType.LABOR],
-        icon: Users,
-        color: "border-blue-500",
-    },
-    {
-        name: resourceTypeNames[ResourceType.SUPPLIES],
-        icon: Package,
-        color: "border-green-500",
-    },
-    {
-        name: resourceTypeNames[ResourceType.TOOLS],
-        icon: Wrench,
-        color: "border-yellow-500",
-    },
-    {
-        name: resourceTypeNames[ResourceType.SERVICES],
-        icon: HeartHandshake,
-        color: "border-purple-500",
-    },
-];
+const extractUniqueTypes = (workItemById: FullWorkItem): string[] => {
+    if (!workItemById.apu || !workItemById.apu.apuOnResource) {
+        return [];
+    }
+    const resources = workItemById.apu.apuOnResource;
+    const types = resources.map((item) => item.resource.type);
+    const uniqueTypes = Array.from(new Set(types));
+    return uniqueTypes;
+};
+
+const convertToResourceExpanded = (
+    uniqueTypes: string[],
+): ResourceExpanded[] => {
+    return uniqueTypes.map((type) => {
+        const name = resourceTypeNames[type as ResourceType];
+        const icon = resourceTypeIcons[type as ResourceType];
+        const color = resourceTypeColors[type as ResourceType];
+        return {
+            name,
+            icon,
+            color,
+        };
+    });
+};
 
 interface ApuDialogProps {
     id: string;
@@ -87,8 +89,20 @@ interface ApuDialogProps {
 
 export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
     const { workItemById } = useWorkItem({ id });
+    console.log("workItemById", JSON.stringify(workItemById, null, 2));
     const [performance, setPerformance] = React.useState(0);
     const [workHours, setWorkHours] = React.useState(0);
+    const [activeTab, setActiveTab] = React.useState("nuevo");
+    const [resourceTypes, setResourceTypes] = React.useState<
+        ResourceExpanded[]
+    >([]);
+    const [resources, setResources] = React.useState<
+        Record<string, ResourceApu[]>
+    >({});
+    const [expandedType, setExpandedType] = React.useState<string | null>(null);
+    const [newResourceType, setNewResourceType] = React.useState("");
+    const [isAddingResourceType, setIsAddingResourceType] =
+        React.useState(false);
 
     React.useEffect(() => {
         if (workItemById?.apu) {
@@ -96,22 +110,38 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
             setWorkHours(workItemById.apu.workHours || 0);
         }
     }, [workItemById]);
-    const [activeTab, setActiveTab] = React.useState("plantilla");
-    const [resourceTypes, setResourceTypes] =
-        React.useState<ResourceExpanded[]>(initialResourceTypes);
-    const [resources, setResources] = React.useState<
-        Record<string, ResourceApu[]>
-    >(Object.fromEntries(resourceTypes.map((type) => [type.name, []])));
-    const [expandedType, setExpandedType] = React.useState<string | null>(null);
-    const [newResourceType, setNewResourceType] = React.useState("");
-    const [isAddingResourceType, setIsAddingResourceType] =
-        React.useState(false);
+
+    React.useEffect(() => {
+        if (workItemById) {
+            const uniqueTypes = extractUniqueTypes(workItemById);
+            const resourceExpandedList = convertToResourceExpanded(uniqueTypes);
+            setResourceTypes(resourceExpandedList);
+            setResources(
+                Object.fromEntries(
+                    resourceExpandedList.map((type) => [type.name, []]),
+                ),
+            );
+            setActiveTab(uniqueTypes.length > 0 ? "plantilla" : "nuevo");
+
+            // Llenar los recursos
+            workItemById.apu.apuOnResource.forEach((apuResource) => {
+                const { resource, quantity, group } = apuResource;
+                handleAddResource(resourceTypeNames[resource.type], {
+                    id: apuResource.id,
+                    name: resource.name,
+                    unit: resource.unit,
+                    quantity,
+                    group,
+                    unitCost: resource.unitCost,
+                });
+            });
+        }
+    }, [workItemById]);
 
     const handleAddResource = (
         type: string,
-        resource: Omit<ResourceApu, "id" | "totalCost">,
+        resource: Omit<ResourceApu, "totalCost" | "type">,
     ) => {
-        console.log(type, resource);
         if (
             resource.name &&
             resource.quantity > 0 &&
@@ -120,13 +150,17 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
         ) {
             const newResource: ResourceApu = {
                 ...resource,
-                id: Math.random().toString(36).substr(2, 9),
+                type: type as ResourceType,
                 totalCost: resource.quantity * resource.unitCost,
             };
-            setResources((prev) => ({
-                ...prev,
-                [type]: [...prev[type], newResource],
-            }));
+
+            setResources((prev) => {
+                const updatedResources = {
+                    ...prev,
+                    [type]: [...prev[type], newResource],
+                };
+                return updatedResources;
+            });
         }
     };
 
