@@ -2,15 +2,15 @@ import { ResourceType } from "./resource";
 
 export type ApuBudget = {
     id: string;
-    unitCost: string;
-    workHours: string;
+    unitCost: number;
+    workHours: number;
     performance: number;
     apuResource: ApuResourceBudget[];
 };
 type ApuResourceBudget = {
     id: string;
-    group: string;
-    quantity: string;
+    group: number;
+    quantity: number;
     resource: ResourceApuBudget;
 };
 
