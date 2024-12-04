@@ -92,7 +92,7 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
     console.log("workItemById", JSON.stringify(workItemById, null, 2));
     const [performance, setPerformance] = React.useState(0);
     const [workHours, setWorkHours] = React.useState(0);
-    const [activeTab, setActiveTab] = React.useState("nuevo");
+    const [activeTab, setActiveTab] = React.useState("new");
     const [resourceTypes, setResourceTypes] = React.useState<
         ResourceExpanded[]
     >([]);
@@ -121,7 +121,7 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
                     resourceExpandedList.map((type) => [type.name, []]),
                 ),
             );
-            setActiveTab(uniqueTypes.length > 0 ? "plantilla" : "nuevo");
+            setActiveTab(uniqueTypes.length > 0 ? "template" : "new");
 
             // Llenar los recursos
             workItemById.apu.apuOnResource.forEach((apuResource) => {
@@ -242,13 +242,13 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
                         className="mb-6"
                     >
                         <TabsList className="grid w-full grid-cols-2">
-                            <TabsTrigger value="plantilla">
+                            <TabsTrigger value="template">
                                 <Pin className="mr-2 h-4 w-4 flex-shrink-0" />
                                 <span className="truncate text-ellipsis">
                                     Plantilla
                                 </span>
                             </TabsTrigger>
-                            <TabsTrigger value="nuevo">
+                            <TabsTrigger value="new">
                                 <SquarePlus className="mr-2 h-4 w-4 flex-shrink-0" />
                                 <span className="truncate text-ellipsis">
                                     Nuevo
@@ -307,7 +307,7 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
                         </div>
                     </div>
                     <div className="space-y-4">
-                        {activeTab === "nuevo" && (
+                        {activeTab === "new" && (
                             <div className="mb-6 space-y-4">
                                 <ResourceTypeSelectorApu
                                     newResourceType={newResourceType}
@@ -371,13 +371,13 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
                                 className="w-full"
                                 onClick={() =>
                                     console.log(
-                                        activeTab === "plantilla"
+                                        activeTab === "template"
                                             ? "Usar plantilla"
                                             : "Crear nuevo",
                                     )
                                 }
                             >
-                                {activeTab === "plantilla"
+                                {activeTab === "template"
                                     ? "Usar Plantilla"
                                     : "Crear Nuevo"}
                             </Button>
