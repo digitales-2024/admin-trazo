@@ -1,6 +1,7 @@
 "use client";
 
 import { useCategory } from "@/hooks/use-category";
+import { useProfile } from "@/hooks/use-profile";
 import { FullCategory, GenericTableItem } from "@/types/category";
 import { useMemo } from "react";
 
@@ -104,16 +105,23 @@ export default function WorkItemPage() {
 }
 
 function WorkItemTable({ data }: { data: Array<FullCategory> }) {
+    const { user } = useProfile();
+
     // preprocess the data
     const dataMemo = useMemo(() => {
         return transformData(data);
     }, [data]);
 
+    const columns = useMemo(
+        () => categoryTableColumns(user?.isSuperAdmin || false),
+        [user],
+    );
+
     return (
         <>
             <DataTableNested
                 data={dataMemo}
-                columns={categoryTableColumns}
+                columns={columns}
                 getSubRows={(row) => row.children}
                 placeholder="Buscar partidas"
                 toolbarActions={<WorkItemToolbarActions />}

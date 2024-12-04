@@ -2,9 +2,16 @@
 
 import { EntityType, GenericTableItem } from "@/types/category";
 import { ColumnDef } from "@tanstack/react-table";
-import { ChevronDown, ChevronRight, Ellipsis, Trash } from "lucide-react";
+import {
+    ChevronDown,
+    ChevronRight,
+    Ellipsis,
+    RefreshCcwDot,
+    Trash,
+} from "lucide-react";
 import { useState } from "react";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -23,7 +30,9 @@ import { DeleteSubWorkItemDialog } from "./DeleteSubWorkItemDialog";
 import { DeleteWorkItemDialog } from "./DeleteWorkItemDialog";
 import { EditWorkItemSheet } from "./EditWorkItemSheet";
 
-export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
+export const categoryTableColumns = (
+    isSuperadmin: boolean,
+): ColumnDef<GenericTableItem>[] => [
     {
         id: "select",
         accessorKey: "name",
@@ -92,7 +101,7 @@ export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
                         className="translate-y-0.5"
                     />
                     <div
-                        className={`${entityTypeToColor(row.original.entityName, !row.original.apuId)} pl-2 uppercase ${!row.original.isActive && "text-red-600 line-through"}`}
+                        className={`${entityTypeToColor(row.original.entityName, !row.original.apuId)} pl-2 uppercase`}
                     >
                         {getValue() as string}
                     </div>
@@ -111,6 +120,31 @@ export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
         accessorKey: "unitCost",
         header: "Costo unitario",
         cell: ({ row }) => <div>{row.original.unitCost ?? "-"}</div>,
+    },
+
+    {
+        id: "estado",
+        accessorKey: "isActive",
+        header: () => <div className="text-center">Estado</div>,
+        cell: ({ row }) => (
+            <div className="text-center">
+                {row.original.isActive ? (
+                    <Badge
+                        variant="secondary"
+                        className="bg-emerald-100 text-emerald-500"
+                    >
+                        Activo
+                    </Badge>
+                ) : (
+                    <Badge
+                        variant="secondary"
+                        className="bg-red-100 text-red-500"
+                    >
+                        Inactivo
+                    </Badge>
+                )}
+            </div>
+        ),
     },
     {
         id: "buttons",
@@ -152,6 +186,7 @@ export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
                             parentId={row.original.id}
                             hasApu={!!row.original.apuId}
                             data={row.original}
+                            isSuperAdmin={isSuperadmin}
                         />
                     );
                     break;
@@ -161,6 +196,7 @@ export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
                         <SubWorkItemActions
                             parentId={row.original.id}
                             data={row.original}
+                            isSuperAdmin={isSuperadmin}
                         />
                     );
                     break;
@@ -234,14 +270,17 @@ function WorkItemActions({
     parentId,
     hasApu,
     data,
+    isSuperAdmin,
 }: {
     parentId: string;
     hasApu: boolean;
     data: GenericTableItem;
+    isSuperAdmin: boolean;
 }) {
     const [showCreate, setShowCreate] = useState(false);
     const [showEditSheet, setShowEditSheet] = useState(false);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [showReactivateDialog, setShowReactivateDialog] = useState(false);
 
     return (
         <div>
@@ -290,6 +329,20 @@ function WorkItemActions({
                     <DropdownMenuItem onSelect={() => setShowEditSheet(true)}>
                         Editar
                     </DropdownMenuItem>
+                    {isSuperAdmin && (
+                        <DropdownMenuItem
+                            onSelect={() => setShowReactivateDialog(true)}
+                            disabled={data.isActive}
+                        >
+                            Reactivar
+                            <DropdownMenuShortcut>
+                                <RefreshCcwDot
+                                    className="size-4"
+                                    aria-hidden="true"
+                                />
+                            </DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    )}
                     <DropdownMenuItem
                         className="text-red-700"
                         onSelect={() => setShowDeleteDialog(true)}
@@ -307,12 +360,15 @@ function WorkItemActions({
 
 function SubWorkItemActions({
     data,
+    isSuperAdmin,
 }: {
     parentId: string;
     data: GenericTableItem;
+    isSuperAdmin: boolean;
 }) {
     const [showEditSheet, setShowEditSheet] = useState(false);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [showReactivateDialog, setShowReactivateDialog] = useState(false);
 
     return (
         <div>
@@ -343,9 +399,24 @@ function SubWorkItemActions({
                     <DropdownMenuItem onSelect={() => setShowEditSheet(true)}>
                         Editar
                     </DropdownMenuItem>
+                    {isSuperAdmin && (
+                        <DropdownMenuItem
+                            onSelect={() => setShowReactivateDialog(true)}
+                            disabled={data.isActive}
+                        >
+                            Reactivar
+                            <DropdownMenuShortcut>
+                                <RefreshCcwDot
+                                    className="size-4"
+                                    aria-hidden="true"
+                                />
+                            </DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    )}
                     <DropdownMenuItem
                         className="text-red-700"
                         onSelect={() => setShowDeleteDialog(true)}
+                        disabled={!data.isActive}
                     >
                         Eliminar
                         <DropdownMenuShortcut>

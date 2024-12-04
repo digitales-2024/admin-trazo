@@ -1,3 +1,4 @@
+import { useCategory } from "@/hooks/use-category";
 import { useWorkItem } from "@/hooks/use-workitem";
 import { GenericTableItem } from "@/types/category";
 
@@ -9,7 +10,6 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { useCategory } from "@/hooks/use-category";
 
 export function DeleteWorkItemDialog({
     open,
