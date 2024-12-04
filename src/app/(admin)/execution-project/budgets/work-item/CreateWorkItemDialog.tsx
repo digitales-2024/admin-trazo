@@ -83,8 +83,20 @@ const withApuSchema = z.object({
             message: "La unidad de la partida debe tener al menos 1 caracter",
         })
         .max(50),
-    apuPerformance: z.coerce.number().min(0),
-    apuWorkHours: z.coerce.number().min(0),
+    apuPerformance: z.coerce
+        .number({
+            message: "El rendimiento debe ser un número",
+        })
+        .min(0, {
+            message: "El rendimiento debe ser un número positivo",
+        }),
+    apuWorkHours: z.coerce
+        .number({
+            message: "Las horas de trabajo deben ser un número",
+        })
+        .min(0, {
+            message: "Las horas de trabajo deben ser un número",
+        }),
 });
 
 function CreateWithApuForm({
@@ -101,10 +113,8 @@ function CreateWithApuForm({
         defaultValues: {
             name: "",
             unit: "",
-            // @ts-expect-error this should be a number, but its a string cause form uses strings
-            apuPerformance: "",
-            // @ts-expect-error this should be a number, but its a string cause form uses strings
-            apuWorkHours: "",
+            apuPerformance: undefined,
+            apuWorkHours: undefined,
         },
     });
 
@@ -183,7 +193,11 @@ function CreateWithApuForm({
                         <FormItem>
                             <FormLabel>Rendimiento del APU</FormLabel>
                             <FormControl>
-                                <Input placeholder="Rendimiento" {...field} />
+                                <Input
+                                    placeholder="Rendimiento"
+                                    {...field}
+                                    type="number"
+                                />
                             </FormControl>
                             <FormDescription>
                                 Rendimiento a aplicar a todo el APU. Ejm: 25.00
@@ -202,6 +216,7 @@ function CreateWithApuForm({
                             <FormControl>
                                 <Input
                                     placeholder="Horas de trabajo"
+                                    type="number"
                                     {...field}
                                 />
                             </FormControl>

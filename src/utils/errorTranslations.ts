@@ -93,6 +93,19 @@ const errorTranslations = {
     "Error updating resource": "Error actualizando recurso",
     "This resource is inactive, contact the superadmin to reactivate it":
         "Este recurso esta desactivado, contactese con el administrador para reactivarlo",
+    "Used name": "Este nombre ya está en uso",
+    "Workitem not found": "Partida no encontrada",
+    "Bad workitem update": "Datos invalidos",
+    "Subworkitem not found": "Subpartida no encontrada",
+    "Parent Subcategory not found": "La subcategoría referenciada no existe",
+    "This WorkItem does not exist": "Partida no encontrada",
+    "This WorkItem exists but is not active":
+        "La partida existe pero no está activa",
+    "Invalid state. Contact an administrator":
+        "Estado de la aplicación invalido.",
+    "Subworkitem not foun": "Subpartida no encontrada",
+    "Parent Work Item not found":
+        "La Partida a la que pertenece esta Subpartida no se encontró",
 };
 
 export default errorTranslations;

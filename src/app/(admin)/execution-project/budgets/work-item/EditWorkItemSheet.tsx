@@ -28,8 +28,24 @@ import {
 } from "@/components/ui/sheet";
 
 const formSchema = z.object({
-    name: z.string().min(2).max(50).optional(),
-    unit: z.string().min(1).max(50).optional(),
+    name: z
+        .string()
+        .min(2, {
+            message: "El nombre debe tener al menos 2 caracteres",
+        })
+        .max(50, {
+            message: "El nombre debe tener hasta 50 caracteres",
+        })
+        .optional(),
+    unit: z
+        .string()
+        .min(1, {
+            message: "El nombre debe tener al menos 2 caracteres",
+        })
+        .max(50, {
+            message: "El nombre debe tener hasta 50 caracteres",
+        })
+        .optional(),
 });
 
 /**

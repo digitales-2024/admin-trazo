@@ -58,15 +58,33 @@ const withApuSchema = z.object({
         .min(2, {
             message: "El nombre de la partida debe tener al menos 2 caracteres",
         })
-        .max(50),
+        .max(50, {
+            message:
+                "El nombre de la partida debe tener un máximo de 50 caracteres",
+        }),
     unit: z
         .string()
         .min(1, {
             message: "La unidad de la partida debe tener al menos 1 caracter",
         })
-        .max(50),
-    apuPerformance: z.coerce.number().min(0),
-    apuWorkHours: z.coerce.number().min(0),
+        .max(50, {
+            message:
+                "El nombre de la partida debe tener un máximo de 50 caracteres",
+        }),
+    apuPerformance: z.coerce
+        .number({
+            message: "El rendimiento debe ser un número",
+        })
+        .min(0, {
+            message: "El rendimiento debe ser un número positivo",
+        }),
+    apuWorkHours: z.coerce
+        .number({
+            message: "Las horas de trabajo deben ser un número",
+        })
+        .min(0, {
+            message: "Las horas de trabajo deben ser un número",
+        }),
 });
 
 function CreateWithApuForm({
@@ -83,10 +101,8 @@ function CreateWithApuForm({
         defaultValues: {
             name: "",
             unit: "",
-            // @ts-expect-error this should be a number, but its a string cause form uses strings
-            apuPerformance: "",
-            // @ts-expect-error this should be a number, but its a string cause form uses strings
-            apuWorkHours: "",
+            apuPerformance: undefined,
+            apuWorkHours: undefined,
         },
     });
 
