@@ -59,7 +59,7 @@ const ResourceTypeCard: React.FC<ResourceTypeCardProps> = ({
                     <span className="font-bold">
                         {calculateSubtotal(name).toFixed(2)}
                     </span>
-                    {activeTab === "nuevo" && (
+                    {activeTab === "new" && (
                         <Button
                             variant="ghost"
                             size="sm"
@@ -75,7 +75,7 @@ const ResourceTypeCard: React.FC<ResourceTypeCardProps> = ({
             {expandedType === name && (
                 <div className="overflow-hidden">
                     <div className="space-y-4 p-4">
-                        {activeTab === "nuevo" && (
+                        {activeTab === "new" && (
                             <ApuResourceForm
                                 onSubmit={(resource) =>
                                     handleAddResource(name, resource)
@@ -108,7 +108,7 @@ const ResourceTypeCard: React.FC<ResourceTypeCardProps> = ({
                                                 resource.id,
                                             )
                                         }
-                                        isEditable={activeTab === "nuevo"}
+                                        isEditable={activeTab === "new"}
                                         performance={performance}
                                         workHours={workHours}
                                     />
