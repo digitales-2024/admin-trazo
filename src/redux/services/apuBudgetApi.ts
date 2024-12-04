@@ -1,4 +1,4 @@
-import { WorkItemCreate } from "@/types/workitem";
+import { ApuBudget } from "@/types";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 import baseQueryWithReauth from "../baseQuery";
@@ -9,7 +9,7 @@ export const apuBudgetApi = createApi({
     tagTypes: ["ApuBudget"],
     endpoints: (build) => ({
         // Crear una variante de apu en ApuBudget
-        createApuBudget: build.mutation<WorkItemCreate, WorkItemCreate>({
+        createApuBudget: build.mutation<ApuBudget, Partial<ApuBudget>>({
             query: (body) => ({
                 url: "/apu-budget",
                 method: "POST",
