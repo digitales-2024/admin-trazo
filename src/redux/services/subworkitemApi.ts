@@ -26,7 +26,7 @@ export const subworkitemApi = createApi({
             { body: SubWorkItemEdit; id: string }
         >({
             query: ({ body, id }) => ({
-                url: `/work-item/${id}`,
+                url: `/sub-work-item/${id}`,
                 method: "PATCH",
                 body,
                 credentials: "include",

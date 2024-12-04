@@ -3,8 +3,7 @@ import {
     useEditSubWorkItemMutation,
 } from "@/redux/services/subworkitemApi";
 import { CustomErrorData } from "@/types";
-import { SubWorkItemCreate } from "@/types/subworkitem";
-import { WorkItemEdit } from "@/types/workitem";
+import { SubWorkItemCreate, SubWorkItemEdit } from "@/types/subworkitem";
 import { translateError } from "@/utils/translateError";
 import { toast } from "sonner";
 
@@ -51,14 +50,13 @@ export const useSubWorkItem = () => {
     };
 
     const onEditSubWorkItem = async (data: {
-        body: WorkItemEdit;
+        body: SubWorkItemEdit;
         id: string;
     }) => {
         const promise = () =>
             new Promise(async (resolve, reject) => {
                 try {
                     const result = await edit(data);
-                    console.log(result);
                     if (result.error) {
                         if (
                             typeof result.error === "object" &&

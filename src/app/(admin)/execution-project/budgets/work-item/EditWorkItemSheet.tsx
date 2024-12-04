@@ -73,6 +73,7 @@ export function EditWorkItemSheet({
                     onOpenChange={onOpenChange}
                     label={label}
                     data={data}
+                    isSub={isSub}
                 />
             </SheetContent>
         </Sheet>
@@ -86,12 +87,14 @@ export function EditWorkItemForm({
     onOpenChange,
     data,
     label,
+    isSub,
 }: {
     onOpenChange: (open: boolean) => void;
     data: GenericTableItem;
     label: string;
+    isSub: boolean;
 }) {
-    const isRegular = !!data.apuId;
+    const isRegular = !isSub;
 
     const { onEditWorkItem, editSuccess, editLoading } = useWorkItem();
     const {
@@ -124,6 +127,7 @@ export function EditWorkItemForm({
 
         edit({
             id: data.id,
+            // @ts-expect-error spaghetti code for reusing this form instead of duplicating
             body: body,
         });
     }
