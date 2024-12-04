@@ -1,5 +1,6 @@
 import {
     useCreateWorkItemMutation,
+    useDeleteWorkItemMutation,
     useEditWorkItemMutation,
 } from "@/redux/services/workitemApi";
 import { CustomErrorData } from "@/types";
@@ -12,6 +13,7 @@ export const useWorkItem = () => {
         useCreateWorkItemMutation();
     const [edit, { isLoading: editLoading, isSuccess: editSuccess }] =
         useEditWorkItemMutation();
+    const [deleteFn] = useDeleteWorkItemMutation();
 
     const onCreate = async (input: WorkItemCreate) => {
         const promise = () =>
@@ -84,6 +86,42 @@ export const useWorkItem = () => {
         });
     };
 
+    const onDeleteWorkItem = async (data: string) => {
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                try {
+                    const result = await deleteFn(data);
+                    if (result.error) {
+                        if (
+                            typeof result.error === "object" &&
+                            "data" in result.error
+                        ) {
+                            const error = (result.error.data as CustomErrorData)
+                                .message;
+                            const message = translateError(error as string);
+                            reject(new Error(message));
+                        } else {
+                            reject(
+                                new Error(
+                                    "Ocurrió un error inesperado, por favor intenta de nuevo",
+                                ),
+                            );
+                        }
+                    } else {
+                        resolve(result);
+                    }
+                } catch (error) {
+                    reject(error);
+                }
+            });
+
+        return toast.promise(promise(), {
+            loading: "Eliminando partida...",
+            success: "Partida eliminada con éxito",
+            error: (err) => err.message,
+        });
+    };
+
     return {
         onCreate,
         createLoading,
@@ -91,5 +129,6 @@ export const useWorkItem = () => {
         onEditWorkItem,
         editLoading,
         editSuccess,
+        onDeleteWorkItem,
     };
 };

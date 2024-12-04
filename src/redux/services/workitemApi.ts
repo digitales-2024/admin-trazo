@@ -27,12 +27,22 @@ export const workitemApi = createApi({
             }),
             invalidatesTags: ["WorkItem"],
         }),
+
         // editar partida
         editWorkItem: build.mutation<void, { body: WorkItemEdit; id: string }>({
             query: ({ body, id }) => ({
                 url: `/work-item/${id}`,
                 method: "PATCH",
                 body,
+                credentials: "include",
+            }),
+            invalidatesTags: ["WorkItem"],
+        }),
+        // eliminar partida y todos sus hijos
+        deleteWorkItem: build.mutation<void, string>({
+            query: (id) => ({
+                url: `/work-item/${id}`,
+                method: "DELETE",
                 credentials: "include",
             }),
             invalidatesTags: ["WorkItem"],
@@ -44,4 +54,5 @@ export const {
     useGetWorkitemQuery,
     useCreateWorkItemMutation,
     useEditWorkItemMutation,
+    useDeleteWorkItemMutation,
 } = workitemApi;

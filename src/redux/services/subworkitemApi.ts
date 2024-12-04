@@ -33,8 +33,20 @@ export const subworkitemApi = createApi({
             }),
             invalidatesTags: ["SubWorkItem"],
         }),
+        // eliminar subpartida y todos sus hijos
+        deleteSubWorkItem: build.mutation<void, string>({
+            query: (id) => ({
+                url: `/sub-work-item/${id}`,
+                method: "DELETE",
+                credentials: "include",
+            }),
+            invalidatesTags: ["SubWorkItem"],
+        }),
     }),
 });
 
-export const { useCreateSubWorkItemMutation, useEditSubWorkItemMutation } =
-    subworkitemApi;
+export const {
+    useCreateSubWorkItemMutation,
+    useEditSubWorkItemMutation,
+    useDeleteSubWorkItemMutation,
+} = subworkitemApi;

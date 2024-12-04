@@ -19,6 +19,8 @@ import { Separator } from "@/components/ui/separator";
 import { ApuDialog } from "./ApuDialog";
 import { CreateSubWorkItemDialog } from "./CreateSubWorkItemDialog";
 import { CreateWorkItemDialog } from "./CreateWorkItemDialog";
+import { DeleteSubWorkItemDialog } from "./DeleteSubWorkItemDialog";
+import { DeleteWorkItemDialog } from "./DeleteWorkItemDialog";
 import { EditWorkItemSheet } from "./EditWorkItemSheet";
 
 export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
@@ -240,7 +242,6 @@ function WorkItemActions({
     const [showCreate, setShowCreate] = useState(false);
     const [showEditSheet, setShowEditSheet] = useState(false);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-    console.log(showDeleteDialog);
 
     return (
         <div>
@@ -253,6 +254,11 @@ function WorkItemActions({
                 <EditWorkItemSheet
                     open={showEditSheet}
                     onOpenChange={setShowEditSheet}
+                    data={data}
+                />
+                <DeleteWorkItemDialog
+                    open={showDeleteDialog}
+                    onOpenChange={setShowDeleteDialog}
                     data={data}
                 />
             </div>
@@ -300,7 +306,6 @@ function WorkItemActions({
 }
 
 function SubWorkItemActions({
-    parentId,
     data,
 }: {
     parentId: string;
@@ -308,8 +313,6 @@ function SubWorkItemActions({
 }) {
     const [showEditSheet, setShowEditSheet] = useState(false);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-    console.log(parentId);
-    console.log(showDeleteDialog);
 
     return (
         <div>
@@ -319,6 +322,11 @@ function SubWorkItemActions({
                     onOpenChange={setShowEditSheet}
                     data={data}
                     isSub={true}
+                />
+                <DeleteSubWorkItemDialog
+                    open={showDeleteDialog}
+                    onOpenChange={setShowDeleteDialog}
+                    data={data}
                 />
             </div>
             <DropdownMenu>

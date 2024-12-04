@@ -1,5 +1,6 @@
 import {
     useCreateSubWorkItemMutation,
+    useDeleteSubWorkItemMutation,
     useEditSubWorkItemMutation,
 } from "@/redux/services/subworkitemApi";
 import { CustomErrorData } from "@/types";
@@ -12,6 +13,7 @@ export const useSubWorkItem = () => {
         useCreateSubWorkItemMutation();
     const [edit, { isLoading: editLoading, isSuccess: editSuccess }] =
         useEditSubWorkItemMutation();
+    const [deleteFn] = useDeleteSubWorkItemMutation();
 
     const onCreate = async (input: SubWorkItemCreate) => {
         const promise = () =>
@@ -88,6 +90,42 @@ export const useSubWorkItem = () => {
         });
     };
 
+    const onDelete = async (data: string) => {
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                try {
+                    const result = await deleteFn(data);
+                    if (result.error) {
+                        if (
+                            typeof result.error === "object" &&
+                            "data" in result.error
+                        ) {
+                            const error = (result.error.data as CustomErrorData)
+                                .message;
+                            const message = translateError(error as string);
+                            reject(new Error(message));
+                        } else {
+                            reject(
+                                new Error(
+                                    "Ocurrió un error inesperado, por favor intenta de nuevo",
+                                ),
+                            );
+                        }
+                    } else {
+                        resolve(result);
+                    }
+                } catch (error) {
+                    reject(error);
+                }
+            });
+
+        return toast.promise(promise(), {
+            loading: "Eliminando partida...",
+            success: "Partida eliminada con éxito",
+            error: (err) => err.message,
+        });
+    };
+
     return {
         onCreate,
         createLoading,
@@ -95,5 +133,6 @@ export const useSubWorkItem = () => {
         onEditSubWorkItem,
         editLoading,
         editSuccess,
+        onDelete,
     };
 };
