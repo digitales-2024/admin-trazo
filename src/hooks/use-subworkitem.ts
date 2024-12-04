@@ -2,6 +2,7 @@ import {
     useCreateSubWorkItemMutation,
     useDeleteSubWorkItemMutation,
     useEditSubWorkItemMutation,
+    useReactivateSubWorkItemMutation,
 } from "@/redux/services/subworkitemApi";
 import { CustomErrorData } from "@/types";
 import { SubWorkItemCreate, SubWorkItemEdit } from "@/types/subworkitem";
@@ -14,6 +15,7 @@ export const useSubWorkItem = () => {
     const [edit, { isLoading: editLoading, isSuccess: editSuccess }] =
         useEditSubWorkItemMutation();
     const [deleteFn] = useDeleteSubWorkItemMutation();
+    const [reactivate] = useReactivateSubWorkItemMutation();
 
     const onCreate = async (input: SubWorkItemCreate) => {
         const promise = () =>
@@ -126,6 +128,42 @@ export const useSubWorkItem = () => {
         });
     };
 
+    const reactivateSubWorkItem = async (id: string) => {
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                try {
+                    const result = await reactivate({ ids: [id] });
+                    if (result.error) {
+                        if (
+                            typeof result.error === "object" &&
+                            "data" in result.error
+                        ) {
+                            const error = (result.error.data as CustomErrorData)
+                                .message;
+                            const message = translateError(error as string);
+                            reject(new Error(message));
+                        } else {
+                            reject(
+                                new Error(
+                                    "Ocurrió un error inesperado, por favor intenta de nuevo",
+                                ),
+                            );
+                        }
+                    } else {
+                        resolve(result);
+                    }
+                } catch (error) {
+                    reject(error);
+                }
+            });
+
+        return toast.promise(promise(), {
+            loading: "Reactivando partida...",
+            success: "Partida reactivada con éxito",
+            error: (err) => err.message,
+        });
+    };
+
     return {
         onCreate,
         createLoading,
@@ -134,5 +172,6 @@ export const useSubWorkItem = () => {
         editLoading,
         editSuccess,
         onDelete,
+        reactivateSubWorkItem,
     };
 };

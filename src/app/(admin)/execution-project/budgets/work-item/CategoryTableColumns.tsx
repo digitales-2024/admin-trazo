@@ -29,6 +29,7 @@ import { CreateWorkItemDialog } from "./CreateWorkItemDialog";
 import { DeleteSubWorkItemDialog } from "./DeleteSubWorkItemDialog";
 import { DeleteWorkItemDialog } from "./DeleteWorkItemDialog";
 import { EditWorkItemSheet } from "./EditWorkItemSheet";
+import { ReactivateSubWorkItemDialog } from "./ReactivateSubWorkItemDialog";
 
 export const categoryTableColumns = (
     isSuperadmin: boolean,
@@ -346,6 +347,7 @@ function WorkItemActions({
                     <DropdownMenuItem
                         className="text-red-700"
                         onSelect={() => setShowDeleteDialog(true)}
+                        disabled={!data.isActive}
                     >
                         Eliminar
                         <DropdownMenuShortcut>
@@ -382,6 +384,11 @@ function SubWorkItemActions({
                 <DeleteSubWorkItemDialog
                     open={showDeleteDialog}
                     onOpenChange={setShowDeleteDialog}
+                    data={data}
+                />
+                <ReactivateSubWorkItemDialog
+                    open={showReactivateDialog}
+                    onOpenChange={setShowReactivateDialog}
                     data={data}
                 />
             </div>

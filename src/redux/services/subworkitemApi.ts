@@ -33,11 +33,21 @@ export const subworkitemApi = createApi({
             }),
             invalidatesTags: ["SubWorkItem"],
         }),
-        // eliminar subpartida y todos sus hijos
+        // eliminar subpartida
         deleteSubWorkItem: build.mutation<void, string>({
             query: (id) => ({
                 url: `/sub-work-item/${id}`,
                 method: "DELETE",
+                credentials: "include",
+            }),
+            invalidatesTags: ["SubWorkItem"],
+        }),
+        // reactivar subpartida
+        reactivateSubWorkItem: build.mutation<void, { ids: string[] }>({
+            query: (ids) => ({
+                url: `/sub-work-item/reactivate/all`,
+                method: "PATCH",
+                body: ids,
                 credentials: "include",
             }),
             invalidatesTags: ["SubWorkItem"],
@@ -49,4 +59,5 @@ export const {
     useCreateSubWorkItemMutation,
     useEditSubWorkItemMutation,
     useDeleteSubWorkItemMutation,
+    useReactivateSubWorkItemMutation,
 } = subworkitemApi;
