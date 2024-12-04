@@ -47,3 +47,9 @@ export type ApuOnResourceFullWorkItem = {
     group?: number;
     resource: Resource;
 };
+
+export type ResourceExpandedApu = {
+    name: string;
+    icon: React.ElementType;
+    color: string;
+};
