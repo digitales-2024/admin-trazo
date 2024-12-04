@@ -30,6 +30,7 @@ import { DeleteSubWorkItemDialog } from "./DeleteSubWorkItemDialog";
 import { DeleteWorkItemDialog } from "./DeleteWorkItemDialog";
 import { EditWorkItemSheet } from "./EditWorkItemSheet";
 import { ReactivateSubWorkItemDialog } from "./ReactivateSubWorkItemDialog";
+import { ReactivateWorkItemDialog } from "./ReactivateWorkItemDialog";
 
 export const categoryTableColumns = (
     isSuperadmin: boolean,
@@ -299,6 +300,11 @@ function WorkItemActions({
                 <DeleteWorkItemDialog
                     open={showDeleteDialog}
                     onOpenChange={setShowDeleteDialog}
+                    data={data}
+                />
+                <ReactivateWorkItemDialog
+                    open={showReactivateDialog}
+                    onOpenChange={setShowReactivateDialog}
                     data={data}
                 />
             </div>

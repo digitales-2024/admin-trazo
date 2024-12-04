@@ -158,8 +158,8 @@ export const useSubWorkItem = () => {
             });
 
         return toast.promise(promise(), {
-            loading: "Reactivando partida...",
-            success: "Partida reactivada con éxito",
+            loading: "Reactivando subpartidas...",
+            success: "Subpartida reactivadas con éxito",
             error: (err) => err.message,
         });
     };

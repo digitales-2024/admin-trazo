@@ -47,6 +47,16 @@ export const workitemApi = createApi({
             }),
             invalidatesTags: ["WorkItem"],
         }),
+        // reactivar partida
+        reactivateWorkItem: build.mutation<void, { ids: string[] }>({
+            query: (ids) => ({
+                url: `/work-item/reactivate/all`,
+                method: "PATCH",
+                body: ids,
+                credentials: "include",
+            }),
+            invalidatesTags: ["WorkItem"],
+        }),
     }),
 });
 
@@ -55,4 +65,5 @@ export const {
     useCreateWorkItemMutation,
     useEditWorkItemMutation,
     useDeleteWorkItemMutation,
+    useReactivateWorkItemMutation,
 } = workitemApi;

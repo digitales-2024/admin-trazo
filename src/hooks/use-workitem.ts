@@ -2,6 +2,7 @@ import {
     useCreateWorkItemMutation,
     useDeleteWorkItemMutation,
     useEditWorkItemMutation,
+    useReactivateWorkItemMutation,
 } from "@/redux/services/workitemApi";
 import { CustomErrorData } from "@/types";
 import { WorkItemCreate, WorkItemEdit } from "@/types/workitem";
@@ -14,6 +15,7 @@ export const useWorkItem = () => {
     const [edit, { isLoading: editLoading, isSuccess: editSuccess }] =
         useEditWorkItemMutation();
     const [deleteFn] = useDeleteWorkItemMutation();
+    const [reactivate] = useReactivateWorkItemMutation();
 
     const onCreate = async (input: WorkItemCreate) => {
         const promise = () =>
@@ -122,6 +124,42 @@ export const useWorkItem = () => {
         });
     };
 
+    const reactivateWorkItem = async (id: string) => {
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                try {
+                    const result = await reactivate({ ids: [id] });
+                    if (result.error) {
+                        if (
+                            typeof result.error === "object" &&
+                            "data" in result.error
+                        ) {
+                            const error = (result.error.data as CustomErrorData)
+                                .message;
+                            const message = translateError(error as string);
+                            reject(new Error(message));
+                        } else {
+                            reject(
+                                new Error(
+                                    "Ocurrió un error inesperado, por favor intenta de nuevo",
+                                ),
+                            );
+                        }
+                    } else {
+                        resolve(result);
+                    }
+                } catch (error) {
+                    reject(error);
+                }
+            });
+
+        return toast.promise(promise(), {
+            loading: "Reactivando partidas...",
+            success: "Partidas reactivada con éxito",
+            error: (err) => err.message,
+        });
+    };
+
     return {
         onCreate,
         createLoading,
@@ -130,5 +168,6 @@ export const useWorkItem = () => {
         editLoading,
         editSuccess,
         onDeleteWorkItem,
+        reactivateWorkItem,
     };
 };
