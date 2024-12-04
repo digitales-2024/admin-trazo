@@ -49,3 +49,4 @@ export type {
 } from "./category";
 export type { FullWorkItem, ResourceExpandedApu } from "./workitem";
 export type { Subcategory } from "./subcategory";
+export type { ApuBudget } from "./apuBudget";
