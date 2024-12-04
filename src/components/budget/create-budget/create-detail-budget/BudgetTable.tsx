@@ -43,6 +43,12 @@ interface BudgetTableProps {
         itemId: string,
         quantity: number,
     ) => void;
+    onUpdateWorkItemApuId: (
+        categoryId: string,
+        subcategoryId: string,
+        itemId: string,
+        apuId: string,
+    ) => void;
     onUpdateWorkItemUnitPrice: (
         categoryId: string,
         subcategoryId: string,
@@ -66,6 +72,7 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
     onDeleteWorkItem,
     onDeleteSubWorkItem,
     onUpdateWorkItemQuantity,
+    onUpdateWorkItemApuId,
     onUpdateWorkItemUnitPrice,
     onUpdateSubWorkItem,
 }) => {
@@ -186,6 +193,9 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                                                                     }
                                                                     onUpdateWorkItemQuantity={
                                                                         onUpdateWorkItemQuantity
+                                                                    }
+                                                                    onUpdateWorkItemApuId={
+                                                                        onUpdateWorkItemApuId
                                                                     }
                                                                     onUpdateWorkItemUnitPrice={
                                                                         onUpdateWorkItemUnitPrice
