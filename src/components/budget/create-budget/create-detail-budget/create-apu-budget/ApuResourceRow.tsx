@@ -14,6 +14,18 @@ interface ApuResourceRowProps {
     workHours: number;
 }
 
+const resourceTypeNamesInverted: { [key: string]: ResourceType } = {
+    Herramientas: ResourceType.TOOLS,
+    "Mano de Obra": ResourceType.LABOR,
+    Insumos: ResourceType.SUPPLIES,
+    Servicios: ResourceType.SERVICES,
+};
+const getResourceTypeInEnglish = (
+    typeInSpanish: string,
+): ResourceType | undefined => {
+    return resourceTypeNamesInverted[typeInSpanish];
+};
+
 export default function ApuResourceRow({
     resource,
     onUpdate,
@@ -24,10 +36,11 @@ export default function ApuResourceRow({
 }: ApuResourceRowProps) {
     // Estado local para manejar el formulario de edición
     const [editForm, setEditForm] = React.useState<ResourceApu>(resource);
+    console.log(getResourceTypeInEnglish(resource.type));
 
     // Efecto para recalcular la cantidad si el tipo es "Mano de Obra"
     React.useEffect(() => {
-        if (resource.type === ResourceType.LABOR) {
+        if (getResourceTypeInEnglish(resource.type) === ResourceType.LABOR) {
             const calculatedQuantity =
                 (Number(editForm.group) * workHours) / performance || 0;
             if (calculatedQuantity !== editForm.quantity) {
@@ -72,7 +85,6 @@ export default function ApuResourceRow({
         setEditForm(updatedResource);
         onUpdate(updatedResource);
     };
-
     return (
         <div className="flex items-center gap-2 rounded-md bg-white p-2 shadow-sm">
             {/* Campo Nombre - Solo Lectura */}
@@ -85,7 +97,7 @@ export default function ApuResourceRow({
             />
 
             {/* Campo Cuadrilla - Solo si es Mano de Obra */}
-            {editForm.type === ResourceType.LABOR && (
+            {getResourceTypeInEnglish(editForm.type) === ResourceType.LABOR && (
                 <Input
                     name="group"
                     type="number"
@@ -105,9 +117,13 @@ export default function ApuResourceRow({
                 value={editForm.quantity}
                 onChange={handleChange}
                 className="w-20"
-                readOnly={editForm.type === ResourceType.LABOR || !isEditable}
+                readOnly={
+                    getResourceTypeInEnglish(editForm.type) ===
+                        ResourceType.LABOR || !isEditable
+                }
                 placeholder="Cantidad"
                 min={1}
+                step="0.0001"
             />
 
             {/* Campo Unidad - Solo Lectura */}
