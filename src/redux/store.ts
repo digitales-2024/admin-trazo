@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
 import { adminApi } from "./services/adminApi";
+import { apuBudgetApi } from "./services/apuBudgetApi";
 import { authApi } from "./services/authApi";
 import { budgetsApi } from "./services/budgetApi";
 import { businessApi } from "./services/businessApi";
@@ -40,6 +41,7 @@ export const store = configureStore({
         [budgetsApi.reducerPath]: budgetsApi.reducer,
         [subcategoryApi.reducerPath]: subcategoryApi.reducer,
         [workitemApi.reducerPath]: workitemApi.reducer,
+        [apuBudgetApi.reducerPath]: apuBudgetApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
@@ -80,7 +82,8 @@ export const store = configureStore({
             .concat(workitemApi.middleware)
             .concat(budgetsApi.middleware)
             .concat(categoryApi.middleware)
-            .concat(subcategoryApi.middleware),
+            .concat(subcategoryApi.middleware)
+            .concat(apuBudgetApi.middleware),
 });
 setupListeners(store.dispatch);
 
