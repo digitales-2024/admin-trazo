@@ -20,7 +20,7 @@ interface ResourceTypeCardProps {
     handleRemoveResourceType: (name: string) => void;
     handleAddResource: (
         type: string,
-        resource: Omit<ResourceApu, "id" | "totalCost">,
+        resource: Omit<ResourceApu, "totalCost" | "type">,
     ) => void;
     resources: ResourceApu[];
     handleRemoveResource: (type: string, id: string) => void;
