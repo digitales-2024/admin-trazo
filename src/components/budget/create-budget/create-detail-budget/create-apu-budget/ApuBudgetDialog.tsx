@@ -1,15 +1,8 @@
 "use client";
 
 import { useWorkItem } from "@/hooks/use-workitem";
-import { FullWorkItem, ResourceApu, ResourceType } from "@/types";
-import {
-    Package,
-    Wrench,
-    HeartHandshake,
-    Users,
-    SquarePlus,
-    Pin,
-} from "lucide-react";
+import { ResourceApu, ResourceExpandedApu, ResourceType } from "@/types";
+import { SquarePlus, Pin } from "lucide-react";
 import * as React from "react";
 
 import {
@@ -26,58 +19,13 @@ import ApuActionButtons from "./ApuActionButtons";
 import ApuHeadInformation from "./ApuHeadInformation";
 import ResourceTypeCard from "./ResourceTypeCard";
 import { ResourceTypeSelectorApu } from "./ResourceTypeSelectorApu";
-
-const resourceTypeNames: { [key in ResourceType]: string } = {
-    [ResourceType.TOOLS]: "Herramientas",
-    [ResourceType.LABOR]: "Mano de Obra",
-    [ResourceType.SUPPLIES]: "Insumos",
-    [ResourceType.SERVICES]: "Servicios",
-};
-
-const resourceTypeIcons: { [key in ResourceType]: React.ElementType } = {
-    [ResourceType.TOOLS]: Wrench,
-    [ResourceType.LABOR]: Users,
-    [ResourceType.SUPPLIES]: Package,
-    [ResourceType.SERVICES]: HeartHandshake,
-};
-
-const resourceTypeColors: { [key in ResourceType]: string } = {
-    [ResourceType.TOOLS]: "border-yellow-500",
-    [ResourceType.LABOR]: "border-blue-500",
-    [ResourceType.SUPPLIES]: "border-green-500",
-    [ResourceType.SERVICES]: "border-purple-500",
-};
-
-type ResourceExpanded = {
-    name: string;
-    icon: React.ElementType;
-    color: string;
-};
-
-const extractUniqueTypes = (workItemById: FullWorkItem): string[] => {
-    if (!workItemById.apu || !workItemById.apu.apuOnResource) {
-        return [];
-    }
-    const resources = workItemById.apu.apuOnResource;
-    const types = resources.map((item) => item.resource.type);
-    const uniqueTypes = Array.from(new Set(types));
-    return uniqueTypes;
-};
-
-const convertToResourceExpanded = (
-    uniqueTypes: string[],
-): ResourceExpanded[] => {
-    return uniqueTypes.map((type) => {
-        const name = resourceTypeNames[type as ResourceType];
-        const icon = resourceTypeIcons[type as ResourceType];
-        const color = resourceTypeColors[type as ResourceType];
-        return {
-            name,
-            icon,
-            color,
-        };
-    });
-};
+import {
+    convertToResourceExpanded,
+    extractUniqueTypes,
+    resourceTypeColors,
+    resourceTypeIcons,
+    resourceTypeNames,
+} from "./utils/resource-type";
 
 interface ApuDialogProps {
     id: string;
@@ -89,7 +37,7 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
     const { workItemById } = useWorkItem({ id });
     const [activeTab, setActiveTab] = React.useState("new");
     const [resourceTypes, setResourceTypes] = React.useState<
-        ResourceExpanded[]
+        ResourceExpandedApu[]
     >([]);
     const [templateResources, setTemplateResources] = React.useState<
         Record<string, ResourceApu[]>

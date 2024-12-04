@@ -5,6 +5,8 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+import { getResourceTypeInEnglish } from "./utils/resource-type";
+
 interface ApuResourceRowProps {
     resource: ResourceApu;
     onUpdate: (resource: ResourceApu) => void;
@@ -13,20 +15,6 @@ interface ApuResourceRowProps {
     performance: number;
     workHours: number;
 }
-
-const resourceTypeNamesInverted: { [key: string]: ResourceType } = {
-    Herramientas: ResourceType.TOOLS,
-    "Mano de Obra": ResourceType.LABOR,
-    Insumos: ResourceType.SUPPLIES,
-    Servicios: ResourceType.SERVICES,
-};
-
-const getResourceTypeInEnglish = (typeInSpanish: string): ResourceType => {
-    return (
-        resourceTypeNamesInverted[typeInSpanish] ||
-        (typeInSpanish as ResourceType)
-    );
-};
 
 export default function ApuResourceRow({
     resource,

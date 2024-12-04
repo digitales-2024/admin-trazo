@@ -11,6 +11,8 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
+import { resourceTypeNames, resourceTypeOptions } from "./utils/resource-type";
+
 interface ResourceTypeSelectorApuProps {
     newResourceType: string;
     setNewResourceType: React.Dispatch<React.SetStateAction<string>>;
@@ -20,20 +22,6 @@ interface ResourceTypeSelectorApuProps {
     handleAddResourceType: () => void;
     resourceTypes: { name: string }[];
 }
-
-const resourceTypeOptions = [
-    { value: "TOOLS", label: "Herramientas" },
-    { value: "LABOR", label: "Mano de obra" },
-    { value: "SUPPLIES", label: "Insumos" },
-    { value: "SERVICES", label: "Servicios" },
-];
-
-const resourceTypeNames: { [key in ResourceType]: string } = {
-    [ResourceType.TOOLS]: "Herramientas",
-    [ResourceType.LABOR]: "Mano de Obra",
-    [ResourceType.SUPPLIES]: "Insumos",
-    [ResourceType.SERVICES]: "Servicios",
-};
 
 export function ResourceTypeSelectorApu({
     newResourceType,
