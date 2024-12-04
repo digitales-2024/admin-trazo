@@ -1,5 +1,6 @@
+import { useApuBudget } from "@/hooks/use-apu-budget";
 import { ResourceApu } from "@/types";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 import { DialogClose } from "@/components/ui/dialog";
@@ -12,6 +13,8 @@ interface ApuActionButtonsProps {
     newWorkHours: number;
     templateResources: Record<string, ResourceApu[]>;
     newResources: Record<string, ResourceApu[]>;
+    onOpenChange: (open: boolean) => void;
+    onSuccess: (apuId: string) => void;
 }
 
 const ApuActionButtons: React.FC<ApuActionButtonsProps> = ({
@@ -22,20 +25,49 @@ const ApuActionButtons: React.FC<ApuActionButtonsProps> = ({
     newWorkHours,
     templateResources,
     newResources,
+    onOpenChange,
+    onSuccess,
 }) => {
+    const { onCreateApuBudget, isSuccessCreateApuBudget, dataCreateApuBudget } =
+        useApuBudget();
+
+    useEffect(() => {
+        if (isSuccessCreateApuBudget) {
+            if (dataCreateApuBudget) {
+                console.log("Apu creado", dataCreateApuBudget.data.id);
+                onSuccess(dataCreateApuBudget.data.id);
+            }
+            onOpenChange(false);
+        }
+    }, [isSuccessCreateApuBudget]);
+
+    const transformResources = (resources: Record<string, ResourceApu[]>) => {
+        return Object.values(resources)
+            .flat()
+            .map((resource) => ({
+                resourceId: resource.id,
+                quantity: Number(Number(resource.quantity).toFixed(4)),
+                group: resource.group
+                    ? Math.max(0, Number(resource.group))
+                    : undefined,
+            }));
+    };
+
     const handleClick = () => {
         if (activeTab === "template") {
-            console.log("Usar plantilla", {
+            const payload = {
                 performance: templatePerformance,
                 workHours: templateWorkHours,
-                resources: templateResources,
-            });
+                resources: transformResources(templateResources),
+            };
+            onCreateApuBudget(payload);
         } else {
-            console.log("Crear nuevo", {
+            const payload = {
                 performance: newPerformance,
                 workHours: newWorkHours,
-                resources: newResources,
-            });
+                resources: transformResources(newResources),
+            };
+            onCreateApuBudget(payload);
         }
     };
 
