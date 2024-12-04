@@ -71,6 +71,7 @@ export type WorkItem = {
     quantity?: number;
     unitCost?: number;
     subtotal: number;
+    apuId?: string;
     subWorkItem?: SubWorkItem[];
 };
 
@@ -80,5 +81,6 @@ export type SubWorkItem = {
     name: string;
     quantity: number;
     unitCost: number;
+    apuId: string;
     subtotal: number;
 };
