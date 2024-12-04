@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 type ApuResourceFormProps = {
-    onSubmit: (resource: Omit<ResourceApu, "id" | "totalCost">) => void;
+    onSubmit: (resource: Omit<ResourceApu, "totalCost" | "type">) => void;
     resourceType: string;
     performance: number;
     workHours: number;
@@ -28,12 +28,12 @@ export default function ApuResourceForm({
     performance,
     workHours,
 }: ApuResourceFormProps) {
-    const form = useForm<Omit<ResourceApu, "id" | "totalCost">>({
+    const form = useForm<Omit<ResourceApu, "totalCost" | "type">>({
         defaultValues: {
+            id: "",
             name: "",
             unit: "",
             unitCost: 0,
-            type: ResourceType.LABOR,
             group: 0,
             quantity: 0,
         },
@@ -81,7 +81,9 @@ export default function ApuResourceForm({
         }),
     );
 
-    const handleFormSubmit = (data: Omit<ResourceApu, "id" | "totalCost">) => {
+    const handleFormSubmit = (
+        data: Omit<ResourceApu, "totalCost" | "type"> & { id: string },
+    ) => {
         if (data.name && data.quantity > 0 && data.unit && data.unitCost > 0) {
             onSubmit(data);
             form.reset();
@@ -97,12 +99,14 @@ export default function ApuResourceForm({
             );
 
             if (selectedResource) {
+                form.setValue("id", selectedResource.id.toString());
                 form.setValue("name", selectedResource.name);
                 form.setValue("unit", selectedResource.unit);
                 form.setValue("unitCost", selectedResource.unitCost);
             }
         } else {
             // Si no hay selección, limpiar los campos
+            form.setValue("id", "");
             form.setValue("name", "");
             form.setValue("unit", "");
             form.setValue("unitCost", 0);
