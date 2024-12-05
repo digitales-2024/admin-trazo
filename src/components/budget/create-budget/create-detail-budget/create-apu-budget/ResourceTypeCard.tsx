@@ -61,6 +61,7 @@ const ResourceTypeCard: React.FC<ResourceTypeCardProps> = ({
                     </span>
                     {activeTab === "new" && (
                         <Button
+                            type="button"
                             variant="ghost"
                             size="sm"
                             onClick={() => handleRemoveResourceType(name)}
