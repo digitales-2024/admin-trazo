@@ -150,6 +150,7 @@ export function ApuDialog({
     };
 
     const handleRemoveResourceType = (name: string) => {
+        // Actualizar los recursos según la pestaña activa
         if (activeTab === "template") {
             setTemplateResources((prev) => {
                 const rest = { ...prev };
@@ -163,6 +164,8 @@ export function ApuDialog({
                 return rest;
             });
         }
+
+        setResourceTypes((prev) => prev.filter((type) => type.name !== name));
     };
 
     const handleAddResourceType = () => {
