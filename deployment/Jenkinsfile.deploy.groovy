@@ -26,7 +26,7 @@ pipeline {
                 script {
                     withDockerRegistry(credentialsId: "${REGISTRY_CREDENTIALS}") {
                         // build docker image
-                        def image = docker.build("${IMAGE_PREFIX}-admin:${BUILD_NUMBER}", "--build-arg NEXT_PUBLIC_BACKEND_URL=\"${NEXT_PUBLIC_BACKEND_URL}\"")
+                        def image = docker.build("${IMAGE_PREFIX}-admin:${BUILD_NUMBER}", "--build-arg NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL} .")
                         image.push()
                     }
                 }
