@@ -111,13 +111,15 @@ export function ApuDialog({ id, open, onOpenChange }: ApuDialogProps) {
         }));
     };
 
-    /*     const handleRemoveResourceType = (name: string) => {
-        setResourceTypes((prev) => prev.filter((type) => type.name !== name));
-        setResources((prev) => {
-            const { [name]: ...rest } = prev;
-            return rest;
-        });
-    }; */
+    const handleRemoveResourceType = (name: string) => {
+        console.log(name);
+        /*    setResourceTypes((prev) => prev.filter((type) => type.name !== name));
+            setResources((prev) => {
+                const { [name]: ...rest } = prev;
+                return rest;
+            });
+        }; */
+    };
 
     const handleAddResourceType = () => {
         if (
