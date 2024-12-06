@@ -7,7 +7,7 @@ import {
 
 const baseQuery = fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
-    credentials: "include", // Envía cookies HttpOnly en cada solicitud
+    credentials: "same-origin", // Envía cookies HttpOnly en cada solicitud
 });
 
 export type QueryError = {
