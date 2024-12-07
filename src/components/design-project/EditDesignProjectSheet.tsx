@@ -251,7 +251,6 @@ function FormWrapper(props: {
                         control={form.control}
                         name="province"
                         render={({ field }) => {
-                            console.log(field.value);
                             return (
                                 <FormItem>
                                     <FormLabel htmlFor="city">
