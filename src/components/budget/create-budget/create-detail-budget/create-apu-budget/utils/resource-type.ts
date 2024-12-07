@@ -1,4 +1,9 @@
-import { FullWorkItem, ResourceExpandedApu, ResourceType } from "@/types";
+import {
+    ApuBudget,
+    FullWorkItem,
+    ResourceExpandedApu,
+    ResourceType,
+} from "@/types";
 import { Package, Wrench, HeartHandshake, Users } from "lucide-react";
 
 export const resourceTypeNames: { [key in ResourceType]: string } = {
@@ -42,6 +47,18 @@ export const extractUniqueTypes = (workItemById: FullWorkItem): string[] => {
         return [];
     }
     const resources = workItemById.apu.apuOnResource;
+    const types = resources.map((item) => item.resource.type);
+    const uniqueTypes = Array.from(new Set(types));
+    return uniqueTypes;
+};
+
+export const extractUniqueTypesFromApuBudget = (
+    apuBudgetById: ApuBudget,
+): string[] => {
+    if (!apuBudgetById.apuResource) {
+        return [];
+    }
+    const resources = apuBudgetById.apuResource;
     const types = resources.map((item) => item.resource.type);
     const uniqueTypes = Array.from(new Set(types));
     return uniqueTypes;
