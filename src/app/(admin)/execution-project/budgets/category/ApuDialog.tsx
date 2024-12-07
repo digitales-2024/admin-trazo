@@ -109,7 +109,7 @@ function ApuForm({ apu }: { apu: ApuReturnNested }) {
                                     <FormLabel>Horas de trabajo</FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder="shadcn"
+                                            placeholder="Horas de trabajo"
                                             {...field}
                                         />
                                     </FormControl>
@@ -129,7 +129,7 @@ function ApuForm({ apu }: { apu: ApuReturnNested }) {
                                     <FormLabel>Rendimiento</FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder="shadcn"
+                                            placeholder="Rendimiento"
                                             {...field}
                                         />
                                     </FormControl>

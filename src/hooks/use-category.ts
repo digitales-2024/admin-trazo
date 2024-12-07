@@ -1,3 +1,4 @@
+import { runAndHandleError } from "@/redux/baseQuery";
 import {
     useCreateCategoryMutation,
     useDeleteCategoryMutation,
@@ -62,41 +63,15 @@ export const useCategory = (options: UseCategoryProps = {}) => {
         },
     ] = useReactivateCategoryMutation();
 
-    const onCreateCategory = async (input: Partial<Category>) => {
-        const promise = () =>
-            new Promise(async (resolve, reject) => {
-                try {
-                    const result = await createCategory(input);
-                    if (result.error) {
-                        if (
-                            typeof result.error === "object" &&
-                            "data" in result.error
-                        ) {
-                            const error = (result.error.data as CustomErrorData)
-                                .message;
-                            const message = translateError(error as string);
-                            reject(new Error(message));
-                        } else {
-                            reject(
-                                new Error(
-                                    "Ocurrió un error inesperado, por favor intenta de nuevo",
-                                ),
-                            );
-                        }
-                    } else {
-                        resolve(result);
-                    }
-                } catch (error) {
-                    reject(error);
-                }
-            });
-
-        return toast.promise(promise(), {
+    async function onCreateCategory(input: Partial<Category>) {
+        const promise = runAndHandleError(() => createCategory(input).unwrap());
+        toast.promise(promise, {
             loading: "Creando categoría...",
-            success: "Categoría creado con éxito",
+            success: "Categoría creada con éxito",
             error: (err) => err.message,
         });
-    };
+        return await promise;
+    }
 
     const onUpdateCategory = async (
         input: Partial<Category> & { id: string },
@@ -228,7 +203,10 @@ export const useCategory = (options: UseCategoryProps = {}) => {
         refetch,
         categoryById,
         refetchCategoryById,
-        createCategory: onCreateCategory,
+        /**
+         * Crea una categoria en el backend, y la devuelve.
+         */
+        onCreateCategory,
         updateCategory: onUpdateCategory,
         deleteCategory: onDeleteCategory,
         reactivateCategory: onReactivateCategory,

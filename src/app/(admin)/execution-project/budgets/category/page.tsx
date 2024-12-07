@@ -12,6 +12,7 @@ import { DataTableNested } from "@/components/data-table/DataTableNested";
 import { DataTableSkeleton } from "@/components/data-table/DataTableSkeleton";
 
 import { categoryTableColumns } from "./CategoryTableColumns";
+import { CreateCategoryDialog } from "./_category/CreateCategoryDialog";
 
 /**
  * Transforma la data que llega del backend (categorias, subcategorias, partidas, subpartidas)
@@ -132,5 +133,9 @@ function WorkItemTable({ data }: { data: Array<FullCategory> }) {
 }
 
 function WorkItemToolbarActions() {
-    return <div className="flex w-fit flex-wrap items-center gap-2"></div>;
+    return (
+        <div className="flex w-fit flex-wrap items-center gap-2">
+            <CreateCategoryDialog />
+        </div>
+    );
 }

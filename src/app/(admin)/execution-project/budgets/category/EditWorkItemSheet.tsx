@@ -168,7 +168,7 @@ export function EditWorkItemForm({
                         <FormItem>
                             <FormLabel>Nombre</FormLabel>
                             <FormControl>
-                                <Input placeholder="shadcn" {...field} />
+                                <Input placeholder="Nombre" {...field} />
                             </FormControl>
                             <FormDescription>
                                 Cómo se llama la {label}. Ejm: Concreto en
@@ -187,7 +187,7 @@ export function EditWorkItemForm({
                             <FormLabel>Unidad de medida</FormLabel>
                             <FormControl>
                                 <Input
-                                    placeholder="shadcn"
+                                    placeholder="Unidad de medida"
                                     disabled={!data.apuId}
                                     {...field}
                                 />
