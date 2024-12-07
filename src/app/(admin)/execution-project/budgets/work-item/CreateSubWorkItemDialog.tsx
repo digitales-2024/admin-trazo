@@ -1,5 +1,5 @@
 import { useCategory } from "@/hooks/use-category";
-import { useWorkItem } from "@/hooks/use-workitem";
+import { useSubWorkItem } from "@/hooks/use-subworkitem";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -23,48 +23,30 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-export function CreateWorkItemDialog({
+export function CreateSubWorkItemDialog({
     open,
     onOpenChange,
-    subcategoryId,
+    workitemId,
 }: {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    subcategoryId: string;
+    workitemId: string;
 }) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Crear una partida</DialogTitle>
+                    <DialogTitle>Crear una subpartida</DialogTitle>
                     <DialogDescription>
-                        Seleccione el tipo de partida y complete la información.
+                        Ingrese la información de la subpartida y de su APU
                     </DialogDescription>
                 </DialogHeader>
 
-                <Tabs defaultValue="apu">
-                    <TabsList className="grid w-full grid-cols-2 text-lg">
-                        <TabsTrigger value="apu">Partida con APU</TabsTrigger>
-                        <TabsTrigger value="subworkitem">
-                            Partida con Subpartidas
-                        </TabsTrigger>
-                    </TabsList>
-
-                    <TabsContent value="apu" className="space-y-4">
-                        <CreateWithApuForm
-                            setOpen={onOpenChange}
-                            subcategoryId={subcategoryId}
-                        />
-                    </TabsContent>
-                    <TabsContent value="subworkitem">
-                        <CreateWithSubitemsForm
-                            setOpen={onOpenChange}
-                            subcategoryId={subcategoryId}
-                        />
-                    </TabsContent>
-                </Tabs>
+                <CreateWithApuForm
+                    setOpen={onOpenChange}
+                    subcategoryId={workitemId}
+                />
             </DialogContent>
         </Dialog>
     );
@@ -76,13 +58,19 @@ const withApuSchema = z.object({
         .min(2, {
             message: "El nombre de la partida debe tener al menos 2 caracteres",
         })
-        .max(50),
+        .max(50, {
+            message:
+                "El nombre de la partida debe tener un máximo de 50 caracteres",
+        }),
     unit: z
         .string()
         .min(1, {
             message: "La unidad de la partida debe tener al menos 1 caracter",
         })
-        .max(50),
+        .max(50, {
+            message:
+                "El nombre de la partida debe tener un máximo de 50 caracteres",
+        }),
     apuPerformance: z.coerce
         .number({
             message: "El rendimiento debe ser un número",
@@ -107,7 +95,7 @@ function CreateWithApuForm({
     subcategoryId: string;
 }) {
     const { fullCategoryRefetch: nestedRefetch } = useCategory();
-    const { onCreate, createLoading, createSuccess } = useWorkItem();
+    const { onCreate, createLoading, createSuccess } = useSubWorkItem();
     const form = useForm<z.infer<typeof withApuSchema>>({
         resolver: zodResolver(withApuSchema),
         defaultValues: {
@@ -120,7 +108,7 @@ function CreateWithApuForm({
 
     function onSubmit(values: z.infer<typeof withApuSchema>) {
         onCreate({
-            subcategoryId,
+            parentId: subcategoryId,
             name: values.name,
             unit: values.unit,
             apu: {
@@ -149,13 +137,13 @@ function CreateWithApuForm({
                             <FormLabel>Nombre</FormLabel>
                             <FormControl>
                                 <Input
-                                    placeholder="Nombre de la partida"
+                                    placeholder="Nombre de la subpartida"
                                     {...field}
                                 />
                             </FormControl>
                             <FormDescription>
-                                Cómo se llama la partida. Ejm: Limpieza de
-                                terreno
+                                Cómo se llama la subpartida. Ejm: Concreto en
+                                Zapatas
                             </FormDescription>
                             <FormMessage />
                         </FormItem>
@@ -170,13 +158,13 @@ function CreateWithApuForm({
                             <FormLabel>Unidad de medida</FormLabel>
                             <FormControl>
                                 <Input
-                                    placeholder="Unidad de la partida"
+                                    placeholder="Unidad de la subpartida"
                                     {...field}
                                 />
                             </FormControl>
                             <FormDescription>
                                 Cuál es la unidad de medida unitaria de la
-                                partida. Ejm: m2
+                                subpartida. Ejm: m2
                             </FormDescription>
                             <FormMessage />
                         </FormItem>
@@ -193,11 +181,7 @@ function CreateWithApuForm({
                         <FormItem>
                             <FormLabel>Rendimiento del APU</FormLabel>
                             <FormControl>
-                                <Input
-                                    placeholder="Rendimiento"
-                                    {...field}
-                                    type="number"
-                                />
+                                <Input placeholder="Rendimiento" {...field} />
                             </FormControl>
                             <FormDescription>
                                 Rendimiento a aplicar a todo el APU. Ejm: 25.00
@@ -216,7 +200,6 @@ function CreateWithApuForm({
                             <FormControl>
                                 <Input
                                     placeholder="Horas de trabajo"
-                                    type="number"
                                     {...field}
                                 />
                             </FormControl>
@@ -234,88 +217,9 @@ function CreateWithApuForm({
                     confirmar la creación de esta partida
                 </p>
 
-                {/* Boton para crear partida */}
                 <div className="text-right">
                     <Button disabled={!form.formState.isDirty || createLoading}>
-                        Crear partida
-                    </Button>
-                </div>
-            </form>
-        </Form>
-    );
-}
-
-const withSubitemsSchema = z.object({
-    name: z
-        .string()
-        .min(1, {
-            message: "El nombre de la partida debe tener al menos 1 caracter",
-        })
-        .max(50),
-});
-
-function CreateWithSubitemsForm({
-    setOpen,
-    subcategoryId,
-}: {
-    setOpen: (v: boolean) => void;
-    subcategoryId: string;
-}) {
-    const { fullCategoryRefetch: nestedRefetch } = useCategory();
-    const { onCreate, createLoading, createSuccess } = useWorkItem();
-    const form = useForm<z.infer<typeof withSubitemsSchema>>({
-        resolver: zodResolver(withSubitemsSchema),
-        defaultValues: {
-            name: "",
-        },
-    });
-    function onSubmit(values: z.infer<typeof withSubitemsSchema>) {
-        onCreate({
-            subcategoryId,
-            name: values.name,
-        });
-    }
-
-    useEffect(() => {
-        if (createSuccess) {
-            form.reset();
-            nestedRefetch();
-            setOpen(false);
-        }
-    }, [createSuccess, form, setOpen, nestedRefetch]);
-    return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Nombre</FormLabel>
-                            <FormControl>
-                                <Input
-                                    placeholder="Nombre de la partida"
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                Cómo se llama la partida. Ejm: Limpieza de
-                                terreno
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
-                <p className="text-sm">
-                    Podrás crear varias subpartidas despues de confirmar la
-                    creación de esta partida.
-                </p>
-
-                {/* Boton para crear partida */}
-                <div className="text-right">
-                    <Button disabled={!form.formState.isDirty || createLoading}>
-                        Crear partida
+                        Crear subpartida
                     </Button>
                 </div>
             </form>

@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
 import { adminApi } from "./services/adminApi";
+import { apuApi } from "./services/apuApi";
 import { authApi } from "./services/authApi";
 import { budgetsApi } from "./services/budgetApi";
 import { businessApi } from "./services/businessApi";
@@ -16,6 +17,7 @@ import { resourceApi } from "./services/resourceApi";
 import { rolesApi } from "./services/rolesApi";
 import { spacesApi } from "./services/spaceApi";
 import { subcategoryApi } from "./services/subcategoryApi";
+import { subworkitemApi } from "./services/subworkitemApi";
 import { usersApi } from "./services/usersApi";
 import { workitemApi } from "./services/workitemApi";
 import { zoningApi } from "./services/zoningApi";
@@ -24,6 +26,7 @@ export const store = configureStore({
     reducer: {
         [authApi.reducerPath]: authApi.reducer,
         [adminApi.reducerPath]: adminApi.reducer,
+        [apuApi.reducerPath]: apuApi.reducer,
         [businessApi.reducerPath]: businessApi.reducer,
         [categoryApi.reducerPath]: categoryApi.reducer,
         [designProjectApi.reducerPath]: designProjectApi.reducer,
@@ -40,6 +43,7 @@ export const store = configureStore({
         [budgetsApi.reducerPath]: budgetsApi.reducer,
         [subcategoryApi.reducerPath]: subcategoryApi.reducer,
         [workitemApi.reducerPath]: workitemApi.reducer,
+        [subworkitemApi.reducerPath]: subworkitemApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
@@ -64,6 +68,7 @@ export const store = configureStore({
         })
             .concat(authApi.middleware)
             .concat(adminApi.middleware)
+            .concat(apuApi.middleware)
             .concat(businessApi.middleware)
             .concat(categoryApi.middleware)
             .concat(designProjectApi.middleware)
@@ -78,6 +83,7 @@ export const store = configureStore({
             .concat(observationApi.middleware)
             .concat(resourceApi.middleware)
             .concat(workitemApi.middleware)
+            .concat(subworkitemApi.middleware)
             .concat(budgetsApi.middleware)
             .concat(categoryApi.middleware)
             .concat(subcategoryApi.middleware),

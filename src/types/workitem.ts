@@ -7,6 +7,11 @@ export type WorkItemCreate = {
     apu?: ApuCreate;
 };
 
+export type WorkItemEdit = {
+    name?: string;
+    unit?: string;
+};
+
 export type WorkItemGetAll = {
     name: string;
     id: string;
