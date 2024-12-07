@@ -1,7 +1,8 @@
 "use client";
 
 import { useCategory } from "@/hooks/use-category";
-import { CategoryGet, GenericTableItem } from "@/types/category";
+import { useProfile } from "@/hooks/use-profile";
+import { FullCategory, GenericTableItem } from "@/types/category";
 import { useMemo } from "react";
 
 import { ErrorPage } from "@/components/common/ErrorPage";
@@ -16,24 +17,24 @@ import { categoryTableColumns } from "./CategoryTableColumns";
  * Transforma la data que llega del backend (categorias, subcategorias, partidas, subpartidas)
  * a un formato que el DataTableNested acepta (un unico tipo de dato recursivo)
  */
-function transformData(data: Array<CategoryGet>): Array<GenericTableItem> {
+function transformData(data: Array<FullCategory>): Array<GenericTableItem> {
     return data.map(
         (category): GenericTableItem => ({
             id: category.id,
             name: category.name,
-            isActive: category.isActive,
+            isActive: category.isActive ?? false,
             entityName: "Category",
             children: category.subcategories.map(
                 (subcategory): GenericTableItem => ({
                     id: subcategory.id,
                     name: subcategory.name,
-                    isActive: subcategory.isActive,
+                    isActive: subcategory.isActive ?? false,
                     entityName: "Subcategory",
                     children: subcategory.workItems.map(
                         (workitem): GenericTableItem => ({
                             id: workitem.id,
                             name: workitem.name,
-                            isActive: workitem.isActive,
+                            isActive: workitem.isActive ?? false,
                             unit: workitem.unit,
                             unitCost: workitem.unitCost,
                             apuId: workitem.apuId,
@@ -42,7 +43,7 @@ function transformData(data: Array<CategoryGet>): Array<GenericTableItem> {
                                 (sub): GenericTableItem => ({
                                     id: sub.id,
                                     name: sub.name,
-                                    isActive: sub.isActive,
+                                    isActive: sub.isActive ?? false,
                                     unit: sub.unit,
                                     unitCost: sub.unitCost,
                                     apuId: sub.apuId,
@@ -59,7 +60,8 @@ function transformData(data: Array<CategoryGet>): Array<GenericTableItem> {
 }
 
 export default function WorkItemPage() {
-    const { nestedData: data, nestedDataLoading: isLoading } = useCategory();
+    const { fullCategoryData: data, fullCategoryDataLoading: isLoading } =
+        useCategory();
 
     if (isLoading) {
         return (
@@ -102,17 +104,24 @@ export default function WorkItemPage() {
     );
 }
 
-function WorkItemTable({ data }: { data: Array<CategoryGet> }) {
+function WorkItemTable({ data }: { data: Array<FullCategory> }) {
+    const { user } = useProfile();
+
     // preprocess the data
     const dataMemo = useMemo(() => {
         return transformData(data);
     }, [data]);
 
+    const columns = useMemo(
+        () => categoryTableColumns(user?.isSuperAdmin || false),
+        [user],
+    );
+
     return (
         <>
             <DataTableNested
                 data={dataMemo}
-                columns={categoryTableColumns}
+                columns={columns}
                 getSubRows={(row) => row.children}
                 placeholder="Buscar partidas"
                 toolbarActions={<WorkItemToolbarActions />}

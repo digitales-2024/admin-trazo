@@ -1,43 +1,28 @@
-import { runAndHandleError } from "@/redux/baseQuery";
 import {
-    useCreateWorkItemMutation,
-    useDeleteWorkItemMutation,
-    useEditWorkItemMutation,
-    useReactivateWorkItemMutation,
-    useGetWorkItemByIdQuery,
-} from "@/redux/services/workitemApi";
+    useCreateSubWorkItemMutation,
+    useDeleteSubWorkItemMutation,
+    useEditSubWorkItemMutation,
+    useReactivateSubWorkItemMutation,
+} from "@/redux/services/subworkitemApi";
 import { CustomErrorData } from "@/types";
-import { WorkItemCreate, WorkItemEdit } from "@/types/workitem";
+import { SubWorkItemCreate, SubWorkItemEdit } from "@/types/subworkitem";
 import { translateError } from "@/utils/translateError";
 import { toast } from "sonner";
 
-interface UseWorkItemsProps {
-    id?: string;
-}
-
-export const useWorkItem = (options: UseWorkItemsProps = {}) => {
-    const { id } = options;
-
-    const { data: workItemById, refetch: refetchWorkItemById } =
-        useGetWorkItemByIdQuery(
-            { id: id as string },
-            {
-                skip: !id, // Evita hacer la query si no hay id
-            },
-        );
-
+export const useSubWorkItem = () => {
     const [create, { isLoading: createLoading, isSuccess: createSuccess }] =
-        useCreateWorkItemMutation();
+        useCreateSubWorkItemMutation();
     const [edit, { isLoading: editLoading, isSuccess: editSuccess }] =
-        useEditWorkItemMutation();
-    const [deleteFn] = useDeleteWorkItemMutation();
-    const [reactivate] = useReactivateWorkItemMutation();
+        useEditSubWorkItemMutation();
+    const [deleteFn] = useDeleteSubWorkItemMutation();
+    const [reactivate] = useReactivateSubWorkItemMutation();
 
-    const onCreate = async (input: WorkItemCreate) => {
+    const onCreate = async (input: SubWorkItemCreate) => {
         const promise = () =>
             new Promise(async (resolve, reject) => {
                 try {
                     const result = await create(input);
+                    console.log(result);
                     if (
                         result.error &&
                         typeof result.error === "object" &&
@@ -68,7 +53,10 @@ export const useWorkItem = (options: UseWorkItemsProps = {}) => {
         });
     };
 
-    const onEditWorkItem = async (data: { body: WorkItemEdit; id: string }) => {
+    const onEditSubWorkItem = async (data: {
+        body: SubWorkItemEdit;
+        id: string;
+    }) => {
         const promise = () =>
             new Promise(async (resolve, reject) => {
                 try {
@@ -104,7 +92,7 @@ export const useWorkItem = (options: UseWorkItemsProps = {}) => {
         });
     };
 
-    const onDeleteWorkItem = async (data: string) => {
+    const onDelete = async (data: string) => {
         const promise = () =>
             new Promise(async (resolve, reject) => {
                 try {
@@ -140,28 +128,50 @@ export const useWorkItem = (options: UseWorkItemsProps = {}) => {
         });
     };
 
-    async function reactivateWorkItem(id: string) {
-        const promise = runAndHandleError(() =>
-            reactivate({ ids: [id] }).unwrap(),
-        );
-        toast.promise(promise, {
-            loading: "Reactivando partidas...",
-            success: "Partidas reactivadas con éxito",
+    const reactivateSubWorkItem = async (id: string) => {
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                try {
+                    const result = await reactivate({ ids: [id] });
+                    if (result.error) {
+                        if (
+                            typeof result.error === "object" &&
+                            "data" in result.error
+                        ) {
+                            const error = (result.error.data as CustomErrorData)
+                                .message;
+                            const message = translateError(error as string);
+                            reject(new Error(message));
+                        } else {
+                            reject(
+                                new Error(
+                                    "Ocurrió un error inesperado, por favor intenta de nuevo",
+                                ),
+                            );
+                        }
+                    } else {
+                        resolve(result);
+                    }
+                } catch (error) {
+                    reject(error);
+                }
+            });
+
+        return toast.promise(promise(), {
+            loading: "Reactivando subpartidas...",
+            success: "Subpartida reactivadas con éxito",
             error: (err) => err.message,
         });
-        return await promise;
-    }
+    };
 
     return {
         onCreate,
         createLoading,
         createSuccess,
-        onEditWorkItem,
+        onEditSubWorkItem,
         editLoading,
         editSuccess,
-        onDeleteWorkItem,
-        reactivateWorkItem,
-        workItemById,
-        refetchWorkItemById,
+        onDelete,
+        reactivateSubWorkItem,
     };
 };

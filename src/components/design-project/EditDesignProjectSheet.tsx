@@ -7,7 +7,7 @@ import {
     DesignProjectSummaryData,
 } from "@/types/designProject";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format, parse } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -317,11 +317,7 @@ function FormWrapper(props: {
                                     <DatePicker
                                         value={
                                             field.value
-                                                ? parse(
-                                                      field.value,
-                                                      "yyyy-MM-dd",
-                                                      new Date(),
-                                                  )
+                                                ? parseISO(field.value)
                                                 : undefined
                                         }
                                         onChange={(date) => {
