@@ -60,8 +60,14 @@ const WorkItemRow: React.FC<WorkItemRowProps> = ({
 }) => {
     const [showApuDialog, setShowApuDialog] = useState(false);
 
-    const handleApuSuccess = (apuId: string) => {
+    const handleApuSuccess = (apuId: string, totalCost: number) => {
         onUpdateWorkItemApuId(category.id, subcategory.id, item.id, apuId);
+        onUpdateWorkItemUnitPrice(
+            category.id,
+            subcategory.id,
+            item.id,
+            totalCost,
+        );
     };
 
     return (
@@ -133,6 +139,7 @@ const WorkItemRow: React.FC<WorkItemRowProps> = ({
                             onOpenChange={setShowApuDialog}
                             id={item.id}
                             onSuccess={handleApuSuccess}
+                            apuId={item.apuId}
                         />
                         <Button
                             type="button"
