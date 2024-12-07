@@ -323,7 +323,10 @@ export function ApuDialog({
                         className="mb-6"
                     >
                         <TabsList className="grid w-full grid-cols-2">
-                            <TabsTrigger value="template">
+                            <TabsTrigger
+                                value="template"
+                                disabled={templateResourceTypes.length === 0}
+                            >
                                 <Pin className="mr-2 h-4 w-4 flex-shrink-0" />
                                 <span className="truncate text-ellipsis">
                                     Plantilla
@@ -340,7 +343,7 @@ export function ApuDialog({
                     <ApuHeadInformation
                         name={
                             activeTab === "new" && apuBudgetById
-                                ? "Presupuesto APU"
+                                ? workItemById?.name || ""
                                 : workItemById?.name || ""
                         }
                         performance={
