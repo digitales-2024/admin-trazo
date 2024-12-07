@@ -14,7 +14,8 @@ interface ApuActionButtonsProps {
     templateResources: Record<string, ResourceApu[]>;
     newResources: Record<string, ResourceApu[]>;
     onOpenChange: (open: boolean) => void;
-    onSuccess: (apuId: string) => void;
+    onSuccess: (apuId: string, totalCost: number) => void;
+    apuId?: string;
 }
 
 const ApuActionButtons: React.FC<ApuActionButtonsProps> = ({
@@ -27,19 +28,35 @@ const ApuActionButtons: React.FC<ApuActionButtonsProps> = ({
     newResources,
     onOpenChange,
     onSuccess,
+    apuId,
 }) => {
     const { onCreateApuBudget, isSuccessCreateApuBudget, dataCreateApuBudget } =
         useApuBudget();
-
+    const { onUpdateApuBudget, isSuccessUpdateApuBudget, dataUpdateApuBudget } =
+        useApuBudget();
     useEffect(() => {
         if (isSuccessCreateApuBudget) {
             if (dataCreateApuBudget) {
-                console.log("Apu creado", dataCreateApuBudget.data.id);
-                onSuccess(dataCreateApuBudget.data.id);
+                onSuccess(
+                    dataCreateApuBudget.data.id,
+                    dataCreateApuBudget.data.unitCost,
+                );
             }
             onOpenChange(false);
         }
     }, [isSuccessCreateApuBudget]);
+
+    useEffect(() => {
+        if (isSuccessUpdateApuBudget) {
+            if (dataUpdateApuBudget) {
+                onSuccess(
+                    dataUpdateApuBudget.data.id,
+                    dataUpdateApuBudget.data.unitCost,
+                );
+            }
+            onOpenChange(false);
+        }
+    }, [isSuccessUpdateApuBudget]);
 
     const transformResources = (resources: Record<string, ResourceApu[]>) => {
         return Object.values(resources)
@@ -67,14 +84,22 @@ const ApuActionButtons: React.FC<ApuActionButtonsProps> = ({
                 workHours: newWorkHours,
                 resources: transformResources(newResources),
             };
-            onCreateApuBudget(payload);
+            if (apuId) {
+                onUpdateApuBudget({ id: apuId, ...payload });
+            } else {
+                onCreateApuBudget(payload);
+            }
         }
     };
 
     return (
         <div className="flex w-full flex-row-reverse gap-2">
             <Button className="w-full" onClick={handleClick}>
-                {activeTab === "template" ? "Usar Plantilla" : "Crear Nuevo"}
+                {activeTab === "template"
+                    ? "Usar Plantilla"
+                    : apuId
+                      ? "Actualizar"
+                      : "Crear Nuevo"}
             </Button>
             <DialogClose asChild>
                 <Button type="button" variant="outline" className="w-full">
