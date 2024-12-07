@@ -443,7 +443,10 @@ export default function BudgetCreator() {
                                         workItems: subcat.workItems.map(
                                             (item) =>
                                                 item.id === itemId
-                                                    ? { ...item, unitPrice }
+                                                    ? {
+                                                          ...item,
+                                                          unitCost: unitPrice,
+                                                      }
                                                     : item,
                                         ),
                                     }
@@ -454,6 +457,8 @@ export default function BudgetCreator() {
             ),
         }));
     };
+
+    console.log("este es mi budget", JSON.stringify(budget, null, 2));
 
     const updateSubWorkItem = (
         categoryId: string,
