@@ -80,6 +80,9 @@ export default function BudgetCreator() {
                                 draggedItem.id,
                                 draggedItem.unit || "",
                                 draggedItem.unitCost || 0,
+                                draggedItem.subWorkItems
+                                    ? draggedItem.subWorkItems.length > 0
+                                    : false,
                             );
                         }
                         break;
@@ -182,6 +185,7 @@ export default function BudgetCreator() {
         id: string,
         unit: string,
         unitCost: number,
+        sub: boolean,
     ) => {
         const newWorkItem: WorkItemDragCategory = {
             id: id,
@@ -190,6 +194,7 @@ export default function BudgetCreator() {
             quantity: 0,
             unitCost: unitCost,
             unit: unit,
+            sub: sub,
         };
 
         const { categoryId, subcategoryId } = getParentIDs("workItem", id) as {
