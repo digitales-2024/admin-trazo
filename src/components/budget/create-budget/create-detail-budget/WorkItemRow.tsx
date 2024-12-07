@@ -122,13 +122,13 @@ const WorkItemRow: React.FC<WorkItemRowProps> = ({
                     <div className="flex items-center space-x-2">
                         <Input
                             type="number"
-                            value={item.unitCost || 0}
+                            value={(item.unitCost ?? 0).toFixed(2) || "0.00"} // Asegurar que el valor tenga dos decimales
                             onChange={(e) =>
                                 onUpdateWorkItemUnitPrice(
                                     category.id,
                                     subcategory.id,
                                     item.id,
-                                    Number(e.target.value),
+                                    Number(Number(e.target.value).toFixed(2)), // Asegurar que el valor ingresado tenga dos decimales
                                 )
                             }
                             className="w-20"
