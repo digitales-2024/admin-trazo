@@ -9,7 +9,7 @@ import {
 } from "@/types";
 import { DragDropContext } from "@hello-pangea/dnd";
 import { BarChart2 } from "lucide-react";
-import React, { useState } from "react";
+import React from "react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -24,14 +24,15 @@ import {
     findDragItemById,
 } from "./utils/budget-utils";
 
-export default function BudgetCreator() {
-    const [budget, setBudget] = useState<Budget>({
-        categories: [],
-        overheadPercentage: 15,
-        profitPercentage: 10,
-        taxPercentage: 18,
-    });
+interface BudgetCreatorProps {
+    budget: Budget;
+    setBudget: React.Dispatch<React.SetStateAction<Budget>>;
+}
 
+export const BudgetCreator: React.FC<BudgetCreatorProps> = ({
+    budget,
+    setBudget,
+}) => {
     console.log(
         "este es el budget de creator",
         JSON.stringify(budget, null, 2),
@@ -153,6 +154,7 @@ export default function BudgetCreator() {
         const newCategory: FullCategory = {
             id: id,
             name,
+            subtotal: 0,
             subcategories: [],
         };
         setBudget((prev) => ({
@@ -166,6 +168,7 @@ export default function BudgetCreator() {
             id: id,
             name,
             workItems: [],
+            subtotal: 0,
         };
         setBudget((prev) => ({
             ...prev,
@@ -195,6 +198,7 @@ export default function BudgetCreator() {
             unitCost: unitCost,
             unit: unit,
             sub: sub,
+            subtotal: 0,
         };
 
         const { categoryId, subcategoryId } = getParentIDs("workItem", id) as {
@@ -237,6 +241,7 @@ export default function BudgetCreator() {
             quantity: 0,
             unitCost: unitCost,
             unit: unit,
+            subtotal: 0,
         };
         const { categoryId, subcategoryId, workItemId } = getParentIDs(
             "subWorkItem",
@@ -577,6 +582,8 @@ export default function BudgetCreator() {
                                                     name: "",
                                                     quantity,
                                                     unitCost,
+                                                    subtotal:
+                                                        quantity * unitCost,
                                                 },
                                             )
                                         }
@@ -602,4 +609,4 @@ export default function BudgetCreator() {
             </div>
         </DragDropContext>
     );
-}
+};

@@ -31,8 +31,10 @@ export const useBudgets = (options: UseBudgetsProps = {}) => {
             },
         );
 
-    const [createBudget, { isSuccess: isSuccessCreateBudget }] =
-        useCreateBudgetMutation();
+    const [
+        createBudget,
+        { isSuccess: isSuccessCreateBudget, isLoading: isLoadingCreateBudget },
+    ] = useCreateBudgetMutation();
 
     const [updateBudgetStatus, { isSuccess: isSuccessUpdateBudgetStatus }] =
         useUpdateStatusBudgetMutation();
@@ -165,6 +167,7 @@ export const useBudgets = (options: UseBudgetsProps = {}) => {
         refetch,
         onCreateBudget,
         isSuccessCreateBudget,
+        isLoadingCreateBudget,
         onUpdateBudgetStatus,
         isSuccessUpdateBudgetStatus,
         budgetById,
