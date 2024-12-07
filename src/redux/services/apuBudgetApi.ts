@@ -3,6 +3,10 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 
 import baseQueryWithReauth from "../baseQuery";
 
+interface GetApuBudgetsByIdProps {
+    id: string;
+}
+
 export const apuBudgetApi = createApi({
     reducerPath: "apuBudgetApi",
     baseQuery: baseQueryWithReauth,
@@ -18,7 +22,33 @@ export const apuBudgetApi = createApi({
             }),
             invalidatesTags: ["ApuBudget"],
         }),
+        // Obtener apu por id en ApuBudget
+        getApuBudgetById: build.query<ApuBudget, GetApuBudgetsByIdProps>({
+            query: ({ id }) => ({
+                url: `/apu-budget/${id}`,
+                method: "GET",
+                credentials: "include",
+            }),
+            providesTags: ["ApuBudget"],
+        }),
+        //Actualizar presupuesto
+        updateApuBudget: build.mutation<
+            ApuBudget,
+            Partial<ApuBudget> & { id: string }
+        >({
+            query: ({ id, ...body }) => ({
+                url: `/apu-budget/${id}`,
+                method: "PATCH",
+                body,
+                credentials: "include",
+            }),
+            invalidatesTags: ["ApuBudget"],
+        }),
     }),
 });
 
-export const { useCreateApuBudgetMutation } = apuBudgetApi;
+export const {
+    useCreateApuBudgetMutation,
+    useGetApuBudgetByIdQuery,
+    useUpdateApuBudgetMutation,
+} = apuBudgetApi;
