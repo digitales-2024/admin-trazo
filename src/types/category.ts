@@ -27,6 +27,7 @@ export type WorkItemDragCategory = {
     unitCost?: number;
     apuId?: string;
     quantity?: number;
+    sub?: boolean;
     type?: "category" | "subcategory" | "workItem" | "subWorkItem";
     isActive?: boolean;
     subWorkItems: SubworkItemDragCategory[];
