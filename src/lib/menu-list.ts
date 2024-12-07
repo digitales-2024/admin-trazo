@@ -96,9 +96,9 @@ export function getMenuList(pathname: string): Group[] {
                             icon: FileChartColumnIncreasing,
                         },
                         {
-                            href: "/execution-project/budgets/work-item",
-                            label: "Partidas",
-                            active: pathname.endsWith("/budgets/work-item"),
+                            href: "/execution-project/budgets/category",
+                            label: "Categorías",
+                            active: pathname.endsWith("/budgets/category"),
                             icon: FileChartColumnIncreasing,
                         },
                         {
