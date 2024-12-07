@@ -1,5 +1,6 @@
 "use client";
 
+import { useApuBudget } from "@/hooks/use-apu-budget";
 import { useWorkItem } from "@/hooks/use-workitem";
 import { ResourceApu, ResourceExpandedApu, ResourceType } from "@/types";
 import { SquarePlus, Pin } from "lucide-react";
@@ -22,6 +23,7 @@ import { ResourceTypeSelectorApu } from "./ResourceTypeSelectorApu";
 import {
     convertToResourceExpanded,
     extractUniqueTypes,
+    extractUniqueTypesFromApuBudget,
     resourceTypeColors,
     resourceTypeIcons,
     resourceTypeNames,
@@ -31,7 +33,8 @@ interface ApuDialogProps {
     id: string;
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    onSuccess: (apuId: string) => void;
+    onSuccess: (apuId: string, totalCost: number) => void;
+    apuId?: string;
 }
 
 export function ApuDialog({
@@ -39,12 +42,21 @@ export function ApuDialog({
     open,
     onOpenChange,
     onSuccess,
+    apuId,
 }: ApuDialogProps) {
     const { workItemById } = useWorkItem({ id });
-    const [activeTab, setActiveTab] = React.useState("new");
-    const [resourceTypes, setResourceTypes] = React.useState<
+    const { apuBudgetById } = useApuBudget({ id: apuId || "" });
+
+    const [activeTab, setActiveTab] = React.useState("template");
+
+    // Separación de tipos de recursos
+    const [templateResourceTypes, setTemplateResourceTypes] = React.useState<
         ResourceExpandedApu[]
     >([]);
+    const [newResourceTypes, setNewResourceTypes] = React.useState<
+        ResourceExpandedApu[]
+    >([]);
+
     const [templateResources, setTemplateResources] = React.useState<
         Record<string, ResourceApu[]>
     >({});
@@ -62,19 +74,26 @@ export function ApuDialog({
     const [newWorkHours, setNewWorkHours] = React.useState(0);
 
     React.useEffect(() => {
-        if (workItemById) {
-            const uniqueTypes = extractUniqueTypes(workItemById);
-            const resourceExpandedList = convertToResourceExpanded(uniqueTypes);
-            setResourceTypes(resourceExpandedList);
+        // Inicializar tipos y recursos de la plantilla desde workItemById
+        if (
+            workItemById &&
+            workItemById.apu &&
+            workItemById.apu.apuOnResource
+        ) {
+            const uniqueTypesFromWorkItem = extractUniqueTypes(workItemById);
+            const resourceExpandedListTemplate = convertToResourceExpanded(
+                uniqueTypesFromWorkItem,
+            );
+            setTemplateResourceTypes(resourceExpandedListTemplate);
 
-            const initialResources: Record<string, ResourceApu[]> = {};
+            const initialTemplateResources: Record<string, ResourceApu[]> = {};
             workItemById.apu.apuOnResource.forEach((apuResource) => {
                 const { resource, quantity, group } = apuResource;
                 const typeName = resourceTypeNames[resource.type];
-                if (!initialResources[typeName]) {
-                    initialResources[typeName] = [];
+                if (!initialTemplateResources[typeName]) {
+                    initialTemplateResources[typeName] = [];
                 }
-                initialResources[typeName].push({
+                initialTemplateResources[typeName].push({
                     id: resource.id,
                     name: resource.name,
                     unit: resource.unit,
@@ -85,15 +104,87 @@ export function ApuDialog({
                     type: resource.type,
                 });
             });
-            setTemplateResources(initialResources);
-            setNewResources(initialResources);
+            setTemplateResources(initialTemplateResources);
             setTemplatePerformance(workItemById.apu.performance || 0);
             setTemplateWorkHours(workItemById.apu.workHours || 0);
+        }
+
+        // Inicializar tipos y recursos nuevos desde apuBudgetById si está disponible
+        if (apuBudgetById && apuBudgetById.apuResource) {
+            const uniqueTypesFromApuBudget =
+                extractUniqueTypesFromApuBudget(apuBudgetById);
+            const resourceExpandedListNew = convertToResourceExpanded(
+                uniqueTypesFromApuBudget,
+            );
+            setNewResourceTypes(resourceExpandedListNew);
+
+            const initialNewResourcesFromApuBudget: Record<
+                string,
+                ResourceApu[]
+            > = {};
+            apuBudgetById.apuResource.forEach((apuResource) => {
+                const { resource, quantity, group } = apuResource;
+                const typeName = resourceTypeNames[resource.type];
+                if (!initialNewResourcesFromApuBudget[typeName]) {
+                    initialNewResourcesFromApuBudget[typeName] = [];
+                }
+                initialNewResourcesFromApuBudget[typeName].push({
+                    id: resource.id,
+                    name: resource.name,
+                    unit: resource.unit,
+                    quantity,
+                    group,
+                    unitCost: resource.unitCost,
+                    totalCost: quantity * resource.unitCost,
+                    type: resource.type,
+                });
+            });
+            setNewResources(initialNewResourcesFromApuBudget);
+            setNewPerformance(apuBudgetById.performance || 0);
+            setNewWorkHours(apuBudgetById.workHours || 0);
+
+            // Cambiar a la pestaña "new" si hay recursos en APU Budget
+            if (uniqueTypesFromApuBudget.length > 0) {
+                setActiveTab("new");
+            }
+        } else if (
+            workItemById &&
+            workItemById.apu &&
+            workItemById.apu.apuOnResource
+        ) {
+            // Si no hay apuBudgetById, inicializar newResourceTypes y newResources desde workItemById
+            const uniqueTypesFromWorkItem = extractUniqueTypes(workItemById);
+            const resourceExpandedListNew = convertToResourceExpanded(
+                uniqueTypesFromWorkItem,
+            );
+            setNewResourceTypes(resourceExpandedListNew);
+
+            const initialNewResourcesFromWorkItem: Record<
+                string,
+                ResourceApu[]
+            > = {};
+            workItemById.apu.apuOnResource.forEach((apuResource) => {
+                const { resource, quantity, group } = apuResource;
+                const typeName = resourceTypeNames[resource.type];
+                if (!initialNewResourcesFromWorkItem[typeName]) {
+                    initialNewResourcesFromWorkItem[typeName] = [];
+                }
+                initialNewResourcesFromWorkItem[typeName].push({
+                    id: resource.id,
+                    name: resource.name,
+                    unit: resource.unit,
+                    quantity,
+                    group,
+                    unitCost: resource.unitCost,
+                    totalCost: quantity * resource.unitCost,
+                    type: resource.type,
+                });
+            });
+            setNewResources(initialNewResourcesFromWorkItem);
             setNewPerformance(workItemById.apu.performance || 0);
             setNewWorkHours(workItemById.apu.workHours || 0);
-            setActiveTab(uniqueTypes.length > 0 ? "template" : "new");
         }
-    }, [workItemById]);
+    }, [workItemById, apuBudgetById]);
 
     const handleAddResource = (
         type: string,
@@ -150,22 +241,25 @@ export function ApuDialog({
     };
 
     const handleRemoveResourceType = (name: string) => {
-        // Actualizar los recursos según la pestaña activa
         if (activeTab === "template") {
             setTemplateResources((prev) => {
-                const rest = { ...prev };
-                delete rest[name];
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const { [name]: removed, ...rest } = prev;
                 return rest;
             });
+            setTemplateResourceTypes((prev) =>
+                prev.filter((type) => type.name !== name),
+            );
         } else {
             setNewResources((prev) => {
-                const rest = { ...prev };
-                delete rest[name];
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const { [name]: removed, ...rest } = prev;
                 return rest;
             });
+            setNewResourceTypes((prev) =>
+                prev.filter((type) => type.name !== name),
+            );
         }
-
-        setResourceTypes((prev) => prev.filter((type) => type.name !== name));
     };
 
     const handleAddResourceType = () => {
@@ -175,7 +269,7 @@ export function ApuDialog({
     const handleConfirmAddResourceType = () => {
         if (
             newResourceType &&
-            !resourceTypes.some(
+            !newResourceTypes.some(
                 (type) =>
                     type.name ===
                     resourceTypeNames[newResourceType as ResourceType],
@@ -186,18 +280,11 @@ export function ApuDialog({
                 icon: resourceTypeIcons[newResourceType as ResourceType],
                 color: resourceTypeColors[newResourceType as ResourceType],
             };
-            setResourceTypes((prev) => [...prev, newType]);
-            if (activeTab === "template") {
-                setTemplateResources((prev) => ({
-                    ...prev,
-                    [resourceTypeNames[newResourceType as ResourceType]]: [],
-                }));
-            } else {
-                setNewResources((prev) => ({
-                    ...prev,
-                    [resourceTypeNames[newResourceType as ResourceType]]: [],
-                }));
-            }
+            setNewResourceTypes((prev) => [...prev, newType]);
+            setNewResources((prev) => ({
+                ...prev,
+                [resourceTypeNames[newResourceType as ResourceType]]: [],
+            }));
             setNewResourceType("");
             setIsAddingResourceType(false);
         }
@@ -225,8 +312,8 @@ export function ApuDialog({
                 <DialogHeader>
                     <DialogTitle>Análisis de Precios Unitarios</DialogTitle>
                     <DialogDescription>
-                        Elige una plantilla o crea un nuevo nuevo analisis de
-                        precios unitarios
+                        Elige una plantilla o crea un nuevo análisis de precios
+                        unitarios
                     </DialogDescription>
                 </DialogHeader>
                 <ScrollArea className="h-[80vh] gap-4 p-4">
@@ -251,7 +338,11 @@ export function ApuDialog({
                         </TabsList>
                     </Tabs>
                     <ApuHeadInformation
-                        name={workItemById?.name || ""}
+                        name={
+                            activeTab === "new" && apuBudgetById
+                                ? "Presupuesto APU"
+                                : workItemById?.name || ""
+                        }
                         performance={
                             activeTab === "template"
                                 ? templatePerformance
@@ -290,54 +381,73 @@ export function ApuDialog({
                                     handleAddResourceType={
                                         handleAddResourceType
                                     }
-                                    resourceTypes={resourceTypes}
+                                    resourceTypes={newResourceTypes}
                                 />
                             </div>
                         )}
-                        {resourceTypes.map(({ name, icon, color }) => (
-                            <ResourceTypeCard
-                                key={name}
-                                name={name}
-                                performance={
-                                    activeTab === "template"
-                                        ? templatePerformance
-                                        : newPerformance
-                                }
-                                workHours={
-                                    activeTab === "template"
-                                        ? templateWorkHours
-                                        : newWorkHours
-                                }
-                                icon={icon}
-                                color={color}
-                                expandedType={expandedType}
-                                setExpandedType={setExpandedType}
-                                calculateSubtotal={calculateSubtotal}
-                                activeTab={activeTab}
-                                handleRemoveResourceType={
-                                    handleRemoveResourceType
-                                }
-                                handleAddResource={handleAddResource}
-                                resources={
-                                    activeTab === "template"
-                                        ? templateResources[name]
-                                        : newResources[name] || []
-                                }
-                                handleRemoveResource={handleRemoveResource}
-                                handleUpdateResource={(
-                                    type,
-                                    updatedResource,
-                                ) => {
-                                    if (activeTab === "template") {
-                                        setTemplateResources((prev) => ({
-                                            ...prev,
-                                            [type]: prev[type].map((r) =>
-                                                r.id === updatedResource.id
-                                                    ? updatedResource
-                                                    : r,
-                                            ),
-                                        }));
-                                    } else {
+                        {activeTab === "template" &&
+                            templateResourceTypes.map(
+                                ({ name, icon, color }) => (
+                                    <ResourceTypeCard
+                                        key={name}
+                                        name={name}
+                                        performance={templatePerformance}
+                                        workHours={templateWorkHours}
+                                        icon={icon}
+                                        color={color}
+                                        expandedType={expandedType}
+                                        setExpandedType={setExpandedType}
+                                        calculateSubtotal={calculateSubtotal}
+                                        activeTab={activeTab}
+                                        handleRemoveResourceType={
+                                            handleRemoveResourceType
+                                        }
+                                        handleAddResource={handleAddResource}
+                                        resources={
+                                            templateResources[name] || []
+                                        }
+                                        handleRemoveResource={
+                                            handleRemoveResource
+                                        }
+                                        handleUpdateResource={(
+                                            type,
+                                            updatedResource,
+                                        ) => {
+                                            setTemplateResources((prev) => ({
+                                                ...prev,
+                                                [type]: prev[type].map((r) =>
+                                                    r.id === updatedResource.id
+                                                        ? updatedResource
+                                                        : r,
+                                                ),
+                                            }));
+                                        }}
+                                    />
+                                ),
+                            )}
+                        {activeTab === "new" &&
+                            newResourceTypes.map(({ name, icon, color }) => (
+                                <ResourceTypeCard
+                                    key={name}
+                                    name={name}
+                                    performance={newPerformance}
+                                    workHours={newWorkHours}
+                                    icon={icon}
+                                    color={color}
+                                    expandedType={expandedType}
+                                    setExpandedType={setExpandedType}
+                                    calculateSubtotal={calculateSubtotal}
+                                    activeTab={activeTab}
+                                    handleRemoveResourceType={
+                                        handleRemoveResourceType
+                                    }
+                                    handleAddResource={handleAddResource}
+                                    resources={newResources[name] || []}
+                                    handleRemoveResource={handleRemoveResource}
+                                    handleUpdateResource={(
+                                        type,
+                                        updatedResource,
+                                    ) => {
                                         setNewResources((prev) => ({
                                             ...prev,
                                             [type]: prev[type].map((r) =>
@@ -346,10 +456,9 @@ export function ApuDialog({
                                                     : r,
                                             ),
                                         }));
-                                    }
-                                }}
-                            />
-                        ))}
+                                    }}
+                                />
+                            ))}
                     </div>
 
                     <div className="mt-6 space-y-4">
@@ -367,6 +476,7 @@ export function ApuDialog({
                             newResources={newResources}
                             onSuccess={onSuccess}
                             onOpenChange={onOpenChange}
+                            apuId={apuId}
                         />
                     </div>
                 </ScrollArea>
