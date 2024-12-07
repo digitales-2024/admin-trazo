@@ -7,13 +7,19 @@ interface GetApuBudgetsByIdProps {
     id: string;
 }
 
+interface ApuBudgetResponse {
+    data: ApuBudget;
+    message: string;
+    statusCode: number;
+}
+
 export const apuBudgetApi = createApi({
     reducerPath: "apuBudgetApi",
     baseQuery: baseQueryWithReauth,
     tagTypes: ["ApuBudget"],
     endpoints: (build) => ({
         // Crear una variante de apu en ApuBudget
-        createApuBudget: build.mutation<ApuBudget, Partial<ApuBudget>>({
+        createApuBudget: build.mutation<ApuBudgetResponse, Partial<ApuBudget>>({
             query: (body) => ({
                 url: "/apu-budget",
                 method: "POST",
@@ -33,7 +39,7 @@ export const apuBudgetApi = createApi({
         }),
         //Actualizar presupuesto
         updateApuBudget: build.mutation<
-            ApuBudget,
+            ApuBudgetResponse,
             Partial<ApuBudget> & { id: string }
         >({
             query: ({ id, ...body }) => ({
