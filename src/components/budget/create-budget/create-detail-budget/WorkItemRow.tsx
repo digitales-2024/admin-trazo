@@ -70,6 +70,49 @@ const WorkItemRow: React.FC<WorkItemRowProps> = ({
         );
     };
 
+    if (item.sub) {
+        return (
+            <TableRow>
+                <TableCell>
+                    <span className="text-sm font-light">{`${catIndex + 1}.${subIndex + 1}.${itemIndex + 1}`}</span>
+                </TableCell>
+                <TableCell className="pl-12">
+                    <div className="flex items-center">
+                        <FileText
+                            className="mr-2 h-4 w-4 text-yellow-500"
+                            strokeWidth={1.5}
+                        />
+                        <span className="text-sm font-light capitalize">
+                            {item.name}
+                        </span>
+                    </div>
+                </TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
+                <TableCell>
+                    S/. {calculateWorkItemTotal(item).toFixed(2)}
+                </TableCell>
+                <TableCell>
+                    <Button
+                        type="button"
+                        size="sm"
+                        variant="destructive"
+                        onClick={() =>
+                            onDeleteWorkItem(
+                                category.id,
+                                subcategory.id,
+                                item.id,
+                            )
+                        }
+                    >
+                        <Trash2 className="h-4 w-4" />
+                    </Button>
+                </TableCell>
+            </TableRow>
+        );
+    }
+
     return (
         <TableRow>
             <TableCell>
@@ -122,13 +165,13 @@ const WorkItemRow: React.FC<WorkItemRowProps> = ({
                     <div className="flex items-center space-x-2">
                         <Input
                             type="number"
-                            value={(item.unitCost ?? 0).toFixed(2) || "0.00"} // Asegurar que el valor tenga dos decimales
+                            value={(item.unitCost ?? 0).toFixed(2) || "0.00"}
                             onChange={(e) =>
                                 onUpdateWorkItemUnitPrice(
                                     category.id,
                                     subcategory.id,
                                     item.id,
-                                    Number(Number(e.target.value).toFixed(2)), // Asegurar que el valor ingresado tenga dos decimales
+                                    Number(Number(e.target.value).toFixed(2)),
                                 )
                             }
                             className="w-20"
