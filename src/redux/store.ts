@@ -2,8 +2,8 @@ import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
 import { adminApi } from "./services/adminApi";
-import { apuBudgetApi } from "./services/apuBudgetApi";
 import { apuApi } from "./services/apuApi";
+import { apuBudgetApi } from "./services/apuBudgetApi";
 import { authApi } from "./services/authApi";
 import { budgetsApi } from "./services/budgetApi";
 import { businessApi } from "./services/businessApi";

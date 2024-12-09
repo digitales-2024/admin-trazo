@@ -72,7 +72,7 @@ export const categoryTableColumns = (
             }
             return (
                 <div className="flex h-16 items-center">
-                    <div className={`h-16 bg-slate-100 ${indentationClass}`} />
+                    <div className={`h-16 bg-slate-50 ${indentationClass}`} />
                     {row.getCanExpand() ? (
                         <button
                             className="inline-block h-16 w-9 px-2"

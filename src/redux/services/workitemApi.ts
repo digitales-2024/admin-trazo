@@ -36,15 +36,6 @@ export const workitemApi = createApi({
             }),
             invalidatesTags: ["WorkItem"],
         }),
-        //Obtener una partida por id
-        getWorkItemById: build.query<FullWorkItem, GetWorkItemsByIdProps>({
-            query: ({ id }) => ({
-                url: `/work-item/${id}`,
-                method: "GET",
-                credentials: "include",
-            }),
-            providesTags: ["WorkItem"],
-        }),
 
         // editar partida
         editWorkItem: build.mutation<void, { body: WorkItemEdit; id: string }>({
@@ -74,6 +65,15 @@ export const workitemApi = createApi({
                 credentials: "include",
             }),
             invalidatesTags: ["WorkItem"],
+        }),
+        //Obtener una partida por id
+        getWorkItemById: build.query<FullWorkItem, GetWorkItemsByIdProps>({
+            query: ({ id }) => ({
+                url: `/work-item/${id}`,
+                method: "GET",
+                credentials: "include",
+            }),
+            providesTags: ["WorkItem"],
         }),
     }),
 });
