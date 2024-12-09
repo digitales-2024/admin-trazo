@@ -2,25 +2,42 @@
 
 import { EntityType, GenericTableItem } from "@/types/category";
 import { ColumnDef } from "@tanstack/react-table";
-import { ChevronDown, ChevronRight, Ellipsis } from "lucide-react";
+import {
+    ChevronDown,
+    ChevronRight,
+    Ellipsis,
+    RefreshCcwDot,
+    Trash,
+} from "lucide-react";
 import { useState } from "react";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
+    DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Separator } from "@/components/ui/separator";
 
+import { ApuDialog } from "./ApuDialog";
+import { CreateSubWorkItemDialog } from "./CreateSubWorkItemDialog";
 import { CreateWorkItemDialog } from "./CreateWorkItemDialog";
+import { DeleteSubWorkItemDialog } from "./DeleteSubWorkItemDialog";
+import { DeleteWorkItemDialog } from "./DeleteWorkItemDialog";
+import { EditWorkItemSheet } from "./EditWorkItemSheet";
+import { ReactivateSubWorkItemDialog } from "./ReactivateSubWorkItemDialog";
+import { ReactivateWorkItemDialog } from "./ReactivateWorkItemDialog";
 
-export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
+export const categoryTableColumns = (
+    isSuperadmin: boolean,
+): ColumnDef<GenericTableItem>[] => [
     {
         id: "select",
         accessorKey: "name",
-        size: 10,
         header: ({ table }) => (
             <div className="flex gap-4 px-2">
                 <Checkbox
@@ -37,53 +54,64 @@ export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
                 <span className="inline-block">Nombre</span>
             </div>
         ),
-        cell: ({ row, getValue }) => (
-            <div className="flex h-16 items-center gap-2">
-                <div
-                    className="h-16 bg-slate-100"
-                    style={{
-                        width: `${row.depth * 1.25}rem`,
-                    }}
-                ></div>
-                {row.getCanExpand() ? (
-                    <button
-                        className="w-6"
-                        {...{
-                            onClick: row.getToggleExpandedHandler(),
-                            style: { cursor: "pointer" },
-                        }}
+        cell: ({ row, getValue }) => {
+            let indentationClass = "";
+            switch (row.depth) {
+                case 1: {
+                    indentationClass = "w-1 md:w-3";
+                    break;
+                }
+                case 2: {
+                    indentationClass = "w-2 md:w-6";
+                    break;
+                }
+                case 3: {
+                    indentationClass = "w-3 md:w-9";
+                    break;
+                }
+            }
+            return (
+                <div className="flex h-16 items-center">
+                    <div className={`h-16 bg-slate-100 ${indentationClass}`} />
+                    {row.getCanExpand() ? (
+                        <button
+                            className="inline-block h-16 w-9 px-2"
+                            {...{
+                                onClick: row.getToggleExpandedHandler(),
+                                style: { cursor: "pointer" },
+                            }}
+                        >
+                            {row.getIsExpanded() ? (
+                                <ChevronDown
+                                    strokeWidth={1.5}
+                                    className="h-5 w-5"
+                                />
+                            ) : (
+                                <ChevronRight
+                                    strokeWidth={1.5}
+                                    className="h-5 w-5"
+                                />
+                            )}
+                        </button>
+                    ) : (
+                        <span className="w-9" />
+                    )}
+                    <Checkbox
+                        checked={row.getIsSelected()}
+                        onCheckedChange={(value) => row.toggleSelected(!!value)}
+                        aria-label="Select row"
+                        className="translate-y-0.5"
+                    />
+                    <div
+                        className={`${entityTypeToColor(row.original.entityName, !row.original.apuId)} pl-2 uppercase`}
                     >
-                        {row.getIsExpanded() ? (
-                            <ChevronDown
-                                strokeWidth={1.5}
-                                className="h-5 w-5"
-                            />
-                        ) : (
-                            <ChevronRight
-                                strokeWidth={1.5}
-                                className="h-5 w-5"
-                            />
-                        )}
-                    </button>
-                ) : (
-                    <span className="w-6" />
-                )}
-                <Checkbox
-                    checked={row.getIsSelected()}
-                    onCheckedChange={(value) => row.toggleSelected(!!value)}
-                    aria-label="Select row"
-                    className="translate-y-0.5"
-                />
-                <div
-                    className={`${entityTypeToColor(row.original.entityName, !row.original.apuId)} uppercase`}
-                >
-                    {getValue() as string}
+                        {getValue() as string}
+                    </div>
                 </div>
-            </div>
-        ),
+            );
+        },
         enableSorting: false,
         enableHiding: false,
-        enablePinning: true,
     },
     {
         accessorKey: "unit",
@@ -94,6 +122,49 @@ export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
         accessorKey: "unitCost",
         header: "Costo unitario",
         cell: ({ row }) => <div>{row.original.unitCost ?? "-"}</div>,
+    },
+
+    {
+        id: "estado",
+        accessorKey: "isActive",
+        header: () => <div className="text-center">Estado</div>,
+        cell: ({ row }) => (
+            <div className="text-center">
+                {row.original.isActive ? (
+                    <Badge
+                        variant="secondary"
+                        className="bg-emerald-100 text-emerald-500"
+                    >
+                        Activo
+                    </Badge>
+                ) : (
+                    <Badge
+                        variant="secondary"
+                        className="bg-red-100 text-red-500"
+                    >
+                        Inactivo
+                    </Badge>
+                )}
+            </div>
+        ),
+    },
+    {
+        id: "buttons",
+        header: () => <div className="text-center">Acciones</div>,
+        cell: ({ row }) => {
+            if (!row.original.apuId) {
+                return <div />;
+            }
+
+            return (
+                <div className="text-center">
+                    <ApuDialog
+                        apuId={row.original.apuId}
+                        parentName={row.original.name}
+                    />
+                </div>
+            );
+        },
     },
     {
         id: "actions",
@@ -112,11 +183,24 @@ export const categoryTableColumns: ColumnDef<GenericTableItem>[] = [
                     break;
                 }
                 case "Workitem": {
-                    actions = <CategoryActions />;
+                    actions = (
+                        <WorkItemActions
+                            parentId={row.original.id}
+                            hasApu={!!row.original.apuId}
+                            data={row.original}
+                            isSuperAdmin={isSuperadmin}
+                        />
+                    );
                     break;
                 }
                 case "Subworkitem": {
-                    actions = <CategoryActions />;
+                    actions = (
+                        <SubWorkItemActions
+                            parentId={row.original.id}
+                            data={row.original}
+                            isSuperAdmin={isSuperadmin}
+                        />
+                    );
                     break;
                 }
             }
@@ -141,7 +225,7 @@ function CategoryActions() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
                 <DropdownMenuItem onSelect={() => {}}>
-                    Ver Categoria
+                    Crear Subcategoría
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
@@ -171,15 +255,186 @@ function SubCategoryActions({ subcategoryId }: { subcategoryId: string }) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-40">
-                    <DropdownMenuItem onSelect={() => {}}>
-                        Ver Subcategoria
-                    </DropdownMenuItem>
                     <DropdownMenuItem
                         onSelect={() => {
                             setShowCreateWorkItem(true);
                         }}
                     >
                         Crear Partida
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </div>
+    );
+}
+
+function WorkItemActions({
+    parentId,
+    hasApu,
+    data,
+    isSuperAdmin,
+}: {
+    parentId: string;
+    hasApu: boolean;
+    data: GenericTableItem;
+    isSuperAdmin: boolean;
+}) {
+    const [showCreate, setShowCreate] = useState(false);
+    const [showEditSheet, setShowEditSheet] = useState(false);
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [showReactivateDialog, setShowReactivateDialog] = useState(false);
+
+    return (
+        <div>
+            <div>
+                <CreateSubWorkItemDialog
+                    open={showCreate}
+                    onOpenChange={setShowCreate}
+                    workitemId={parentId}
+                />
+                <EditWorkItemSheet
+                    open={showEditSheet}
+                    onOpenChange={setShowEditSheet}
+                    data={data}
+                />
+                <DeleteWorkItemDialog
+                    open={showDeleteDialog}
+                    onOpenChange={setShowDeleteDialog}
+                    data={data}
+                />
+                <ReactivateWorkItemDialog
+                    open={showReactivateDialog}
+                    onOpenChange={setShowReactivateDialog}
+                    data={data}
+                />
+            </div>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button
+                        aria-label="Open menu"
+                        variant="ghost"
+                        className="flex size-8 p-0 data-[state=open]:bg-muted"
+                    >
+                        <Ellipsis className="size-4" aria-hidden="true" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-40">
+                    {!hasApu && (
+                        <>
+                            <DropdownMenuItem
+                                onSelect={() => {
+                                    setShowCreate(true);
+                                }}
+                            >
+                                Crear Subpartida
+                            </DropdownMenuItem>
+
+                            <Separator />
+                        </>
+                    )}
+
+                    <DropdownMenuItem onSelect={() => setShowEditSheet(true)}>
+                        Editar
+                    </DropdownMenuItem>
+                    {isSuperAdmin && (
+                        <DropdownMenuItem
+                            onSelect={() => setShowReactivateDialog(true)}
+                            disabled={data.isActive}
+                        >
+                            Reactivar
+                            <DropdownMenuShortcut>
+                                <RefreshCcwDot
+                                    className="size-4"
+                                    aria-hidden="true"
+                                />
+                            </DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    )}
+                    <DropdownMenuItem
+                        className="text-red-700"
+                        onSelect={() => setShowDeleteDialog(true)}
+                        disabled={!data.isActive}
+                    >
+                        Eliminar
+                        <DropdownMenuShortcut>
+                            <Trash className="size-4" aria-hidden="true" />
+                        </DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </div>
+    );
+}
+
+function SubWorkItemActions({
+    data,
+    isSuperAdmin,
+}: {
+    parentId: string;
+    data: GenericTableItem;
+    isSuperAdmin: boolean;
+}) {
+    const [showEditSheet, setShowEditSheet] = useState(false);
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [showReactivateDialog, setShowReactivateDialog] = useState(false);
+
+    return (
+        <div>
+            <div>
+                <EditWorkItemSheet
+                    open={showEditSheet}
+                    onOpenChange={setShowEditSheet}
+                    data={data}
+                    isSub={true}
+                />
+                <DeleteSubWorkItemDialog
+                    open={showDeleteDialog}
+                    onOpenChange={setShowDeleteDialog}
+                    data={data}
+                />
+                <ReactivateSubWorkItemDialog
+                    open={showReactivateDialog}
+                    onOpenChange={setShowReactivateDialog}
+                    data={data}
+                />
+            </div>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button
+                        aria-label="Open menu"
+                        variant="ghost"
+                        className="flex size-8 p-0 data-[state=open]:bg-muted"
+                    >
+                        <Ellipsis className="size-4" aria-hidden="true" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-40">
+                    <DropdownMenuItem onSelect={() => setShowEditSheet(true)}>
+                        Editar
+                    </DropdownMenuItem>
+                    {isSuperAdmin && (
+                        <DropdownMenuItem
+                            onSelect={() => setShowReactivateDialog(true)}
+                            disabled={data.isActive}
+                        >
+                            Reactivar
+                            <DropdownMenuShortcut>
+                                <RefreshCcwDot
+                                    className="size-4"
+                                    aria-hidden="true"
+                                />
+                            </DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    )}
+                    <DropdownMenuItem
+                        className="text-red-700"
+                        onSelect={() => setShowDeleteDialog(true)}
+                        disabled={!data.isActive}
+                    >
+                        Eliminar
+                        <DropdownMenuShortcut>
+                            <Trash className="size-4" aria-hidden="true" />
+                        </DropdownMenuShortcut>
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

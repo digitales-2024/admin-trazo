@@ -1,5 +1,4 @@
 import {
-    Column,
     ColumnDef,
     ColumnFiltersState,
     ColumnPinningState,
@@ -16,7 +15,7 @@ import {
     useReactTable,
     VisibilityState,
 } from "@tanstack/react-table";
-import { CSSProperties, ReactElement, useState } from "react";
+import { ReactElement, useState } from "react";
 
 import {
     Table,
@@ -92,24 +91,24 @@ export function DataTableNested<TData, TValue>({
         getExpandedRowModel: getExpandedRowModel(),
     });
 
-    const getCommonPinningStyles = (column: Column<TData>): CSSProperties => {
-        const isPinned = column.getIsPinned();
-
-        return {
-            left:
-                isPinned === "left"
-                    ? `${column.getStart("left")}px`
-                    : undefined,
-            right:
-                isPinned === "right"
-                    ? `${column.getAfter("right")}px`
-                    : undefined,
-            position: isPinned ? "sticky" : "relative",
-            width: column.getSize(),
-            zIndex: isPinned ? 1 : 0,
-            backgroundColor: "white",
-        };
-    };
+    //const getCommonPinningStyles = (column: Column<TData>): CSSProperties => {
+    //    const isPinned = column.getIsPinned();
+    //
+    //    return {
+    //        left:
+    //            isPinned === "left"
+    //                ? `${column.getStart("left")}px`
+    //                : undefined,
+    //        right:
+    //            isPinned === "right"
+    //                ? `${column.getAfter("right")}px`
+    //                : undefined,
+    //        position: isPinned ? "sticky" : "relative",
+    //        width: column.getSize(),
+    //        zIndex: isPinned ? 1 : 0,
+    //        backgroundColor: "white",
+    //    };
+    //};
 
     return (
         <div className="w-full space-y-2.5 overflow-auto p-1">
@@ -127,16 +126,16 @@ export function DataTableNested<TData, TValue>({
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
-                                    const { column } = header;
+                                    //const { column } = header;
                                     return (
                                         <TableHead
                                             key={header.id}
                                             colSpan={header.colSpan}
-                                            style={{
-                                                ...getCommonPinningStyles(
-                                                    column,
-                                                ),
-                                            }}
+                                            //style={{
+                                            //    ...getCommonPinningStyles(
+                                            //        column,
+                                            //    ),
+                                            //}}
                                         >
                                             {header.isPlaceholder
                                                 ? null
@@ -162,17 +161,17 @@ export function DataTableNested<TData, TValue>({
                                     }
                                 >
                                     {row.getVisibleCells().map((cell) => {
-                                        const { column } = cell;
+                                        //const { column } = cell;
 
                                         return (
                                             <TableCell
                                                 key={cell.id}
                                                 className="p-0 text-slate-600"
-                                                style={{
-                                                    ...getCommonPinningStyles(
-                                                        column,
-                                                    ),
-                                                }}
+                                                //style={{
+                                                //    ...getCommonPinningStyles(
+                                                //        column,
+                                                //    ),
+                                                //}}
                                             >
                                                 {flexRender(
                                                     cell.column.columnDef.cell,

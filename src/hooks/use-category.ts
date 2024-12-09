@@ -26,7 +26,11 @@ export const useCategory = (options: UseCategoryProps = {}) => {
         refetch,
     } = useGetAllCategoryQuery();
 
-    const { data: fullCategoryData } = useGetFullCategoryQuery();
+    const {
+        data: fullCategoryData,
+        isLoading: fullCategoryDataLoading,
+        refetch: fullCategoryRefetch,
+    } = useGetFullCategoryQuery();
 
     const { data: categoryById, refetch: refetchCategoryById } =
         useGetCategoryByIdQuery(
@@ -235,5 +239,7 @@ export const useCategory = (options: UseCategoryProps = {}) => {
         isSuccessReactivateCategory,
         isLoadingReactivateCategory,
         fullCategoryData,
+        fullCategoryDataLoading,
+        fullCategoryRefetch,
     };
 };

@@ -1,3 +1,4 @@
+import { Budget } from "@/components/budget/create-budget/create-detail-budget/types";
 import { Percent } from "lucide-react";
 import React from "react";
 
@@ -9,13 +10,7 @@ interface PercentageBudgetProps {
         profitPercentage: number;
         taxPercentage: number;
     };
-    setBudget: React.Dispatch<
-        React.SetStateAction<{
-            overheadPercentage: number;
-            profitPercentage: number;
-            taxPercentage: number;
-        }>
-    >;
+    setBudget: React.Dispatch<React.SetStateAction<Budget>>;
 }
 
 const PercentageBudget: React.FC<PercentageBudgetProps> = ({
@@ -80,16 +75,10 @@ const PercentageBudget: React.FC<PercentageBudgetProps> = ({
                         id="tax"
                         value={budget.taxPercentage}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            setBudget(
-                                (prev: {
-                                    overheadPercentage: number;
-                                    profitPercentage: number;
-                                    taxPercentage: number;
-                                }) => ({
-                                    ...prev,
-                                    taxPercentage: Number(e.target.value),
-                                }),
-                            )
+                            setBudget((prev) => ({
+                                ...prev,
+                                taxPercentage: Number(e.target.value),
+                            }))
                         }
                         className="mt-1"
                     />
