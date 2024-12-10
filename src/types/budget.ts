@@ -26,6 +26,7 @@ export type CreateBudget = {
     igv: number;
     percentageOverhead: number;
     percentageUtility: number;
+    discount: number;
     totalCost: number;
     category: {
         categoryId: string;
@@ -85,6 +86,7 @@ export type BudgetDetail = {
     overhead: number;
     utility: number;
     igv: number;
+    discount: number;
     percentageOverhead: number;
     percentageUtility: number;
     totalCost: number;
@@ -131,4 +133,6 @@ export interface BudgetCategories {
     overheadPercentage: number;
     profitPercentage: number;
     taxPercentage: number;
+    commercialDiscount: number;
+    applyTax: boolean;
 }
