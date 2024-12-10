@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 
+import { EditCategorySheet } from "./_category/EditCategorySheet";
 import { CreateSubCategoryDialog } from "./_subcategory/CreateSubCategoryDialog";
 import { CreateSubWorkItemDialog } from "./_subworkitem/CreateSubWorkItemDialog";
 import { DeleteSubWorkItemDialog } from "./_subworkitem/DeleteSubWorkItemDialog";
@@ -166,7 +167,13 @@ export const categoryTableColumns = (
             let actions = <></>;
             switch (row.original.entityName) {
                 case "Category": {
-                    actions = <CategoryActions categoryId={row.original.id} />;
+                    actions = (
+                        <CategoryActions
+                            categoryId={row.original.id}
+                            data={row.original}
+                            isSuperAdmin={isSuperadmin}
+                        />
+                    );
                     break;
                 }
                 case "Subcategory": {
@@ -204,8 +211,17 @@ export const categoryTableColumns = (
     },
 ];
 
-function CategoryActions({ categoryId }: { categoryId: string }) {
+function CategoryActions({
+    categoryId,
+    data,
+    isSuperAdmin,
+}: {
+    categoryId: string;
+    data: GenericTableItem;
+    isSuperAdmin: boolean;
+}) {
     const [showCreate, setShowCreate] = useState(false);
+    const [showEdit, setShowEdit] = useState(false);
 
     return (
         <div>
@@ -214,6 +230,12 @@ function CategoryActions({ categoryId }: { categoryId: string }) {
                     open={showCreate}
                     setOpen={setShowCreate}
                     categoryId={categoryId}
+                />
+                <EditCategorySheet
+                    open={showEdit}
+                    setOpen={setShowEdit}
+                    categoryId={categoryId}
+                    data={data}
                 />
             </div>
             <DropdownMenu>
@@ -229,6 +251,34 @@ function CategoryActions({ categoryId }: { categoryId: string }) {
                 <DropdownMenuContent align="end" className="w-40">
                     <DropdownMenuItem onSelect={() => setShowCreate(true)}>
                         Crear Subcategoría
+                    </DropdownMenuItem>
+                    <Separator />
+                    <DropdownMenuItem onSelect={() => setShowEdit(true)}>
+                        Editar Categoría
+                    </DropdownMenuItem>
+                    {isSuperAdmin && (
+                        <DropdownMenuItem
+                            onSelect={() => void 0}
+                            disabled={data.isActive}
+                        >
+                            Reactivar
+                            <DropdownMenuShortcut>
+                                <RefreshCcwDot
+                                    className="size-4"
+                                    aria-hidden="true"
+                                />
+                            </DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    )}
+                    <DropdownMenuItem
+                        className="text-red-700"
+                        onSelect={() => void 0}
+                        disabled={!data.isActive}
+                    >
+                        Eliminar
+                        <DropdownMenuShortcut>
+                            <Trash className="size-4" aria-hidden="true" />
+                        </DropdownMenuShortcut>
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

@@ -73,44 +73,15 @@ export const useCategory = (options: UseCategoryProps = {}) => {
         return await promise;
     }
 
-    const onUpdateCategory = async (
-        input: Partial<Category> & { id: string },
-    ) => {
-        const promise = () =>
-            new Promise(async (resolve, reject) => {
-                try {
-                    const result = await updateCategory(input);
-                    if (
-                        result.error &&
-                        typeof result.error === "object" &&
-                        result.error !== null &&
-                        "data" in result.error
-                    ) {
-                        const error = (result.error.data as CustomErrorData)
-                            .message;
-                        const message = translateError(error as string);
-                        reject(new Error(message));
-                    }
-                    if (result.error) {
-                        reject(
-                            new Error(
-                                "Ocurrió un error inesperado, por favor intenta de nuevo",
-                            ),
-                        );
-                    }
-                    resolve(result);
-                } catch (error) {
-                    reject(error);
-                }
-            });
-        toast.promise(promise(), {
+    async function onUpdateCategory(input: Partial<Category> & { id: string }) {
+        const promise = runAndHandleError(() => updateCategory(input).unwrap());
+        toast.promise(promise, {
             loading: "Actualizando categoría...",
-            success: "Categoría actualizado exitosamente",
-            error: (error) => {
-                return error.message;
-            },
+            success: "Categoría actualizada con éxito",
+            error: (err) => err.message,
         });
-    };
+        return await promise;
+    }
 
     const onReactivateCategory = async (ids: Category[]) => {
         const onlyIds = ids.map((categoryType) => categoryType.id);
