@@ -20,23 +20,11 @@ interface WorkItemRowProps {
     subcategory: SubcategoryDragCategory;
     item: WorkItemDragCategory;
     calculateWorkItemTotal: (item: WorkItemDragCategory) => number;
-    onUpdateWorkItemQuantity: (
+    onUpdateWorkItem: (
         categoryId: string,
         subcategoryId: string,
         itemId: string,
-        quantity: number,
-    ) => void;
-    onUpdateWorkItemApuId: (
-        categoryId: string,
-        subcategoryId: string,
-        itemId: string,
-        apuId: string,
-    ) => void;
-    onUpdateWorkItemUnitPrice: (
-        categoryId: string,
-        subcategoryId: string,
-        itemId: string,
-        unitPrice: number,
+        updates: Partial<WorkItemDragCategory>,
     ) => void;
     onDeleteWorkItem: (
         categoryId: string,
@@ -53,28 +41,25 @@ const WorkItemRow: React.FC<WorkItemRowProps> = ({
     subcategory,
     item,
     calculateWorkItemTotal,
-    onUpdateWorkItemQuantity,
-    onUpdateWorkItemApuId,
-    onUpdateWorkItemUnitPrice,
+    onUpdateWorkItem,
     onDeleteWorkItem,
 }) => {
     const [showApuDialog, setShowApuDialog] = useState(false);
 
     const handleApuSuccess = (apuId: string, totalCost: number) => {
-        onUpdateWorkItemApuId(category.id, subcategory.id, item.id, apuId);
-        onUpdateWorkItemUnitPrice(
-            category.id,
-            subcategory.id,
-            item.id,
-            totalCost,
-        );
+        onUpdateWorkItem(category.id, subcategory.id, item.id, {
+            apuId,
+            unitCost: totalCost,
+        });
     };
 
     if (item.sub) {
         return (
             <TableRow>
                 <TableCell>
-                    <span className="text-sm font-light">{`${catIndex + 1}.${subIndex + 1}.${itemIndex + 1}`}</span>
+                    <span className="text-sm font-light">{`${catIndex + 1}.${
+                        subIndex + 1
+                    }.${itemIndex + 1}`}</span>
                 </TableCell>
                 <TableCell className="pl-12">
                     <div className="flex items-center">
@@ -116,7 +101,9 @@ const WorkItemRow: React.FC<WorkItemRowProps> = ({
     return (
         <TableRow>
             <TableCell>
-                <span className="text-sm font-light">{`${catIndex + 1}.${subIndex + 1}.${itemIndex + 1}`}</span>
+                <span className="text-sm font-light">{`${catIndex + 1}.${
+                    subIndex + 1
+                }.${itemIndex + 1}`}</span>
             </TableCell>
             <TableCell className="pl-12">
                 <div className="flex items-center">
@@ -145,11 +132,11 @@ const WorkItemRow: React.FC<WorkItemRowProps> = ({
                             type="number"
                             value={item.quantity || 0}
                             onChange={(e) =>
-                                onUpdateWorkItemQuantity(
+                                onUpdateWorkItem(
                                     category.id,
                                     subcategory.id,
                                     item.id,
-                                    Number(e.target.value),
+                                    { quantity: Number(e.target.value) },
                                 )
                             }
                             className="w-20"
@@ -167,11 +154,15 @@ const WorkItemRow: React.FC<WorkItemRowProps> = ({
                             type="number"
                             value={(item.unitCost ?? 0).toFixed(2) || "0.00"}
                             onChange={(e) =>
-                                onUpdateWorkItemUnitPrice(
+                                onUpdateWorkItem(
                                     category.id,
                                     subcategory.id,
                                     item.id,
-                                    Number(Number(e.target.value).toFixed(2)),
+                                    {
+                                        unitCost: Number(
+                                            Number(e.target.value).toFixed(2),
+                                        ),
+                                    },
                                 )
                             }
                             className="w-20"
