@@ -32,6 +32,7 @@ import { CreateWorkItemDialog } from "./_workitem/CreateWorkItemDialog";
 import { DeleteWorkItemDialog } from "./_workitem/DeleteWorkItemDialog";
 import { EditWorkItemSheet } from "./_workitem/EditWorkItemSheet";
 import { ReactivateWorkItemDialog } from "./_workitem/ReactivateWorkItemDialog";
+import { EditSubCategorySheet } from "./_subcategory/EditSubCategorySheet";
 
 export const categoryTableColumns = (
     isSuperadmin: boolean,
@@ -178,7 +179,11 @@ export const categoryTableColumns = (
                 }
                 case "Subcategory": {
                     actions = (
-                        <SubCategoryActions subcategoryId={row.original.id} />
+                        <SubCategoryActions
+                            subcategoryId={row.original.id}
+                            data={row.original}
+                            isSuperAdmin={isSuperadmin}
+                        />
                     );
                     break;
                 }
@@ -254,7 +259,7 @@ function CategoryActions({
                     </DropdownMenuItem>
                     <Separator />
                     <DropdownMenuItem onSelect={() => setShowEdit(true)}>
-                        Editar Categoría
+                        Editar
                     </DropdownMenuItem>
                     {isSuperAdmin && (
                         <DropdownMenuItem
@@ -286,8 +291,17 @@ function CategoryActions({
     );
 }
 
-function SubCategoryActions({ subcategoryId }: { subcategoryId: string }) {
+function SubCategoryActions({
+    subcategoryId,
+    data,
+    isSuperAdmin,
+}: {
+    subcategoryId: string;
+    data: GenericTableItem;
+    isSuperAdmin: boolean;
+}) {
     const [showCreateWorkItem, setShowCreateWorkItem] = useState(false);
+    const [showEdit, setShowEdit] = useState(false);
 
     return (
         <div>
@@ -296,6 +310,11 @@ function SubCategoryActions({ subcategoryId }: { subcategoryId: string }) {
                     open={showCreateWorkItem}
                     onOpenChange={setShowCreateWorkItem}
                     subcategoryId={subcategoryId}
+                />
+                <EditSubCategorySheet
+                    open={showEdit}
+                    setOpen={setShowEdit}
+                    data={data}
                 />
             </div>
             <DropdownMenu>
@@ -315,6 +334,34 @@ function SubCategoryActions({ subcategoryId }: { subcategoryId: string }) {
                         }}
                     >
                         Crear Partida
+                    </DropdownMenuItem>
+                    <Separator />
+                    <DropdownMenuItem onSelect={() => setShowEdit(true)}>
+                        Editar
+                    </DropdownMenuItem>
+                    {isSuperAdmin && (
+                        <DropdownMenuItem
+                            onSelect={() => void 0}
+                            disabled={data.isActive}
+                        >
+                            Reactivar
+                            <DropdownMenuShortcut>
+                                <RefreshCcwDot
+                                    className="size-4"
+                                    aria-hidden="true"
+                                />
+                            </DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    )}
+                    <DropdownMenuItem
+                        className="text-red-700"
+                        onSelect={() => void 0}
+                        disabled={!data.isActive}
+                    >
+                        Eliminar
+                        <DropdownMenuShortcut>
+                            <Trash className="size-4" aria-hidden="true" />
+                        </DropdownMenuShortcut>
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

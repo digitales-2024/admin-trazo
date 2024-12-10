@@ -81,44 +81,19 @@ export const useSubcategory = (options: UseSubcategoryProps = {}) => {
         return await promise;
     }
 
-    const onUpdateSubcategory = async (
+    async function onUpdateSubcategory(
         input: Partial<Subcategory> & { id: string },
-    ) => {
-        const promise = () =>
-            new Promise(async (resolve, reject) => {
-                try {
-                    const result = await updateSubcategory(input);
-                    if (
-                        result.error &&
-                        typeof result.error === "object" &&
-                        result.error !== null &&
-                        "data" in result.error
-                    ) {
-                        const error = (result.error.data as CustomErrorData)
-                            .message;
-                        const message = translateError(error as string);
-                        reject(new Error(message));
-                    }
-                    if (result.error) {
-                        reject(
-                            new Error(
-                                "Ocurrió un error inesperado, por favor intenta de nuevo",
-                            ),
-                        );
-                    }
-                    resolve(result);
-                } catch (error) {
-                    reject(error);
-                }
-            });
-        toast.promise(promise(), {
+    ) {
+        const promise = runAndHandleError(() =>
+            updateSubcategory(input).unwrap(),
+        );
+        toast.promise(promise, {
             loading: "Actualizando subcategoría...",
-            success: "Subcategoría actualizado exitosamente",
-            error: (error) => {
-                return error.message;
-            },
+            success: "Subcategoría actualizada con éxito",
+            error: (err) => err.message,
         });
-    };
+        return await promise;
+    }
 
     const onReactivateSubcategory = async (ids: Subcategory[]) => {
         const onlyIds = ids.map((subcategoryType) => subcategoryType.id);
