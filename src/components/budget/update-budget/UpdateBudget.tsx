@@ -30,13 +30,13 @@ export default function UpdateBudget({ budgetById }: UpdateBudgetProps) {
 
     useEffect(() => {
         if (isSuccessUpdateBudget && isClient) {
-            router.push("/design-project/quotation");
+            router.push("/execution-project/budgets");
         }
     }, [isSuccessUpdateBudget, isClient, router]);
 
     const handleBack = () => {
         if (isClient) {
-            router.push("/design-project/quotation");
+            router.push("/execution-project/budgets");
         }
     };
 
