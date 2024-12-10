@@ -2,6 +2,7 @@
 
 import { useBudgets } from "@/hooks/use-budget";
 import { createBudgetSchema, CreateBudgetSchema } from "@/schemas";
+import { FullCategory } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 /* import { RefreshCcw } from "lucide-react"; */
 import { RefreshCcw } from "lucide-react";
@@ -19,7 +20,7 @@ import { HeadBudget } from "./create-head-budget/HeadBudget";
 
 export default function CreateBudget() {
     const [isClient, setIsClient] = useState(false);
-    const { /*  onCreateBudget, */ isLoadingCreateBudget } = useBudgets();
+    const { onCreateBudget, isLoadingCreateBudget } = useBudgets();
     const router = useRouter();
     const [budget, setBudget] = useState<Budget>({
         categories: [],
@@ -29,11 +30,74 @@ export default function CreateBudget() {
     });
 
     const handleCreateQuotation = () => {
-        console.log("Creating budget", JSON.stringify(budget, null, 2));
-        console.log(
-            "este es mi form",
-            JSON.stringify(form.getValues(), null, 2),
+        const formData = form.getValues();
+
+        // Cálculo de costos
+        const directCost = budget.categories.reduce(
+            (acc: number, category: FullCategory) => {
+                const categoryTotal = category.subcategories.reduce(
+                    (subAcc: number, subcat) => subAcc + subcat.subtotal,
+                    0,
+                );
+                return acc + categoryTotal;
+            },
+            0,
         );
+
+        const overhead = directCost * (budget.overheadPercentage / 100);
+        const utility = directCost * (budget.profitPercentage / 100);
+        const igv = directCost * (budget.taxPercentage / 100);
+        const totalCost = directCost + overhead + utility + igv;
+
+        // Construcción del objeto DTO final
+        const budgetData = {
+            name: formData.name.trim(),
+            ubication: formData.ubication.trim(),
+            dateProject: formData.dateProject,
+            clientId: formData.clientId,
+            designProjectId: formData.isExistingDesignProject
+                ? formData.designProjectId
+                : undefined,
+
+            directCost: directCost,
+            overhead: overhead,
+            utility: utility,
+            igv: igv,
+            percentageOverhead: budget.overheadPercentage,
+            percentageUtility: budget.profitPercentage,
+            totalCost: totalCost,
+
+            category: budget.categories.map((cat: FullCategory) => ({
+                categoryId: cat.id,
+                subtotal: cat.subcategories.reduce(
+                    (subAcc: number, subcat) => subAcc + subcat.subtotal,
+                    0,
+                ),
+                subcategory: cat.subcategories.map((sub) => ({
+                    subcategoryId: sub.id,
+                    subtotal: sub.subtotal,
+                    workItem: sub.workItems.map((wi) => ({
+                        quantity: wi.quantity,
+                        unitCost: wi.unitCost,
+                        subtotal: wi.subtotal,
+                        workItemId: wi.id,
+                        apuBugdetId: wi.apuId,
+                        subWorkItem:
+                            wi.subWorkItems && wi.subWorkItems.length > 0
+                                ? wi.subWorkItems.map((swi) => ({
+                                      quantity: swi.quantity!,
+                                      unitCost: swi.unitCost!,
+                                      subtotal: swi.subtotal,
+                                      subWorkItemId: swi.id,
+                                      apuBugdetId: swi.apuId,
+                                  }))
+                                : undefined,
+                    })),
+                })),
+            })),
+        };
+        console.log(JSON.stringify(budgetData, null, 2));
+        onCreateBudget(budgetData);
     };
 
     useEffect(() => {
