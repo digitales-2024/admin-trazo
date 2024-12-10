@@ -25,6 +25,7 @@ import { Separator } from "@/components/ui/separator";
 
 import { DeleteCategoryDialog } from "./_category/DeleteCategoryDialog";
 import { EditCategorySheet } from "./_category/EditCategorySheet";
+import { ReactivateCategoryDialog } from "./_category/ReactivateCategoryDialog";
 import { CreateSubCategoryDialog } from "./_subcategory/CreateSubCategoryDialog";
 import { DeleteSubCategoryDialog } from "./_subcategory/DeleteSubCategoryDialog";
 import { EditSubCategorySheet } from "./_subcategory/EditSubCategorySheet";
@@ -231,6 +232,7 @@ function CategoryActions({
     const [showCreate, setShowCreate] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
+    const [showReactivate, setShowReactivate] = useState(false);
 
     return (
         <div>
@@ -249,6 +251,11 @@ function CategoryActions({
                 <DeleteCategoryDialog
                     open={showDelete}
                     onOpenChange={setShowDelete}
+                    data={data}
+                />
+                <ReactivateCategoryDialog
+                    open={showReactivate}
+                    onOpenChange={setShowReactivate}
                     data={data}
                 />
             </div>
@@ -272,7 +279,7 @@ function CategoryActions({
                     </DropdownMenuItem>
                     {isSuperAdmin && (
                         <DropdownMenuItem
-                            onSelect={() => void 0}
+                            onSelect={() => setShowReactivate(true)}
                             disabled={data.isActive}
                         >
                             Reactivar

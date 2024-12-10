@@ -8,8 +8,7 @@ import {
     useReactivateCategoryMutation,
     useUpdateCategoryMutation,
 } from "@/redux/services/categoryApi";
-import { Category, CustomErrorData } from "@/types";
-import { translateError } from "@/utils/translateError";
+import { Category } from "@/types";
 import { toast } from "sonner";
 
 interface UseCategoryProps {
@@ -83,47 +82,17 @@ export const useCategory = (options: UseCategoryProps = {}) => {
         return await promise;
     }
 
-    const onReactivateCategory = async (ids: Category[]) => {
-        const onlyIds = ids.map((categoryType) => categoryType.id);
-        const idsString = {
-            ids: onlyIds,
-        };
-        const promise = () =>
-            new Promise(async (resolve, reject) => {
-                try {
-                    const result = await reactivateCategory(idsString);
-                    if (result.error) {
-                        if (
-                            typeof result.error === "object" &&
-                            "data" in result.error
-                        ) {
-                            const error = (result.error.data as CustomErrorData)
-                                .message;
-                            const message = translateError(error as string);
-                            reject(new Error(message));
-                        } else {
-                            reject(
-                                new Error(
-                                    "Ocurrió un error inesperado, por favor intenta de nuevo",
-                                ),
-                            );
-                        }
-                    } else {
-                        resolve(result);
-                    }
-                } catch (error) {
-                    reject(error);
-                }
-            });
-
-        toast.promise(promise(), {
+    async function onReactivateCategory(ids: string[]) {
+        const promise = runAndHandleError(() =>
+            reactivateCategory({ ids }).unwrap(),
+        );
+        toast.promise(promise, {
             loading: "Reactivando...",
-            success: "Categorias reactivadas con éxito",
-            error: (error) => {
-                return error.message;
-            },
+            success: "Categorías reactivadas con éxito",
+            error: (err) => err.message,
         });
-    };
+        return await promise;
+    }
 
     async function onDeleteCategory(ids: Array<string>) {
         const promise = runAndHandleError(() =>
