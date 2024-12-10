@@ -25,7 +25,7 @@ export const CategoryRow: React.FC<CategoryRowProps> = ({
             <TableCell>
                 <div className="flex items-center">
                     <Package
-                        className="mr-2 h-4 w-4 text-blue-500"
+                        className="mr-2 h-4 w-4 flex-shrink-0 text-blue-500"
                         strokeWidth={1.5}
                     />
                     <span className="text-sm font-light capitalize">

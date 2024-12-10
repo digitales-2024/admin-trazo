@@ -30,7 +30,7 @@ const SubcategoryRow: React.FC<SubcategoryRowProps> = ({
             <TableCell className="pl-8">
                 <div className="flex items-center">
                     <Layers
-                        className="mr-2 h-4 w-4 text-green-500"
+                        className="mr-2 h-4 w-4 flex-shrink-0 text-green-500"
                         strokeWidth={1.5}
                     />
                     <span className="text-sm font-light capitalize">

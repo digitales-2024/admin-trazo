@@ -22,27 +22,30 @@ export const DraggableItem: React.FC<DraggableItemProps> = ({
             case "category":
                 return (
                     <Package
-                        className="h-4 w-4 text-blue-500"
+                        className="h-4 w-4 flex-shrink-0 text-blue-500"
                         strokeWidth={1.5}
                     />
                 );
             case "subcategory":
                 return (
                     <Layers
-                        className="h-4 w-4 text-green-500"
+                        className="h-4 w-4 flex-shrink-0 text-green-500"
                         strokeWidth={1.5}
                     />
                 );
             case "workItem":
                 return (
                     <FileText
-                        className="h-4 w-4 text-yellow-500"
+                        className="h-4 w-4 flex-shrink-0 text-yellow-500"
                         strokeWidth={1.5}
                     />
                 );
             case "subWorkItem":
                 return (
-                    <List className="h-4 w-4 text-red-500" strokeWidth={1.5} />
+                    <List
+                        className="h-4 w-4 flex-shrink-0 text-red-500"
+                        strokeWidth={1.5}
+                    />
                 );
         }
     };

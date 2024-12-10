@@ -66,7 +66,7 @@ const SubWorkItemRow: React.FC<SubWorkItemRowProps> = ({
             <TableCell className="pl-16">
                 <div className="flex items-center">
                     <List
-                        className="mr-2 h-4 w-4 text-red-500"
+                        className="mr-2 h-4 w-4 flex-shrink-0 text-red-500"
                         strokeWidth={1.5}
                     />
                     <span className="text-sm font-light capitalize">
