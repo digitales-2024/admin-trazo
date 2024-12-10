@@ -20,6 +20,7 @@ import PercentageBudget from "./PercentageBudget";
 import SummaryBudget from "./SummaryBudget";
 import {
     calculateCategoryTotal,
+    calculateSubcategoryTotal,
     DragResult,
     findDragItemById,
 } from "./utils/budget-utils";
@@ -402,29 +403,62 @@ export const BudgetCreator: React.FC<BudgetCreatorProps> = ({
                                                       }
                                                     : item,
                                         ),
-                                        subtotal: subcat.workItems.reduce(
-                                            (acc, item) =>
-                                                acc +
-                                                (item.id === itemId
-                                                    ? ((updates.quantity !==
-                                                      undefined
-                                                          ? updates.quantity
-                                                          : item.quantity) ||
-                                                          0) *
-                                                      ((updates.unitCost !==
-                                                      undefined
-                                                          ? updates.unitCost
-                                                          : item.unitCost) || 0)
-                                                    : item.subtotal),
-                                            0,
-                                        ),
+                                        subtotal: calculateSubcategoryTotal({
+                                            ...subcat,
+                                            workItems: subcat.workItems.map(
+                                                (item) =>
+                                                    item.id === itemId
+                                                        ? {
+                                                              ...item,
+                                                              ...updates,
+                                                              subtotal:
+                                                                  ((updates.quantity !==
+                                                                  undefined
+                                                                      ? updates.quantity
+                                                                      : item.quantity) ||
+                                                                      0) *
+                                                                  ((updates.unitCost !==
+                                                                  undefined
+                                                                      ? updates.unitCost
+                                                                      : item.unitCost) ||
+                                                                      0),
+                                                          }
+                                                        : item,
+                                            ),
+                                        }),
                                     }
                                   : subcat,
                           ),
-                          subtotal: cat.subcategories.reduce(
-                              (acc, subcat) => acc + subcat.subtotal,
-                              0,
-                          ),
+                          subtotal: calculateCategoryTotal({
+                              ...cat,
+                              subcategories: cat.subcategories.map((subcat) =>
+                                  subcat.id === subcategoryId
+                                      ? {
+                                            ...subcat,
+                                            workItems: subcat.workItems.map(
+                                                (item) =>
+                                                    item.id === itemId
+                                                        ? {
+                                                              ...item,
+                                                              ...updates,
+                                                              subtotal:
+                                                                  ((updates.quantity !==
+                                                                  undefined
+                                                                      ? updates.quantity
+                                                                      : item.quantity) ||
+                                                                      0) *
+                                                                  ((updates.unitCost !==
+                                                                  undefined
+                                                                      ? updates.unitCost
+                                                                      : item.unitCost) ||
+                                                                      0),
+                                                          }
+                                                        : item,
+                                            ),
+                                        }
+                                      : subcat,
+                              ),
+                          }),
                       }
                     : cat,
             );
@@ -500,17 +534,124 @@ export const BudgetCreator: React.FC<BudgetCreatorProps> = ({
                                                   }
                                                 : i,
                                         ),
-                                        subtotal: sc.workItems.reduce(
-                                            (acc, item) => acc + item.subtotal,
-                                            0,
-                                        ),
+                                        subtotal: calculateSubcategoryTotal({
+                                            ...sc,
+                                            workItems: sc.workItems.map((i) =>
+                                                i.id === itemId
+                                                    ? {
+                                                          ...i,
+                                                          subWorkItems:
+                                                              i.subWorkItems?.map(
+                                                                  (si) =>
+                                                                      si.id ===
+                                                                      subItemId
+                                                                          ? {
+                                                                                ...si,
+                                                                                ...updates,
+                                                                                subtotal:
+                                                                                    ((updates.quantity !==
+                                                                                    undefined
+                                                                                        ? updates.quantity
+                                                                                        : si.quantity) ||
+                                                                                        0) *
+                                                                                    ((updates.unitCost !==
+                                                                                    undefined
+                                                                                        ? updates.unitCost
+                                                                                        : si.unitCost) ||
+                                                                                        0),
+                                                                            }
+                                                                          : si,
+                                                              ),
+                                                          subtotal:
+                                                              i.subWorkItems?.reduce(
+                                                                  (
+                                                                      acc,
+                                                                      subItem,
+                                                                  ) =>
+                                                                      acc +
+                                                                      (subItem.id ===
+                                                                      subItemId
+                                                                          ? ((updates.quantity !==
+                                                                            undefined
+                                                                                ? updates.quantity
+                                                                                : subItem.quantity) ||
+                                                                                0) *
+                                                                            ((updates.unitCost !==
+                                                                            undefined
+                                                                                ? updates.unitCost
+                                                                                : subItem.unitCost) ||
+                                                                                0)
+                                                                          : subItem.subtotal),
+                                                                  0,
+                                                              ),
+                                                      }
+                                                    : i,
+                                            ),
+                                        }),
                                     }
                                   : sc,
                           ),
-                          subtotal: cat.subcategories.reduce(
-                              (acc, subcat) => acc + subcat.subtotal,
-                              0,
-                          ),
+                          subtotal: calculateCategoryTotal({
+                              ...cat,
+                              subcategories: cat.subcategories.map((sc) =>
+                                  sc.id === subcategoryId
+                                      ? {
+                                            ...sc,
+                                            workItems: sc.workItems.map((i) =>
+                                                i.id === itemId
+                                                    ? {
+                                                          ...i,
+                                                          subWorkItems:
+                                                              i.subWorkItems?.map(
+                                                                  (si) =>
+                                                                      si.id ===
+                                                                      subItemId
+                                                                          ? {
+                                                                                ...si,
+                                                                                ...updates,
+                                                                                subtotal:
+                                                                                    ((updates.quantity !==
+                                                                                    undefined
+                                                                                        ? updates.quantity
+                                                                                        : si.quantity) ||
+                                                                                        0) *
+                                                                                    ((updates.unitCost !==
+                                                                                    undefined
+                                                                                        ? updates.unitCost
+                                                                                        : si.unitCost) ||
+                                                                                        0),
+                                                                            }
+                                                                          : si,
+                                                              ),
+                                                          subtotal:
+                                                              i.subWorkItems?.reduce(
+                                                                  (
+                                                                      acc,
+                                                                      subItem,
+                                                                  ) =>
+                                                                      acc +
+                                                                      (subItem.id ===
+                                                                      subItemId
+                                                                          ? ((updates.quantity !==
+                                                                            undefined
+                                                                                ? updates.quantity
+                                                                                : subItem.quantity) ||
+                                                                                0) *
+                                                                            ((updates.unitCost !==
+                                                                            undefined
+                                                                                ? updates.unitCost
+                                                                                : subItem.unitCost) ||
+                                                                                0)
+                                                                          : subItem.subtotal),
+                                                                  0,
+                                                              ),
+                                                      }
+                                                    : i,
+                                            ),
+                                        }
+                                      : sc,
+                              ),
+                          }),
                       }
                     : cat,
             );
