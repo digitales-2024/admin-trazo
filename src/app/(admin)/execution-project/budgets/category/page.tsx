@@ -11,8 +11,8 @@ import { Shell } from "@/components/common/Shell";
 import { DataTableNested } from "@/components/data-table/DataTableNested";
 import { DataTableSkeleton } from "@/components/data-table/DataTableSkeleton";
 
-import { categoryTableColumns } from "./CategoryTableColumns";
 import { CreateCategoryDialog } from "./_category/CreateCategoryDialog";
+import { categoryTableColumns } from "./CategoryTableColumns";
 
 export default function WorkItemPage() {
     const { fullCategoryData: data, fullCategoryDataLoading: isLoading } =

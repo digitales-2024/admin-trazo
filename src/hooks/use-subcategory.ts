@@ -70,7 +70,9 @@ export const useSubcategory = (options: UseSubcategoryProps = {}) => {
     ] = useReactivateSubcategoryMutation();
 
     async function onCreateSubcategory(input: SubcategoryCreate) {
-        const promise = runAndHandleError(() => createSubcategory(input).unwrap());
+        const promise = runAndHandleError(() =>
+            createSubcategory(input).unwrap(),
+        );
         toast.promise(promise, {
             loading: "Creando subcategoría...",
             success: "Subcategoría creada con éxito",

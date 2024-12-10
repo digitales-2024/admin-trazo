@@ -1,3 +1,9 @@
+import { useCategory } from "@/hooks/use-category";
+import { useSubcategory } from "@/hooks/use-subcategory";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -5,7 +11,6 @@ import {
     DialogDescription,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog";
 import {
     Form,
@@ -17,13 +22,6 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useCategory } from "@/hooks/use-category";
-import { useSubcategory } from "@/hooks/use-subcategory";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 const formSchema = z.object({
     name: z
@@ -39,10 +37,13 @@ type FormSchema = z.infer<typeof formSchema>;
 
 export function CreateSubCategoryDialog({
     categoryId,
+    open,
+    setOpen,
 }: {
-    categoryId: string
+    categoryId: string;
+    open: boolean;
+    setOpen: (open: boolean) => void;
 }) {
-    const [open, setOpen] = useState(false);
     const { fullCategoryRefetch } = useCategory();
     const { createSubcategory } = useSubcategory();
 
@@ -65,12 +66,6 @@ export function CreateSubCategoryDialog({
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <Button variant="outline" size="sm">
-                    <Plus className="mr-2 size-4" aria-hidden="true" />
-                    Crear Subcategoría
-                </Button>
-            </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Crear una Subategoría</DialogTitle>

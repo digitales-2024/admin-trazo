@@ -1,8 +1,8 @@
 import { Subcategory } from "@/types";
+import { SubcategoryCreate } from "@/types/subcategory";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 import baseQueryWithReauth from "../baseQuery";
-import { SubcategoryCreate } from "@/types/subcategory";
 
 interface GetSubcategoryByIdProps {
     id: string;
