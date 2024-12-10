@@ -1,7 +1,7 @@
-import { Budget } from "@/components/budget/create-budget/create-detail-budget/types";
 import { Percent } from "lucide-react";
 import React from "react";
 
+import { Budget } from "@/components/budget/create-budget/create-detail-budget/types";
 import { Input } from "@/components/ui/input";
 
 interface PercentageBudgetProps {

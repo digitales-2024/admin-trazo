@@ -7,6 +7,7 @@ export type Category = {
 export type FullCategory = {
     id: string;
     name: string;
+    subtotal: number;
     type?: "category" | "subcategory" | "workItem" | "subWorkItem";
     isActive?: boolean;
     subcategories: SubcategoryDragCategory[];
@@ -15,6 +16,7 @@ export type FullCategory = {
 export type SubcategoryDragCategory = {
     id: string;
     name: string;
+    subtotal: number;
     type?: "category" | "subcategory" | "workItem" | "subWorkItem";
     isActive?: boolean;
     workItems: WorkItemDragCategory[];
@@ -27,6 +29,8 @@ export type WorkItemDragCategory = {
     unitCost?: number;
     apuId?: string;
     quantity?: number;
+    sub?: boolean;
+    subtotal: number;
     type?: "category" | "subcategory" | "workItem" | "subWorkItem";
     isActive?: boolean;
     subWorkItems: SubworkItemDragCategory[];
@@ -39,6 +43,7 @@ export type SubworkItemDragCategory = {
     quantity?: number;
     unitCost?: number;
     apuId?: string;
+    subtotal: number;
     type?: "category" | "subcategory" | "workItem" | "subWorkItem";
     isActive?: boolean;
 };

@@ -53,10 +53,12 @@ export const DraggableItem: React.FC<DraggableItemProps> = ({
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
-                    className={`flex items-center space-x-2 p-2 capitalize ml-${depth * 4}`}
+                    className={`flex items-center space-x-2 p-2 capitalize ml-${depth * 4} select-none`}
                 >
                     {getIcon()}
-                    <span className="text-sm font-light">{name}</span>
+                    <span className="select-none text-sm font-light">
+                        {name}
+                    </span>
                 </div>
             )}
         </Draggable>

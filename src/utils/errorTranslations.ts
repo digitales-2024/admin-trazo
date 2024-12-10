@@ -106,6 +106,10 @@ const errorTranslations = {
     "Subworkitem not foun": "Subpartida no encontrada",
     "Parent Work Item not found":
         "La Partida a la que pertenece esta Subpartida no se encontró",
+    "The design project must be completed":
+        "El proyecto de diseño debe estar completado",
+    "category should not be empty":
+        "La estructura del presupuesto no puede estar vacio",
 };
 
 export default errorTranslations;

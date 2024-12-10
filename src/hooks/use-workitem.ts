@@ -4,13 +4,28 @@ import {
     useDeleteWorkItemMutation,
     useEditWorkItemMutation,
     useReactivateWorkItemMutation,
+    useGetWorkItemByIdQuery,
 } from "@/redux/services/workitemApi";
 import { CustomErrorData } from "@/types";
 import { WorkItemCreate, WorkItemEdit } from "@/types/workitem";
 import { translateError } from "@/utils/translateError";
 import { toast } from "sonner";
 
-export const useWorkItem = () => {
+interface UseWorkItemsProps {
+    id?: string;
+}
+
+export const useWorkItem = (options: UseWorkItemsProps = {}) => {
+    const { id } = options;
+
+    const { data: workItemById, refetch: refetchWorkItemById } =
+        useGetWorkItemByIdQuery(
+            { id: id as string },
+            {
+                skip: !id, // Evita hacer la query si no hay id
+            },
+        );
+
     const [create, { isLoading: createLoading, isSuccess: createSuccess }] =
         useCreateWorkItemMutation();
     const [edit, { isLoading: editLoading, isSuccess: editSuccess }] =
@@ -146,5 +161,7 @@ export const useWorkItem = () => {
         editSuccess,
         onDeleteWorkItem,
         reactivateWorkItem,
+        workItemById,
+        refetchWorkItemById,
     };
 };
