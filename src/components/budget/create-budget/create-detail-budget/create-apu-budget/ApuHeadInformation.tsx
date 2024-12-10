@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 
 interface ApuHeadInformationProps {
     name: string;
+    workItemValidation: boolean;
     performance: number;
     setPerformance: (value: number) => void;
     workHours: number;
@@ -14,6 +15,7 @@ interface ApuHeadInformationProps {
 
 const ApuHeadInformation: React.FC<ApuHeadInformationProps> = ({
     name,
+    workItemValidation,
     performance,
     setPerformance,
     workHours,
@@ -27,7 +29,7 @@ const ApuHeadInformation: React.FC<ApuHeadInformationProps> = ({
                     htmlFor="itemName"
                     className="text-sm font-medium text-gray-700"
                 >
-                    Nombre de la Partida
+                    Nombre de la {workItemValidation ? "Partida" : "Subpartida"}
                 </Label>
                 <Input
                     id="itemName"
