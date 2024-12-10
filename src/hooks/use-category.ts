@@ -125,47 +125,18 @@ export const useCategory = (options: UseCategoryProps = {}) => {
         });
     };
 
-    const onDeleteCategory = async (ids: Category[]) => {
-        const onlyIds = ids.map((categoryType) => categoryType.id);
-        const idsString = {
-            ids: onlyIds,
-        };
-        const promise = () =>
-            new Promise(async (resolve, reject) => {
-                try {
-                    const result = await deleteCategory(idsString);
-                    if (
-                        result.error &&
-                        typeof result.error === "object" &&
-                        result.error !== null &&
-                        "data" in result.error
-                    ) {
-                        const error = (result.error.data as CustomErrorData)
-                            .message;
-                        const message = translateError(error as string);
-                        reject(new Error(message));
-                    } else if (result.error) {
-                        reject(
-                            new Error(
-                                "Ocurrió un error inesperado, por favor intenta de nuevo",
-                            ),
-                        );
-                    } else {
-                        resolve(result);
-                    }
-                } catch (error) {
-                    reject(error);
-                }
-            });
-
-        toast.promise(promise(), {
+    async function onDeleteCategory(ids: Array<string>) {
+        const promise = runAndHandleError(() =>
+            deleteCategory({ ids }).unwrap(),
+        );
+        toast.promise(promise, {
             loading: "Eliminando...",
-            success: "Categorias eliminadas con éxito",
-            error: (error) => {
-                return error.message;
-            },
+            success: "Categorías eliminadas con éxito",
+            error: (err) => err.message,
         });
-    };
+        return await promise;
+    }
+
     return {
         dataCategoryAll,
         error,

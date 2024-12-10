@@ -23,8 +23,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 
+import { DeleteCategoryDialog } from "./_category/DeleteCategoryDialog";
 import { EditCategorySheet } from "./_category/EditCategorySheet";
 import { CreateSubCategoryDialog } from "./_subcategory/CreateSubCategoryDialog";
+import { EditSubCategorySheet } from "./_subcategory/EditSubCategorySheet";
 import { CreateSubWorkItemDialog } from "./_subworkitem/CreateSubWorkItemDialog";
 import { DeleteSubWorkItemDialog } from "./_subworkitem/DeleteSubWorkItemDialog";
 import { ReactivateSubWorkItemDialog } from "./_subworkitem/ReactivateSubWorkItemDialog";
@@ -32,7 +34,6 @@ import { CreateWorkItemDialog } from "./_workitem/CreateWorkItemDialog";
 import { DeleteWorkItemDialog } from "./_workitem/DeleteWorkItemDialog";
 import { EditWorkItemSheet } from "./_workitem/EditWorkItemSheet";
 import { ReactivateWorkItemDialog } from "./_workitem/ReactivateWorkItemDialog";
-import { EditSubCategorySheet } from "./_subcategory/EditSubCategorySheet";
 
 export const categoryTableColumns = (
     isSuperadmin: boolean,
@@ -227,6 +228,7 @@ function CategoryActions({
 }) {
     const [showCreate, setShowCreate] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
+    const [showDelete, setShowDelete] = useState(false);
 
     return (
         <div>
@@ -240,6 +242,11 @@ function CategoryActions({
                     open={showEdit}
                     setOpen={setShowEdit}
                     categoryId={categoryId}
+                    data={data}
+                />
+                <DeleteCategoryDialog
+                    open={showDelete}
+                    onOpenChange={setShowDelete}
                     data={data}
                 />
             </div>
@@ -277,7 +284,7 @@ function CategoryActions({
                     )}
                     <DropdownMenuItem
                         className="text-red-700"
-                        onSelect={() => void 0}
+                        onSelect={() => setShowDelete(true)}
                         disabled={!data.isActive}
                     >
                         Eliminar
