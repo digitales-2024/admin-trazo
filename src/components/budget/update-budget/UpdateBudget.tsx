@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 
-// Importa el Form desde tu ui/form
 import { HeadBudget } from "../create-budget/create-head-budget/HeadBudget";
 
 interface UpdateBudgetProps {
@@ -58,9 +57,7 @@ export default function UpdateBudget({ budgetById }: UpdateBudgetProps) {
     };
 
     return (
-        // Aquí Form actúa como FormProvider
         <Form {...form}>
-            {/* Ahora el formulario HTML y tus campos están dentro de FormProvider */}
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-8 p-1"
