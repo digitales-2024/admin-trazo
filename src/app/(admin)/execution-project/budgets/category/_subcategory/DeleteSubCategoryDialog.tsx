@@ -35,8 +35,7 @@ export function DeleteSubCategoryDialog({
                 <DialogHeader>
                     <DialogTitle>¿Estas seguro?</DialogTitle>
                     <DialogDescription>
-                        Esta acción eliminará esta subcategoría, todas sus{" "}
-                        <b>subpartidas</b> y todos sus <b>APUs</b>.
+                        Esta acción eliminará esta subcategoría.
                         <br />
                         Los presupuestos existentes no se verán afectados.
                         <br />

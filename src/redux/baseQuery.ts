@@ -110,8 +110,10 @@ export function runAndHandleError<Output>(
 
                 // Despues de intentar obtener el msg de error, si esta vacio,
                 // usar un msg de error por defecto.
-                error_msg =
-                    "Ocurrió un error inesperado, por favor intenta de nuevo";
+                if (error_msg === "") {
+                    error_msg =
+                        "Ocurrió un error inesperado, por favor intenta de nuevo";
+                }
 
                 // traducir y relanzar
                 reject({

@@ -110,6 +110,20 @@ const errorTranslations = {
         "El proyecto de diseño debe estar completado",
     "category should not be empty":
         "La estructura del presupuesto no puede estar vacio",
+    "This category has active subcategories":
+        "Esta categoria tiene subcategorias activas",
+    "This category exists but is not active":
+        "Ya existe una categoria inactiva con este nombre",
+    "This category exists, but is inactive":
+        "Ya existe una categoria inactiva con este nombre",
+    "This category already exists": "Ya existe una categoría con este nombre",
+    "This category doesnt exist": "No existe esta categoría",
+    "Category not found or inactive": "No existe esta categoría",
+    "This subcategory doesnt exist": "No existe esta subcategoría",
+    "This subcategory already exists":
+        "Ya existe una categoría con este nombre",
+    "This category exist, but is inactive":
+        "Ya existe una categoría inactiva con este nombre",
 };
 
 export default errorTranslations;

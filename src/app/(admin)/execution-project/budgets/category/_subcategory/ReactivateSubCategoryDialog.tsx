@@ -35,8 +35,7 @@ export function ReactivateSubCategoryDialog({
                 <DialogHeader>
                     <DialogTitle>¿Reactivar subcategoría?</DialogTitle>
                     <DialogDescription>
-                        Esta acción reactivará esta subcategoría, sus
-                        subpartidas y su APU.
+                        Esta acción reactivará esta subcategoría.
                         <br />
                         ¿Deseas continuar?
                     </DialogDescription>
