@@ -5,7 +5,12 @@ import {
     useUpdateBudgetMutation,
     useUpdateStatusBudgetMutation,
 } from "@/redux/services/budgetApi";
-import { Budget, BudgetStatusType, CustomErrorData } from "@/types";
+import {
+    Budget,
+    BudgetStatusType,
+    CreateBudget,
+    CustomErrorData,
+} from "@/types";
 import { translateError } from "@/utils/translateError";
 import { toast } from "sonner";
 
@@ -44,7 +49,7 @@ export const useBudgets = (options: UseBudgetsProps = {}) => {
         { isSuccess: isSuccessUpdateBudget, isLoading: isLoadingUpdateBudget },
     ] = useUpdateBudgetMutation();
 
-    const onCreateBudget = async (input: Partial<Budget>) => {
+    const onCreateBudget = async (input: Partial<CreateBudget>) => {
         const promise = () =>
             new Promise(async (resolve, reject) => {
                 try {
