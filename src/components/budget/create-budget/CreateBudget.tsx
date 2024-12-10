@@ -61,7 +61,7 @@ export default function CreateBudget() {
             directCost: directCost,
             overhead: overhead,
             utility: utility,
-            igv: igv,
+            igv: budget.taxPercentage,
             percentageOverhead: budget.overheadPercentage,
             percentageUtility: budget.profitPercentage,
             totalCost: totalCost,
