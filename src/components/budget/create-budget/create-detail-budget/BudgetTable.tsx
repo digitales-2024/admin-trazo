@@ -37,25 +37,18 @@ interface BudgetTableProps {
         itemId: string,
         subItemId: string,
     ) => void;
-    onUpdateWorkItemQuantity: (
+    onUpdateWorkItem: (
         categoryId: string,
         subcategoryId: string,
         itemId: string,
-        quantity: number,
-    ) => void;
-    onUpdateWorkItemUnitPrice: (
-        categoryId: string,
-        subcategoryId: string,
-        itemId: string,
-        unitPrice: number,
+        updates: Partial<WorkItemDragCategory>,
     ) => void;
     onUpdateSubWorkItem: (
         categoryId: string,
         subcategoryId: string,
         itemId: string,
         subItemId: string,
-        quantity: number,
-        unitPrice: number,
+        updates: Partial<SubworkItemDragCategory>,
     ) => void;
 }
 
@@ -65,8 +58,7 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
     onDeleteSubcategory,
     onDeleteWorkItem,
     onDeleteSubWorkItem,
-    onUpdateWorkItemQuantity,
-    onUpdateWorkItemUnitPrice,
+    onUpdateWorkItem,
     onUpdateSubWorkItem,
 }) => {
     const calculateSubWorkItemTotal = (subItem: SubworkItemDragCategory) =>
@@ -184,11 +176,8 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                                                                     calculateWorkItemTotal={
                                                                         calculateWorkItemTotal
                                                                     }
-                                                                    onUpdateWorkItemQuantity={
-                                                                        onUpdateWorkItemQuantity
-                                                                    }
-                                                                    onUpdateWorkItemUnitPrice={
-                                                                        onUpdateWorkItemUnitPrice
+                                                                    onUpdateWorkItem={
+                                                                        onUpdateWorkItem
                                                                     }
                                                                     onDeleteWorkItem={
                                                                         onDeleteWorkItem

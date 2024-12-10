@@ -1,7 +1,12 @@
+import { FullWorkItem } from "@/types";
 import { SubWorkItemCreate, SubWorkItemEdit } from "@/types/subworkitem";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 import baseQueryWithReauth from "../baseQuery";
+
+interface GetSubWorkItemsByIdProps {
+    id: string;
+}
 
 export const subworkitemApi = createApi({
     reducerPath: "subworkitemApi",
@@ -52,6 +57,17 @@ export const subworkitemApi = createApi({
             }),
             invalidatesTags: ["SubWorkItem"],
         }),
+        //Obtener una subpartida por id
+        getSubWorkItemById: build.query<FullWorkItem, GetSubWorkItemsByIdProps>(
+            {
+                query: ({ id }) => ({
+                    url: `/sub-work-item/${id}`,
+                    method: "GET",
+                    credentials: "include",
+                }),
+                providesTags: ["SubWorkItem"],
+            },
+        ),
     }),
 });
 
@@ -60,4 +76,5 @@ export const {
     useEditSubWorkItemMutation,
     useDeleteSubWorkItemMutation,
     useReactivateSubWorkItemMutation,
+    useGetSubWorkItemByIdQuery,
 } = subworkitemApi;

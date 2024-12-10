@@ -2,6 +2,7 @@ import {
     useCreateSubWorkItemMutation,
     useDeleteSubWorkItemMutation,
     useEditSubWorkItemMutation,
+    useGetSubWorkItemByIdQuery,
     useReactivateSubWorkItemMutation,
 } from "@/redux/services/subworkitemApi";
 import { CustomErrorData } from "@/types";
@@ -9,7 +10,21 @@ import { SubWorkItemCreate, SubWorkItemEdit } from "@/types/subworkitem";
 import { translateError } from "@/utils/translateError";
 import { toast } from "sonner";
 
-export const useSubWorkItem = () => {
+interface UseSubWorkItemsProps {
+    id?: string;
+}
+
+export const useSubWorkItem = (options: UseSubWorkItemsProps = {}) => {
+    const { id } = options;
+
+    const { data: subWorkItemById, refetch: refetchSubWorkItemById } =
+        useGetSubWorkItemByIdQuery(
+            { id: id as string },
+            {
+                skip: !id, // Evita hacer la query si no hay id
+            },
+        );
+
     const [create, { isLoading: createLoading, isSuccess: createSuccess }] =
         useCreateSubWorkItemMutation();
     const [edit, { isLoading: editLoading, isSuccess: editSuccess }] =
@@ -173,5 +188,7 @@ export const useSubWorkItem = () => {
         editSuccess,
         onDelete,
         reactivateSubWorkItem,
+        subWorkItemById,
+        refetchSubWorkItemById,
     };
 };

@@ -2,7 +2,6 @@
 
 import { useCategory } from "@/hooks/use-category";
 import {
-    DragCategoriesItem,
     FullCategory,
     SubcategoryDragCategory,
     SubworkItemDragCategory,
@@ -10,7 +9,7 @@ import {
 } from "@/types";
 import { DragDropContext } from "@hello-pangea/dnd";
 import { BarChart2 } from "lucide-react";
-import React, { useState } from "react";
+import React from "react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -19,56 +18,24 @@ import { BudgetTable } from "./BudgetTable";
 import PercentageBudget from "./PercentageBudget";
 import SummaryBudget from "./SummaryBudget";
 import { Budget } from "./types";
+import {
+    calculateCategoryTotal,
+    DragResult,
+    findDragItemById,
+} from "./utils/budget-utils";
 
-const calculateSubWorkItemTotal = (subItem: SubworkItemDragCategory) =>
-    (subItem.quantity || 0) * (subItem.unitCost || 0);
+interface BudgetCreatorProps {
+    budget: Budget;
+    setBudget: React.Dispatch<React.SetStateAction<Budget>>;
+}
 
-const calculateWorkItemTotal = (item: WorkItemDragCategory) =>
-    item.subWorkItems && item.subWorkItems.length > 0
-        ? item.subWorkItems.reduce(
-              (total, subItem) => total + calculateSubWorkItemTotal(subItem),
-              0,
-          )
-        : (item.quantity || 0) * (item.unitCost || 0);
-
-const calculateSubcategoryTotal = (subcategory: SubcategoryDragCategory) => {
-    if (!subcategory.workItems) {
-        return 0;
-    }
-    return subcategory.workItems.reduce(
-        (total, item) => total + calculateWorkItemTotal(item),
-        0,
-    );
-};
-
-const calculateCategoryTotal = (category: FullCategory) =>
-    category.subcategories.reduce(
-        (total, subcategory) => total + calculateSubcategoryTotal(subcategory),
-        0,
-    );
-
-export default function BudgetCreator() {
-    const [budget, setBudget] = useState<Budget>({
-        categories: [],
-        overheadPercentage: 15,
-        profitPercentage: 10,
-        taxPercentage: 18,
-    });
-
+export const BudgetCreator: React.FC<BudgetCreatorProps> = ({
+    budget,
+    setBudget,
+}) => {
     const { fullCategoryData } = useCategory();
 
-    interface DragResult {
-        source: {
-            droppableId: string;
-            index: number;
-        };
-        destination: {
-            droppableId: string;
-            index: number;
-        } | null;
-        draggableId: string;
-        type: string;
-    }
+    console.log(JSON.stringify(budget, null, 2));
 
     const onDragEnd = (result: DragResult) => {
         if (!result.destination) return;
@@ -111,6 +78,9 @@ export default function BudgetCreator() {
                                 draggedItem.id,
                                 draggedItem.unit || "",
                                 draggedItem.unitCost || 0,
+                                draggedItem.subWorkItems
+                                    ? draggedItem.subWorkItems.length > 0
+                                    : false,
                             );
                         }
                         break;
@@ -181,6 +151,7 @@ export default function BudgetCreator() {
         const newCategory: FullCategory = {
             id: id,
             name,
+            subtotal: 0,
             subcategories: [],
         };
         setBudget((prev) => ({
@@ -194,6 +165,7 @@ export default function BudgetCreator() {
             id: id,
             name,
             workItems: [],
+            subtotal: 0,
         };
         setBudget((prev) => ({
             ...prev,
@@ -213,6 +185,7 @@ export default function BudgetCreator() {
         id: string,
         unit: string,
         unitCost: number,
+        sub: boolean,
     ) => {
         const newWorkItem: WorkItemDragCategory = {
             id: id,
@@ -221,6 +194,8 @@ export default function BudgetCreator() {
             quantity: 0,
             unitCost: unitCost,
             unit: unit,
+            sub: sub,
+            subtotal: 0,
         };
 
         const { categoryId, subcategoryId } = getParentIDs("workItem", id) as {
@@ -263,6 +238,7 @@ export default function BudgetCreator() {
             quantity: 0,
             unitCost: unitCost,
             unit: unit,
+            subtotal: 0,
         };
         const { categoryId, subcategoryId, workItemId } = getParentIDs(
             "subWorkItem",
@@ -393,15 +369,14 @@ export default function BudgetCreator() {
         }));
     };
 
-    const updateWorkItemQuantity = (
+    const updateWorkItem = (
         categoryId: string,
         subcategoryId: string,
         itemId: string,
-        quantity: number,
+        updates: Partial<WorkItemDragCategory>,
     ) => {
-        setBudget((prev) => ({
-            ...prev,
-            categories: prev.categories.map((cat) =>
+        setBudget((prev) => {
+            const updatedCategories = prev.categories.map((cat) =>
                 cat.id === categoryId
                     ? {
                           ...cat,
@@ -412,47 +387,55 @@ export default function BudgetCreator() {
                                         workItems: subcat.workItems.map(
                                             (item) =>
                                                 item.id === itemId
-                                                    ? { ...item, quantity }
+                                                    ? {
+                                                          ...item,
+                                                          ...updates,
+                                                          subtotal:
+                                                              ((updates.quantity !==
+                                                              undefined
+                                                                  ? updates.quantity
+                                                                  : item.quantity) ||
+                                                                  0) *
+                                                              ((updates.unitCost !==
+                                                              undefined
+                                                                  ? updates.unitCost
+                                                                  : item.unitCost) ||
+                                                                  0),
+                                                      }
                                                     : item,
+                                        ),
+                                        subtotal: subcat.workItems.reduce(
+                                            (acc, item) =>
+                                                acc +
+                                                (item.id === itemId
+                                                    ? ((updates.quantity !==
+                                                      undefined
+                                                          ? updates.quantity
+                                                          : item.quantity) ||
+                                                          0) *
+                                                      ((updates.unitCost !==
+                                                      undefined
+                                                          ? updates.unitCost
+                                                          : item.unitCost) || 0)
+                                                    : item.subtotal),
+                                            0,
                                         ),
                                     }
                                   : subcat,
                           ),
+                          subtotal: cat.subcategories.reduce(
+                              (acc, subcat) => acc + subcat.subtotal,
+                              0,
+                          ),
                       }
                     : cat,
-            ),
-        }));
-    };
+            );
 
-    const updateWorkItemUnitPrice = (
-        categoryId: string,
-        subcategoryId: string,
-        itemId: string,
-        unitPrice: number,
-    ) => {
-        setBudget((prev) => ({
-            ...prev,
-            categories: prev.categories.map((cat) =>
-                cat.id === categoryId
-                    ? {
-                          ...cat,
-                          subcategories: cat.subcategories.map((subcat) =>
-                              subcat.id === subcategoryId
-                                  ? {
-                                        ...subcat,
-                                        workItems: subcat.workItems.map(
-                                            (item) =>
-                                                item.id === itemId
-                                                    ? { ...item, unitPrice }
-                                                    : item,
-                                        ),
-                                    }
-                                  : subcat,
-                          ),
-                      }
-                    : cat,
-            ),
-        }));
+            return {
+                ...prev,
+                categories: updatedCategories,
+            };
+        });
     };
 
     const updateSubWorkItem = (
@@ -460,11 +443,10 @@ export default function BudgetCreator() {
         subcategoryId: string,
         itemId: string,
         subItemId: string,
-        updatedSubItem: SubworkItemDragCategory,
+        updates: Partial<SubworkItemDragCategory>,
     ) => {
-        setBudget((prev) => ({
-            ...prev,
-            categories: prev.categories.map((cat) =>
+        setBudget((prev) => {
+            const updatedCategories = prev.categories.map((cat) =>
                 cat.id === categoryId
                     ? {
                           ...cat,
@@ -476,24 +458,70 @@ export default function BudgetCreator() {
                                             i.id === itemId
                                                 ? {
                                                       ...i,
-                                                      subworkItem:
+                                                      subWorkItems:
                                                           i.subWorkItems?.map(
                                                               (si) =>
                                                                   si.id ===
                                                                   subItemId
-                                                                      ? updatedSubItem
+                                                                      ? {
+                                                                            ...si,
+                                                                            ...updates,
+                                                                            subtotal:
+                                                                                ((updates.quantity !==
+                                                                                undefined
+                                                                                    ? updates.quantity
+                                                                                    : si.quantity) ||
+                                                                                    0) *
+                                                                                ((updates.unitCost !==
+                                                                                undefined
+                                                                                    ? updates.unitCost
+                                                                                    : si.unitCost) ||
+                                                                                    0),
+                                                                        }
                                                                       : si,
+                                                          ),
+                                                      subtotal:
+                                                          i.subWorkItems?.reduce(
+                                                              (acc, subItem) =>
+                                                                  acc +
+                                                                  (subItem.id ===
+                                                                  subItemId
+                                                                      ? ((updates.quantity !==
+                                                                        undefined
+                                                                            ? updates.quantity
+                                                                            : subItem.quantity) ||
+                                                                            0) *
+                                                                        ((updates.unitCost !==
+                                                                        undefined
+                                                                            ? updates.unitCost
+                                                                            : subItem.unitCost) ||
+                                                                            0)
+                                                                      : subItem.subtotal),
+                                                              0,
                                                           ),
                                                   }
                                                 : i,
                                         ),
+                                        subtotal: sc.workItems.reduce(
+                                            (acc, item) => acc + item.subtotal,
+                                            0,
+                                        ),
                                     }
                                   : sc,
                           ),
+                          subtotal: cat.subcategories.reduce(
+                              (acc, subcat) => acc + subcat.subtotal,
+                              0,
+                          ),
                       }
                     : cat,
-            ),
-        }));
+            );
+
+            return {
+                ...prev,
+                categories: updatedCategories,
+            };
+        });
     };
 
     const calculateTotals = () => {
@@ -504,7 +532,7 @@ export default function BudgetCreator() {
         const overhead = directCosts * (budget.overheadPercentage / 100);
         const profit = directCosts * (budget.profitPercentage / 100);
         const subtotal = directCosts + overhead + profit;
-        const tax = subtotal * (budget.taxPercentage / 100);
+        const tax = directCosts * (budget.taxPercentage / 100);
         const total = subtotal + tax;
         return { directCosts, overhead, profit, tax, total };
     };
@@ -514,7 +542,7 @@ export default function BudgetCreator() {
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <div className="min-h-screen">
-                <Card className="mx-auto w-full max-w-6xl">
+                <Card className="w-full">
                     <CardHeader>
                         <div className="flex w-full justify-between">
                             <div className="flex w-full cursor-pointer items-center justify-between">
@@ -542,33 +570,8 @@ export default function BudgetCreator() {
                                         onDeleteSubcategory={deleteSubcategory}
                                         onDeleteWorkItem={deleteWorkItem}
                                         onDeleteSubWorkItem={deleteSubWorkItem}
-                                        onUpdateWorkItemQuantity={
-                                            updateWorkItemQuantity
-                                        }
-                                        onUpdateWorkItemUnitPrice={
-                                            updateWorkItemUnitPrice
-                                        }
-                                        onUpdateSubWorkItem={(
-                                            categoryId,
-                                            subcategoryId,
-                                            itemId,
-                                            subItemId,
-                                            quantity,
-                                            unitCost,
-                                        ) =>
-                                            updateSubWorkItem(
-                                                categoryId,
-                                                subcategoryId,
-                                                itemId,
-                                                subItemId,
-                                                {
-                                                    id: subItemId,
-                                                    name: "",
-                                                    quantity,
-                                                    unitCost,
-                                                },
-                                            )
-                                        }
+                                        onUpdateWorkItem={updateWorkItem}
+                                        onUpdateSubWorkItem={updateSubWorkItem}
                                     />
                                 </div>
                             </div>
@@ -591,26 +594,4 @@ export default function BudgetCreator() {
             </div>
         </DragDropContext>
     );
-}
-
-function findDragItemById(
-    items: DragCategoriesItem[],
-    id: string,
-): DragCategoriesItem | undefined {
-    for (const item of items) {
-        if (item.id === id) return item;
-        if (item.subcategories) {
-            const found = findDragItemById(item.subcategories, id);
-            if (found) return found;
-        }
-        if (item.workItems) {
-            const found = findDragItemById(item.workItems, id);
-            if (found) return found;
-        }
-        if (item.subWorkItems) {
-            const found = findDragItemById(item.subWorkItems, id);
-            if (found) return found;
-        }
-    }
-    return undefined;
-}
+};
