@@ -17,7 +17,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AvailableItems } from "./AvailableItems";
 import { BudgetTable } from "./BudgetTable";
 import PercentageBudget from "./PercentageBudget";
-import SummaryBudget from "./SummaryBudget";
 import {
     calculateCategoryTotal,
     calculateSubcategoryTotal,
@@ -670,13 +669,15 @@ export const BudgetCreator: React.FC<BudgetCreatorProps> = ({
         );
         const overhead = directCosts * (budget.overheadPercentage / 100);
         const profit = directCosts * (budget.profitPercentage / 100);
-        const subtotal = directCosts + overhead + profit;
         const tax = directCosts * (budget.taxPercentage / 100);
-        const total = subtotal + tax;
-        return { directCosts, overhead, profit, tax, total };
+        const subtotal =
+            directCosts + overhead + profit + (budget.applyTax ? tax : 0);
+        const total = subtotal - budget.commercialDiscount;
+        return { directCosts, overhead, profit, tax, subtotal, total };
     };
 
-    const { directCosts, overhead, profit, tax, total } = calculateTotals();
+    const { directCosts, overhead, profit, tax, subtotal, total } =
+        calculateTotals();
 
     return (
         <DragDropContext onDragEnd={onDragEnd}>
@@ -686,7 +687,11 @@ export const BudgetCreator: React.FC<BudgetCreatorProps> = ({
                         <div className="flex w-full justify-between">
                             <div className="flex w-full cursor-pointer items-center justify-between">
                                 <div className="flex items-center gap-2">
-                                    <BarChart2 size={24} strokeWidth={1.5} />
+                                    <BarChart2
+                                        size={24}
+                                        strokeWidth={1.5}
+                                        className="flex-shrink-0"
+                                    />
                                     <CardTitle className="text-xl font-semibold text-gray-900">
                                         Estructura del Presupuesto
                                     </CardTitle>
@@ -695,7 +700,7 @@ export const BudgetCreator: React.FC<BudgetCreatorProps> = ({
                         </div>
                     </CardHeader>
                     <CardContent className="p-6">
-                        <div className="grid grid-cols-1 gap-6">
+                        <div className="grid grid-cols-1 space-y-6">
                             <div className="lg:col-span-2">
                                 <div className="flex space-x-4">
                                     {fullCategoryData && (
@@ -718,12 +723,11 @@ export const BudgetCreator: React.FC<BudgetCreatorProps> = ({
                                 <PercentageBudget
                                     budget={budget}
                                     setBudget={setBudget}
-                                />
-                                <SummaryBudget
                                     directCosts={directCosts}
                                     overhead={overhead}
                                     profit={profit}
                                     tax={tax}
+                                    subtotal={subtotal}
                                     total={total}
                                 />
                             </div>
