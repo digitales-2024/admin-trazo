@@ -38,6 +38,7 @@ export {
     type BudgetSummary,
     type CategoryBudget,
     BudgetStatusType,
+    type CreateBudget,
 } from "./budget";
 export type {
     Category,

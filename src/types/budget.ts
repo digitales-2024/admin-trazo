@@ -12,6 +12,43 @@ export type Budget = {
     category: CategoryBudget[];
 };
 
+export type CreateBudget = {
+    name: string;
+    ubication: string;
+    dateProject: string;
+    clientId: string;
+    designProjectId?: string;
+    directCost: number;
+    overhead: number;
+    utility: number;
+    igv: number;
+    percentageOverhead: number;
+    percentageUtility: number;
+    totalCost: number;
+    category: {
+        categoryId: string;
+        subtotal: number;
+        subcategory: {
+            subcategoryId: string;
+            subtotal: number;
+            workItem: {
+                quantity?: number;
+                unitCost?: number;
+                subtotal: number;
+                workItemId: string;
+                apuBugdetId?: string;
+                subWorkItem?: {
+                    quantity: number;
+                    unitCost: number;
+                    subtotal: number;
+                    subWorkItemId: string;
+                    apuBugdetId?: string;
+                }[];
+            }[];
+        }[];
+    }[];
+};
+
 export type BudgetSummary = {
     id: string;
     name: string;
