@@ -34,6 +34,7 @@ import { CreateWorkItemDialog } from "./_workitem/CreateWorkItemDialog";
 import { DeleteWorkItemDialog } from "./_workitem/DeleteWorkItemDialog";
 import { EditWorkItemSheet } from "./_workitem/EditWorkItemSheet";
 import { ReactivateWorkItemDialog } from "./_workitem/ReactivateWorkItemDialog";
+import { DeleteSubCategoryDialog } from "./_subcategory/DeleteSubCategoryDialog";
 
 export const categoryTableColumns = (
     isSuperadmin: boolean,
@@ -309,6 +310,7 @@ function SubCategoryActions({
 }) {
     const [showCreateWorkItem, setShowCreateWorkItem] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
+    const [showDelete, setShowDelete] = useState(false);
 
     return (
         <div>
@@ -321,6 +323,11 @@ function SubCategoryActions({
                 <EditSubCategorySheet
                     open={showEdit}
                     setOpen={setShowEdit}
+                    data={data}
+                />
+                <DeleteSubCategoryDialog
+                    open={showDelete}
+                    onOpenChange={setShowDelete}
                     data={data}
                 />
             </div>
@@ -362,7 +369,7 @@ function SubCategoryActions({
                     )}
                     <DropdownMenuItem
                         className="text-red-700"
-                        onSelect={() => void 0}
+                        onSelect={() => setShowDelete(true)}
                         disabled={!data.isActive}
                     >
                         Eliminar
