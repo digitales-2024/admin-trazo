@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
+import { ApuDialog } from "@/components/budget/create-budget/create-detail-budget/create-apu-budget/ApuBudgetDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -158,11 +159,37 @@ export const categoryTableColumns = (
         id: "buttons",
         header: () => <div className="text-center">Acciones</div>,
         cell: ({ row }) => {
-            if (!row.original.apuId) {
+            const data = row.original;
+            const [open, setOpen] = useState(false);
+            if (!data.apuId) {
                 return <div />;
             }
 
-            return <div className="text-center">--apu--</div>;
+            return (
+                <div className="text-center">
+                    <ApuDialog
+                        idWorkItem={
+                            data.entityName === "Workitem" ? data.id : undefined
+                        }
+                        idSubWorkItem={
+                            data.entityName === "Subworkitem"
+                                ? data.id
+                                : undefined
+                        }
+                        open={open}
+                        onOpenChange={setOpen}
+                        onSuccess={(id, cost) => console.table({ id, cost })}
+                        apuId={!!data.apuId ? data.apuId : undefined}
+                        isBlueprint={true}
+                    />
+                    <Button
+                        onClick={() => setOpen(true)}
+                        disabled={!data.isActive}
+                    >
+                        APU
+                    </Button>
+                </div>
+            );
         },
     },
     {

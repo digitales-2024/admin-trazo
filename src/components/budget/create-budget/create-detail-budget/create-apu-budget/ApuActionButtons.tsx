@@ -1,3 +1,4 @@
+import { useApu } from "@/hooks/use-apu";
 import { useApuBudget } from "@/hooks/use-apu-budget";
 import { ResourceApu } from "@/types";
 import React, { useEffect } from "react";
@@ -16,6 +17,7 @@ interface ApuActionButtonsProps {
     onOpenChange: (open: boolean) => void;
     onSuccess: (apuId: string, totalCost: number) => void;
     apuId?: string;
+    isBlueprint?: boolean;
 }
 
 const ApuActionButtons: React.FC<ApuActionButtonsProps> = ({
@@ -29,11 +31,14 @@ const ApuActionButtons: React.FC<ApuActionButtonsProps> = ({
     onOpenChange,
     onSuccess,
     apuId,
+    isBlueprint = false,
 }) => {
     const { onCreateApuBudget, isSuccessCreateApuBudget, dataCreateApuBudget } =
         useApuBudget();
     const { onUpdateApuBudget, isSuccessUpdateApuBudget, dataUpdateApuBudget } =
         useApuBudget();
+    const { updateApu } = useApu();
+
     useEffect(() => {
         if (isSuccessCreateApuBudget) {
             if (dataCreateApuBudget) {
@@ -70,7 +75,19 @@ const ApuActionButtons: React.FC<ApuActionButtonsProps> = ({
             }));
     };
 
-    const handleClick = () => {
+    const handleClick = async () => {
+        if (isBlueprint) {
+            const payload = {
+                id: apuId,
+                performance: newPerformance,
+                workHours: newWorkHours,
+                resources: transformResources(newResources),
+            };
+            await updateApu(payload);
+            onOpenChange(false);
+            return;
+        }
+
         if (activeTab === "template") {
             const payload = {
                 performance: templatePerformance,

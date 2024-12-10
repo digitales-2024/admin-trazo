@@ -1,5 +1,6 @@
 "use client";
 
+import { useApu } from "@/hooks/use-apu";
 import { useApuBudget } from "@/hooks/use-apu-budget";
 import { useSubWorkItem } from "@/hooks/use-subworkitem";
 import { useWorkItem } from "@/hooks/use-workitem";
@@ -37,6 +38,8 @@ interface ApuDialogProps {
     onOpenChange: (open: boolean) => void;
     onSuccess: (apuId: string, totalCost: number) => void;
     apuId?: string;
+    /** true si el APU ID pasado es de un apu plantilla, false si es apu presupesto */
+    isBlueprint?: boolean;
 }
 
 export function ApuDialog({
@@ -46,14 +49,22 @@ export function ApuDialog({
     onOpenChange,
     onSuccess,
     apuId,
+    isBlueprint = false,
 }: ApuDialogProps) {
     const { workItemById } = useWorkItem({ id: idWorkItem });
-    const { apuBudgetById } = useApuBudget({ id: apuId || "" });
+    const { apuBudgetById: apuBudgetByIdTemp } = useApuBudget({
+        id: apuId || "",
+    });
+    const { apuById } = useApu({ id: apuId || "" });
     const { subWorkItemById } = useSubWorkItem({ id: idSubWorkItem });
+
+    const apuBudgetById = isBlueprint ? apuById : apuBudgetByIdTemp;
 
     const itemData = idWorkItem ? workItemById : subWorkItemById;
 
-    const [activeTab, setActiveTab] = React.useState("template");
+    const [activeTab, setActiveTab] = React.useState(
+        isBlueprint ? "new" : "template",
+    );
 
     // Separación de tipos de recursos
     const [templateResourceTypes, setTemplateResourceTypes] = React.useState<
@@ -137,7 +148,7 @@ export function ApuDialog({
                     name: resource.name,
                     unit: resource.unit,
                     quantity,
-                    group,
+                    group: group ? group : undefined,
                     unitCost: resource.unitCost,
                     totalCost: quantity * resource.unitCost,
                     type: resource.type,
@@ -321,23 +332,27 @@ export function ApuDialog({
                         onValueChange={setActiveTab}
                         className="mb-6"
                     >
-                        <TabsList className="grid w-full grid-cols-2">
-                            <TabsTrigger
-                                value="template"
-                                disabled={templateResourceTypes.length === 0}
-                            >
-                                <Pin className="mr-2 h-4 w-4 flex-shrink-0" />
-                                <span className="truncate text-ellipsis">
-                                    Plantilla
-                                </span>
-                            </TabsTrigger>
-                            <TabsTrigger value="new">
-                                <SquarePlus className="mr-2 h-4 w-4 flex-shrink-0" />
-                                <span className="truncate text-ellipsis">
-                                    Nuevo
-                                </span>
-                            </TabsTrigger>
-                        </TabsList>
+                        {!isBlueprint && (
+                            <TabsList className="grid w-full grid-cols-2">
+                                <TabsTrigger
+                                    value="template"
+                                    disabled={
+                                        templateResourceTypes.length === 0
+                                    }
+                                >
+                                    <Pin className="mr-2 h-4 w-4 flex-shrink-0" />
+                                    <span className="truncate text-ellipsis">
+                                        Plantilla
+                                    </span>
+                                </TabsTrigger>
+                                <TabsTrigger value="new">
+                                    <SquarePlus className="mr-2 h-4 w-4 flex-shrink-0" />
+                                    <span className="truncate text-ellipsis">
+                                        Nuevo
+                                    </span>
+                                </TabsTrigger>
+                            </TabsList>
+                        )}
                     </Tabs>
                     <ApuHeadInformation
                         name={
@@ -479,6 +494,7 @@ export function ApuDialog({
                             onSuccess={onSuccess}
                             onOpenChange={onOpenChange}
                             apuId={apuId}
+                            isBlueprint={isBlueprint}
                         />
                     </div>
                 </ScrollArea>

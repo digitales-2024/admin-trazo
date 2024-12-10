@@ -4,6 +4,7 @@ import {
     ResourceExpandedApu,
     ResourceType,
 } from "@/types";
+import { ApuReturnNested } from "@/types/apu";
 import { Package, Wrench, HeartHandshake, Users } from "lucide-react";
 
 export const resourceTypeNames: { [key in ResourceType]: string } = {
@@ -53,7 +54,7 @@ export const extractUniqueTypes = (workItemById: FullWorkItem): string[] => {
 };
 
 export const extractUniqueTypesFromApuBudget = (
-    apuBudgetById: ApuBudget,
+    apuBudgetById: ApuBudget | ApuReturnNested,
 ): string[] => {
     if (!apuBudgetById.apuResource) {
         return [];

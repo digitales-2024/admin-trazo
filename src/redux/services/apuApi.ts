@@ -13,7 +13,16 @@ export const apuApi = createApi({
                 url: `/apus/${id}`,
             }),
         }),
+        updateApu: build.mutation<void, { id: string }>({
+            query: ({ id, ...body }) => ({
+                url: `/apus/${id}`,
+                method: "PATCH",
+                body,
+                credentials: "include",
+            }),
+            invalidatesTags: ["Apu"],
+        }),
     }),
 });
 
-export const { useApuByIdQuery } = apuApi;
+export const { useApuByIdQuery, useUpdateApuMutation } = apuApi;
