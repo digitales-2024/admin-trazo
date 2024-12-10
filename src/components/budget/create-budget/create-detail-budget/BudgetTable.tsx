@@ -37,23 +37,11 @@ interface BudgetTableProps {
         itemId: string,
         subItemId: string,
     ) => void;
-    onUpdateWorkItemQuantity: (
+    onUpdateWorkItem: (
         categoryId: string,
         subcategoryId: string,
         itemId: string,
-        quantity: number,
-    ) => void;
-    onUpdateWorkItemApuId: (
-        categoryId: string,
-        subcategoryId: string,
-        itemId: string,
-        apuId: string,
-    ) => void;
-    onUpdateWorkItemUnitPrice: (
-        categoryId: string,
-        subcategoryId: string,
-        itemId: string,
-        unitPrice: number,
+        updates: Partial<WorkItemDragCategory>,
     ) => void;
     onUpdateSubWorkItem: (
         categoryId: string,
@@ -71,9 +59,7 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
     onDeleteSubcategory,
     onDeleteWorkItem,
     onDeleteSubWorkItem,
-    onUpdateWorkItemQuantity,
-    onUpdateWorkItemApuId,
-    onUpdateWorkItemUnitPrice,
+    onUpdateWorkItem,
     onUpdateSubWorkItem,
 }) => {
     const calculateSubWorkItemTotal = (subItem: SubworkItemDragCategory) =>
@@ -191,14 +177,8 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                                                                     calculateWorkItemTotal={
                                                                         calculateWorkItemTotal
                                                                     }
-                                                                    onUpdateWorkItemQuantity={
-                                                                        onUpdateWorkItemQuantity
-                                                                    }
-                                                                    onUpdateWorkItemApuId={
-                                                                        onUpdateWorkItemApuId
-                                                                    }
-                                                                    onUpdateWorkItemUnitPrice={
-                                                                        onUpdateWorkItemUnitPrice
+                                                                    onUpdateWorkItem={
+                                                                        onUpdateWorkItem
                                                                     }
                                                                     onDeleteWorkItem={
                                                                         onDeleteWorkItem
