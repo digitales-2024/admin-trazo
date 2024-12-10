@@ -1,4 +1,5 @@
 import {
+    BudgetCategories,
     FullCategory,
     SubcategoryDragCategory,
     SubworkItemDragCategory,
@@ -19,11 +20,10 @@ import {
 import { CategoryRow } from "./CategoryRows";
 import SubcategoryRow from "./SubcategoryRows";
 import SubWorkItemRow from "./SubWorkItemRow";
-import { Budget } from "./types";
 import WorkItemRow from "./WorkItemRow";
 
 interface BudgetTableProps {
-    budget: Budget;
+    budget: BudgetCategories;
     onDeleteCategory: (id: string) => void;
     onDeleteSubcategory: (categoryId: string, subcategoryId: string) => void;
     onDeleteWorkItem: (

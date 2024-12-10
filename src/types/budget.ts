@@ -1,3 +1,5 @@
+import { FullCategory } from "./category";
+
 export type Budget = {
     id: string;
     name: string;
@@ -121,3 +123,10 @@ export type SubWorkItem = {
     apuId: string;
     subtotal: number;
 };
+
+export interface BudgetCategories {
+    categories: FullCategory[];
+    overheadPercentage: number;
+    profitPercentage: number;
+    taxPercentage: number;
+}

@@ -24,6 +24,8 @@ export default function UpdateBudget({ budgetById }: UpdateBudgetProps) {
     const [isClient, setIsClient] = useState(false);
     const router = useRouter();
 
+    console.log("budgetById", JSON.stringify(budgetById, null, 2));
+
     useEffect(() => {
         setIsClient(true);
     }, []);

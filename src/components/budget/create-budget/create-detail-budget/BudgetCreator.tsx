@@ -2,6 +2,7 @@
 
 import { useCategory } from "@/hooks/use-category";
 import {
+    BudgetCategories,
     FullCategory,
     SubcategoryDragCategory,
     SubworkItemDragCategory,
@@ -17,7 +18,6 @@ import { AvailableItems } from "./AvailableItems";
 import { BudgetTable } from "./BudgetTable";
 import PercentageBudget from "./PercentageBudget";
 import SummaryBudget from "./SummaryBudget";
-import { Budget } from "./types";
 import {
     calculateCategoryTotal,
     DragResult,
@@ -25,8 +25,8 @@ import {
 } from "./utils/budget-utils";
 
 interface BudgetCreatorProps {
-    budget: Budget;
-    setBudget: React.Dispatch<React.SetStateAction<Budget>>;
+    budget: BudgetCategories;
+    setBudget: React.Dispatch<React.SetStateAction<BudgetCategories>>;
 }
 
 export const BudgetCreator: React.FC<BudgetCreatorProps> = ({

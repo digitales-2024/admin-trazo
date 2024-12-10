@@ -2,7 +2,7 @@
 
 import { useBudgets } from "@/hooks/use-budget";
 import { createBudgetSchema, CreateBudgetSchema } from "@/schemas";
-import { FullCategory } from "@/types";
+import { BudgetCategories, FullCategory } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RefreshCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -14,7 +14,6 @@ import { Separator } from "@/components/ui/separator";
 
 import { Form } from "../../ui/form";
 import { BudgetCreator } from "./create-detail-budget/BudgetCreator";
-import { Budget } from "./create-detail-budget/types";
 import { HeadBudget } from "./create-head-budget/HeadBudget";
 
 export default function CreateBudget() {
@@ -22,7 +21,7 @@ export default function CreateBudget() {
     const { onCreateBudget, isLoadingCreateBudget, isSuccessCreateBudget } =
         useBudgets();
     const router = useRouter();
-    const [budget, setBudget] = useState<Budget>({
+    const [budget, setBudget] = useState<BudgetCategories>({
         categories: [],
         overheadPercentage: 15,
         profitPercentage: 10,

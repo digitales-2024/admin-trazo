@@ -1,7 +1,7 @@
+import { BudgetCategories } from "@/types";
 import { Percent } from "lucide-react";
 import React from "react";
 
-import { Budget } from "@/components/budget/create-budget/create-detail-budget/types";
 import { Input } from "@/components/ui/input";
 
 interface PercentageBudgetProps {
@@ -10,7 +10,7 @@ interface PercentageBudgetProps {
         profitPercentage: number;
         taxPercentage: number;
     };
-    setBudget: React.Dispatch<React.SetStateAction<Budget>>;
+    setBudget: React.Dispatch<React.SetStateAction<BudgetCategories>>;
 }
 
 const PercentageBudget: React.FC<PercentageBudgetProps> = ({
