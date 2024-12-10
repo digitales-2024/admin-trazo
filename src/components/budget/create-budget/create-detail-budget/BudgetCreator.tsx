@@ -35,8 +35,6 @@ export const BudgetCreator: React.FC<BudgetCreatorProps> = ({
 }) => {
     const { fullCategoryData } = useCategory();
 
-    console.log(JSON.stringify(budget, null, 2));
-
     const onDragEnd = (result: DragResult) => {
         if (!result.destination) return;
 
