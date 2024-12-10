@@ -110,6 +110,16 @@ const errorTranslations = {
         "El proyecto de diseño debe estar completado",
     "category should not be empty":
         "La estructura del presupuesto no puede estar vacio",
+    "category\\.(\\d+)\\.subcategory\\.(\\d+)\\.workItem\\.(\\d+)\\.subWorkItem\\.(\\d+)\\.apuBugdetId should not be empty":
+        "Debe seleccionar un APU para la subpartida",
+    "category\\.(\\d+)\\.subcategory\\.(\\d+)\\.workItem\\.(\\d+)\\.subWorkItem\\.(\\d+)\\.apuBugdetId must be a UUID":
+        "Debe seleccionar un APU para la subpartida",
+    "category\\.(\\d+)\\.subcategory\\.(\\d+)\\.workItem\\.(\\d+)\\.subWorkItem\\.(\\d+)\\.apuBugdetId must be a string":
+        "Debe seleccionar un APU para la subpartida",
+    "performance must be a positive number":
+        "El rendimiento debe ser un número positivo",
+    "workHours must be a positive number":
+        "Las horas de trabajo deben ser un número positivo",
 };
 
 export default errorTranslations;

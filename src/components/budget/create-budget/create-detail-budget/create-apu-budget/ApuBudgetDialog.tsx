@@ -52,6 +52,7 @@ export function ApuDialog({
     const { subWorkItemById } = useSubWorkItem({ id: idSubWorkItem });
 
     const itemData = idWorkItem ? workItemById : subWorkItemById;
+    const workItemValidation = workItemById ? true : false;
 
     const [activeTab, setActiveTab] = React.useState("template");
 
@@ -345,6 +346,7 @@ export function ApuDialog({
                                 ? itemData?.name || ""
                                 : itemData?.name || ""
                         }
+                        workItemValidation={workItemValidation}
                         performance={
                             activeTab === "template"
                                 ? templatePerformance

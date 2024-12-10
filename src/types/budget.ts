@@ -1,3 +1,5 @@
+import { FullCategory } from "./category";
+
 export type Budget = {
     id: string;
     name: string;
@@ -8,7 +10,7 @@ export type Budget = {
     dateProject: string;
     clientBudget: Client;
     designProjectBudget?: DesignProject;
-    budgetDetails: BudgetDetail[];
+    budgetDetail: BudgetDetail[];
     category: CategoryBudget[];
 };
 
@@ -24,6 +26,7 @@ export type CreateBudget = {
     igv: number;
     percentageOverhead: number;
     percentageUtility: number;
+    discount: number;
     totalCost: number;
     category: {
         categoryId: string;
@@ -83,6 +86,7 @@ export type BudgetDetail = {
     overhead: number;
     utility: number;
     igv: number;
+    discount: number;
     percentageOverhead: number;
     percentageUtility: number;
     totalCost: number;
@@ -105,19 +109,30 @@ export type WorkItem = {
     id: string;
     subcategoryId?: string;
     name: string;
+    unit?: string;
     quantity?: number;
     unitCost?: number;
     subtotal: number;
     apuId?: string;
-    subWorkItem?: SubWorkItem[];
+    subWorkItems?: SubWorkItem[];
 };
 
 export type SubWorkItem = {
     id: string;
     workItemId?: string;
     name: string;
+    unit?: string;
     quantity: number;
     unitCost: number;
     apuId: string;
     subtotal: number;
 };
+
+export interface BudgetCategories {
+    categories: FullCategory[];
+    overheadPercentage: number;
+    profitPercentage: number;
+    taxPercentage: number;
+    commercialDiscount: number;
+    applyTax: boolean;
+}

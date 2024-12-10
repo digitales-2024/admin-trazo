@@ -2,7 +2,7 @@
 
 import { useBudgets } from "@/hooks/use-budget";
 import { createBudgetSchema, CreateBudgetSchema } from "@/schemas";
-import { FullCategory } from "@/types";
+import { BudgetCategories, FullCategory } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RefreshCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -14,7 +14,6 @@ import { Separator } from "@/components/ui/separator";
 
 import { Form } from "../../ui/form";
 import { BudgetCreator } from "./create-detail-budget/BudgetCreator";
-import { Budget } from "./create-detail-budget/types";
 import { HeadBudget } from "./create-head-budget/HeadBudget";
 
 export default function CreateBudget() {
@@ -22,11 +21,13 @@ export default function CreateBudget() {
     const { onCreateBudget, isLoadingCreateBudget, isSuccessCreateBudget } =
         useBudgets();
     const router = useRouter();
-    const [budget, setBudget] = useState<Budget>({
+    const [budget, setBudget] = useState<BudgetCategories>({
         categories: [],
         overheadPercentage: 15,
         profitPercentage: 10,
         taxPercentage: 18,
+        commercialDiscount: 0,
+        applyTax: true,
     });
 
     const handleCreateBudget = () => {
@@ -46,8 +47,10 @@ export default function CreateBudget() {
 
         const overhead = directCost * (budget.overheadPercentage / 100);
         const utility = directCost * (budget.profitPercentage / 100);
-        const igv = directCost * (budget.taxPercentage / 100);
-        const totalCost = directCost + overhead + utility + igv;
+        const igv =
+            directCost * ((budget.applyTax ? budget.taxPercentage : 0) / 100);
+        const totalCost =
+            directCost + overhead + utility + igv - budget.commercialDiscount;
 
         // Construcción del objeto DTO final
         const budgetData = {
@@ -62,9 +65,10 @@ export default function CreateBudget() {
             directCost: directCost,
             overhead: overhead,
             utility: utility,
-            igv: igv,
+            igv: budget.applyTax ? budget.taxPercentage : 0,
             percentageOverhead: budget.overheadPercentage,
             percentageUtility: budget.profitPercentage,
+            discount: budget.commercialDiscount,
             totalCost: totalCost,
 
             category: budget.categories.map((cat: FullCategory) => ({

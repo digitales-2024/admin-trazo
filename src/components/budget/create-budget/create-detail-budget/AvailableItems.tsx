@@ -97,7 +97,7 @@ export const AvailableItems: React.FC<AvailableItemsProps> = ({ items }) => {
                 <div
                     {...provided.droppableProps}
                     ref={provided.innerRef}
-                    className="w-1/3 rounded-md border border-gray-200 bg-white p-4"
+                    className="w-full rounded-md border border-gray-200 bg-white p-4 md:w-1/3"
                 >
                     <h3 className="mb-2 font-semibold">
                         Elementos Disponibles
