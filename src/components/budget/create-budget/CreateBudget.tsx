@@ -4,7 +4,6 @@ import { useBudgets } from "@/hooks/use-budget";
 import { createBudgetSchema, CreateBudgetSchema } from "@/schemas";
 import { FullCategory } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-/* import { RefreshCcw } from "lucide-react"; */
 import { RefreshCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -20,7 +19,8 @@ import { HeadBudget } from "./create-head-budget/HeadBudget";
 
 export default function CreateBudget() {
     const [isClient, setIsClient] = useState(false);
-    const { onCreateBudget, isLoadingCreateBudget } = useBudgets();
+    const { onCreateBudget, isLoadingCreateBudget, isSuccessCreateBudget } =
+        useBudgets();
     const router = useRouter();
     const [budget, setBudget] = useState<Budget>({
         categories: [],
@@ -29,7 +29,7 @@ export default function CreateBudget() {
         taxPercentage: 18,
     });
 
-    const handleCreateQuotation = () => {
+    const handleCreateBudget = () => {
         const formData = form.getValues();
 
         // Cálculo de costos
@@ -96,7 +96,6 @@ export default function CreateBudget() {
                 })),
             })),
         };
-        console.log(JSON.stringify(budgetData, null, 2));
         onCreateBudget(budgetData);
     };
 
@@ -109,6 +108,12 @@ export default function CreateBudget() {
             router.push("/execution-project/budgets");
         }
     };
+
+    useEffect(() => {
+        if (isSuccessCreateBudget && isClient) {
+            router.push("/execution-project/budgets");
+        }
+    }, [isSuccessCreateBudget, isClient, router]);
 
     const form = useForm<CreateBudgetSchema>({
         resolver: zodResolver(createBudgetSchema),
@@ -140,7 +145,7 @@ export default function CreateBudget() {
                         <Button
                             type="submit"
                             disabled={isLoadingCreateBudget}
-                            onClick={form.handleSubmit(handleCreateQuotation)}
+                            onClick={form.handleSubmit(handleCreateBudget)}
                         >
                             {isLoadingCreateBudget && (
                                 <RefreshCcw
