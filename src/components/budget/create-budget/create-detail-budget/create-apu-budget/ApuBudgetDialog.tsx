@@ -1,6 +1,7 @@
 "use client";
 
 import { useApuBudget } from "@/hooks/use-apu-budget";
+import { useSubWorkItem } from "@/hooks/use-subworkitem";
 import { useWorkItem } from "@/hooks/use-workitem";
 import { ResourceApu, ResourceExpandedApu, ResourceType } from "@/types";
 import { SquarePlus, Pin } from "lucide-react";
@@ -30,7 +31,8 @@ import {
 } from "./utils/resource-type";
 
 interface ApuDialogProps {
-    id: string;
+    idWorkItem?: string;
+    idSubWorkItem?: string;
     open: boolean;
     onOpenChange: (open: boolean) => void;
     onSuccess: (apuId: string, totalCost: number) => void;
@@ -38,14 +40,18 @@ interface ApuDialogProps {
 }
 
 export function ApuDialog({
-    id,
+    idWorkItem,
+    idSubWorkItem,
     open,
     onOpenChange,
     onSuccess,
     apuId,
 }: ApuDialogProps) {
-    const { workItemById } = useWorkItem({ id });
+    const { workItemById } = useWorkItem({ id: idWorkItem });
     const { apuBudgetById } = useApuBudget({ id: apuId || "" });
+    const { subWorkItemById } = useSubWorkItem({ id: idSubWorkItem });
+
+    const itemData = idWorkItem ? workItemById : subWorkItemById;
 
     const [activeTab, setActiveTab] = React.useState("template");
 
@@ -74,20 +80,18 @@ export function ApuDialog({
     const [newWorkHours, setNewWorkHours] = React.useState(0);
 
     React.useEffect(() => {
-        // Inicializar tipos y recursos de la plantilla desde workItemById
-        if (
-            workItemById &&
-            workItemById.apu &&
-            workItemById.apu.apuOnResource
-        ) {
-            const uniqueTypesFromWorkItem = extractUniqueTypes(workItemById);
-            const resourceExpandedListTemplate = convertToResourceExpanded(
-                uniqueTypesFromWorkItem,
-            );
+        // Si no hay datos del item
+        if (!itemData) return;
+
+        // Inicializar tipos y recursos de la plantilla desde itemData
+        if (itemData.apu && itemData.apu.apuOnResource) {
+            const uniqueTypesFromItem = extractUniqueTypes(itemData);
+            const resourceExpandedListTemplate =
+                convertToResourceExpanded(uniqueTypesFromItem);
             setTemplateResourceTypes(resourceExpandedListTemplate);
 
             const initialTemplateResources: Record<string, ResourceApu[]> = {};
-            workItemById.apu.apuOnResource.forEach((apuResource) => {
+            itemData.apu.apuOnResource.forEach((apuResource) => {
                 const { resource, quantity, group } = apuResource;
                 const typeName = resourceTypeNames[resource.type];
                 if (!initialTemplateResources[typeName]) {
@@ -105,8 +109,8 @@ export function ApuDialog({
                 });
             });
             setTemplateResources(initialTemplateResources);
-            setTemplatePerformance(workItemById.apu.performance || 0);
-            setTemplateWorkHours(workItemById.apu.workHours || 0);
+            setTemplatePerformance(itemData.apu.performance || 0);
+            setTemplateWorkHours(itemData.apu.workHours || 0);
         }
 
         // Inicializar tipos y recursos nuevos desde apuBudgetById si está disponible
@@ -147,23 +151,18 @@ export function ApuDialog({
             if (uniqueTypesFromApuBudget.length > 0) {
                 setActiveTab("new");
             }
-        } else if (
-            workItemById &&
-            workItemById.apu &&
-            workItemById.apu.apuOnResource
-        ) {
-            // Si no hay apuBudgetById, inicializar newResourceTypes y newResources desde workItemById
-            const uniqueTypesFromWorkItem = extractUniqueTypes(workItemById);
-            const resourceExpandedListNew = convertToResourceExpanded(
-                uniqueTypesFromWorkItem,
-            );
+        } else if (itemData.apu && itemData.apu.apuOnResource) {
+            // Si no hay apuBudgetById, inicializar newResourceTypes y newResources desde itemData
+            const uniqueTypesFromItem = extractUniqueTypes(itemData);
+            const resourceExpandedListNew =
+                convertToResourceExpanded(uniqueTypesFromItem);
             setNewResourceTypes(resourceExpandedListNew);
 
             const initialNewResourcesFromWorkItem: Record<
                 string,
                 ResourceApu[]
             > = {};
-            workItemById.apu.apuOnResource.forEach((apuResource) => {
+            itemData.apu.apuOnResource.forEach((apuResource) => {
                 const { resource, quantity, group } = apuResource;
                 const typeName = resourceTypeNames[resource.type];
                 if (!initialNewResourcesFromWorkItem[typeName]) {
@@ -181,10 +180,10 @@ export function ApuDialog({
                 });
             });
             setNewResources(initialNewResourcesFromWorkItem);
-            setNewPerformance(workItemById.apu.performance || 0);
-            setNewWorkHours(workItemById.apu.workHours || 0);
+            setNewPerformance(itemData.apu.performance || 0);
+            setNewWorkHours(itemData.apu.workHours || 0);
         }
-    }, [workItemById, apuBudgetById]);
+    }, [itemData, apuBudgetById]);
 
     const handleAddResource = (
         type: string,
@@ -343,8 +342,8 @@ export function ApuDialog({
                     <ApuHeadInformation
                         name={
                             activeTab === "new" && apuBudgetById
-                                ? workItemById?.name || ""
-                                : workItemById?.name || ""
+                                ? itemData?.name || ""
+                                : itemData?.name || ""
                         }
                         performance={
                             activeTab === "template"

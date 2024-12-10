@@ -171,7 +171,7 @@ const WorkItemRow: React.FC<WorkItemRowProps> = ({
                         <ApuDialog
                             open={showApuDialog}
                             onOpenChange={setShowApuDialog}
-                            id={item.id}
+                            idWorkItem={item.id}
                             onSuccess={handleApuSuccess}
                             apuId={item.apuId}
                         />
