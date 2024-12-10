@@ -48,8 +48,7 @@ interface BudgetTableProps {
         subcategoryId: string,
         itemId: string,
         subItemId: string,
-        quantity: number,
-        unitPrice: number,
+        updates: Partial<SubworkItemDragCategory>,
     ) => void;
 }
 

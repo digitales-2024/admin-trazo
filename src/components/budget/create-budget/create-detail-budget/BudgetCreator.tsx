@@ -35,6 +35,8 @@ export const BudgetCreator: React.FC<BudgetCreatorProps> = ({
 }) => {
     const { fullCategoryData } = useCategory();
 
+    console.log(JSON.stringify(budget, null, 2));
+
     const onDragEnd = (result: DragResult) => {
         if (!result.destination) return;
 
@@ -441,7 +443,7 @@ export const BudgetCreator: React.FC<BudgetCreatorProps> = ({
         subcategoryId: string,
         itemId: string,
         subItemId: string,
-        updatedSubItem: SubworkItemDragCategory,
+        updates: Partial<SubworkItemDragCategory>,
     ) => {
         setBudget((prev) => {
             const updatedCategories = prev.categories.map((cat) =>
@@ -461,7 +463,21 @@ export const BudgetCreator: React.FC<BudgetCreatorProps> = ({
                                                               (si) =>
                                                                   si.id ===
                                                                   subItemId
-                                                                      ? updatedSubItem
+                                                                      ? {
+                                                                            ...si,
+                                                                            ...updates,
+                                                                            subtotal:
+                                                                                ((updates.quantity !==
+                                                                                undefined
+                                                                                    ? updates.quantity
+                                                                                    : si.quantity) ||
+                                                                                    0) *
+                                                                                ((updates.unitCost !==
+                                                                                undefined
+                                                                                    ? updates.unitCost
+                                                                                    : si.unitCost) ||
+                                                                                    0),
+                                                                        }
                                                                       : si,
                                                           ),
                                                       subtotal:
@@ -470,7 +486,16 @@ export const BudgetCreator: React.FC<BudgetCreatorProps> = ({
                                                                   acc +
                                                                   (subItem.id ===
                                                                   subItemId
-                                                                      ? updatedSubItem.subtotal
+                                                                      ? ((updates.quantity !==
+                                                                        undefined
+                                                                            ? updates.quantity
+                                                                            : subItem.quantity) ||
+                                                                            0) *
+                                                                        ((updates.unitCost !==
+                                                                        undefined
+                                                                            ? updates.unitCost
+                                                                            : subItem.unitCost) ||
+                                                                            0)
                                                                       : subItem.subtotal),
                                                               0,
                                                           ),
@@ -546,29 +571,7 @@ export const BudgetCreator: React.FC<BudgetCreatorProps> = ({
                                         onDeleteWorkItem={deleteWorkItem}
                                         onDeleteSubWorkItem={deleteSubWorkItem}
                                         onUpdateWorkItem={updateWorkItem}
-                                        onUpdateSubWorkItem={(
-                                            categoryId,
-                                            subcategoryId,
-                                            itemId,
-                                            subItemId,
-                                            quantity,
-                                            unitCost,
-                                        ) =>
-                                            updateSubWorkItem(
-                                                categoryId,
-                                                subcategoryId,
-                                                itemId,
-                                                subItemId,
-                                                {
-                                                    id: subItemId,
-                                                    name: "",
-                                                    quantity,
-                                                    unitCost,
-                                                    subtotal:
-                                                        quantity * unitCost,
-                                                },
-                                            )
-                                        }
+                                        onUpdateSubWorkItem={updateSubWorkItem}
                                     />
                                 </div>
                             </div>
