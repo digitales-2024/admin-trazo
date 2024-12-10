@@ -24,13 +24,13 @@ import {
 import { Separator } from "@/components/ui/separator";
 
 import { CreateSubCategoryDialog } from "./_subcategory/CreateSubCategoryDialog";
-import { CreateSubWorkItemDialog } from "./CreateSubWorkItemDialog";
-import { CreateWorkItemDialog } from "./CreateWorkItemDialog";
-import { DeleteSubWorkItemDialog } from "./DeleteSubWorkItemDialog";
-import { DeleteWorkItemDialog } from "./DeleteWorkItemDialog";
-import { EditWorkItemSheet } from "./EditWorkItemSheet";
-import { ReactivateSubWorkItemDialog } from "./ReactivateSubWorkItemDialog";
-import { ReactivateWorkItemDialog } from "./ReactivateWorkItemDialog";
+import { CreateSubWorkItemDialog } from "./_subworkitem/CreateSubWorkItemDialog";
+import { DeleteSubWorkItemDialog } from "./_subworkitem/DeleteSubWorkItemDialog";
+import { ReactivateSubWorkItemDialog } from "./_subworkitem/ReactivateSubWorkItemDialog";
+import { CreateWorkItemDialog } from "./_workitem/CreateWorkItemDialog";
+import { DeleteWorkItemDialog } from "./_workitem/DeleteWorkItemDialog";
+import { EditWorkItemSheet } from "./_workitem/EditWorkItemSheet";
+import { ReactivateWorkItemDialog } from "./_workitem/ReactivateWorkItemDialog";
 
 export const categoryTableColumns = (
     isSuperadmin: boolean,
