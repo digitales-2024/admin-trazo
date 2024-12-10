@@ -33,11 +33,6 @@ export const BudgetCreator: React.FC<BudgetCreatorProps> = ({
     budget,
     setBudget,
 }) => {
-    console.log(
-        "este es el budget de creator",
-        JSON.stringify(budget, null, 2),
-    );
-
     const { fullCategoryData } = useCategory();
 
     const onDragEnd = (result: DragResult) => {
@@ -372,77 +367,14 @@ export const BudgetCreator: React.FC<BudgetCreatorProps> = ({
         }));
     };
 
-    const updateWorkItemQuantity = (
+    const updateWorkItem = (
         categoryId: string,
         subcategoryId: string,
         itemId: string,
-        quantity: number,
+        updates: Partial<WorkItemDragCategory>,
     ) => {
-        setBudget((prev) => ({
-            ...prev,
-            categories: prev.categories.map((cat) =>
-                cat.id === categoryId
-                    ? {
-                          ...cat,
-                          subcategories: cat.subcategories.map((subcat) =>
-                              subcat.id === subcategoryId
-                                  ? {
-                                        ...subcat,
-                                        workItems: subcat.workItems.map(
-                                            (item) =>
-                                                item.id === itemId
-                                                    ? { ...item, quantity }
-                                                    : item,
-                                        ),
-                                    }
-                                  : subcat,
-                          ),
-                      }
-                    : cat,
-            ),
-        }));
-    };
-
-    const updateWorkItemApuId = (
-        categoryId: string,
-        subcategoryId: string,
-        itemId: string,
-        apuId: string,
-    ) => {
-        setBudget((prev) => ({
-            ...prev,
-            categories: prev.categories.map((cat) =>
-                cat.id === categoryId
-                    ? {
-                          ...cat,
-                          subcategories: cat.subcategories.map((subcat) =>
-                              subcat.id === subcategoryId
-                                  ? {
-                                        ...subcat,
-                                        workItems: subcat.workItems.map(
-                                            (item) =>
-                                                item.id === itemId
-                                                    ? { ...item, apuId }
-                                                    : item,
-                                        ),
-                                    }
-                                  : subcat,
-                          ),
-                      }
-                    : cat,
-            ),
-        }));
-    };
-
-    const updateWorkItemUnitPrice = (
-        categoryId: string,
-        subcategoryId: string,
-        itemId: string,
-        unitPrice: number,
-    ) => {
-        setBudget((prev) => ({
-            ...prev,
-            categories: prev.categories.map((cat) =>
+        setBudget((prev) => {
+            const updatedCategories = prev.categories.map((cat) =>
                 cat.id === categoryId
                     ? {
                           ...cat,
@@ -455,17 +387,53 @@ export const BudgetCreator: React.FC<BudgetCreatorProps> = ({
                                                 item.id === itemId
                                                     ? {
                                                           ...item,
-                                                          unitCost: unitPrice,
+                                                          ...updates,
+                                                          subtotal:
+                                                              ((updates.quantity !==
+                                                              undefined
+                                                                  ? updates.quantity
+                                                                  : item.quantity) ||
+                                                                  0) *
+                                                              ((updates.unitCost !==
+                                                              undefined
+                                                                  ? updates.unitCost
+                                                                  : item.unitCost) ||
+                                                                  0),
                                                       }
                                                     : item,
+                                        ),
+                                        subtotal: subcat.workItems.reduce(
+                                            (acc, item) =>
+                                                acc +
+                                                (item.id === itemId
+                                                    ? ((updates.quantity !==
+                                                      undefined
+                                                          ? updates.quantity
+                                                          : item.quantity) ||
+                                                          0) *
+                                                      ((updates.unitCost !==
+                                                      undefined
+                                                          ? updates.unitCost
+                                                          : item.unitCost) || 0)
+                                                    : item.subtotal),
+                                            0,
                                         ),
                                     }
                                   : subcat,
                           ),
+                          subtotal: cat.subcategories.reduce(
+                              (acc, subcat) => acc + subcat.subtotal,
+                              0,
+                          ),
                       }
                     : cat,
-            ),
-        }));
+            );
+
+            return {
+                ...prev,
+                categories: updatedCategories,
+            };
+        });
     };
 
     const updateSubWorkItem = (
@@ -475,9 +443,8 @@ export const BudgetCreator: React.FC<BudgetCreatorProps> = ({
         subItemId: string,
         updatedSubItem: SubworkItemDragCategory,
     ) => {
-        setBudget((prev) => ({
-            ...prev,
-            categories: prev.categories.map((cat) =>
+        setBudget((prev) => {
+            const updatedCategories = prev.categories.map((cat) =>
                 cat.id === categoryId
                     ? {
                           ...cat,
@@ -497,16 +464,39 @@ export const BudgetCreator: React.FC<BudgetCreatorProps> = ({
                                                                       ? updatedSubItem
                                                                       : si,
                                                           ),
+                                                      subtotal:
+                                                          i.subWorkItems?.reduce(
+                                                              (acc, subItem) =>
+                                                                  acc +
+                                                                  (subItem.id ===
+                                                                  subItemId
+                                                                      ? updatedSubItem.subtotal
+                                                                      : subItem.subtotal),
+                                                              0,
+                                                          ),
                                                   }
                                                 : i,
+                                        ),
+                                        subtotal: sc.workItems.reduce(
+                                            (acc, item) => acc + item.subtotal,
+                                            0,
                                         ),
                                     }
                                   : sc,
                           ),
+                          subtotal: cat.subcategories.reduce(
+                              (acc, subcat) => acc + subcat.subtotal,
+                              0,
+                          ),
                       }
                     : cat,
-            ),
-        }));
+            );
+
+            return {
+                ...prev,
+                categories: updatedCategories,
+            };
+        });
     };
 
     const calculateTotals = () => {
@@ -517,7 +507,7 @@ export const BudgetCreator: React.FC<BudgetCreatorProps> = ({
         const overhead = directCosts * (budget.overheadPercentage / 100);
         const profit = directCosts * (budget.profitPercentage / 100);
         const subtotal = directCosts + overhead + profit;
-        const tax = subtotal * (budget.taxPercentage / 100);
+        const tax = directCosts * (budget.taxPercentage / 100);
         const total = subtotal + tax;
         return { directCosts, overhead, profit, tax, total };
     };
@@ -555,15 +545,7 @@ export const BudgetCreator: React.FC<BudgetCreatorProps> = ({
                                         onDeleteSubcategory={deleteSubcategory}
                                         onDeleteWorkItem={deleteWorkItem}
                                         onDeleteSubWorkItem={deleteSubWorkItem}
-                                        onUpdateWorkItemQuantity={
-                                            updateWorkItemQuantity
-                                        }
-                                        onUpdateWorkItemUnitPrice={
-                                            updateWorkItemUnitPrice
-                                        }
-                                        onUpdateWorkItemApuId={
-                                            updateWorkItemApuId
-                                        }
+                                        onUpdateWorkItem={updateWorkItem}
                                         onUpdateSubWorkItem={(
                                             categoryId,
                                             subcategoryId,
