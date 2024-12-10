@@ -5,6 +5,11 @@ export type Subcategory = {
     category: Category;
 };
 
+export type SubcategoryCreate = {
+    name: string,
+    categoryId: string,
+}
+
 type Category = {
     id: string;
     name: string;

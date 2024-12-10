@@ -2,6 +2,7 @@ import { Subcategory } from "@/types";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 import baseQueryWithReauth from "../baseQuery";
+import { SubcategoryCreate } from "@/types/subcategory";
 
 interface GetSubcategoryByIdProps {
     id: string;
@@ -13,7 +14,7 @@ export const subcategoryApi = createApi({
     tagTypes: ["Subcategory"],
     endpoints: (build) => ({
         //Crear subcategorias
-        createSubcategory: build.mutation<Subcategory, Partial<Subcategory>>({
+        createSubcategory: build.mutation<Subcategory, SubcategoryCreate>({
             query: (body) => ({
                 url: "/subcategory",
                 method: "POST",

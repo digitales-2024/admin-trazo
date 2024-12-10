@@ -1,3 +1,4 @@
+import { runAndHandleError } from "@/redux/baseQuery";
 import {
     useCreateSubcategoryMutation,
     useDeleteSubcategoryMutation,
@@ -8,6 +9,7 @@ import {
     useUpdateSubcategoryMutation,
 } from "@/redux/services/subcategoryApi";
 import { CustomErrorData, Subcategory } from "@/types";
+import { SubcategoryCreate } from "@/types/subcategory";
 import { translateError } from "@/utils/translateError";
 import { toast } from "sonner";
 
@@ -67,41 +69,15 @@ export const useSubcategory = (options: UseSubcategoryProps = {}) => {
         },
     ] = useReactivateSubcategoryMutation();
 
-    const onCreateSubcategory = async (input: Partial<Subcategory>) => {
-        const promise = () =>
-            new Promise(async (resolve, reject) => {
-                try {
-                    const result = await createSubcategory(input);
-                    if (result.error) {
-                        if (
-                            typeof result.error === "object" &&
-                            "data" in result.error
-                        ) {
-                            const error = (result.error.data as CustomErrorData)
-                                .message;
-                            const message = translateError(error as string);
-                            reject(new Error(message));
-                        } else {
-                            reject(
-                                new Error(
-                                    "Ocurrió un error inesperado, por favor intenta de nuevo",
-                                ),
-                            );
-                        }
-                    } else {
-                        resolve(result);
-                    }
-                } catch (error) {
-                    reject(error);
-                }
-            });
-
-        return toast.promise(promise(), {
+    async function onCreateSubcategory(input: SubcategoryCreate) {
+        const promise = runAndHandleError(() => createSubcategory(input).unwrap());
+        toast.promise(promise, {
             loading: "Creando subcategoría...",
-            success: "Subcategoría creado con éxito",
+            success: "Subcategoría creada con éxito",
             error: (err) => err.message,
         });
-    };
+        return await promise;
+    }
 
     const onUpdateSubcategory = async (
         input: Partial<Subcategory> & { id: string },
