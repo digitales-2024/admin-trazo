@@ -59,7 +59,10 @@ export const budgetsApi = createApi({
             providesTags: ["Budget"],
         }),
         //Actualizar presupuesto
-        updateBudget: build.mutation<Budget, Partial<Budget> & { id: string }>({
+        updateBudget: build.mutation<
+            Budget,
+            Partial<CreateBudget> & { id: string }
+        >({
             query: ({ id, ...body }) => ({
                 url: `/budget/${id}`,
                 method: "PATCH",
