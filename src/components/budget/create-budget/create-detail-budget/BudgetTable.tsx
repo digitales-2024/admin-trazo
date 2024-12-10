@@ -113,7 +113,7 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                                     <TableHead className="w-[250px] text-center">
                                         Precio
                                     </TableHead>
-                                    <TableHead className="w-[200px] text-center">
+                                    <TableHead className="w-[300px] text-center">
                                         Subtotal
                                     </TableHead>
                                     <TableHead className="w-[100px] text-center">

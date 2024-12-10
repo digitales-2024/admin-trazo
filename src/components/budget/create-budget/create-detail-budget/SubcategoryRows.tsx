@@ -42,7 +42,11 @@ const SubcategoryRow: React.FC<SubcategoryRowProps> = ({
             <TableCell></TableCell>
             <TableCell></TableCell>
             <TableCell>
-                S/. {calculateSubcategoryTotal(subcategory).toFixed(2)}
+                <div className="w-28 items-center text-center">
+                    <span>
+                        S/. {calculateSubcategoryTotal(subcategory).toFixed(2)}
+                    </span>
+                </div>
             </TableCell>
             <TableCell>
                 <Button

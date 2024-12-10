@@ -165,7 +165,7 @@ const WorkItemRow: React.FC<WorkItemRowProps> = ({
                                     },
                                 )
                             }
-                            className="w-20"
+                            className="w-28"
                             placeholder="Precio"
                         />
                         <ApuDialog
@@ -187,7 +187,11 @@ const WorkItemRow: React.FC<WorkItemRowProps> = ({
                 )}
             </TableCell>
 
-            <TableCell>S/. {calculateWorkItemTotal(item).toFixed(2)}</TableCell>
+            <TableCell>
+                <div className="w-28 items-center text-center">
+                    <span>S/. {calculateWorkItemTotal(item).toFixed(2)}</span>
+                </div>
+            </TableCell>
             <TableCell>
                 <Button
                     type="button"

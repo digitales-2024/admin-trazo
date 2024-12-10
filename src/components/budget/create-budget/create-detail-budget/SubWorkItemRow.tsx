@@ -135,10 +135,15 @@ const SubWorkItemRow: React.FC<SubWorkItemRowProps> = ({
                     </Button>
                 </div>
             </TableCell>
-
             <TableCell>
-                S/.{" "}
-                {((subItem.quantity || 0) * (subItem.unitCost || 0)).toFixed(2)}
+                <div className="w-28 items-center text-center">
+                    <span>
+                        S/.{" "}
+                        {(
+                            (subItem.quantity || 0) * (subItem.unitCost || 0)
+                        ).toFixed(2)}
+                    </span>
+                </div>
             </TableCell>
             <TableCell>
                 <Button

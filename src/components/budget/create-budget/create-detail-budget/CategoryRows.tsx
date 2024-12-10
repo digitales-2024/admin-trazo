@@ -37,7 +37,11 @@ export const CategoryRow: React.FC<CategoryRowProps> = ({
             <TableCell></TableCell>
             <TableCell></TableCell>
             <TableCell>
-                S/. {calculateCategoryTotal(category).toFixed(2)}
+                <div className="w-28 items-center text-center">
+                    <span>
+                        S/. {calculateCategoryTotal(category).toFixed(2)}
+                    </span>
+                </div>
             </TableCell>
             <TableCell>
                 <Button
