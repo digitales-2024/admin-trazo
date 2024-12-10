@@ -61,6 +61,7 @@ export function ApuDialog({
     const apuBudgetById = isBlueprint ? apuById : apuBudgetByIdTemp;
 
     const itemData = idWorkItem ? workItemById : subWorkItemById;
+    const workItemValidation = workItemById ? true : false;
 
     const [activeTab, setActiveTab] = React.useState(
         isBlueprint ? "new" : "template",
@@ -360,6 +361,7 @@ export function ApuDialog({
                                 ? itemData?.name || ""
                                 : itemData?.name || ""
                         }
+                        workItemValidation={workItemValidation}
                         performance={
                             activeTab === "template"
                                 ? templatePerformance

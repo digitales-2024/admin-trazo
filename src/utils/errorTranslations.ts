@@ -124,6 +124,16 @@ const errorTranslations = {
         "Ya existe una categoría con este nombre",
     "This category exist, but is inactive":
         "Ya existe una categoría inactiva con este nombre",
+    "category\\.(\\d+)\\.subcategory\\.(\\d+)\\.workItem\\.(\\d+)\\.subWorkItem\\.(\\d+)\\.apuBugdetId should not be empty":
+        "Debe seleccionar un APU para la subpartida",
+    "category\\.(\\d+)\\.subcategory\\.(\\d+)\\.workItem\\.(\\d+)\\.subWorkItem\\.(\\d+)\\.apuBugdetId must be a UUID":
+        "Debe seleccionar un APU para la subpartida",
+    "category\\.(\\d+)\\.subcategory\\.(\\d+)\\.workItem\\.(\\d+)\\.subWorkItem\\.(\\d+)\\.apuBugdetId must be a string":
+        "Debe seleccionar un APU para la subpartida",
+    "performance must be a positive number":
+        "El rendimiento debe ser un número positivo",
+    "workHours must be a positive number":
+        "Las horas de trabajo deben ser un número positivo",
 };
 
 export default errorTranslations;
