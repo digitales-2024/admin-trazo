@@ -8,7 +8,7 @@ export const useApu = (options?: { id: string }) => {
 
     const [updateApuFn] = useUpdateApuMutation();
 
-    async function updateApu(input: any) {
+    async function updateApu(input: { id: string }) {
         const promise = runAndHandleError(() => updateApuFn(input).unwrap());
         toast.promise(promise, {
             loading: "Creando categoría...",

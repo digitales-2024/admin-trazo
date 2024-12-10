@@ -2,6 +2,7 @@ import { ApuReturnNested } from "@/types/apu";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 import baseQueryWithReauth from "../baseQuery";
+import { ApuBudgetResponse } from "./apuBudgetApi";
 
 export const apuApi = createApi({
     reducerPath: "apuApi",
@@ -13,7 +14,7 @@ export const apuApi = createApi({
                 url: `/apus/${id}`,
             }),
         }),
-        updateApu: build.mutation<void, { id: string }>({
+        updateApu: build.mutation<ApuBudgetResponse, { id: string }>({
             query: ({ id, ...body }) => ({
                 url: `/apus/${id}`,
                 method: "PATCH",

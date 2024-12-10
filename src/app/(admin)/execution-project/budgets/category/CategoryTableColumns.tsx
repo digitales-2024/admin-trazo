@@ -1,5 +1,8 @@
 "use client";
 
+import { useCategory } from "@/hooks/use-category";
+import { useEditSubWorkItemMutation } from "@/redux/services/subworkitemApi";
+import { useEditWorkItemMutation } from "@/redux/services/workitemApi";
 import { EntityType, GenericTableItem } from "@/types/category";
 import { ColumnDef } from "@tanstack/react-table";
 import {
@@ -158,11 +161,35 @@ export const categoryTableColumns = (
     {
         id: "buttons",
         header: () => <div className="text-center">Acciones</div>,
-        cell: ({ row }) => {
+        cell: function Component({ row }) {
             const data = row.original;
             const [open, setOpen] = useState(false);
+            const { fullCategoryRefetch } = useCategory();
+            const [workitemEdit] = useEditWorkItemMutation();
+            const [subworkitemEdit] = useEditSubWorkItemMutation();
             if (!data.apuId) {
                 return <div />;
+            }
+
+            // recibe el costo unitario de cuando se actualiza el apu,
+            // y lo guarda en la bd
+            async function updateWorkItemUnitPrice(price: number) {
+                if (data.entityName === "Workitem") {
+                    await workitemEdit({
+                        id: data.id,
+                        body: {
+                            unitCost: price,
+                        },
+                    });
+                } else if (data.entityName === "Subworkitem") {
+                    await subworkitemEdit({
+                        id: data.id,
+                        body: {
+                            unitCost: price,
+                        },
+                    });
+                }
+                fullCategoryRefetch();
             }
 
             return (
@@ -178,7 +205,7 @@ export const categoryTableColumns = (
                         }
                         open={open}
                         onOpenChange={setOpen}
-                        onSuccess={(id, cost) => console.table({ id, cost })}
+                        onSuccess={(id, cost) => updateWorkItemUnitPrice(cost)}
                         apuId={!!data.apuId ? data.apuId : undefined}
                         isBlueprint={true}
                     />

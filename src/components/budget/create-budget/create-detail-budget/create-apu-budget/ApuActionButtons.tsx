@@ -1,5 +1,6 @@
 import { useApu } from "@/hooks/use-apu";
 import { useApuBudget } from "@/hooks/use-apu-budget";
+import { useCategory } from "@/hooks/use-category";
 import { ResourceApu } from "@/types";
 import React, { useEffect } from "react";
 
@@ -33,6 +34,7 @@ const ApuActionButtons: React.FC<ApuActionButtonsProps> = ({
     apuId,
     isBlueprint = false,
 }) => {
+    const { fullCategoryRefetch } = useCategory();
     const { onCreateApuBudget, isSuccessCreateApuBudget, dataCreateApuBudget } =
         useApuBudget();
     const { onUpdateApuBudget, isSuccessUpdateApuBudget, dataUpdateApuBudget } =
@@ -49,7 +51,12 @@ const ApuActionButtons: React.FC<ApuActionButtonsProps> = ({
             }
             onOpenChange(false);
         }
-    }, [isSuccessCreateApuBudget]);
+    }, [
+        isSuccessCreateApuBudget,
+        dataCreateApuBudget,
+        onOpenChange,
+        onSuccess,
+    ]);
 
     useEffect(() => {
         if (isSuccessUpdateApuBudget) {
@@ -61,7 +68,12 @@ const ApuActionButtons: React.FC<ApuActionButtonsProps> = ({
             }
             onOpenChange(false);
         }
-    }, [isSuccessUpdateApuBudget]);
+    }, [
+        isSuccessUpdateApuBudget,
+        dataUpdateApuBudget,
+        onOpenChange,
+        onSuccess,
+    ]);
 
     const transformResources = (resources: Record<string, ResourceApu[]>) => {
         return Object.values(resources)
@@ -83,8 +95,10 @@ const ApuActionButtons: React.FC<ApuActionButtonsProps> = ({
                 workHours: newWorkHours,
                 resources: transformResources(newResources),
             };
-            await updateApu(payload);
+            const result = await updateApu(payload);
+            fullCategoryRefetch();
             onOpenChange(false);
+            onSuccess(result.data.id, result.data.unitCost);
             return;
         }
 
