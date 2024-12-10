@@ -10,7 +10,7 @@ export type Budget = {
     dateProject: string;
     clientBudget: Client;
     designProjectBudget?: DesignProject;
-    budgetDetails: BudgetDetail[];
+    budgetDetail: BudgetDetail[];
     category: CategoryBudget[];
 };
 
@@ -107,17 +107,19 @@ export type WorkItem = {
     id: string;
     subcategoryId?: string;
     name: string;
+    unit?: string;
     quantity?: number;
     unitCost?: number;
     subtotal: number;
     apuId?: string;
-    subWorkItem?: SubWorkItem[];
+    subWorkItems?: SubWorkItem[];
 };
 
 export type SubWorkItem = {
     id: string;
     workItemId?: string;
     name: string;
+    unit?: string;
     quantity: number;
     unitCost: number;
     apuId: string;
