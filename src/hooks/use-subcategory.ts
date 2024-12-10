@@ -8,9 +8,8 @@ import {
     useReactivateSubcategoryMutation,
     useUpdateSubcategoryMutation,
 } from "@/redux/services/subcategoryApi";
-import { CustomErrorData, Subcategory } from "@/types";
+import { Subcategory } from "@/types";
 import { SubcategoryCreate } from "@/types/subcategory";
-import { translateError } from "@/utils/translateError";
 import { toast } from "sonner";
 
 interface UseSubcategoryProps {
@@ -95,47 +94,17 @@ export const useSubcategory = (options: UseSubcategoryProps = {}) => {
         return await promise;
     }
 
-    const onReactivateSubcategory = async (ids: Subcategory[]) => {
-        const onlyIds = ids.map((subcategoryType) => subcategoryType.id);
-        const idsString = {
-            ids: onlyIds,
-        };
-        const promise = () =>
-            new Promise(async (resolve, reject) => {
-                try {
-                    const result = await reactivateSubcategory(idsString);
-                    if (result.error) {
-                        if (
-                            typeof result.error === "object" &&
-                            "data" in result.error
-                        ) {
-                            const error = (result.error.data as CustomErrorData)
-                                .message;
-                            const message = translateError(error as string);
-                            reject(new Error(message));
-                        } else {
-                            reject(
-                                new Error(
-                                    "Ocurrió un error inesperado, por favor intenta de nuevo",
-                                ),
-                            );
-                        }
-                    } else {
-                        resolve(result);
-                    }
-                } catch (error) {
-                    reject(error);
-                }
-            });
-
-        toast.promise(promise(), {
+    async function onReactivateSubcategory(ids: string[]) {
+        const promise = runAndHandleError(() =>
+            reactivateSubcategory({ ids }).unwrap(),
+        );
+        toast.promise(promise, {
             loading: "Reactivando...",
-            success: "Subcategorias reactivadas con éxito",
-            error: (error) => {
-                return error.message;
-            },
+            success: "Subcategorías reactivadas con éxito",
+            error: (err) => err.message,
         });
-    };
+        return await promise;
+    }
 
     async function onDeleteSubcategory(ids: Array<string>) {
         const promise = runAndHandleError(() =>

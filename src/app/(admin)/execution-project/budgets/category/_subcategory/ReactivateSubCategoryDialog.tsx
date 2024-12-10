@@ -11,7 +11,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 
-export function DeleteSubCategoryDialog({
+export function ReactivateSubCategoryDialog({
     open,
     onOpenChange,
     data,
@@ -21,10 +21,10 @@ export function DeleteSubCategoryDialog({
     data: GenericTableItem;
 }) {
     const { fullCategoryRefetch } = useCategory();
-    const { deleteSubcategory } = useSubcategory();
+    const { reactivateSubcategory } = useSubcategory();
 
-    async function deleteFn() {
-        await deleteSubcategory([data.id]);
+    async function reactivate() {
+        await reactivateSubcategory([data.id]);
         onOpenChange(false);
         fullCategoryRefetch();
     }
@@ -33,12 +33,10 @@ export function DeleteSubCategoryDialog({
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>¿Estas seguro?</DialogTitle>
+                    <DialogTitle>¿Reactivar subcategoría?</DialogTitle>
                     <DialogDescription>
-                        Esta acción eliminará esta subcategoría, todas sus{" "}
-                        <b>subpartidas</b> y todos sus <b>APUs</b>.
-                        <br />
-                        Los presupuestos existentes no se verán afectados.
+                        Esta acción reactivará esta subcategoría, sus
+                        subpartidas y su APU.
                         <br />
                         ¿Deseas continuar?
                     </DialogDescription>
@@ -50,9 +48,7 @@ export function DeleteSubCategoryDialog({
                     >
                         Cancelar
                     </Button>
-                    <Button variant="destructive" onClick={deleteFn}>
-                        Eliminar
-                    </Button>
+                    <Button onClick={reactivate}>Reactivar</Button>
                 </div>
             </DialogContent>
         </Dialog>

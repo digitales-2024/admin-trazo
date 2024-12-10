@@ -26,7 +26,9 @@ import { Separator } from "@/components/ui/separator";
 import { DeleteCategoryDialog } from "./_category/DeleteCategoryDialog";
 import { EditCategorySheet } from "./_category/EditCategorySheet";
 import { CreateSubCategoryDialog } from "./_subcategory/CreateSubCategoryDialog";
+import { DeleteSubCategoryDialog } from "./_subcategory/DeleteSubCategoryDialog";
 import { EditSubCategorySheet } from "./_subcategory/EditSubCategorySheet";
+import { ReactivateSubCategoryDialog } from "./_subcategory/ReactivateSubCategoryDialog";
 import { CreateSubWorkItemDialog } from "./_subworkitem/CreateSubWorkItemDialog";
 import { DeleteSubWorkItemDialog } from "./_subworkitem/DeleteSubWorkItemDialog";
 import { ReactivateSubWorkItemDialog } from "./_subworkitem/ReactivateSubWorkItemDialog";
@@ -34,7 +36,6 @@ import { CreateWorkItemDialog } from "./_workitem/CreateWorkItemDialog";
 import { DeleteWorkItemDialog } from "./_workitem/DeleteWorkItemDialog";
 import { EditWorkItemSheet } from "./_workitem/EditWorkItemSheet";
 import { ReactivateWorkItemDialog } from "./_workitem/ReactivateWorkItemDialog";
-import { DeleteSubCategoryDialog } from "./_subcategory/DeleteSubCategoryDialog";
 
 export const categoryTableColumns = (
     isSuperadmin: boolean,
@@ -311,6 +312,7 @@ function SubCategoryActions({
     const [showCreateWorkItem, setShowCreateWorkItem] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
+    const [showReactivate, setShowReactivate] = useState(false);
 
     return (
         <div>
@@ -328,6 +330,11 @@ function SubCategoryActions({
                 <DeleteSubCategoryDialog
                     open={showDelete}
                     onOpenChange={setShowDelete}
+                    data={data}
+                />
+                <ReactivateSubCategoryDialog
+                    open={showReactivate}
+                    onOpenChange={setShowReactivate}
                     data={data}
                 />
             </div>
@@ -355,7 +362,7 @@ function SubCategoryActions({
                     </DropdownMenuItem>
                     {isSuperAdmin && (
                         <DropdownMenuItem
-                            onSelect={() => void 0}
+                            onSelect={() => setShowReactivate(true)}
                             disabled={data.isActive}
                         >
                             Reactivar
