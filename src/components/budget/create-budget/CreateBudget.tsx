@@ -26,6 +26,8 @@ export default function CreateBudget() {
         overheadPercentage: 15,
         profitPercentage: 10,
         taxPercentage: 18,
+        commercialDiscount: 0,
+        applyTax: true,
     });
 
     const handleCreateBudget = () => {
@@ -45,8 +47,10 @@ export default function CreateBudget() {
 
         const overhead = directCost * (budget.overheadPercentage / 100);
         const utility = directCost * (budget.profitPercentage / 100);
-        const igv = directCost * (budget.taxPercentage / 100);
-        const totalCost = directCost + overhead + utility + igv;
+        const igv =
+            directCost * ((budget.applyTax ? budget.taxPercentage : 0) / 100);
+        const totalCost =
+            directCost + overhead + utility + igv - budget.commercialDiscount;
 
         // Construcción del objeto DTO final
         const budgetData = {
@@ -61,9 +65,10 @@ export default function CreateBudget() {
             directCost: directCost,
             overhead: overhead,
             utility: utility,
-            igv: budget.taxPercentage,
+            igv: budget.applyTax ? budget.taxPercentage : 0,
             percentageOverhead: budget.overheadPercentage,
             percentageUtility: budget.profitPercentage,
+            discount: budget.commercialDiscount,
             totalCost: totalCost,
 
             category: budget.categories.map((cat: FullCategory) => ({

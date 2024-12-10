@@ -114,6 +114,8 @@ export default function UpdateBudget({ budgetById }: UpdateBudgetProps) {
             budgetById.budgetDetail?.[0]?.percentageOverhead ?? 0,
         profitPercentage: budgetById.budgetDetail?.[0]?.percentageUtility ?? 10,
         taxPercentage: budgetById.budgetDetail?.[0]?.igv ?? 18,
+        commercialDiscount: budgetById.budgetDetail?.[0]?.discount ?? 0,
+        applyTax: budgetById.budgetDetail?.[0]?.igv !== 0,
     });
 
     console.log("budget", JSON.stringify(budget, null, 2));
