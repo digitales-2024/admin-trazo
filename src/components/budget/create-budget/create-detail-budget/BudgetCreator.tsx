@@ -702,7 +702,7 @@ export const BudgetCreator: React.FC<BudgetCreatorProps> = ({
                     <CardContent className="p-6">
                         <div className="grid grid-cols-1 space-y-6">
                             <div className="lg:col-span-2">
-                                <div className="flex space-x-4">
+                                <div className="flex flex-col space-x-0 space-y-4 md:flex-row md:space-x-4 md:space-y-0">
                                     {fullCategoryData && (
                                         <AvailableItems
                                             items={fullCategoryData}

@@ -91,7 +91,7 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                 <div
                     {...provided.droppableProps}
                     ref={provided.innerRef}
-                    className="w-3/4 overflow-auto rounded-md border bg-white p-4"
+                    className="w-full overflow-auto rounded-md border bg-white p-4 md:w-3/4"
                 >
                     <h3 className="mb-2 font-semibold">Presupuesto</h3>
                     <ScrollArea className="h-[500px] w-full rounded-md border p-4">
