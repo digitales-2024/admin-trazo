@@ -46,6 +46,7 @@ export type BudgetDetail = {
     overhead: number;
     utility: number;
     igv: number;
+    discount: number;
     percentageOverhead: number;
     percentageUtility: number;
     totalCost: number;
@@ -55,6 +56,7 @@ export type CategoryBudget = {
     id: string;
     budgetDetailId?: string;
     name: string;
+    subtotal: number;
     subcategory: Subcategory[];
 };
 
@@ -62,7 +64,8 @@ export type Subcategory = {
     id: string;
     categoryId?: string;
     name: string;
-    workitem: WorkItem[];
+    subtotal: number;
+    workItem: WorkItem[];
 };
 export type WorkItem = {
     id: string;
@@ -72,7 +75,7 @@ export type WorkItem = {
     quantity?: number;
     unitCost?: number;
     subtotal: number;
-    subWorkItem?: SubWorkItem[];
+    subWorkItems?: SubWorkItem[];
 };
 
 export type SubWorkItem = {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useBudgets } from "@/hooks/use-budget";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import { BudgetSummary } from "@/types/budget";
 import { DialogDescription } from "@radix-ui/react-dialog";
 
@@ -10,6 +11,13 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
+import {
+    Drawer,
+    DrawerContent,
+    DrawerDescription,
+    DrawerHeader,
+    DrawerTitle,
+} from "@/components/ui/drawer";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import BudgetDetailsDialog from "./BudgetDetailsDialog";
@@ -26,44 +34,68 @@ export function BudgetDetailDialog({ budget, open, onClose }: Props) {
     const { budgetById: budgetData } = useBudgets({
         id: budget.id,
     });
+    const isDesktop = useMediaQuery("(min-width: 1024px)");
 
     if (!budgetData) return null;
 
+    console.log("Data", JSON.stringify(budgetData, null, 2));
+
+    const Container = isDesktop ? Dialog : Drawer;
+    const ContentComponent = isDesktop ? DialogContent : DrawerContent;
+    const Header = isDesktop ? DialogHeader : DrawerHeader;
+    const Title = isDesktop ? DialogTitle : DrawerTitle;
+    const Description = isDesktop ? DialogDescription : DrawerDescription;
+
     return (
-        <Dialog open={open} onOpenChange={onClose}>
-            <DialogContent
-                className="max-h-[90vh] w-full max-w-4xl overflow-y-auto p-6 sm:max-w-2xl sm:px-4 md:max-w-3xl md:px-6 lg:max-w-4xl lg:px-8"
-                aria-describedby="dialog-budget-description"
-            >
-                <DialogHeader>
-                    <DialogTitle>
-                        Detalles del Presupuesto: {budgetData.name}
-                    </DialogTitle>
-                    <DialogDescription>
-                        dialog-budget-description
-                    </DialogDescription>
-                </DialogHeader>
-                <Tabs defaultValue="general" className="w-full">
-                    <TabsList>
-                        <TabsTrigger value="general">
-                            Información General
-                        </TabsTrigger>
-                        <TabsTrigger value="details">
-                            Detalles del Presupuesto
-                        </TabsTrigger>
-                        <TabsTrigger value="categories">Categorías</TabsTrigger>
-                    </TabsList>
+        <Container open={open} onOpenChange={onClose}>
+            <ContentComponent className="w-full max-w-5xl p-4">
+                <Header>
+                    <div>
+                        <Title>
+                            Detalles del Presupuesto: {budgetData.name}
+                        </Title>
+                    </div>
+                    <div>
+                        <Description>
+                            Información detallada del presupuesto
+                        </Description>
+                    </div>
+                </Header>
 
-                    {/* Información General */}
-                    <GeneralInformationDialog budget={budget} />
+                <div className="max-h-[80vh] overflow-y-auto">
+                    <Tabs defaultValue="general" className="w-full">
+                        <TabsList className="flex justify-start overflow-auto">
+                            <TabsTrigger
+                                value="general"
+                                className="flex-shrink-0"
+                            >
+                                Información General
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="details"
+                                className="flex-shrink-0"
+                            >
+                                Detalles del Presupuesto
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="categories"
+                                className="flex-shrink-0"
+                            >
+                                Categorías
+                            </TabsTrigger>
+                        </TabsList>
 
-                    {/* Detalles del Presupuesto */}
-                    <BudgetDetailsDialog budget={budget} />
+                        {/* Información General */}
+                        <GeneralInformationDialog budget={budget} />
 
-                    {/* Categorías y Subcategorías */}
-                    <CategoriesBudget budget={budget} />
-                </Tabs>
-            </DialogContent>
-        </Dialog>
+                        {/* Detalles del Presupuesto */}
+                        <BudgetDetailsDialog budget={budget} />
+
+                        {/* Categorías y Subcategorías */}
+                        <CategoriesBudget budget={budget} />
+                    </Tabs>
+                </div>
+            </ContentComponent>
+        </Container>
     );
 }
