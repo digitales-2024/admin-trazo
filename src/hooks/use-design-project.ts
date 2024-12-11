@@ -219,47 +219,43 @@ export const useDesignProject = (options: UseDesignProjectOptions = {}) => {
         publicCode: string,
         signingDate: string,
     ) => {
-        const promise = () =>
-            new Promise(async (resolve, reject) => {
-                try {
-                    const result = await genPdfContract({
-                        id,
-                        signingDate,
-                    }).unwrap();
+        const promise = async () => {
+            try {
+                const result = await genPdfContract({
+                    id,
+                    signingDate,
+                }).unwrap();
 
-                    // Crear el enlace de descarga
-                    const url = window.URL.createObjectURL(result);
-                    const link = document.createElement("a");
-                    link.href = url;
-                    link.setAttribute(
-                        "download",
-                        `${publicCode}-${format(new Date(), "yyyy-MM-dd")}.pdf`,
-                    );
+                // Crear el enlace de descarga
+                const url = window.URL.createObjectURL(result);
+                const link = document.createElement("a");
+                link.href = url;
+                link.setAttribute(
+                    "download",
+                    `${publicCode}-${format(new Date(), "yyyy-MM-dd")}.pdf`,
+                );
 
-                    // Añadir el enlace al DOM y disparar la descarga
-                    document.body.appendChild(link);
-                    link.click();
+                // Añadir el enlace al DOM y disparar la descarga
+                document.body.appendChild(link);
+                link.click();
 
-                    // Eliminar el enlace temporal del DOM
-                    document.body.removeChild(link);
-                    window.URL.revokeObjectURL(url); // Limpiar el objeto URL
+                // Eliminar el enlace temporal del DOM
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url); // Limpiar el objeto URL
 
-                    resolve(result);
-                } catch (error) {
-                    if (error && typeof error === "object" && "data" in error) {
-                        const errorMessage = (error.data as CustomErrorData)
-                            .message;
-                        const message = translateError(errorMessage as string);
-                        reject(new Error(message));
-                    } else {
-                        reject(
-                            new Error(
-                                "Ocurrió un error inesperado, por favor intenta de nuevo",
-                            ),
-                        );
-                    }
+                return result;
+            } catch (error) {
+                if (error && typeof error === "object" && "data" in error) {
+                    const errorText = await (error.data as Response).text();
+                    const errorJson = JSON.parse(errorText);
+                    const errorMessage = errorJson.message;
+                    const message = translateError(errorMessage as string);
+                    throw new Error(message);
+                } else {
+                    throw new Error("Error desconocido.");
                 }
-            });
+            }
+        };
 
         return toast.promise(promise(), {
             loading: "Descargando contrato en PDF...",

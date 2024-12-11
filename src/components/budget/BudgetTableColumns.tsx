@@ -1,6 +1,6 @@
 "use client";
 
-import { BudgetStatusType, BudgetSummary, QuotationStatusType } from "@/types";
+import { BudgetStatusType, BudgetSummary } from "@/types";
 import { type ColumnDef } from "@tanstack/react-table";
 import { Contact, Ellipsis, MonitorCog } from "lucide-react";
 import { useState } from "react";
@@ -204,7 +204,7 @@ export const budgetsColumns = (
                                 <DropdownMenuItem
                                     onSelect={() => handleEditClick(id)}
                                     disabled={
-                                        status === QuotationStatusType.APPROVED
+                                        status === BudgetStatusType.APPROVED
                                     }
                                 >
                                     Editar
@@ -216,8 +216,7 @@ export const budgetsColumns = (
                                         setShowUpdateStatusDialog(true)
                                     }
                                     disabled={
-                                        status ===
-                                            QuotationStatusType.APPROVED ||
+                                        status === BudgetStatusType.APPROVED ||
                                         !isSuperAdmin
                                     }
                                 >

@@ -99,7 +99,7 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                             <TableHeader>
                                 <TableRow>
                                     <TableHead className="w-[50px] text-center">
-                                        ID
+                                        Item
                                     </TableHead>
                                     <TableHead className="w-[250px] text-center">
                                         Nombre

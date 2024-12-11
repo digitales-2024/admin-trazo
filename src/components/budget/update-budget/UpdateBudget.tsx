@@ -31,6 +31,16 @@ export default function UpdateBudget({ budgetById }: UpdateBudgetProps) {
     const [isClient, setIsClient] = useState(false);
     const router = useRouter();
 
+    const form = useForm<CreateBudgetSchema>({
+        resolver: zodResolver(createBudgetSchema),
+        defaultValues: {
+            name: "",
+            ubication: "",
+            clientId: "",
+            dateProject: "",
+        },
+    });
+
     console.log("budgetById", JSON.stringify(budgetById, null, 2));
 
     const [budget, setBudget] = useState<BudgetCategories>({
@@ -136,17 +146,22 @@ export default function UpdateBudget({ budgetById }: UpdateBudgetProps) {
         }
     };
 
-    const form = useForm<CreateBudgetSchema>({
-        resolver: zodResolver(createBudgetSchema),
-        defaultValues: {
-            name: budgetById.name,
-            ubication: budgetById.ubication,
-            clientId: budgetById.clientBudget.id,
-            dateProject: budgetById.dateProject,
-            isExistingDesignProject: !!budgetById.designProjectBudget?.id,
-            designProjectId: budgetById.designProjectBudget?.id,
-        },
-    });
+    useEffect(() => {
+        if (budgetById) {
+            form.reset({
+                name: budgetById.name || "",
+                ubication: budgetById.ubication || "",
+                clientId: budgetById.clientBudget?.id || "",
+                dateProject: budgetById.dateProject || "",
+                ...(budgetById.designProjectBudget && {
+                    isExistingDesignProject: true,
+                    designProjectId: budgetById.designProjectBudget.id,
+                }),
+            });
+        }
+    }, [budgetById, form]);
+
+    console.log(JSON.stringify(form.getValues(), null, 2));
 
     const handleUpdateBudget = () => {
         const formData = form.getValues();

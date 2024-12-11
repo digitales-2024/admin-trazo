@@ -18,6 +18,7 @@ import {
     PencilRuler,
     ScrollText,
     Anvil,
+    LayoutList,
 } from "lucide-react";
 
 type Submenu = {
@@ -99,7 +100,7 @@ export function getMenuList(pathname: string): Group[] {
                             href: "/execution-project/budgets/category",
                             label: "Categorías",
                             active: pathname.endsWith("/budgets/category"),
-                            icon: FileChartColumnIncreasing,
+                            icon: LayoutList,
                         },
                         {
                             href: "/execution-project/projects",

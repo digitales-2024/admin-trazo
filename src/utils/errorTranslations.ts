@@ -134,6 +134,8 @@ const errorTranslations = {
         "El rendimiento debe ser un número positivo",
     "workHours must be a positive number":
         "Las horas de trabajo deben ser un número positivo",
+    "Expected to find 1 business":
+        "Se debe definir la información del negocio primero",
 };
 
 export default errorTranslations;

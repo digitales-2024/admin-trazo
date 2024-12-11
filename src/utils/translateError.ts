@@ -11,7 +11,7 @@ export function translateError(errorInput: string | string[]): string {
     const errorMessages = Array.isArray(errorInput) ? errorInput : [errorInput];
 
     // Selecciona el primer mensaje del arreglo
-    const errorMessage = errorMessages[0];
+    const errorMessage = errorMessages[0] || "";
 
     // Busca la traducción para el mensaje seleccionado
     for (const pattern in translations) {
@@ -22,7 +22,7 @@ export function translateError(errorInput: string | string[]): string {
             // Reemplaza los placeholders {0}, {1}, etc., con los valores capturados
             return translations[pattern].replace(
                 /{(\d+)}/g,
-                (_, index) => match[parseInt(index) + 1],
+                (_, index) => match[parseInt(index) + 1] || "",
             );
         }
     }
