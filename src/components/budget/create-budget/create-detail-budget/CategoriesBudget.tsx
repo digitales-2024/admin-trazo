@@ -64,8 +64,10 @@ const CategoriesBudget = ({ budget }: Props) => {
                                         <span>{category.name}</span>
                                         <span className="mr-[2%]">
                                             <span>SubTotal: </span>
-                                            <span className="font-bold text-green-500">
-                                                {formatCurrency(193660.59)}
+                                            <span className="font-semibold text-green-500">
+                                                {formatCurrency(
+                                                    category.subtotal,
+                                                )}
                                             </span>
                                         </span>
                                     </div>
@@ -94,9 +96,9 @@ const CategoriesBudget = ({ budget }: Props) => {
                                                                 <span>
                                                                     SubTotal:{" "}
                                                                 </span>
-                                                                <span className="text-red-500">
+                                                                <span className="font-semibold text-red-500">
                                                                     {formatCurrency(
-                                                                        3851.01,
+                                                                        subcategory.subtotal,
                                                                     )}
                                                                 </span>
                                                             </span>
@@ -132,33 +134,57 @@ const CategoriesBudget = ({ budget }: Props) => {
                                                                                 item.id
                                                                             }
                                                                         >
-                                                                            <TableRow className="border-t border-gray-200">
-                                                                                <TableCell className="text-xs sm:text-sm">
-                                                                                    {
-                                                                                        item.name
-                                                                                    }
-                                                                                </TableCell>
-                                                                                <TableCell className="text-center text-xs sm:text-sm">
-                                                                                    {
-                                                                                        item.unit
-                                                                                    }
-                                                                                </TableCell>
-                                                                                <TableCell className="text-center text-xs sm:text-sm">
-                                                                                    {
-                                                                                        item.quantity
-                                                                                    }
-                                                                                </TableCell>
-                                                                                <TableCell className="text-center text-xs sm:text-sm">
-                                                                                    {
-                                                                                        item.unitCost
-                                                                                    }
-                                                                                </TableCell>
-                                                                                <TableCell className="text-center text-xs sm:text-sm">
-                                                                                    {formatCurrency(
-                                                                                        item.subtotal,
-                                                                                    )}
-                                                                                </TableCell>
-                                                                            </TableRow>
+                                                                            {Array.isArray(
+                                                                                item.subWorkItems,
+                                                                            ) &&
+                                                                            item
+                                                                                .subWorkItems
+                                                                                .length >
+                                                                                0 ? (
+                                                                                <TableRow className="border-t border-gray-200">
+                                                                                    <TableCell className="text-xs sm:text-sm">
+                                                                                        {
+                                                                                            item.name
+                                                                                        }
+                                                                                    </TableCell>
+                                                                                    <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+                                                                                    <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+                                                                                    <TableCell className="text-center text-xs sm:text-sm"></TableCell>
+                                                                                    <TableCell className="text-center text-xs font-semibold text-blue-500 sm:text-sm">
+                                                                                        {formatCurrency(
+                                                                                            item.subtotal,
+                                                                                        )}
+                                                                                    </TableCell>
+                                                                                </TableRow>
+                                                                            ) : (
+                                                                                <TableRow className="border-t border-gray-200">
+                                                                                    <TableCell className="text-xs sm:text-sm">
+                                                                                        {
+                                                                                            item.name
+                                                                                        }
+                                                                                    </TableCell>
+                                                                                    <TableCell className="text-center text-xs sm:text-sm">
+                                                                                        {
+                                                                                            item.unit
+                                                                                        }
+                                                                                    </TableCell>
+                                                                                    <TableCell className="text-center text-xs sm:text-sm">
+                                                                                        {
+                                                                                            item.quantity
+                                                                                        }
+                                                                                    </TableCell>
+                                                                                    <TableCell className="text-center text-xs sm:text-sm">
+                                                                                        {
+                                                                                            item.unitCost
+                                                                                        }
+                                                                                    </TableCell>
+                                                                                    <TableCell className="text-center text-xs sm:text-sm">
+                                                                                        {formatCurrency(
+                                                                                            item.subtotal,
+                                                                                        )}
+                                                                                    </TableCell>
+                                                                                </TableRow>
+                                                                            )}
                                                                             {/* SubWorkItems */}
                                                                             {Array.isArray(
                                                                                 item.subWorkItems,
