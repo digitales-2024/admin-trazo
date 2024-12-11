@@ -51,12 +51,7 @@ const ApuActionButtons: React.FC<ApuActionButtonsProps> = ({
             }
             onOpenChange(false);
         }
-    }, [
-        isSuccessCreateApuBudget,
-        dataCreateApuBudget,
-        onOpenChange,
-        onSuccess,
-    ]);
+    }, [isSuccessCreateApuBudget]);
 
     useEffect(() => {
         if (isSuccessUpdateApuBudget) {
@@ -68,12 +63,7 @@ const ApuActionButtons: React.FC<ApuActionButtonsProps> = ({
             }
             onOpenChange(false);
         }
-    }, [
-        isSuccessUpdateApuBudget,
-        dataUpdateApuBudget,
-        onOpenChange,
-        onSuccess,
-    ]);
+    }, [isSuccessUpdateApuBudget]);
 
     const transformResources = (resources: Record<string, ResourceApu[]>) => {
         return Object.values(resources)

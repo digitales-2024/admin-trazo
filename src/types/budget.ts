@@ -96,6 +96,7 @@ export type CategoryBudget = {
     id: string;
     budgetDetailId?: string;
     name: string;
+    subtotal: number;
     subcategory: Subcategory[];
 };
 
@@ -103,6 +104,7 @@ export type Subcategory = {
     id: string;
     categoryId?: string;
     name: string;
+    subtotal: number;
     workItem: WorkItem[];
 };
 export type WorkItem = {
@@ -128,6 +130,10 @@ export type SubWorkItem = {
     subtotal: number;
 };
 
+export type DataItem = {
+    name: string;
+    value: number;
+};
 export interface BudgetCategories {
     categories: FullCategory[];
     overheadPercentage: number;
