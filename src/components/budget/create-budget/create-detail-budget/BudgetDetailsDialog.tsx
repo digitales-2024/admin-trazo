@@ -29,9 +29,9 @@ type Props = {
 };
 
 const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat("es-PE", {
         style: "currency",
-        currency: "USD",
+        currency: "PEN",
         maximumFractionDigits: 2,
     }).format(amount);
 };
@@ -137,7 +137,7 @@ const BudgetDetailsDialog = ({ budget }: Props) => {
                     <div className="space-y-6">
                         {budgetData.budgetDetail?.map((detail) => (
                             <div key={detail.id} className="space-y-4">
-                                <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 sm:gap-2">
+                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-2">
                                     <Card>
                                         <CardHeader>
                                             <CardTitle className="text-lg">
@@ -227,11 +227,13 @@ const BudgetDetailsDialog = ({ budget }: Props) => {
                                                 <div className="flex items-center justify-between">
                                                     <span className="flex items-center">
                                                         <DollarSign className="mr-2 h-4 w-4" />
-                                                        Costo Total
+                                                        Costo sin Descuento
+                                                        Comercial
                                                     </span>
                                                     <span className="font-semibold">
                                                         {formatCurrency(
-                                                            detail.totalCost,
+                                                            detail.totalCost +
+                                                                detail.discount,
                                                         )}
                                                     </span>
                                                 </div>
@@ -241,8 +243,20 @@ const BudgetDetailsDialog = ({ budget }: Props) => {
                                                         Descuento Comercial
                                                     </span>
                                                     <span className="font-semibold">
+                                                        -
                                                         {formatCurrency(
                                                             detail.discount,
+                                                        )}
+                                                    </span>
+                                                </div>
+                                                <div className="flex items-center justify-between">
+                                                    <span className="flex items-center">
+                                                        <DollarSign className="mr-2 h-4 w-4" />
+                                                        Costo Total
+                                                    </span>
+                                                    <span className="font-semibold">
+                                                        {formatCurrency(
+                                                            detail.totalCost,
                                                         )}
                                                     </span>
                                                 </div>
@@ -252,7 +266,7 @@ const BudgetDetailsDialog = ({ budget }: Props) => {
                                 </div>
 
                                 {/* gráfico de Costos */}
-                                <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 sm:gap-2">
+                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-2">
                                     <Card>
                                         <CardHeader>
                                             <CardTitle className="text-lg">
@@ -314,7 +328,7 @@ const BudgetDetailsDialog = ({ budget }: Props) => {
                                     <Card>
                                         <CardHeader>
                                             <CardTitle className="text-lg">
-                                                Gráfico de Porcentajes
+                                                Gráfico de Costos sin Descuento
                                             </CardTitle>
                                         </CardHeader>
                                         <CardContent>

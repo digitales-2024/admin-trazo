@@ -60,7 +60,7 @@ const CategoriesBudget = ({ budget }: Props) => {
                                 className="rounded-lg bg-white shadow-sm"
                             >
                                 <AccordionTrigger className="pl-4 text-start text-sm font-bold capitalize leading-none tracking-tight sm:text-center">
-                                    <div className="flex w-full flex-col justify-start sm:flex-row sm:justify-between">
+                                    <div className="flex w-full flex-col justify-start gap-2 sm:flex-row sm:justify-between sm:gap-0">
                                         <span>{category.name}</span>
                                         <span className="mr-[2%]">
                                             <span>SubTotal: </span>
@@ -86,7 +86,7 @@ const CategoriesBudget = ({ budget }: Props) => {
                                                     className="mb-2 rounded-lg bg-white shadow-sm"
                                                 >
                                                     <AccordionTrigger className="border-b-2 border-gray-300 px-4 py-2 text-start text-xs font-semibold capitalize transition-all hover:bg-gray-100 sm:text-center sm:text-sm">
-                                                        <div className="flex w-full flex-col justify-start sm:flex-row sm:justify-between">
+                                                        <div className="flex w-full flex-col justify-start gap-2 sm:flex-row sm:justify-between sm:gap-0">
                                                             <span>
                                                                 {
                                                                     subcategory.name
