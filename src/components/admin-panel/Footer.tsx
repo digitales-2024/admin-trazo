@@ -1,5 +1,5 @@
 const infoBussiness = {
-    url: "https://trazo.com",
+    url: "https://trazoarq.com",
 };
 export default function Footer() {
     const currentYear = new Date().getFullYear();

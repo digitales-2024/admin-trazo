@@ -38,6 +38,7 @@ export interface ResourceApu {
     name: string;
     unit: string;
     quantity: number;
+    group?: number;
     unitCost: number;
     totalCost: number;
 }

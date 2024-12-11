@@ -5,11 +5,13 @@ import {
     FullCategory,
 } from "@/types";
 import { List, Trash2 } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TableCell, TableRow } from "@/components/ui/table";
+
+import { ApuDialog } from "./create-apu-budget/ApuBudgetDialog";
 
 interface SubWorkItemRowProps {
     catIndex: number;
@@ -25,8 +27,7 @@ interface SubWorkItemRowProps {
         subcategoryId: string,
         itemId: string,
         subItemId: string,
-        quantity: number,
-        unitCost: number,
+        updates: Partial<SubworkItemDragCategory>,
     ) => void;
     onDeleteSubWorkItem: (
         categoryId: string,
@@ -48,6 +49,15 @@ const SubWorkItemRow: React.FC<SubWorkItemRowProps> = ({
     onUpdateSubWorkItem,
     onDeleteSubWorkItem,
 }) => {
+    const [showApuDialog, setShowApuDialog] = useState(false);
+
+    const handleApuSuccess = (apuId: string, totalCost: number) => {
+        onUpdateSubWorkItem(category.id, subcategory.id, item.id, subItem.id, {
+            apuId,
+            unitCost: totalCost,
+        });
+    };
+
     return (
         <TableRow key={subItem.id}>
             <TableCell>
@@ -56,7 +66,7 @@ const SubWorkItemRow: React.FC<SubWorkItemRowProps> = ({
             <TableCell className="pl-16">
                 <div className="flex items-center">
                     <List
-                        className="mr-2 h-4 w-4 text-red-500"
+                        className="mr-2 h-4 w-4 flex-shrink-0 text-red-500"
                         strokeWidth={1.5}
                     />
                     <span className="text-sm font-light capitalize">
@@ -79,8 +89,9 @@ const SubWorkItemRow: React.FC<SubWorkItemRowProps> = ({
                                 subcategory.id,
                                 item.id,
                                 subItem.id,
-                                Number(e.target.value),
-                                subItem.unitCost || 0,
+                                {
+                                    quantity: Number(e.target.value),
+                                },
                             )
                         }
                         placeholder="Cantidad"
@@ -100,21 +111,39 @@ const SubWorkItemRow: React.FC<SubWorkItemRowProps> = ({
                                 subcategory.id,
                                 item.id,
                                 subItem.id,
-                                subItem.quantity || 0,
-                                Number(e.target.value),
+                                {
+                                    unitCost: Number(e.target.value),
+                                },
                             )
                         }
                         placeholder="Precio"
                     />
-                    <Button type="button" size="sm" variant="default">
+                    <ApuDialog
+                        open={showApuDialog}
+                        onOpenChange={setShowApuDialog}
+                        idSubWorkItem={subItem.id}
+                        onSuccess={handleApuSuccess}
+                        apuId={subItem.apuId}
+                    />
+                    <Button
+                        type="button"
+                        size="sm"
+                        variant="default"
+                        onClick={() => setShowApuDialog(true)}
+                    >
                         APU
                     </Button>
                 </div>
             </TableCell>
-
             <TableCell>
-                S/.{" "}
-                {((subItem.quantity || 0) * (subItem.unitCost || 0)).toFixed(2)}
+                <div className="w-28 items-center text-center">
+                    <span>
+                        S/.{" "}
+                        {(
+                            (subItem.quantity || 0) * (subItem.unitCost || 0)
+                        ).toFixed(2)}
+                    </span>
+                </div>
             </TableCell>
             <TableCell>
                 <Button

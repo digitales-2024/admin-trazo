@@ -55,8 +55,8 @@ export function CreateRolesDialog() {
         },
     });
     const onSubmit = async (input: CreateRolesSchema) => {
-        startCreateTransition(async () => {
-            await onCreateRole(input);
+        startCreateTransition(() => {
+            onCreateRole(input);
         });
     };
     useEffect(() => {

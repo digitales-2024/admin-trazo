@@ -93,6 +93,47 @@ const errorTranslations = {
     "Error updating resource": "Error actualizando recurso",
     "This resource is inactive, contact the superadmin to reactivate it":
         "Este recurso esta desactivado, contactese con el administrador para reactivarlo",
+    "Used name": "Este nombre ya está en uso",
+    "Workitem not found": "Partida no encontrada",
+    "Bad workitem update": "Datos invalidos",
+    "Subworkitem not found": "Subpartida no encontrada",
+    "Parent Subcategory not found": "La subcategoría referenciada no existe",
+    "This WorkItem does not exist": "Partida no encontrada",
+    "This WorkItem exists but is not active":
+        "La partida existe pero no está activa",
+    "Invalid state. Contact an administrator":
+        "Estado de la aplicación invalido.",
+    "Subworkitem not foun": "Subpartida no encontrada",
+    "Parent Work Item not found":
+        "La Partida a la que pertenece esta Subpartida no se encontró",
+    "The design project must be completed":
+        "El proyecto de diseño debe estar completado",
+    "category should not be empty":
+        "La estructura del presupuesto no puede estar vacio",
+    "This category has active subcategories":
+        "Esta categoria tiene subcategorias activas",
+    "This category exists but is not active":
+        "Ya existe una categoria inactiva con este nombre",
+    "This category exists, but is inactive":
+        "Ya existe una categoria inactiva con este nombre",
+    "This category already exists": "Ya existe una categoría con este nombre",
+    "This category doesnt exist": "No existe esta categoría",
+    "Category not found or inactive": "No existe esta categoría",
+    "This subcategory doesnt exist": "No existe esta subcategoría",
+    "This subcategory already exists":
+        "Ya existe una categoría con este nombre",
+    "This category exist, but is inactive":
+        "Ya existe una categoría inactiva con este nombre",
+    "category\\.(\\d+)\\.subcategory\\.(\\d+)\\.workItem\\.(\\d+)\\.subWorkItem\\.(\\d+)\\.apuBugdetId should not be empty":
+        "Debe seleccionar un APU para la subpartida",
+    "category\\.(\\d+)\\.subcategory\\.(\\d+)\\.workItem\\.(\\d+)\\.subWorkItem\\.(\\d+)\\.apuBugdetId must be a UUID":
+        "Debe seleccionar un APU para la subpartida",
+    "category\\.(\\d+)\\.subcategory\\.(\\d+)\\.workItem\\.(\\d+)\\.subWorkItem\\.(\\d+)\\.apuBugdetId must be a string":
+        "Debe seleccionar un APU para la subpartida",
+    "performance must be a positive number":
+        "El rendimiento debe ser un número positivo",
+    "workHours must be a positive number":
+        "Las horas de trabajo deben ser un número positivo",
 };
 
 export default errorTranslations;

@@ -1,3 +1,4 @@
+import { translateError } from "@/utils/translateError";
 import { BaseQueryFn } from "@reduxjs/toolkit/query";
 import {
     fetchBaseQuery,
@@ -13,6 +14,17 @@ export type QueryError = {
     name: string;
     message: string;
     stack: string;
+};
+
+type ServerError = {
+    error: string;
+    message?: string;
+    statusCode: number;
+};
+type ReduxError = {
+    data?: ServerError;
+    status: number | string;
+    error?: string;
 };
 
 const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
@@ -56,5 +68,59 @@ const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
 
     return result;
 };
+
+/**
+ * Crea una `Promise` que maneja errores del backend.
+ *
+ * Si `fn` se ejecuta normalmente, devuelve el resultado.
+ *
+ * Si `fn` lanza un error:
+ * - Intenta obtener el mensaje de error
+ * - Traduce el mensaje de error
+ * - Lanza el mensaje traducido, listo para usarse en un toast
+ *
+ * Devuelve `Promise<Output, {message: string}>`
+ *
+ * @example
+ *
+ * ```typescript
+ * const promise = runAndHandleError(() => reactivate({ ids: [id] }).unwrap())
+ * toast.promise(promise, {
+ *     loading: "Reactivando partidas...",
+ *     success: "Partidas reactivadas con éxito",
+ *     error: (err) => err,
+ * })
+ * return await promise;
+ * ```
+ */
+export function runAndHandleError<Output>(
+    fn: () => Promise<Output>,
+): Promise<Output> {
+    return new Promise((resolve, reject) => {
+        fn()
+            .then((res) => resolve(res))
+            .catch((err: ReduxError) => {
+                // Obtener el msg de error, o utilizar uno por defecto
+                let error_msg = "";
+                if (err.data && err.data.message) {
+                    error_msg = err.data.message;
+                } else if (err.error) {
+                    error_msg = err.error;
+                }
+
+                // Despues de intentar obtener el msg de error, si esta vacio,
+                // usar un msg de error por defecto.
+                if (error_msg === "") {
+                    error_msg =
+                        "Ocurrió un error inesperado, por favor intenta de nuevo";
+                }
+
+                // traducir y relanzar
+                reject({
+                    message: translateError(error_msg),
+                });
+            });
+    });
+}
 
 export default baseQueryWithReauth;

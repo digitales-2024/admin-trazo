@@ -1,3 +1,4 @@
+import { useCategory } from "@/hooks/use-category";
 import { useWorkItem } from "@/hooks/use-workitem";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
@@ -23,7 +24,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useCategory } from "@/hooks/use-category";
 
 export function CreateWorkItemDialog({
     open,
@@ -79,12 +79,24 @@ const withApuSchema = z.object({
         .max(50),
     unit: z
         .string()
-        .min(2, {
-            message: "La unidad de la partida debe tener al menos 2 caracteres",
+        .min(1, {
+            message: "La unidad de la partida debe tener al menos 1 caracter",
         })
         .max(50),
-    apuPerformance: z.coerce.number().min(0),
-    apuWorkHours: z.coerce.number().min(0),
+    apuPerformance: z.coerce
+        .number({
+            message: "El rendimiento debe ser un número",
+        })
+        .min(0, {
+            message: "El rendimiento debe ser un número positivo",
+        }),
+    apuWorkHours: z.coerce
+        .number({
+            message: "Las horas de trabajo deben ser un número",
+        })
+        .min(0, {
+            message: "Las horas de trabajo deben ser un número",
+        }),
 });
 
 function CreateWithApuForm({
@@ -94,17 +106,15 @@ function CreateWithApuForm({
     setOpen: (v: boolean) => void;
     subcategoryId: string;
 }) {
-    const { nestedRefetch } = useCategory();
+    const { fullCategoryRefetch: nestedRefetch } = useCategory();
     const { onCreate, createLoading, createSuccess } = useWorkItem();
     const form = useForm<z.infer<typeof withApuSchema>>({
         resolver: zodResolver(withApuSchema),
         defaultValues: {
             name: "",
             unit: "",
-            // @ts-expect-error this should be a number, but its a string cause form uses strings
-            apuPerformance: "",
-            // @ts-expect-error this should be a number, but its a string cause form uses strings
-            apuWorkHours: "",
+            apuPerformance: undefined,
+            apuWorkHours: undefined,
         },
     });
 
@@ -127,7 +137,7 @@ function CreateWithApuForm({
             nestedRefetch();
             setOpen(false);
         }
-    }, [createSuccess, form, setOpen]);
+    }, [createSuccess, form, setOpen, nestedRefetch]);
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -183,7 +193,11 @@ function CreateWithApuForm({
                         <FormItem>
                             <FormLabel>Rendimiento del APU</FormLabel>
                             <FormControl>
-                                <Input placeholder="Rendimiento" {...field} />
+                                <Input
+                                    placeholder="Rendimiento"
+                                    {...field}
+                                    type="number"
+                                />
                             </FormControl>
                             <FormDescription>
                                 Rendimiento a aplicar a todo el APU. Ejm: 25.00
@@ -202,6 +216,7 @@ function CreateWithApuForm({
                             <FormControl>
                                 <Input
                                     placeholder="Horas de trabajo"
+                                    type="number"
                                     {...field}
                                 />
                             </FormControl>
@@ -233,8 +248,8 @@ function CreateWithApuForm({
 const withSubitemsSchema = z.object({
     name: z
         .string()
-        .min(2, {
-            message: "El nombre de la partida debe tener al menos 2 caracteres",
+        .min(1, {
+            message: "El nombre de la partida debe tener al menos 1 caracter",
         })
         .max(50),
 });
@@ -246,7 +261,7 @@ function CreateWithSubitemsForm({
     setOpen: (v: boolean) => void;
     subcategoryId: string;
 }) {
-    const { nestedRefetch } = useCategory();
+    const { fullCategoryRefetch: nestedRefetch } = useCategory();
     const { onCreate, createLoading, createSuccess } = useWorkItem();
     const form = useForm<z.infer<typeof withSubitemsSchema>>({
         resolver: zodResolver(withSubitemsSchema),
@@ -267,7 +282,7 @@ function CreateWithSubitemsForm({
             nestedRefetch();
             setOpen(false);
         }
-    }, [createSuccess, form, setOpen]);
+    }, [createSuccess, form, setOpen, nestedRefetch]);
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

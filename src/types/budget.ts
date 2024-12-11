@@ -1,3 +1,5 @@
+import { FullCategory } from "./category";
+
 export type Budget = {
     id: string;
     name: string;
@@ -10,6 +12,44 @@ export type Budget = {
     designProjectBudget?: DesignProject;
     budgetDetail: BudgetDetail[];
     category: CategoryBudget[];
+};
+
+export type CreateBudget = {
+    name: string;
+    ubication: string;
+    dateProject: string;
+    clientId: string;
+    designProjectId?: string;
+    directCost: number;
+    overhead: number;
+    utility: number;
+    igv: number;
+    percentageOverhead: number;
+    percentageUtility: number;
+    discount: number;
+    totalCost: number;
+    category: {
+        categoryId: string;
+        subtotal: number;
+        subcategory: {
+            subcategoryId: string;
+            subtotal: number;
+            workItem: {
+                quantity?: number;
+                unitCost?: number;
+                subtotal: number;
+                workItemId: string;
+                apuBugdetId?: string;
+                subWorkItem?: {
+                    quantity: number;
+                    unitCost: number;
+                    subtotal: number;
+                    subWorkItemId: string;
+                    apuBugdetId?: string;
+                }[];
+            }[];
+        }[];
+    }[];
 };
 
 export type BudgetSummary = {
@@ -75,6 +115,7 @@ export type WorkItem = {
     quantity?: number;
     unitCost?: number;
     subtotal: number;
+    apuId?: string;
     subWorkItems?: SubWorkItem[];
 };
 
@@ -82,9 +123,10 @@ export type SubWorkItem = {
     id: string;
     workItemId?: string;
     name: string;
-    unit: string;
+    unit?: string;
     quantity: number;
     unitCost: number;
+    apuId: string;
     subtotal: number;
 };
 
@@ -92,3 +134,11 @@ export type DataItem = {
     name: string;
     value: number;
 };
+export interface BudgetCategories {
+    categories: FullCategory[];
+    overheadPercentage: number;
+    profitPercentage: number;
+    taxPercentage: number;
+    commercialDiscount: number;
+    applyTax: boolean;
+}

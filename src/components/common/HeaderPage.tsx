@@ -18,7 +18,7 @@ export const HeaderPage = ({
             {badgeContent && (
                 <div className="m-2">
                     <Badge
-                        className="bg-emerald-100 text-emerald-700"
+                        className="bg-emerald-100 capitalize text-emerald-700"
                         variant="secondary"
                     >
                         {badgeContent}

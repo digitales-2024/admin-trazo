@@ -38,6 +38,8 @@ export {
     type BudgetSummary,
     type CategoryBudget,
     BudgetStatusType,
+    type CreateBudget,
+    type BudgetCategories,
 } from "./budget";
 export type {
     Category,
@@ -47,4 +49,6 @@ export type {
     WorkItemDragCategory,
     SubworkItemDragCategory,
 } from "./category";
+export type { FullWorkItem, ResourceExpandedApu } from "./workitem";
 export type { Subcategory } from "./subcategory";
+export type { ApuBudget } from "./apuBudget";

@@ -185,7 +185,7 @@ export default function UpdateStatusBudgetDialog({
                         <DrawerHeader>
                             <DrawerTitle>
                                 <span className="text-lg font-medium">
-                                    Actualizar estado de presupuesto
+                                    Actualizar estado
                                 </span>
                                 <div className="mt-2 flex items-center justify-center gap-2">
                                     <BudgetStatusBadge
@@ -193,7 +193,7 @@ export default function UpdateStatusBudgetDialog({
                                             budget.status as BudgetStatusType
                                         }
                                     />
-                                    <MoveRight />
+                                    <MoveRight strokeWidth={1.5} />
                                     <BudgetStatusBadge
                                         status={status as BudgetStatusType}
                                     />
@@ -219,7 +219,7 @@ export default function UpdateStatusBudgetDialog({
                         <DialogHeader>
                             <DialogTitle>
                                 <span className="text-lg font-medium">
-                                    Actualizar estado de presupuesto
+                                    Actualizar estado
                                 </span>
 
                                 <div className="mt-2 flex gap-2">
@@ -228,7 +228,7 @@ export default function UpdateStatusBudgetDialog({
                                             budget.status as BudgetStatusType
                                         }
                                     />
-                                    <MoveRight />
+                                    <MoveRight strokeWidth={1.5} />
                                     <BudgetStatusBadge
                                         status={status as BudgetStatusType}
                                     />

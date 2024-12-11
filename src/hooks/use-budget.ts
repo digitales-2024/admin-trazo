@@ -5,7 +5,7 @@ import {
     useUpdateBudgetMutation,
     useUpdateStatusBudgetMutation,
 } from "@/redux/services/budgetApi";
-import { Budget, BudgetStatusType, CustomErrorData } from "@/types";
+import { BudgetStatusType, CreateBudget, CustomErrorData } from "@/types";
 import { translateError } from "@/utils/translateError";
 import { toast } from "sonner";
 
@@ -31,8 +31,10 @@ export const useBudgets = (options: UseBudgetsProps = {}) => {
             },
         );
 
-    const [createBudget, { isSuccess: isSuccessCreateBudget }] =
-        useCreateBudgetMutation();
+    const [
+        createBudget,
+        { isSuccess: isSuccessCreateBudget, isLoading: isLoadingCreateBudget },
+    ] = useCreateBudgetMutation();
 
     const [updateBudgetStatus, { isSuccess: isSuccessUpdateBudgetStatus }] =
         useUpdateStatusBudgetMutation();
@@ -42,7 +44,7 @@ export const useBudgets = (options: UseBudgetsProps = {}) => {
         { isSuccess: isSuccessUpdateBudget, isLoading: isLoadingUpdateBudget },
     ] = useUpdateBudgetMutation();
 
-    const onCreateBudget = async (input: Partial<Budget>) => {
+    const onCreateBudget = async (input: Partial<CreateBudget>) => {
         const promise = () =>
             new Promise(async (resolve, reject) => {
                 try {
@@ -120,7 +122,9 @@ export const useBudgets = (options: UseBudgetsProps = {}) => {
         });
     };
 
-    const onUpdateBudget = async (input: Partial<Budget> & { id: string }) => {
+    const onUpdateBudget = async (
+        input: Partial<CreateBudget> & { id: string },
+    ) => {
         const promise = () =>
             new Promise(async (resolve, reject) => {
                 try {
@@ -165,6 +169,7 @@ export const useBudgets = (options: UseBudgetsProps = {}) => {
         refetch,
         onCreateBudget,
         isSuccessCreateBudget,
+        isLoadingCreateBudget,
         onUpdateBudgetStatus,
         isSuccessUpdateBudgetStatus,
         budgetById,

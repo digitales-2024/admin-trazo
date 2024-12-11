@@ -1,3 +1,4 @@
+import { runAndHandleError } from "@/redux/baseQuery";
 import {
     useCreateSubcategoryMutation,
     useDeleteSubcategoryMutation,
@@ -7,8 +8,8 @@ import {
     useReactivateSubcategoryMutation,
     useUpdateSubcategoryMutation,
 } from "@/redux/services/subcategoryApi";
-import { CustomErrorData, Subcategory } from "@/types";
-import { translateError } from "@/utils/translateError";
+import { Subcategory } from "@/types";
+import { SubcategoryCreate } from "@/types/subcategory";
 import { toast } from "sonner";
 
 interface UseSubcategoryProps {
@@ -67,164 +68,56 @@ export const useSubcategory = (options: UseSubcategoryProps = {}) => {
         },
     ] = useReactivateSubcategoryMutation();
 
-    const onCreateSubcategory = async (input: Partial<Subcategory>) => {
-        const promise = () =>
-            new Promise(async (resolve, reject) => {
-                try {
-                    const result = await createSubcategory(input);
-                    if (result.error) {
-                        if (
-                            typeof result.error === "object" &&
-                            "data" in result.error
-                        ) {
-                            const error = (result.error.data as CustomErrorData)
-                                .message;
-                            const message = translateError(error as string);
-                            reject(new Error(message));
-                        } else {
-                            reject(
-                                new Error(
-                                    "Ocurrió un error inesperado, por favor intenta de nuevo",
-                                ),
-                            );
-                        }
-                    } else {
-                        resolve(result);
-                    }
-                } catch (error) {
-                    reject(error);
-                }
-            });
-
-        return toast.promise(promise(), {
+    async function onCreateSubcategory(input: SubcategoryCreate) {
+        const promise = runAndHandleError(() =>
+            createSubcategory(input).unwrap(),
+        );
+        toast.promise(promise, {
             loading: "Creando subcategoría...",
-            success: "Subcategoría creado con éxito",
+            success: "Subcategoría creada con éxito",
             error: (err) => err.message,
         });
-    };
+        return await promise;
+    }
 
-    const onUpdateSubcategory = async (
+    async function onUpdateSubcategory(
         input: Partial<Subcategory> & { id: string },
-    ) => {
-        const promise = () =>
-            new Promise(async (resolve, reject) => {
-                try {
-                    const result = await updateSubcategory(input);
-                    if (
-                        result.error &&
-                        typeof result.error === "object" &&
-                        result.error !== null &&
-                        "data" in result.error
-                    ) {
-                        const error = (result.error.data as CustomErrorData)
-                            .message;
-                        const message = translateError(error as string);
-                        reject(new Error(message));
-                    }
-                    if (result.error) {
-                        reject(
-                            new Error(
-                                "Ocurrió un error inesperado, por favor intenta de nuevo",
-                            ),
-                        );
-                    }
-                    resolve(result);
-                } catch (error) {
-                    reject(error);
-                }
-            });
-        toast.promise(promise(), {
+    ) {
+        const promise = runAndHandleError(() =>
+            updateSubcategory(input).unwrap(),
+        );
+        toast.promise(promise, {
             loading: "Actualizando subcategoría...",
-            success: "Subcategoría actualizado exitosamente",
-            error: (error) => {
-                return error.message;
-            },
+            success: "Subcategoría actualizada con éxito",
+            error: (err) => err.message,
         });
-    };
+        return await promise;
+    }
 
-    const onReactivateSubcategory = async (ids: Subcategory[]) => {
-        const onlyIds = ids.map((subcategoryType) => subcategoryType.id);
-        const idsString = {
-            ids: onlyIds,
-        };
-        const promise = () =>
-            new Promise(async (resolve, reject) => {
-                try {
-                    const result = await reactivateSubcategory(idsString);
-                    if (result.error) {
-                        if (
-                            typeof result.error === "object" &&
-                            "data" in result.error
-                        ) {
-                            const error = (result.error.data as CustomErrorData)
-                                .message;
-                            const message = translateError(error as string);
-                            reject(new Error(message));
-                        } else {
-                            reject(
-                                new Error(
-                                    "Ocurrió un error inesperado, por favor intenta de nuevo",
-                                ),
-                            );
-                        }
-                    } else {
-                        resolve(result);
-                    }
-                } catch (error) {
-                    reject(error);
-                }
-            });
-
-        toast.promise(promise(), {
+    async function onReactivateSubcategory(ids: string[]) {
+        const promise = runAndHandleError(() =>
+            reactivateSubcategory({ ids }).unwrap(),
+        );
+        toast.promise(promise, {
             loading: "Reactivando...",
-            success: "Subcategorias reactivadas con éxito",
-            error: (error) => {
-                return error.message;
-            },
+            success: "Subcategorías reactivadas con éxito",
+            error: (err) => err.message,
         });
-    };
+        return await promise;
+    }
 
-    const onDeleteSubcategory = async (ids: Subcategory[]) => {
-        const onlyIds = ids.map((subcategoryType) => subcategoryType.id);
-        const idsString = {
-            ids: onlyIds,
-        };
-        const promise = () =>
-            new Promise(async (resolve, reject) => {
-                try {
-                    const result = await deleteSubcategory(idsString);
-                    if (
-                        result.error &&
-                        typeof result.error === "object" &&
-                        result.error !== null &&
-                        "data" in result.error
-                    ) {
-                        const error = (result.error.data as CustomErrorData)
-                            .message;
-                        const message = translateError(error as string);
-                        reject(new Error(message));
-                    } else if (result.error) {
-                        reject(
-                            new Error(
-                                "Ocurrió un error inesperado, por favor intenta de nuevo",
-                            ),
-                        );
-                    } else {
-                        resolve(result);
-                    }
-                } catch (error) {
-                    reject(error);
-                }
-            });
-
-        toast.promise(promise(), {
+    async function onDeleteSubcategory(ids: Array<string>) {
+        const promise = runAndHandleError(() =>
+            deleteSubcategory({ ids }).unwrap(),
+        );
+        toast.promise(promise, {
             loading: "Eliminando...",
-            success: "Subcategorias eliminadas con éxito",
-            error: (error) => {
-                return error.message;
-            },
+            success: "Subcategorías eliminadas con éxito",
+            error: (err) => err.message,
         });
-    };
+        return await promise;
+    }
+
     return {
         dataSubcategoryAll,
         error,

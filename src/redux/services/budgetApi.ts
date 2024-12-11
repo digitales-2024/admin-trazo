@@ -1,6 +1,11 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 
-import { Budget, BudgetStatusType, BudgetSummary } from "../../types";
+import {
+    Budget,
+    BudgetStatusType,
+    BudgetSummary,
+    CreateBudget,
+} from "../../types";
 import baseQueryWithReauth from "../baseQuery";
 
 interface GetBudgetsByIdProps {
@@ -13,7 +18,7 @@ export const budgetsApi = createApi({
     tagTypes: ["Budget"],
     endpoints: (build) => ({
         // Crear presupuesto
-        createBudget: build.mutation<Budget, Partial<Budget>>({
+        createBudget: build.mutation<Budget, Partial<CreateBudget>>({
             query: (body) => ({
                 url: "/budget",
                 method: "POST",
@@ -54,7 +59,10 @@ export const budgetsApi = createApi({
             providesTags: ["Budget"],
         }),
         //Actualizar presupuesto
-        updateBudget: build.mutation<Budget, Partial<Budget> & { id: string }>({
+        updateBudget: build.mutation<
+            Budget,
+            Partial<CreateBudget> & { id: string }
+        >({
             query: ({ id, ...body }) => ({
                 url: `/budget/${id}`,
                 method: "PATCH",

@@ -1,4 +1,5 @@
 import {
+    BudgetCategories,
     FullCategory,
     SubcategoryDragCategory,
     SubworkItemDragCategory,
@@ -19,11 +20,10 @@ import {
 import { CategoryRow } from "./CategoryRows";
 import SubcategoryRow from "./SubcategoryRows";
 import SubWorkItemRow from "./SubWorkItemRow";
-import { Budget } from "./types";
 import WorkItemRow from "./WorkItemRow";
 
 interface BudgetTableProps {
-    budget: Budget;
+    budget: BudgetCategories;
     onDeleteCategory: (id: string) => void;
     onDeleteSubcategory: (categoryId: string, subcategoryId: string) => void;
     onDeleteWorkItem: (
@@ -37,25 +37,18 @@ interface BudgetTableProps {
         itemId: string,
         subItemId: string,
     ) => void;
-    onUpdateWorkItemQuantity: (
+    onUpdateWorkItem: (
         categoryId: string,
         subcategoryId: string,
         itemId: string,
-        quantity: number,
-    ) => void;
-    onUpdateWorkItemUnitPrice: (
-        categoryId: string,
-        subcategoryId: string,
-        itemId: string,
-        unitPrice: number,
+        updates: Partial<WorkItemDragCategory>,
     ) => void;
     onUpdateSubWorkItem: (
         categoryId: string,
         subcategoryId: string,
         itemId: string,
         subItemId: string,
-        quantity: number,
-        unitPrice: number,
+        updates: Partial<SubworkItemDragCategory>,
     ) => void;
 }
 
@@ -65,8 +58,7 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
     onDeleteSubcategory,
     onDeleteWorkItem,
     onDeleteSubWorkItem,
-    onUpdateWorkItemQuantity,
-    onUpdateWorkItemUnitPrice,
+    onUpdateWorkItem,
     onUpdateSubWorkItem,
 }) => {
     const calculateSubWorkItemTotal = (subItem: SubworkItemDragCategory) =>
@@ -99,7 +91,7 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                 <div
                     {...provided.droppableProps}
                     ref={provided.innerRef}
-                    className="w-3/4 overflow-auto rounded-md border bg-white p-4"
+                    className="w-full overflow-auto rounded-md border bg-white p-4 md:w-3/4"
                 >
                     <h3 className="mb-2 font-semibold">Presupuesto</h3>
                     <ScrollArea className="h-[500px] w-full rounded-md border p-4">
@@ -121,7 +113,7 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                                     <TableHead className="w-[250px] text-center">
                                         Precio
                                     </TableHead>
-                                    <TableHead className="w-[200px] text-center">
+                                    <TableHead className="w-[300px] text-center">
                                         Subtotal
                                     </TableHead>
                                     <TableHead className="w-[100px] text-center">
@@ -184,11 +176,8 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                                                                     calculateWorkItemTotal={
                                                                         calculateWorkItemTotal
                                                                     }
-                                                                    onUpdateWorkItemQuantity={
-                                                                        onUpdateWorkItemQuantity
-                                                                    }
-                                                                    onUpdateWorkItemUnitPrice={
-                                                                        onUpdateWorkItemUnitPrice
+                                                                    onUpdateWorkItem={
+                                                                        onUpdateWorkItem
                                                                     }
                                                                     onDeleteWorkItem={
                                                                         onDeleteWorkItem
