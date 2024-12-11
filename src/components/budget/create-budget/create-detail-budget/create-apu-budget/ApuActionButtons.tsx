@@ -1,4 +1,6 @@
+import { useApu } from "@/hooks/use-apu";
 import { useApuBudget } from "@/hooks/use-apu-budget";
+import { useCategory } from "@/hooks/use-category";
 import { ResourceApu } from "@/types";
 import React, { useEffect } from "react";
 
@@ -16,6 +18,7 @@ interface ApuActionButtonsProps {
     onOpenChange: (open: boolean) => void;
     onSuccess: (apuId: string, totalCost: number) => void;
     apuId?: string;
+    isBlueprint?: boolean;
 }
 
 const ApuActionButtons: React.FC<ApuActionButtonsProps> = ({
@@ -29,11 +32,15 @@ const ApuActionButtons: React.FC<ApuActionButtonsProps> = ({
     onOpenChange,
     onSuccess,
     apuId,
+    isBlueprint = false,
 }) => {
+    const { fullCategoryRefetch } = useCategory();
     const { onCreateApuBudget, isSuccessCreateApuBudget, dataCreateApuBudget } =
         useApuBudget();
     const { onUpdateApuBudget, isSuccessUpdateApuBudget, dataUpdateApuBudget } =
         useApuBudget();
+    const { updateApu } = useApu();
+
     useEffect(() => {
         if (isSuccessCreateApuBudget) {
             if (dataCreateApuBudget) {
@@ -44,7 +51,12 @@ const ApuActionButtons: React.FC<ApuActionButtonsProps> = ({
             }
             onOpenChange(false);
         }
-    }, [isSuccessCreateApuBudget]);
+    }, [
+        isSuccessCreateApuBudget,
+        dataCreateApuBudget,
+        onOpenChange,
+        onSuccess,
+    ]);
 
     useEffect(() => {
         if (isSuccessUpdateApuBudget) {
@@ -56,7 +68,12 @@ const ApuActionButtons: React.FC<ApuActionButtonsProps> = ({
             }
             onOpenChange(false);
         }
-    }, [isSuccessUpdateApuBudget]);
+    }, [
+        isSuccessUpdateApuBudget,
+        dataUpdateApuBudget,
+        onOpenChange,
+        onSuccess,
+    ]);
 
     const transformResources = (resources: Record<string, ResourceApu[]>) => {
         return Object.values(resources)
@@ -70,7 +87,21 @@ const ApuActionButtons: React.FC<ApuActionButtonsProps> = ({
             }));
     };
 
-    const handleClick = () => {
+    const handleClick = async () => {
+        if (isBlueprint) {
+            const payload = {
+                id: apuId,
+                performance: newPerformance,
+                workHours: newWorkHours,
+                resources: transformResources(newResources),
+            };
+            const result = await updateApu(payload);
+            fullCategoryRefetch();
+            onOpenChange(false);
+            onSuccess(result.data.id, result.data.unitCost);
+            return;
+        }
+
         if (activeTab === "template") {
             const payload = {
                 performance: templatePerformance,

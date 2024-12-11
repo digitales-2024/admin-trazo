@@ -11,6 +11,7 @@ export type WorkItemCreate = {
 export type WorkItemEdit = {
     name?: string;
     unit?: string;
+    unitCost?: number;
 };
 
 export type WorkItemGetAll = {

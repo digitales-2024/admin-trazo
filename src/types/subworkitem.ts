@@ -8,8 +8,9 @@ export type SubWorkItemCreate = {
 };
 
 export type SubWorkItemEdit = {
-    name: string;
-    unit: string;
+    name?: string;
+    unit?: string;
+    unitCost?: number;
 };
 
 export type WorkItemGetSubItem = {

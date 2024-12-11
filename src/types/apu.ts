@@ -1,3 +1,5 @@
+import { ResourceType } from "./resource";
+
 export type ApuCreate = {
     performance: number;
     workHours: number;
@@ -38,7 +40,7 @@ type Resource = {
     updatedAt: Date;
     unit: string;
     unitCost: number;
-    type: "TOOLS" | "LABOR" | "SUPPLIES" | "SERVICES";
+    type: ResourceType;
 };
 
 type ApuResourceReturn = Pick<ApuOnResource, "id" | "group" | "quantity"> & {

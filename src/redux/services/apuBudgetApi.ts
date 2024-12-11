@@ -7,7 +7,7 @@ interface GetApuBudgetsByIdProps {
     id: string;
 }
 
-interface ApuBudgetResponse {
+export interface ApuBudgetResponse {
     data: ApuBudget;
     message: string;
     statusCode: number;
