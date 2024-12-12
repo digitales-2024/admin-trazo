@@ -18,13 +18,16 @@ import {
 
 import { DataTableColumnHeader } from "../data-table/DataTableColumnHeader";
 import { Badge } from "../ui/badge";
+import { BudgetDetailDialog } from "./create-budget/create-detail-budget/BudgetDetailDialog";
 import UpdateStatusBudgetDialog from "./UpdateStatusBudgetDialog";
 
 export const budgetsColumns = (
     isSuperAdmin: boolean,
     generateBudgetPdf: (id: string, code: string) => void,
     handleEditClick: (id: string) => void,
+    // ColumnDef<Budget>[] => {
 ): ColumnDef<BudgetSummary>[] => {
+    // const columns: ColumnDef<Budget>[] = [
     const columns: ColumnDef<BudgetSummary>[] = [
         {
             id: "select",
@@ -168,6 +171,7 @@ export const budgetsColumns = (
             cell: function Cell({ row }) {
                 const [showUpdateStatusDialog, setShowUpdateStatusDialog] =
                     useState(false);
+                const [showDataDialog, setShowDataDialog] = useState(false);
                 const { status, id, code } = row.original;
                 const downloadPdfBudget = () => {
                     generateBudgetPdf(id, code);
@@ -185,6 +189,11 @@ export const budgetsColumns = (
                                     row.toggleSelected(false);
                                 }}
                             />
+                            <BudgetDetailDialog
+                                open={showDataDialog}
+                                onClose={setShowDataDialog}
+                                budget={row?.original}
+                            />
                         </div>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -200,11 +209,11 @@ export const budgetsColumns = (
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-40">
-                                {/*                                 <DropdownMenuItem
-                                    onSelect={() => setShowEditDialog(true)}
+                                <DropdownMenuItem
+                                    onSelect={() => setShowDataDialog(true)}
                                 >
                                     Ver
-                                </DropdownMenuItem> */}
+                                </DropdownMenuItem>
                                 <DropdownMenuItem
                                     onSelect={() => handleEditClick(id)}
                                     disabled={
