@@ -2,7 +2,7 @@
 
 import { BudgetStatusType, BudgetSummary } from "@/types";
 import { type ColumnDef } from "@tanstack/react-table";
-import { Contact, Ellipsis, MonitorCog } from "lucide-react";
+import { Contact, Ellipsis, FileDown, MonitorCog } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,7 @@ import UpdateStatusBudgetDialog from "./UpdateStatusBudgetDialog";
 
 export const budgetsColumns = (
     isSuperAdmin: boolean,
+    generateBudgetPdf: (id: string, code: string) => void,
     handleEditClick: (id: string) => void,
 ): ColumnDef<BudgetSummary>[] => {
     const columns: ColumnDef<BudgetSummary>[] = [
@@ -167,7 +168,10 @@ export const budgetsColumns = (
             cell: function Cell({ row }) {
                 const [showUpdateStatusDialog, setShowUpdateStatusDialog] =
                     useState(false);
-                const { status, id } = row.original;
+                const { status, id, code } = row.original;
+                const downloadPdfBudget = () => {
+                    generateBudgetPdf(id, code);
+                };
 
                 return (
                     <div>
@@ -223,6 +227,17 @@ export const budgetsColumns = (
                                     Actualizar
                                     <DropdownMenuShortcut>
                                         <MonitorCog
+                                            className="size-4"
+                                            aria-hidden="true"
+                                        />
+                                    </DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onSelect={() => downloadPdfBudget()}
+                                >
+                                    Descargar
+                                    <DropdownMenuShortcut>
+                                        <FileDown
                                             className="size-4"
                                             aria-hidden="true"
                                         />
