@@ -112,7 +112,7 @@ export function ObservationProjectCharterSheet({
         if (!isLoadingUpdateObservation && editingId === null) {
             form.reset();
         }
-    }, [isLoadingUpdateObservation, editingId, form]);
+    }, [isLoadingUpdateObservation]);
 
     const handleToggle = (id: string) => {
         setExpandedId(expandedId === id ? null : id);
