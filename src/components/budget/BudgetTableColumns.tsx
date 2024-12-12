@@ -18,7 +18,7 @@ import {
 
 import { DataTableColumnHeader } from "../data-table/DataTableColumnHeader";
 import { Badge } from "../ui/badge";
-import { BudgetDetailDialog } from "./create-budget/create-detail-budget/BudgetDetailDialog";
+import { BudgetDetailDialog } from "./show-budget-data/BudgetDetailDialog";
 import UpdateStatusBudgetDialog from "./UpdateStatusBudgetDialog";
 
 export const budgetsColumns = (
