@@ -137,7 +137,7 @@ function CreateWithApuForm({
             nestedRefetch();
             setOpen(false);
         }
-    }, [createSuccess, form, setOpen, nestedRefetch]);
+    }, [createSuccess, setOpen, nestedRefetch]);
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -282,7 +282,7 @@ function CreateWithSubitemsForm({
             nestedRefetch();
             setOpen(false);
         }
-    }, [createSuccess, form, setOpen, nestedRefetch]);
+    }, [createSuccess, setOpen, nestedRefetch]);
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

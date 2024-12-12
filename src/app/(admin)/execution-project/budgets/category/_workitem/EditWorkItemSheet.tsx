@@ -153,7 +153,7 @@ export function EditWorkItemForm({
             onOpenChange(false);
             fullCategoryRefetch();
         }
-    }, [success, form, onOpenChange, fullCategoryRefetch]);
+    }, [success, onOpenChange, fullCategoryRefetch]);
 
     return (
         <Form {...form}>

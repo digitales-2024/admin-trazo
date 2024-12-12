@@ -116,7 +116,7 @@ export function CreateProjectDialog() {
             form.reset();
             setOpen(false);
         }
-    }, [createSuccess, form]);
+    }, [createSuccess]);
 
     async function onSubmit(formData: z.infer<typeof FormSchema>) {
         const quotation = data?.find((q) => q.id === formData.quotationId);

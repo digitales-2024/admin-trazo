@@ -73,7 +73,7 @@ export function UpdateSpacesSheet({
                 description: space.description ?? "",
             });
         }
-    }, [open, space, form]);
+    }, [open, space]);
 
     const onSubmit = async (input: CreateSpacesSchema) => {
         onUpdateSpace({
@@ -87,7 +87,7 @@ export function UpdateSpacesSheet({
             form.reset();
             onOpenChange(false);
         }
-    }, [isSuccessUpdateSpace, form, onOpenChange]);
+    }, [isSuccessUpdateSpace, onOpenChange]);
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>

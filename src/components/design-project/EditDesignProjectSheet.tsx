@@ -174,7 +174,7 @@ function FormWrapper(props: {
         if (editSuccess) {
             onOpenChange(false);
         }
-    }, [editSuccess, form, onOpenChange]);
+    }, [editSuccess, onOpenChange]);
 
     return (
         <Form {...form}>

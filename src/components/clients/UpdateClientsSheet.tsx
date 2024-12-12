@@ -127,7 +127,7 @@ export function UpdateClientSheet({
                 );
             }
         }
-    }, [open, client, form]);
+    }, [open, client]);
 
     const onSubmit = async (input: CreateClientsSchema) => {
         onUpdateClient({
@@ -141,7 +141,7 @@ export function UpdateClientSheet({
             form.reset();
             onOpenChange(false);
         }
-    }, [isSuccessUpdateClient, form, onOpenChange]);
+    }, [isSuccessUpdateClient, onOpenChange]);
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>

@@ -78,7 +78,7 @@ export function CreateZoningDialog({
             form.reset();
             setOpen(false);
         }
-    }, [isSuccessCreateZoning, form]);
+    }, [isSuccessCreateZoning]);
 
     const handleClose = () => {
         form.reset();

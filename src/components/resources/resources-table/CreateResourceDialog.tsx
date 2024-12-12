@@ -78,7 +78,7 @@ export function CreateResourceDialog({
             form.reset();
             setOpen(false);
         }
-    }, [isSuccessCreateResource, form]);
+    }, [isSuccessCreateResource]);
 
     const handleClose = () => {
         form.reset();

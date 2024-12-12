@@ -88,7 +88,7 @@ export function UpdateResourceSheet({
                 unitCost: resource.unitCost ?? 0,
             });
         }
-    }, [open, resource, form]);
+    }, [open, resource]);
 
     const onSubmit = async (input: CreateResourceSchema) => {
         onUpdateResource({
@@ -102,7 +102,7 @@ export function UpdateResourceSheet({
             form.reset();
             onOpenChange(false);
         }
-    }, [isSuccessUpdateResource, form, onOpenChange]);
+    }, [isSuccessUpdateResource, onOpenChange]);
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>

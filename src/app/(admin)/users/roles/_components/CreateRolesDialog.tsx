@@ -64,7 +64,7 @@ export function CreateRolesDialog() {
             form.reset();
             setOpen(false);
         }
-    }, [isSuccessCreateRole, form]);
+    }, [isSuccessCreateRole]);
 
     const handleClose = () => {
         form.reset();

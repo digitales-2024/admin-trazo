@@ -52,7 +52,7 @@ export function AccountComponent() {
             form.setValue("name", user?.name ?? "");
             form.setValue("telephone", user?.phone ?? "");
         }
-    }, [form, user, isSuccess]);
+    }, [user, isSuccess]);
 
     const submitForm = (data: AccountUpdateSchema) => {
         const updateData = {

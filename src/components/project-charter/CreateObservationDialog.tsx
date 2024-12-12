@@ -94,7 +94,6 @@ export function CreateObservationDialog({
         }
     }, [
         isSuccessCreateObservation,
-        form,
         onOpenChange,
         amountOfObservations,
         refetch,

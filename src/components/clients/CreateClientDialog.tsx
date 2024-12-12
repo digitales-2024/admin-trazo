@@ -85,7 +85,7 @@ export function CreateClientDialog({
             form.reset();
             setOpen(false);
         }
-    }, [isSuccessCreateClient, form]);
+    }, [isSuccessCreateClient]);
 
     const handleClose = () => {
         form.reset();

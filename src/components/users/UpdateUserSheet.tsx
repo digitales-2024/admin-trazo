@@ -72,7 +72,7 @@ export function UpdateUserSheet({ user, ...props }: UpdateUserSheetProps) {
             phone: user.phone,
             roles: user.roles.map((rol) => rol.id),
         });
-    }, [user, form]);
+    }, [user]);
 
     function onSubmit(input: UpdateUsersSchema) {
         onUpdateUser({
@@ -86,7 +86,7 @@ export function UpdateUserSheet({ user, ...props }: UpdateUserSheetProps) {
             form.reset();
             props.onOpenChange?.(false);
         }
-    }, [isSuccessUpdateUser, form, props]);
+    }, [isSuccessUpdateUser]);
 
     return (
         <Sheet {...props}>

@@ -100,14 +100,14 @@ export function UpdateRoleSheet({ rol, ...props }: UpdateRoleSheetProps) {
             setSelectedPermissions(idsModulesPermissions ?? []);
         }
         /* eslint react-hooks/exhaustive-deps: "off" */
-    }, [rol, setSelectedPermissions]);
+    }, [setSelectedPermissions]);
 
     useEffect(() => {
         form.reset({
             name: rol.name ?? "",
             description: rol.description ?? "",
         });
-    }, [rol, form]);
+    }, [rol]);
 
     function onSubmit(input: UpdateRolesSchema) {
         onUpdateRole({

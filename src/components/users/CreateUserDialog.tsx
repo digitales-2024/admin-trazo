@@ -77,7 +77,7 @@ export function CreateUsersDialog() {
             form.reset();
             setOpen(false);
         }
-    }, [isSuccessCreateUser, form]);
+    }, [isSuccessCreateUser]);
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>

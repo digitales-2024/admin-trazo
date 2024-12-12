@@ -61,7 +61,7 @@ export const SendNewPasswordForm = ({ user }: SendNewPasswordFormProps) => {
         if (isSuccessSendNewPassword) {
             form.reset();
         }
-    }, [isSuccessSendNewPassword, form]);
+    }, [isSuccessSendNewPassword]);
 
     const { setValue, clearErrors } = form;
 

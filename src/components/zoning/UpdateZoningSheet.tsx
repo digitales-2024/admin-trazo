@@ -74,7 +74,7 @@ export function UpdateZoningSheet({
                 openArea: zoning.openArea ?? 0,
             });
         }
-    }, [open, zoning, form]);
+    }, [open, zoning]);
 
     const onSubmit = async (input: CreateZoningSchema) => {
         onUpdateZoning({
@@ -88,7 +88,7 @@ export function UpdateZoningSheet({
             form.reset();
             onOpenChange(false);
         }
-    }, [isSuccessUpdateZoning, form, onOpenChange]);
+    }, [isSuccessUpdateZoning, onOpenChange]);
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
