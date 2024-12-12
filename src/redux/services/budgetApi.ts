@@ -71,6 +71,15 @@ export const budgetsApi = createApi({
             }),
             invalidatesTags: ["Budget"],
         }),
+        // Generar Pdf de presupuesto
+        genPdfBudget: build.mutation<Blob, string>({
+            query: (id) => ({
+                url: `/budget/${id}/pdf`,
+                method: "GET",
+                responseHandler: (response: Response) => response.blob(),
+                credentials: "include",
+            }),
+        }),
     }),
 });
 
@@ -80,4 +89,5 @@ export const {
     useUpdateStatusBudgetMutation,
     useGetBudgetByIdQuery,
     useUpdateBudgetMutation,
+    useGenPdfBudgetMutation,
 } = budgetsApi;
