@@ -113,6 +113,9 @@ const PercentageBudget: React.FC<PercentageBudgetProps> = ({
                                 setBudget((prev) => ({
                                     ...prev,
                                     applyTax: checked,
+                                    taxPercentage: checked
+                                        ? prev.taxPercentage
+                                        : 0,
                                 }))
                             }
                         />
