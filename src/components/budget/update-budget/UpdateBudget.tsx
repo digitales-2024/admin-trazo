@@ -41,8 +41,6 @@ export default function UpdateBudget({ budgetById }: UpdateBudgetProps) {
         },
     });
 
-    console.log("budgetById", JSON.stringify(budgetById, null, 2));
-
     const [budget, setBudget] = useState<BudgetCategories>({
         categories: budgetById.category.map((cat: CategoryBudget) => ({
             id: cat.id,
@@ -128,8 +126,6 @@ export default function UpdateBudget({ budgetById }: UpdateBudgetProps) {
         applyTax: budgetById.budgetDetail?.[0]?.igv !== 0,
     });
 
-    console.log("budget", JSON.stringify(budget, null, 2));
-
     useEffect(() => {
         setIsClient(true);
     }, []);
@@ -159,9 +155,7 @@ export default function UpdateBudget({ budgetById }: UpdateBudgetProps) {
                 }),
             });
         }
-    }, [budgetById, form]);
-
-    console.log(JSON.stringify(form.getValues(), null, 2));
+    }, [budgetById]);
 
     const handleUpdateBudget = () => {
         const formData = form.getValues();
