@@ -38,8 +38,6 @@ export function BudgetDetailDialog({ budget, open, onClose }: Props) {
 
     if (!budgetData) return null;
 
-    console.log("Data", JSON.stringify(budgetData, null, 2));
-
     const Container = isDesktop ? Dialog : Drawer;
     const ContentComponent = isDesktop ? DialogContent : DrawerContent;
     const Header = isDesktop ? DialogHeader : DrawerHeader;
