@@ -4,7 +4,9 @@ import { useBudgets } from "@/hooks/use-budget";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { BudgetSummary } from "@/types/budget";
 import { DialogDescription } from "@radix-ui/react-dialog";
+import { BarChart2, DollarSign, FileUser } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import {
     Dialog,
     DialogContent,
@@ -18,11 +20,12 @@ import {
     DrawerHeader,
     DrawerTitle,
 } from "@/components/ui/drawer";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import BudgetDetailsDialog from "./BudgetDetailsDialog";
 import CategoriesBudget from "./CategoriesBudget";
 import GeneralInformationDialog from "./GeneralInformationDialog";
+import SummaryCostBudgetDialog from "./SummaryCostBudgetDialog";
 
 interface Props {
     open: boolean;
@@ -34,7 +37,7 @@ export function BudgetDetailDialog({ budget, open, onClose }: Props) {
     const { budgetById: budgetData } = useBudgets({
         id: budget.id,
     });
-    const isDesktop = useMediaQuery("(min-width: 1024px)");
+    const isDesktop = useMediaQuery("(min-width: 640px)");
 
     if (!budgetData) return null;
 
@@ -46,12 +49,16 @@ export function BudgetDetailDialog({ budget, open, onClose }: Props) {
 
     return (
         <Container open={open} onOpenChange={onClose}>
-            <ContentComponent className="w-full max-w-5xl p-4">
+            <ContentComponent className="w-full max-w-4xl p-4">
                 <Header>
                     <div>
-                        <Title>
-                            Detalles del Presupuesto: {budgetData.name}
-                        </Title>
+                        <Title>Detalles del Presupuesto</Title>
+                        <Badge
+                            className="mt-2 bg-emerald-100 capitalize text-emerald-700"
+                            variant="secondary"
+                        >
+                            {budgetData.code}
+                        </Badge>
                     </div>
                     <div>
                         <Description>
@@ -60,26 +67,44 @@ export function BudgetDetailDialog({ budget, open, onClose }: Props) {
                     </div>
                 </Header>
 
-                <div className="max-h-[80vh] overflow-y-auto">
+                <ScrollArea className="h-full max-h-[80vh] w-full justify-center gap-4 p-4">
                     <Tabs defaultValue="general" className="w-full">
-                        <TabsList className="flex justify-start overflow-auto">
+                        <TabsList className="grid w-full grid-cols-3">
                             <TabsTrigger
                                 value="general"
-                                className="flex-shrink-0"
+                                className="flex-grow text-center"
                             >
-                                Información General
+                                <FileUser
+                                    className="mr-2 h-4 w-4 flex-shrink-0"
+                                    strokeWidth={1.5}
+                                />
+                                <span className="truncate text-ellipsis">
+                                    Información General
+                                </span>
                             </TabsTrigger>
                             <TabsTrigger
                                 value="details"
-                                className="flex-shrink-0"
+                                className="flex-grow text-center"
                             >
-                                Detalles del Presupuesto
+                                <DollarSign
+                                    className="mr-2 h-4 w-4 flex-shrink-0"
+                                    strokeWidth={1.5}
+                                />
+                                <span className="truncate text-ellipsis">
+                                    Resumén de Costos
+                                </span>
                             </TabsTrigger>
                             <TabsTrigger
                                 value="categories"
-                                className="flex-shrink-0"
+                                className="flex-grow text-center"
                             >
-                                Categorías
+                                <BarChart2
+                                    className="mr-2 h-4 w-4 flex-shrink-0"
+                                    strokeWidth={1.5}
+                                />
+                                <span className="truncate text-ellipsis">
+                                    Estructura del Presupuesto
+                                </span>
                             </TabsTrigger>
                         </TabsList>
 
@@ -87,12 +112,12 @@ export function BudgetDetailDialog({ budget, open, onClose }: Props) {
                         <GeneralInformationDialog budget={budget} />
 
                         {/* Detalles del Presupuesto */}
-                        <BudgetDetailsDialog budget={budget} />
+                        <SummaryCostBudgetDialog budget={budget} />
 
                         {/* Categorías y Subcategorías */}
                         <CategoriesBudget budget={budget} />
                     </Tabs>
-                </div>
+                </ScrollArea>
             </ContentComponent>
         </Container>
     );
