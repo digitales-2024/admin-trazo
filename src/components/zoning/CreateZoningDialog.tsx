@@ -78,6 +78,7 @@ export function CreateZoningDialog({
             form.reset();
             setOpen(false);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSuccessCreateZoning]);
 
     const handleClose = () => {

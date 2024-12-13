@@ -127,6 +127,7 @@ export function UpdateClientSheet({
                 );
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open, client]);
 
     const onSubmit = async (input: CreateClientsSchema) => {
@@ -141,6 +142,7 @@ export function UpdateClientSheet({
             form.reset();
             onOpenChange(false);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSuccessUpdateClient, onOpenChange]);
 
     return (

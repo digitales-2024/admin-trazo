@@ -78,6 +78,7 @@ export function CreateResourceDialog({
             form.reset();
             setOpen(false);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSuccessCreateResource]);
 
     const handleClose = () => {

@@ -73,6 +73,7 @@ export function UpdateSpacesSheet({
                 description: space.description ?? "",
             });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open, space]);
 
     const onSubmit = async (input: CreateSpacesSchema) => {
@@ -87,6 +88,7 @@ export function UpdateSpacesSheet({
             form.reset();
             onOpenChange(false);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSuccessUpdateSpace, onOpenChange]);
 
     return (

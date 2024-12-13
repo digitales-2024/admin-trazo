@@ -49,7 +49,8 @@ export function BusinessUpdateForm() {
             form.setValue("legalRepName", business[0].legalRepName);
             form.setValue("legalRepDni", business[0].legalRepDni);
         }
-    }, [form, business]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [business]);
     function onSubmit(values: UpdateBusinessSchema) {
         startCreateTransition(async () => {
             if (business?.length === 1) {

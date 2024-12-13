@@ -52,6 +52,7 @@ export function AccountComponent() {
             form.setValue("name", user?.name ?? "");
             form.setValue("telephone", user?.phone ?? "");
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user, isSuccess]);
 
     const submitForm = (data: AccountUpdateSchema) => {

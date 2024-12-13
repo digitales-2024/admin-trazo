@@ -155,6 +155,7 @@ export default function UpdateBudget({ budgetById }: UpdateBudgetProps) {
                 }),
             });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [budgetById]);
 
     const handleUpdateBudget = () => {

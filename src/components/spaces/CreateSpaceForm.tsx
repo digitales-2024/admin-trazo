@@ -64,7 +64,7 @@ export const CreateSpacesForm = ({
                                 <FormControl>
                                     <Textarea
                                         id="description"
-                                        placeholder="Ingrese el nombre del ambiente"
+                                        placeholder="Ingrese la descripción del ambiente"
                                         {...field}
                                     />
                                 </FormControl>

@@ -116,6 +116,7 @@ export function CreateProjectDialog() {
             form.reset();
             setOpen(false);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [createSuccess]);
 
     async function onSubmit(formData: z.infer<typeof FormSchema>) {

@@ -72,6 +72,7 @@ export function UpdateUserSheet({ user, ...props }: UpdateUserSheetProps) {
             phone: user.phone,
             roles: user.roles.map((rol) => rol.id),
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
     function onSubmit(input: UpdateUsersSchema) {
@@ -86,6 +87,7 @@ export function UpdateUserSheet({ user, ...props }: UpdateUserSheetProps) {
             form.reset();
             props.onOpenChange?.(false);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSuccessUpdateUser]);
 
     return (

@@ -74,6 +74,7 @@ export function UpdateZoningSheet({
                 openArea: zoning.openArea ?? 0,
             });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open, zoning]);
 
     const onSubmit = async (input: CreateZoningSchema) => {
@@ -88,6 +89,7 @@ export function UpdateZoningSheet({
             form.reset();
             onOpenChange(false);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSuccessUpdateZoning, onOpenChange]);
 
     return (
@@ -140,12 +142,12 @@ export function UpdateZoningSheet({
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel htmlFor="description">
-                                            Descripcion del ambiente
+                                            Descripcion de la zonificación
                                         </FormLabel>
                                         <FormControl>
                                             <Textarea
                                                 id="description"
-                                                placeholder="Ingrese el nombre del ambiente"
+                                                placeholder="Ingrese la descripción de la zonificación"
                                                 {...field}
                                             />
                                         </FormControl>

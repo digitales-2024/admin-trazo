@@ -1,6 +1,6 @@
 import { Floor, QuotationStructure } from "@/types";
 import { Edit2, Trash, Plus, Copy } from "lucide-react";
-import { useState } from "react";
+import React from "react";
 import { UseFormReturn } from "react-hook-form";
 
 import {
@@ -58,8 +58,8 @@ export function LevelAccordionItem({
     deleteSelectedSpaces,
     form,
 }: LevelAccordionItemProps) {
-    const [newName, setNewName] = useState(floor.name);
-    const [dialogOpen, setDialogOpen] = useState(false);
+    const [newName, setNewName] = React.useState(floor.name);
+    const [dialogOpen, setDialogOpen] = React.useState(false);
 
     const selectedSpacesCount = floor.spaces.filter(
         (space) => space.selected,
@@ -202,7 +202,7 @@ export function LevelAccordionItem({
                         </div>
                         {floor.spaces.map((space, environmentIndex) => (
                             <SpaceForm
-                                key={environmentIndex}
+                                key={space.spaceId} // Usar spaceId como clave única
                                 space={space}
                                 floorIndex={floorIndex}
                                 environmentIndex={environmentIndex}

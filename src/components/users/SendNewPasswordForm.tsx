@@ -61,6 +61,7 @@ export const SendNewPasswordForm = ({ user }: SendNewPasswordFormProps) => {
         if (isSuccessSendNewPassword) {
             form.reset();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSuccessSendNewPassword]);
 
     const { setValue, clearErrors } = form;

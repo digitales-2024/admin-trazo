@@ -51,6 +51,7 @@ const ApuActionButtons: React.FC<ApuActionButtonsProps> = ({
             }
             onOpenChange(false);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSuccessCreateApuBudget]);
 
     useEffect(() => {
@@ -63,6 +64,7 @@ const ApuActionButtons: React.FC<ApuActionButtonsProps> = ({
             }
             onOpenChange(false);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSuccessUpdateApuBudget]);
 
     const transformResources = (resources: Record<string, ResourceApu[]>) => {

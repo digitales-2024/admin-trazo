@@ -106,6 +106,7 @@ export default function UpdateQuotation({
                 totalAmount: quotationById.totalAmount,
             });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [quotationById]);
 
     const architecturalCost = form.watch("architecturalCost").toString();
@@ -222,6 +223,7 @@ export default function UpdateQuotation({
         if (isSuccessUpdateQuotation) {
             form.reset();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSuccessUpdateQuotation]);
 
     const diferentPage = true;

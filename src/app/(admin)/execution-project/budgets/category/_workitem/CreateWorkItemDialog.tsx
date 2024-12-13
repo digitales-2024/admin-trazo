@@ -137,6 +137,7 @@ function CreateWithApuForm({
             nestedRefetch();
             setOpen(false);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [createSuccess, setOpen, nestedRefetch]);
     return (
         <Form {...form}>
@@ -282,6 +283,7 @@ function CreateWithSubitemsForm({
             nestedRefetch();
             setOpen(false);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [createSuccess, setOpen, nestedRefetch]);
     return (
         <Form {...form}>

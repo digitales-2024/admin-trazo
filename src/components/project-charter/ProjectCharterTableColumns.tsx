@@ -3,6 +3,7 @@
 import { useObservation } from "@/hooks/use-observation";
 import { useProjectCharter } from "@/hooks/use-project-charter";
 import { ProjectCharter } from "@/types";
+import { DesignProjectStatus } from "@/types/designProject";
 import { type ColumnDef } from "@tanstack/react-table";
 import {
     CircleCheck,
@@ -198,60 +199,64 @@ export const projectsChartersColumns = (
         {
             id: "estado",
             accessorKey: "designProject.status",
-            header: ({ column }) => (
-                <DataTableColumnHeader column={column} title="Estado" />
-            ),
+            header: "Estado",
             cell: ({ row }) => {
-                const status = row.getValue("estado");
-                let badgeProps: { className: string; label: string } = {
-                    className: "",
-                    label: "",
-                };
-
-                switch (status) {
+                const estado: DesignProjectStatus = row.getValue("estado");
+                let badge = <></>;
+                switch (estado) {
                     case "APPROVED":
-                        badgeProps = {
-                            className: "bg-emerald-100 text-emerald-500",
-                            label: "Aprobado",
-                        };
-                        break;
-                    case "ENGINEERING":
-                        badgeProps = {
-                            className: "bg-blue-100 text-blue-500",
-                            label: "Ingeniería",
-                        };
-                        break;
-                    case "CONFIRMATION":
-                        badgeProps = {
-                            className: "bg-yellow-100 text-yellow-500",
-                            label: "Confirmación",
-                        };
-                        break;
-                    case "PRESENTATION":
-                        badgeProps = {
-                            className: "bg-purple-100 text-purple-500",
-                            label: "Presentación",
-                        };
+                        badge = (
+                            <Badge
+                                variant="secondary"
+                                className="bg-yellow-200 text-yellow-600"
+                            >
+                                Aprobado
+                            </Badge>
+                        );
                         break;
                     case "COMPLETED":
-                        badgeProps = {
-                            className: "bg-gray-100 text-gray-500",
-                            label: "Completado",
-                        };
+                        badge = (
+                            <Badge
+                                variant="secondary"
+                                className="bg-green-200 text-green-700"
+                            >
+                                Completado
+                            </Badge>
+                        );
                         break;
-                    default:
-                        badgeProps = {
-                            className: "bg-red-100 text-red-500",
-                            label: "Inactivo",
-                        };
+                    case "ENGINEERING":
+                        badge = (
+                            <Badge
+                                variant="secondary"
+                                className="bg-blue-200 text-blue-600"
+                            >
+                                En ingeniería
+                            </Badge>
+                        );
+                        break;
+                    case "CONFIRMATION":
+                        badge = (
+                            <Badge
+                                variant="secondary"
+                                className="bg-cyan-200 text-cyan-600"
+                            >
+                                Confirmado
+                            </Badge>
+                        );
+                        break;
+                    case "PRESENTATION":
+                        badge = (
+                            <Badge
+                                variant="secondary"
+                                className="bg-teal-200 text-teal-600"
+                            >
+                                En presentacion
+                            </Badge>
+                        );
                         break;
                 }
 
-                return (
-                    <Badge variant="secondary" className={badgeProps.className}>
-                        {badgeProps.label}
-                    </Badge>
-                );
+                return <div>{badge}</div>;
             },
         },
 
