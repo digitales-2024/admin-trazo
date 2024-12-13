@@ -4,7 +4,10 @@ import { toast } from "sonner";
 
 export const useApu = (options?: { id: string }) => {
     const id = options?.id;
-    const { data: apuById } = useApuByIdQuery(id ?? "", { skip: !id });
+    const { data: apuById, refetch: refetchApuById } = useApuByIdQuery(
+        id ?? "",
+        { skip: !id },
+    );
 
     const [updateApuFn] = useUpdateApuMutation();
 
@@ -21,5 +24,6 @@ export const useApu = (options?: { id: string }) => {
     return {
         apuById,
         updateApu,
+        refetchApuById,
     };
 };

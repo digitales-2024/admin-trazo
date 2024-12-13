@@ -47,13 +47,9 @@ export function ObservationInformationUpdate({
                 <div className="bg-background text-xs font-light italic text-slate-500">
                     Fecha:{" "}
                     {obs.meetingDate
-                        ? format(
-                              parse(obs.meetingDate, "yyyy-MM-dd", new Date()),
-                              "PPP",
-                              {
-                                  locale: es,
-                              },
-                          )
+                        ? format(parse(obs.meetingDate), "PPP", {
+                              locale: es,
+                          })
                         : "Sin fecha"}
                 </div>
                 <div className="mt-4 flex flex-col justify-end gap-2 sm:flex-row">
