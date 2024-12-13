@@ -71,12 +71,9 @@ export function CreateWorkItemDialog({
 }
 
 const withApuSchema = z.object({
-    name: z
-        .string()
-        .min(2, {
-            message: "El nombre de la partida debe tener al menos 2 caracteres",
-        })
-        .max(50),
+    name: z.string().min(2, {
+        message: "El nombre de la partida debe tener al menos 2 caracteres",
+    }),
     unit: z
         .string()
         .min(1, {
@@ -247,12 +244,9 @@ function CreateWithApuForm({
 }
 
 const withSubitemsSchema = z.object({
-    name: z
-        .string()
-        .min(1, {
-            message: "El nombre de la partida debe tener al menos 1 caracter",
-        })
-        .max(50),
+    name: z.string().min(1, {
+        message: "El nombre de la partida debe tener al menos 1 caracter",
+    }),
 });
 
 function CreateWithSubitemsForm({
