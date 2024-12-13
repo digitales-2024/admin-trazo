@@ -55,7 +55,7 @@ export function ApuDialog({
     const { apuBudgetById: apuBudgetByIdTemp } = useApuBudget({
         id: apuId || "",
     });
-    const { apuById } = useApu({ id: apuId || "" });
+    const { apuById, refetchApuById } = useApu({ id: apuId || "" });
     const { subWorkItemById } = useSubWorkItem({ id: idSubWorkItem });
 
     const apuBudgetById = isBlueprint ? apuById : apuBudgetByIdTemp;
@@ -493,7 +493,12 @@ export function ApuDialog({
                             newWorkHours={newWorkHours}
                             templateResources={templateResources}
                             newResources={newResources}
-                            onSuccess={onSuccess}
+                            onSuccess={async (id, data) => {
+                                if (isBlueprint) {
+                                    await refetchApuById();
+                                }
+                                onSuccess(id, data);
+                            }}
                             onOpenChange={onOpenChange}
                             apuId={apuId}
                             isBlueprint={isBlueprint}
