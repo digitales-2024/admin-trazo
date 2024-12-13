@@ -1,5 +1,5 @@
 import { Observation, ProjectCharter } from "@/types";
-import { format, parse } from "date-fns";
+import { format, parseISO as parse } from "date-fns";
 import { es } from "date-fns/locale";
 import { Pencil, Trash } from "lucide-react";
 
@@ -46,13 +46,9 @@ export function ObservationInformationUpdate({
             <div className="bg-background text-xs font-light italic text-slate-500">
                 Fecha:{" "}
                 {obs.meetingDate
-                    ? format(
-                          parse(obs.meetingDate, "yyyy-MM-dd", new Date()),
-                          "PPP",
-                          {
-                              locale: es,
-                          },
-                      )
+                    ? format(parse(obs.meetingDate), "PPP", {
+                          locale: es,
+                      })
                     : "Sin fecha"}
             </div>
             <div className="mt-4 flex flex-col justify-end gap-2 sm:flex-row">

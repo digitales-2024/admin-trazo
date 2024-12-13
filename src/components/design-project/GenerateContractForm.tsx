@@ -2,7 +2,7 @@
 
 import { useDesignProject } from "@/hooks/use-design-project";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { parse, format } from "date-fns";
+import { parseISO as parse, format } from "date-fns";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -75,11 +75,7 @@ export function GenerateContractForm(props: {
                                             <DatePicker
                                                 value={
                                                     field.value
-                                                        ? parse(
-                                                              field.value,
-                                                              "yyyy-MM-dd",
-                                                              new Date(),
-                                                          )
+                                                        ? parse(field.value)
                                                         : undefined
                                                 }
                                                 onChange={(date) => {
