@@ -27,8 +27,7 @@ export function ObservationInformationUpdate({
             <div className="">
                 <div
                     className={cn(
-                        "cursor-pointer overflow-hidden truncate text-ellipsis",
-                        expandido ? "whitespace-normal" : "whitespace-nowrap",
+                        "cursor-default whitespace-normal break-words text-justify",
                     )}
                     onClick={handleToggle}
                 >
