@@ -88,7 +88,8 @@ export function UpdateResourceSheet({
                 unitCost: resource.unitCost ?? 0,
             });
         }
-    }, [open, resource, form]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [open, resource]);
 
     const onSubmit = async (input: CreateResourceSchema) => {
         onUpdateResource({
@@ -102,7 +103,8 @@ export function UpdateResourceSheet({
             form.reset();
             onOpenChange(false);
         }
-    }, [isSuccessUpdateResource, form, onOpenChange]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSuccessUpdateResource, onOpenChange]);
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>

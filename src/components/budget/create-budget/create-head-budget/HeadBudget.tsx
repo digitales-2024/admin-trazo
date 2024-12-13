@@ -115,7 +115,8 @@ export const HeadBudget = ({
             form.setValue("ubication", "");
             form.setValue("clientId", "");
         }
-    }, [form, isExistingDesignProject]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isExistingDesignProject]);
 
     return (
         <Card>

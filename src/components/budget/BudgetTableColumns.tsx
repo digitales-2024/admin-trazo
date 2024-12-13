@@ -1,13 +1,8 @@
 "use client";
 
-import {
-    BudgetStatusType,
-    // Budget,
-    BudgetSummary,
-    QuotationStatusType,
-} from "@/types";
+import { BudgetStatusType, BudgetSummary } from "@/types";
 import { type ColumnDef } from "@tanstack/react-table";
-import { Contact, Ellipsis, MonitorCog } from "lucide-react";
+import { Contact, Ellipsis, FileDown, MonitorCog } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -23,11 +18,12 @@ import {
 
 import { DataTableColumnHeader } from "../data-table/DataTableColumnHeader";
 import { Badge } from "../ui/badge";
-import { BudgetDetailDialog } from "./create-budget/create-detail-budget/BudgetDetailDialog";
+import { BudgetDetailDialog } from "./show-budget-data/BudgetDetailDialog";
 import UpdateStatusBudgetDialog from "./UpdateStatusBudgetDialog";
 
 export const budgetsColumns = (
     isSuperAdmin: boolean,
+    generateBudgetPdf: (id: string, code: string) => void,
     handleEditClick: (id: string) => void,
     // ColumnDef<Budget>[] => {
 ): ColumnDef<BudgetSummary>[] => {
@@ -176,7 +172,10 @@ export const budgetsColumns = (
                 const [showUpdateStatusDialog, setShowUpdateStatusDialog] =
                     useState(false);
                 const [showDataDialog, setShowDataDialog] = useState(false);
-                const { status, id } = row.original;
+                const { status, id, code } = row.original;
+                const downloadPdfBudget = () => {
+                    generateBudgetPdf(id, code);
+                };
 
                 return (
                     <div>
@@ -218,7 +217,7 @@ export const budgetsColumns = (
                                 <DropdownMenuItem
                                     onSelect={() => handleEditClick(id)}
                                     disabled={
-                                        status === QuotationStatusType.APPROVED
+                                        status === BudgetStatusType.APPROVED
                                     }
                                 >
                                     Editar
@@ -230,14 +229,24 @@ export const budgetsColumns = (
                                         setShowUpdateStatusDialog(true)
                                     }
                                     disabled={
-                                        status ===
-                                            QuotationStatusType.APPROVED ||
+                                        status === BudgetStatusType.APPROVED ||
                                         !isSuperAdmin
                                     }
                                 >
                                     Actualizar
                                     <DropdownMenuShortcut>
                                         <MonitorCog
+                                            className="size-4"
+                                            aria-hidden="true"
+                                        />
+                                    </DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onSelect={() => downloadPdfBudget()}
+                                >
+                                    Descargar
+                                    <DropdownMenuShortcut>
+                                        <FileDown
                                             className="size-4"
                                             aria-hidden="true"
                                         />

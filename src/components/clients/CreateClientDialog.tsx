@@ -85,7 +85,8 @@ export function CreateClientDialog({
             form.reset();
             setOpen(false);
         }
-    }, [isSuccessCreateClient, form]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSuccessCreateClient]);
 
     const handleClose = () => {
         form.reset();

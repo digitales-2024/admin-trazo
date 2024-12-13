@@ -92,13 +92,8 @@ export function CreateObservationDialog({
                 refetch();
             }
         }
-    }, [
-        isSuccessCreateObservation,
-        form,
-        onOpenChange,
-        amountOfObservations,
-        refetch,
-    ]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSuccessCreateObservation]);
 
     const handleClose = () => {
         form.reset();

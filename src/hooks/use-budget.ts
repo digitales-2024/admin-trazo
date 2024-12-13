@@ -1,5 +1,6 @@
 import {
     useCreateBudgetMutation,
+    useGenPdfBudgetMutation,
     useGetAllBudgetsQuery,
     useGetBudgetByIdQuery,
     useUpdateBudgetMutation,
@@ -7,6 +8,7 @@ import {
 } from "@/redux/services/budgetApi";
 import { BudgetStatusType, CreateBudget, CustomErrorData } from "@/types";
 import { translateError } from "@/utils/translateError";
+import { format } from "date-fns";
 import { toast } from "sonner";
 
 interface UseBudgetsProps {
@@ -43,6 +45,8 @@ export const useBudgets = (options: UseBudgetsProps = {}) => {
         updateBudget,
         { isSuccess: isSuccessUpdateBudget, isLoading: isLoadingUpdateBudget },
     ] = useUpdateBudgetMutation();
+
+    const [genPdfBudget] = useGenPdfBudgetMutation();
 
     const onCreateBudget = async (input: Partial<CreateBudget>) => {
         const promise = () =>
@@ -161,6 +165,49 @@ export const useBudgets = (options: UseBudgetsProps = {}) => {
         });
     };
 
+    const generateBudgetPdf = async (id: string, code: string) => {
+        const promise = async () => {
+            try {
+                const result = await genPdfBudget(id).unwrap();
+
+                // Crear el enlace de descarga
+                const url = window.URL.createObjectURL(result);
+                const link = document.createElement("a");
+                link.href = url;
+                link.setAttribute(
+                    "download",
+                    `${code}-${format(new Date(), "yyyy-MM-dd")}.pdf`,
+                );
+
+                // Añadir el enlace al DOM y disparar la descarga
+                document.body.appendChild(link);
+                link.click();
+
+                // Eliminar el enlace temporal del DOM
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url); // Limpiar el objeto URL
+
+                return result;
+            } catch (error) {
+                if (error && typeof error === "object" && "data" in error) {
+                    const errorText = await (error.data as Response).text();
+                    const errorJson = JSON.parse(errorText);
+                    const errorMessage = errorJson.message;
+                    const message = translateError(errorMessage as string);
+                    throw new Error(message);
+                } else {
+                    throw new Error("Error desconocido.");
+                }
+            }
+        };
+
+        return toast.promise(promise(), {
+            loading: "Descargando presupuesto en PDF...",
+            success: "Presupuesto descargado con éxito en PDF",
+            error: (err) => err.message,
+        });
+    };
+
     return {
         dataBudgetsAll,
         error,
@@ -177,5 +224,6 @@ export const useBudgets = (options: UseBudgetsProps = {}) => {
         onUpdateBudget,
         isSuccessUpdateBudget,
         isLoadingUpdateBudget,
+        generateBudgetPdf,
     };
 };

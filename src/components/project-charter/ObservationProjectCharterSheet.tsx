@@ -112,7 +112,8 @@ export function ObservationProjectCharterSheet({
         if (!isLoadingUpdateObservation && editingId === null) {
             form.reset();
         }
-    }, [isLoadingUpdateObservation, editingId, form]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isLoadingUpdateObservation]);
 
     const handleToggle = (id: string) => {
         setExpandedId(expandedId === id ? null : id);
@@ -147,7 +148,7 @@ export function ObservationProjectCharterSheet({
                     </SheetTitle>
                     <SheetDescription>{infoSheet.description}</SheetDescription>
                 </SheetHeader>
-                <ScrollArea className="w-full gap-4 rounded-md border p-4">
+                <ScrollArea className="gap-4 rounded-md border p-4">
                     <div className="space-y-4">
                         <h3 className="text-sm font-normal">
                             Observaciones Existentes

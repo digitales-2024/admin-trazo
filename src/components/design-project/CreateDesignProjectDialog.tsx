@@ -116,7 +116,8 @@ export function CreateProjectDialog() {
             form.reset();
             setOpen(false);
         }
-    }, [createSuccess, form]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [createSuccess]);
 
     async function onSubmit(formData: z.infer<typeof FormSchema>) {
         const quotation = data?.find((q) => q.id === formData.quotationId);

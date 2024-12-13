@@ -106,7 +106,8 @@ export default function UpdateQuotation({
                 totalAmount: quotationById.totalAmount,
             });
         }
-    }, [quotationById, form]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [quotationById]);
 
     const architecturalCost = form.watch("architecturalCost").toString();
     const structuralCost = form.watch("structuralCost").toString();
@@ -222,7 +223,8 @@ export default function UpdateQuotation({
         if (isSuccessUpdateQuotation) {
             form.reset();
         }
-    }, [isSuccessUpdateQuotation, form]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSuccessUpdateQuotation]);
 
     const diferentPage = true;
     return (

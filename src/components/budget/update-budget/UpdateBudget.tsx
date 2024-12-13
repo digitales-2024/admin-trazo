@@ -31,7 +31,15 @@ export default function UpdateBudget({ budgetById }: UpdateBudgetProps) {
     const [isClient, setIsClient] = useState(false);
     const router = useRouter();
 
-    console.log("budgetById", JSON.stringify(budgetById, null, 2));
+    const form = useForm<CreateBudgetSchema>({
+        resolver: zodResolver(createBudgetSchema),
+        defaultValues: {
+            name: "",
+            ubication: "",
+            clientId: "",
+            dateProject: "",
+        },
+    });
 
     const [budget, setBudget] = useState<BudgetCategories>({
         categories: budgetById.category.map((cat: CategoryBudget) => ({
@@ -118,8 +126,6 @@ export default function UpdateBudget({ budgetById }: UpdateBudgetProps) {
         applyTax: budgetById.budgetDetail?.[0]?.igv !== 0,
     });
 
-    console.log("budget", JSON.stringify(budget, null, 2));
-
     useEffect(() => {
         setIsClient(true);
     }, []);
@@ -136,17 +142,21 @@ export default function UpdateBudget({ budgetById }: UpdateBudgetProps) {
         }
     };
 
-    const form = useForm<CreateBudgetSchema>({
-        resolver: zodResolver(createBudgetSchema),
-        defaultValues: {
-            name: budgetById.name,
-            ubication: budgetById.ubication,
-            clientId: budgetById.clientBudget.id,
-            dateProject: budgetById.dateProject,
-            isExistingDesignProject: !!budgetById.designProjectBudget?.id,
-            designProjectId: budgetById.designProjectBudget?.id,
-        },
-    });
+    useEffect(() => {
+        if (budgetById) {
+            form.reset({
+                name: budgetById.name || "",
+                ubication: budgetById.ubication || "",
+                clientId: budgetById.clientBudget?.id || "",
+                dateProject: budgetById.dateProject || "",
+                ...(budgetById.designProjectBudget && {
+                    isExistingDesignProject: true,
+                    designProjectId: budgetById.designProjectBudget.id,
+                }),
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [budgetById]);
 
     const handleUpdateBudget = () => {
         const formData = form.getValues();

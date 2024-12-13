@@ -1,5 +1,6 @@
 import { useBudgets } from "@/hooks/use-budget";
 import { BudgetSummary } from "@/types/budget";
+import { FileText, Layers, List, Package } from "lucide-react";
 import React from "react";
 
 import {
@@ -41,10 +42,10 @@ const CategoriesBudget = ({ budget }: Props) => {
     }
     return (
         <TabsContent value="categories">
-            <Card className="rounded-lg shadow-lg">
-                <CardHeader className="border-b border-gray-300 bg-gray-200">
+            <Card className="rounded-lg">
+                <CardHeader className="border-gray-300 bg-zinc-50">
                     <CardTitle className="text-base font-semibold text-gray-800 sm:text-xl">
-                        Categorías, Subcategorías y WorkItems
+                        Estructura del Presupuesto
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="p-4">
@@ -57,14 +58,19 @@ const CategoriesBudget = ({ budget }: Props) => {
                             <AccordionItem
                                 key={category.id}
                                 value={category.id}
-                                className="rounded-lg bg-white shadow-sm"
+                                className="rounded-lg bg-white"
                             >
-                                <AccordionTrigger className="pl-4 text-start text-sm font-bold capitalize leading-none tracking-tight sm:text-center">
+                                <AccordionTrigger className="pl-4 text-start text-sm font-light capitalize leading-none tracking-tight sm:text-center">
                                     <div className="flex w-full flex-col justify-start gap-2 sm:flex-row sm:justify-between sm:gap-0">
-                                        <span>{category.name}</span>
+                                        <div className="flex flex-row gap-2">
+                                            <Package
+                                                className="h-4 w-4 flex-shrink-0 text-blue-500"
+                                                strokeWidth={1.5}
+                                            />
+                                            <span>{category.name}</span>
+                                        </div>
                                         <span className="mr-[2%]">
-                                            <span>SubTotal: </span>
-                                            <span className="font-semibold text-green-500">
+                                            <span className="font-light text-green-500">
                                                 {formatCurrency(
                                                     category.subtotal,
                                                 )}
@@ -72,31 +78,36 @@ const CategoriesBudget = ({ budget }: Props) => {
                                         </span>
                                     </div>
                                 </AccordionTrigger>
-                                <AccordionContent className="bg-gray-50 p-4">
+                                <AccordionContent className="p-4">
                                     {category.subcategory?.map(
                                         (subcategory) => (
                                             <Accordion
                                                 key={subcategory.id}
                                                 type="single"
-                                                collapsible
                                                 className="ml-4 w-full"
                                             >
                                                 <AccordionItem
                                                     value={subcategory.id}
-                                                    className="mb-2 rounded-lg bg-white shadow-sm"
+                                                    className="mb-2 rounded-lg bg-white"
                                                 >
-                                                    <AccordionTrigger className="border-b-2 border-gray-300 px-4 py-2 text-start text-xs font-semibold capitalize transition-all hover:bg-gray-100 sm:text-center sm:text-sm">
+                                                    <AccordionTrigger className="px-4 py-2 text-start text-sm font-light capitalize sm:text-center">
                                                         <div className="flex w-full flex-col justify-start gap-2 sm:flex-row sm:justify-between sm:gap-0">
-                                                            <span>
-                                                                {
-                                                                    subcategory.name
-                                                                }
-                                                            </span>
-                                                            <span className="mr-[2%]">
+                                                            <div className="flex flex-row items-center gap-2">
+                                                                <Layers
+                                                                    className="h-4 w-4 flex-shrink-0 text-green-500"
+                                                                    strokeWidth={
+                                                                        1.5
+                                                                    }
+                                                                />
                                                                 <span>
-                                                                    SubTotal:{" "}
+                                                                    {
+                                                                        subcategory.name
+                                                                    }
                                                                 </span>
-                                                                <span className="font-semibold text-red-500">
+                                                            </div>
+
+                                                            <span className="mr-[2%]">
+                                                                <span className="font-light text-red-500">
                                                                     {formatCurrency(
                                                                         subcategory.subtotal,
                                                                     )}
@@ -104,24 +115,24 @@ const CategoriesBudget = ({ budget }: Props) => {
                                                             </span>
                                                         </div>
                                                     </AccordionTrigger>
-                                                    <AccordionContent className="bg-gray-100 p-4">
+                                                    <AccordionContent className="p-4">
                                                         <Table className="mt-4">
-                                                            <TableHeader className="bg-gray-200">
+                                                            <TableHeader>
                                                                 <TableRow>
-                                                                    <TableHead className="text-xs sm:text-sm">
+                                                                    <TableHead className="text-xs font-light sm:text-sm">
                                                                         Descripción
                                                                     </TableHead>
-                                                                    <TableHead className="text-xs sm:text-sm">
+                                                                    <TableHead className="text-xs font-light sm:text-sm">
                                                                         Unidad
                                                                     </TableHead>
-                                                                    <TableHead className="text-xs sm:text-sm">
+                                                                    <TableHead className="text-xs font-light sm:text-sm">
                                                                         Cantidad
                                                                     </TableHead>
-                                                                    <TableHead className="text-xs sm:text-sm">
+                                                                    <TableHead className="text-xs font-light sm:text-sm">
                                                                         Costo
                                                                         Unitario
                                                                     </TableHead>
-                                                                    <TableHead className="text-xs sm:text-sm">
+                                                                    <TableHead className="text-xs font-light sm:text-sm">
                                                                         Subtotal
                                                                     </TableHead>
                                                                 </TableRow>
@@ -141,16 +152,26 @@ const CategoriesBudget = ({ budget }: Props) => {
                                                                                 .subWorkItems
                                                                                 .length >
                                                                                 0 ? (
-                                                                                <TableRow className="border-t border-gray-200">
-                                                                                    <TableCell className="text-xs sm:text-sm">
-                                                                                        {
-                                                                                            item.name
-                                                                                        }
+                                                                                <TableRow className="border-t">
+                                                                                    <TableCell className="text-xs font-light sm:text-sm">
+                                                                                        <div className="flex items-center gap-2">
+                                                                                            <FileText
+                                                                                                className="h-4 w-4 flex-shrink-0 text-yellow-500"
+                                                                                                strokeWidth={
+                                                                                                    1.5
+                                                                                                }
+                                                                                            />
+                                                                                            <span className="ml-2">
+                                                                                                {
+                                                                                                    item.name
+                                                                                                }
+                                                                                            </span>
+                                                                                        </div>
                                                                                     </TableCell>
                                                                                     <TableCell className="text-center text-xs sm:text-sm"></TableCell>
                                                                                     <TableCell className="text-center text-xs sm:text-sm"></TableCell>
                                                                                     <TableCell className="text-center text-xs sm:text-sm"></TableCell>
-                                                                                    <TableCell className="text-center text-xs font-semibold text-blue-500 sm:text-sm">
+                                                                                    <TableCell className="text-center text-xs font-light text-blue-500 sm:text-sm">
                                                                                         {formatCurrency(
                                                                                             item.subtotal,
                                                                                         )}
@@ -158,27 +179,37 @@ const CategoriesBudget = ({ budget }: Props) => {
                                                                                 </TableRow>
                                                                             ) : (
                                                                                 <TableRow className="border-t border-gray-200">
-                                                                                    <TableCell className="text-xs sm:text-sm">
-                                                                                        {
-                                                                                            item.name
-                                                                                        }
+                                                                                    <TableCell className="text-xs font-light sm:text-sm">
+                                                                                        <div className="flex items-center">
+                                                                                            <FileText
+                                                                                                className="h-4 w-4 flex-shrink-0 text-yellow-500"
+                                                                                                strokeWidth={
+                                                                                                    1.5
+                                                                                                }
+                                                                                            />
+                                                                                            <span className="ml-2">
+                                                                                                {
+                                                                                                    item.name
+                                                                                                }
+                                                                                            </span>
+                                                                                        </div>
                                                                                     </TableCell>
-                                                                                    <TableCell className="text-center text-xs sm:text-sm">
+                                                                                    <TableCell className="text-center text-xs font-light sm:text-sm">
                                                                                         {
                                                                                             item.unit
                                                                                         }
                                                                                     </TableCell>
-                                                                                    <TableCell className="text-center text-xs sm:text-sm">
+                                                                                    <TableCell className="text-center text-xs font-light sm:text-sm">
                                                                                         {
                                                                                             item.quantity
                                                                                         }
                                                                                     </TableCell>
-                                                                                    <TableCell className="text-center text-xs sm:text-sm">
+                                                                                    <TableCell className="text-center text-xs font-light sm:text-sm">
                                                                                         {
                                                                                             item.unitCost
                                                                                         }
                                                                                     </TableCell>
-                                                                                    <TableCell className="text-center text-xs sm:text-sm">
+                                                                                    <TableCell className="text-center text-sm font-light">
                                                                                         {formatCurrency(
                                                                                             item.subtotal,
                                                                                         )}
@@ -193,30 +224,30 @@ const CategoriesBudget = ({ budget }: Props) => {
                                                                                     .subWorkItems
                                                                                     .length >
                                                                                     0 && (
-                                                                                    <TableRow className="border-t border-gray-200">
+                                                                                    <TableRow className="border-t">
                                                                                         <TableCell
                                                                                             colSpan={
                                                                                                 5
                                                                                             }
                                                                                             className="p-2"
                                                                                         >
-                                                                                            <Table className="ml-4 bg-gray-50">
+                                                                                            <Table className="ml-4">
                                                                                                 <TableHeader>
                                                                                                     <TableRow>
-                                                                                                        <TableHead className="text-xs sm:text-sm">
-                                                                                                            Sub-WorkItem
+                                                                                                        <TableHead className="text-xs font-light sm:text-sm">
+                                                                                                            Subpartida
                                                                                                         </TableHead>
-                                                                                                        <TableHead className="text-xs sm:text-sm">
+                                                                                                        <TableHead className="text-xs font-light sm:text-sm">
                                                                                                             Unidad
                                                                                                         </TableHead>
-                                                                                                        <TableHead className="text-xs sm:text-sm">
+                                                                                                        <TableHead className="text-xs font-light sm:text-sm">
                                                                                                             Cantidad
                                                                                                         </TableHead>
-                                                                                                        <TableHead className="text-xs sm:text-sm">
+                                                                                                        <TableHead className="text-xs font-light sm:text-sm">
                                                                                                             Costo
                                                                                                             Unitario
                                                                                                         </TableHead>
-                                                                                                        <TableHead className="text-xs sm:text-sm">
+                                                                                                        <TableHead className="text-xs font-light sm:text-sm">
                                                                                                             Subtotal
                                                                                                         </TableHead>
                                                                                                     </TableRow>
@@ -233,29 +264,39 @@ const CategoriesBudget = ({ budget }: Props) => {
                                                                                                                 key={
                                                                                                                     subItem.id
                                                                                                                 }
-                                                                                                                className="border-t border-gray-200"
                                                                                                             >
-                                                                                                                <TableCell className="text-xs sm:text-sm">
-                                                                                                                    {
-                                                                                                                        subItem.name
-                                                                                                                    }
+                                                                                                                <TableCell className="text-xs font-light sm:text-sm">
+                                                                                                                    <div className="flex items-center">
+                                                                                                                        <List
+                                                                                                                            className="h-4 w-4 flex-shrink-0 text-red-500"
+                                                                                                                            strokeWidth={
+                                                                                                                                1.5
+                                                                                                                            }
+                                                                                                                        />
+                                                                                                                        <span className="ml-2">
+                                                                                                                            {
+                                                                                                                                subItem.name
+                                                                                                                            }
+                                                                                                                        </span>
+                                                                                                                    </div>
                                                                                                                 </TableCell>
-                                                                                                                <TableCell className="text-center text-xs sm:text-sm">
+
+                                                                                                                <TableCell className="text-center text-xs font-light sm:text-sm">
                                                                                                                     {
                                                                                                                         subItem.unit
                                                                                                                     }
                                                                                                                 </TableCell>
-                                                                                                                <TableCell className="text-center text-xs sm:text-sm">
+                                                                                                                <TableCell className="text-center text-xs font-light sm:text-sm">
                                                                                                                     {
                                                                                                                         subItem.quantity
                                                                                                                     }
                                                                                                                 </TableCell>
-                                                                                                                <TableCell className="text-center text-xs sm:text-sm">
+                                                                                                                <TableCell className="text-center text-xs font-light sm:text-sm">
                                                                                                                     {
                                                                                                                         subItem.unitCost
                                                                                                                     }
                                                                                                                 </TableCell>
-                                                                                                                <TableCell className="text-center text-xs sm:text-sm">
+                                                                                                                <TableCell className="text-center text-xs font-light sm:text-sm">
                                                                                                                     {formatCurrency(
                                                                                                                         subItem.subtotal,
                                                                                                                     )}

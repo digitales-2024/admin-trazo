@@ -125,7 +125,8 @@ function CreateWithApuForm({
             nestedRefetch();
             setOpen(false);
         }
-    }, [createSuccess, form, setOpen, nestedRefetch]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [createSuccess, setOpen, nestedRefetch]);
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

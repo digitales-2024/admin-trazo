@@ -81,7 +81,8 @@ export function CreateSpaceDialog({
             form.reset();
             setOpen(false);
         }
-    }, [isSuccessCreateSpace, form]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSuccessCreateSpace]);
 
     const handleClose = () => {
         form.reset();

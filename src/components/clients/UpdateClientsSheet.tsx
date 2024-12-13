@@ -127,7 +127,8 @@ export function UpdateClientSheet({
                 );
             }
         }
-    }, [open, client, form]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [open, client]);
 
     const onSubmit = async (input: CreateClientsSchema) => {
         onUpdateClient({
@@ -141,7 +142,8 @@ export function UpdateClientSheet({
             form.reset();
             onOpenChange(false);
         }
-    }, [isSuccessUpdateClient, form, onOpenChange]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSuccessUpdateClient, onOpenChange]);
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
