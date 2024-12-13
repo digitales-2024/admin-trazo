@@ -143,7 +143,6 @@ export function EditWorkItemForm({
 
         edit({
             id: data.id,
-            // @ts-expect-error spaghetti code for reusing this form instead of duplicating
             body: body,
         });
     }
