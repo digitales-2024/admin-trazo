@@ -70,7 +70,9 @@ export function CreateLevelSpace({
             }
             return floor;
         });
+
         setFloors(newFloors);
+        form.reset({ levels: newFloors });
     };
 
     const duplicateFloor = (floorNumber: number) => {

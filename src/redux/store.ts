@@ -59,12 +59,15 @@ export const store = configureStore({
                     "observationApi/executeMutation/rejected",
                     "designProjectApi/executeMutation/fulfilled",
                     "designProjectApi/executeMutation/rejected",
+                    "budgetsApi/executeMutation/fulfilled",
+                    "budgetsApi/executeMutation/rejected",
                 ],
                 // Ignorar las rutas en el estado que contienen valores no serializables
                 ignoredPaths: [
                     "quotationsApi.mutations",
                     "designProjectApi.mutations",
                     "observationApi.mutations",
+                    "budgetsApi.mutations",
                 ],
             },
         })

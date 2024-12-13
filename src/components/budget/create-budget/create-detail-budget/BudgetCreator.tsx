@@ -57,19 +57,14 @@ export const BudgetCreator: React.FC<BudgetCreatorProps> = ({
                         break;
                     case "subcategory":
                         if (budget.categories.length > 0) {
-                            addSubcategory(
-                                budget.categories[budget.categories.length - 1]
-                                    .id,
-                                draggedItem.name,
-                                draggedItem.id,
-                            );
+                            addSubcategory(draggedItem.name, draggedItem.id);
                         }
                         break;
                     case "workItem":
                         if (
-                            budget.categories.length > 0 &&
-                            budget.categories[budget.categories.length - 1]
-                                .subcategories.length > 0
+                            budget.categories.some(
+                                (category) => category.subcategories.length > 0,
+                            )
                         ) {
                             addWorkItem(
                                 draggedItem.name,
@@ -84,14 +79,12 @@ export const BudgetCreator: React.FC<BudgetCreatorProps> = ({
                         break;
                     case "subWorkItem":
                         if (
-                            budget.categories.length > 0 &&
-                            budget.categories[budget.categories.length - 1]
-                                .subcategories.length > 0 &&
-                            budget.categories[budget.categories.length - 1]
-                                .subcategories[
-                                budget.categories[budget.categories.length - 1]
-                                    .subcategories.length - 1
-                            ].workItems.length > 0
+                            budget.categories.some((category) =>
+                                category.subcategories.some(
+                                    (subcategory) =>
+                                        subcategory.workItems.length > 0,
+                                ),
+                            )
                         ) {
                             addSubWorkItem(
                                 draggedItem.name,
@@ -158,12 +151,15 @@ export const BudgetCreator: React.FC<BudgetCreatorProps> = ({
         }));
     };
 
-    const addSubcategory = (categoryId: string, name: string, id: string) => {
+    const addSubcategory = (name: string, id: string) => {
         const newSubcategory: SubcategoryDragCategory = {
             id: id,
             name,
             workItems: [],
             subtotal: 0,
+        };
+        const { categoryId } = getParentIDs("subcategory", id) as {
+            categoryId: string;
         };
         setBudget((prev) => ({
             ...prev,

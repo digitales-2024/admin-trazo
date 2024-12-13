@@ -64,7 +64,8 @@ export function CreateRolesDialog() {
             form.reset();
             setOpen(false);
         }
-    }, [isSuccessCreateRole, form]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSuccessCreateRole]);
 
     const handleClose = () => {
         form.reset();

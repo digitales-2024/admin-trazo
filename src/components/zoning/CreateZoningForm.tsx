@@ -61,12 +61,12 @@ export const CreateZoningForm = ({
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel htmlFor="description">
-                                    Descripcion del ambiente
+                                    Descripcion de la zonificación
                                 </FormLabel>
                                 <FormControl>
                                     <Textarea
                                         id="description"
-                                        placeholder="Ingrese el nombre del ambiente"
+                                        placeholder="Ingrese la descripción de la zonificación"
                                         {...field}
                                     />
                                 </FormControl>

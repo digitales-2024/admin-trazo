@@ -1,6 +1,7 @@
 "use client";
 "use memo";
 
+import { useBudgets } from "@/hooks/use-budget";
 import { useProfile } from "@/hooks/use-profile";
 import { BudgetSummary } from "@/types";
 import { useRouter } from "next/navigation";
@@ -12,6 +13,7 @@ import { BudgetTableToolbarActions } from "./BudgetTableToolbarActions";
 
 export function BudgetssTable({ data }: { data: BudgetSummary[] }) {
     const { user } = useProfile();
+    const { generateBudgetPdf } = useBudgets();
 
     const router = useRouter();
     const handleEditClick = useCallback(
@@ -20,9 +22,15 @@ export function BudgetssTable({ data }: { data: BudgetSummary[] }) {
         },
         [router],
     );
+
     const columns = useMemo(
-        () => budgetsColumns(user?.isSuperAdmin || false, handleEditClick),
-        [user, handleEditClick],
+        () =>
+            budgetsColumns(
+                user?.isSuperAdmin || false,
+                generateBudgetPdf,
+                handleEditClick,
+            ),
+        [user, generateBudgetPdf, handleEditClick],
     );
 
     return (

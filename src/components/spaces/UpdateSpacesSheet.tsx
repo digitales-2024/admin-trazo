@@ -73,7 +73,8 @@ export function UpdateSpacesSheet({
                 description: space.description ?? "",
             });
         }
-    }, [open, space, form]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [open, space]);
 
     const onSubmit = async (input: CreateSpacesSchema) => {
         onUpdateSpace({
@@ -87,7 +88,8 @@ export function UpdateSpacesSheet({
             form.reset();
             onOpenChange(false);
         }
-    }, [isSuccessUpdateSpace, form, onOpenChange]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSuccessUpdateSpace, onOpenChange]);
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>

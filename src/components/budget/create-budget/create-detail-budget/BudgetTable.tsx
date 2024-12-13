@@ -8,7 +8,7 @@ import {
 import { Droppable } from "@hello-pangea/dnd";
 import React from "react";
 
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
     Table,
     TableBody,
@@ -91,107 +91,87 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                 <div
                     {...provided.droppableProps}
                     ref={provided.innerRef}
-                    className="w-full overflow-auto rounded-md border bg-white p-4 md:w-3/4"
+                    className="w-full rounded-md border bg-white p-4 md:w-3/4"
                 >
                     <h3 className="mb-2 font-semibold">Presupuesto</h3>
-                    <ScrollArea className="h-[500px] w-full rounded-md border p-4">
-                        <Table className="w-full">
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead className="w-[50px] text-center">
-                                        ID
-                                    </TableHead>
-                                    <TableHead className="w-[250px] text-center">
-                                        Nombre
-                                    </TableHead>
-                                    <TableHead className="w-[50px] text-center">
-                                        Unidad
-                                    </TableHead>
-                                    <TableHead className="text-center">
-                                        Cantidad
-                                    </TableHead>
-                                    <TableHead className="w-[250px] text-center">
-                                        Precio
-                                    </TableHead>
-                                    <TableHead className="w-[300px] text-center">
-                                        Subtotal
-                                    </TableHead>
-                                    <TableHead className="w-[100px] text-center">
-                                        Acciones
-                                    </TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody className="w-full">
-                                {budget.categories.map((category, catIndex) => (
-                                    <React.Fragment key={category.id}>
-                                        <CategoryRow
-                                            category={category}
-                                            catIndex={catIndex}
-                                            onDeleteCategory={onDeleteCategory}
-                                            calculateCategoryTotal={
-                                                calculateCategoryTotal
-                                            }
-                                        />
-                                        {category.subcategories.map(
-                                            (subcategory, subIndex) => (
-                                                <React.Fragment
-                                                    key={subcategory.id}
-                                                >
-                                                    <SubcategoryRow
-                                                        catIndex={catIndex}
-                                                        subIndex={subIndex}
-                                                        category={category}
-                                                        subcategory={
-                                                            subcategory
-                                                        }
-                                                        calculateSubcategoryTotal={
-                                                            calculateSubcategoryTotal
-                                                        }
-                                                        onDeleteSubcategory={
-                                                            onDeleteSubcategory
-                                                        }
-                                                    />
-                                                    {subcategory.workItems.map(
-                                                        (item, itemIndex) => (
-                                                            <React.Fragment
-                                                                key={item.id}
-                                                            >
-                                                                <WorkItemRow
-                                                                    catIndex={
-                                                                        catIndex
-                                                                    }
-                                                                    subIndex={
-                                                                        subIndex
-                                                                    }
-                                                                    itemIndex={
-                                                                        itemIndex
-                                                                    }
-                                                                    category={
-                                                                        category
-                                                                    }
-                                                                    subcategory={
-                                                                        subcategory
-                                                                    }
-                                                                    item={item}
-                                                                    calculateWorkItemTotal={
-                                                                        calculateWorkItemTotal
-                                                                    }
-                                                                    onUpdateWorkItem={
-                                                                        onUpdateWorkItem
-                                                                    }
-                                                                    onDeleteWorkItem={
-                                                                        onDeleteWorkItem
-                                                                    }
-                                                                />
-                                                                {item.subWorkItems.map(
-                                                                    (
-                                                                        subItem,
-                                                                        subItemIndex,
-                                                                    ) => (
-                                                                        <SubWorkItemRow
-                                                                            key={
-                                                                                subItem.id
-                                                                            }
+                    <ScrollArea className="h-[500px] w-full rounded-md border">
+                        <div className="p-4">
+                            <Table className="w-full">
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead className="w-[50px] text-center">
+                                            Item
+                                        </TableHead>
+                                        <TableHead className="w-[250px] text-center">
+                                            Nombre
+                                        </TableHead>
+                                        <TableHead className="w-[50px] text-center">
+                                            Unidad
+                                        </TableHead>
+                                        <TableHead className="text-center">
+                                            Cantidad
+                                        </TableHead>
+                                        <TableHead className="w-[250px] text-center">
+                                            Precio
+                                        </TableHead>
+                                        <TableHead className="w-[300px] text-center">
+                                            Subtotal
+                                        </TableHead>
+                                        <TableHead className="w-[100px] text-center">
+                                            Acciones
+                                        </TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody className="w-full">
+                                    {budget.categories.map(
+                                        (category, catIndex) => (
+                                            <React.Fragment key={category.id}>
+                                                <CategoryRow
+                                                    category={category}
+                                                    catIndex={catIndex}
+                                                    onDeleteCategory={
+                                                        onDeleteCategory
+                                                    }
+                                                    calculateCategoryTotal={
+                                                        calculateCategoryTotal
+                                                    }
+                                                />
+                                                {category.subcategories.map(
+                                                    (subcategory, subIndex) => (
+                                                        <React.Fragment
+                                                            key={subcategory.id}
+                                                        >
+                                                            <SubcategoryRow
+                                                                catIndex={
+                                                                    catIndex
+                                                                }
+                                                                subIndex={
+                                                                    subIndex
+                                                                }
+                                                                category={
+                                                                    category
+                                                                }
+                                                                subcategory={
+                                                                    subcategory
+                                                                }
+                                                                calculateSubcategoryTotal={
+                                                                    calculateSubcategoryTotal
+                                                                }
+                                                                onDeleteSubcategory={
+                                                                    onDeleteSubcategory
+                                                                }
+                                                            />
+                                                            {subcategory.workItems.map(
+                                                                (
+                                                                    item,
+                                                                    itemIndex,
+                                                                ) => (
+                                                                    <React.Fragment
+                                                                        key={
+                                                                            item.id
+                                                                        }
+                                                                    >
+                                                                        <WorkItemRow
                                                                             catIndex={
                                                                                 catIndex
                                                                             }
@@ -200,9 +180,6 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                                                                             }
                                                                             itemIndex={
                                                                                 itemIndex
-                                                                            }
-                                                                            subItemIndex={
-                                                                                subItemIndex
                                                                             }
                                                                             category={
                                                                                 category
@@ -213,28 +190,72 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
                                                                             item={
                                                                                 item
                                                                             }
-                                                                            subItem={
-                                                                                subItem
+                                                                            calculateWorkItemTotal={
+                                                                                calculateWorkItemTotal
                                                                             }
-                                                                            onUpdateSubWorkItem={
-                                                                                onUpdateSubWorkItem
+                                                                            onUpdateWorkItem={
+                                                                                onUpdateWorkItem
                                                                             }
-                                                                            onDeleteSubWorkItem={
-                                                                                onDeleteSubWorkItem
+                                                                            onDeleteWorkItem={
+                                                                                onDeleteWorkItem
                                                                             }
                                                                         />
-                                                                    ),
-                                                                )}
-                                                            </React.Fragment>
-                                                        ),
-                                                    )}
-                                                </React.Fragment>
-                                            ),
-                                        )}
-                                    </React.Fragment>
-                                ))}
-                            </TableBody>
-                        </Table>
+                                                                        {item.subWorkItems.map(
+                                                                            (
+                                                                                subItem,
+                                                                                subItemIndex,
+                                                                            ) => (
+                                                                                <SubWorkItemRow
+                                                                                    key={
+                                                                                        subItem.id
+                                                                                    }
+                                                                                    catIndex={
+                                                                                        catIndex
+                                                                                    }
+                                                                                    subIndex={
+                                                                                        subIndex
+                                                                                    }
+                                                                                    itemIndex={
+                                                                                        itemIndex
+                                                                                    }
+                                                                                    subItemIndex={
+                                                                                        subItemIndex
+                                                                                    }
+                                                                                    category={
+                                                                                        category
+                                                                                    }
+                                                                                    subcategory={
+                                                                                        subcategory
+                                                                                    }
+                                                                                    item={
+                                                                                        item
+                                                                                    }
+                                                                                    subItem={
+                                                                                        subItem
+                                                                                    }
+                                                                                    onUpdateSubWorkItem={
+                                                                                        onUpdateSubWorkItem
+                                                                                    }
+                                                                                    onDeleteSubWorkItem={
+                                                                                        onDeleteSubWorkItem
+                                                                                    }
+                                                                                />
+                                                                            ),
+                                                                        )}
+                                                                    </React.Fragment>
+                                                                ),
+                                                            )}
+                                                        </React.Fragment>
+                                                    ),
+                                                )}
+                                            </React.Fragment>
+                                        ),
+                                    )}
+                                </TableBody>
+                            </Table>
+                        </div>
+                        <ScrollBar orientation="horizontal" />
+                        <ScrollBar orientation="vertical" />
                     </ScrollArea>
                     {provided.placeholder}
                 </div>

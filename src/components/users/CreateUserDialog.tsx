@@ -77,7 +77,8 @@ export function CreateUsersDialog() {
             form.reset();
             setOpen(false);
         }
-    }, [isSuccessCreateUser, form]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSuccessCreateUser]);
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>

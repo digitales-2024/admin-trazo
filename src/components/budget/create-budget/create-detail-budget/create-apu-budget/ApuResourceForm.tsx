@@ -51,7 +51,8 @@ export default function ApuResourceForm({
                 (Number(groupValue) * workHours) / performance || 0;
             form.setValue("quantity", calculatedQuantity);
         }
-    }, [resourceType, groupValue, workHours, performance, form]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [resourceType, groupValue, workHours, performance]);
 
     const [isAddingResource, setIsAddingResource] = React.useState(false);
     const handleCancelAddResource = () => {
