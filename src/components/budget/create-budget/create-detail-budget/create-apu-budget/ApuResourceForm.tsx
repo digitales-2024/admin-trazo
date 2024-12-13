@@ -186,11 +186,6 @@ export default function ApuResourceForm({
                                     name="group"
                                     rules={{
                                         required: "La cuadrilla es requerida.",
-                                        min: {
-                                            value: 1,
-                                            message:
-                                                "La cuadrilla debe ser al menos 1.",
-                                        },
                                     }}
                                     render={({ field }) => (
                                         <FormItem>
