@@ -14,8 +14,8 @@ export const useApu = (options?: { id: string }) => {
     async function updateApu(input: { id: string }) {
         const promise = runAndHandleError(() => updateApuFn(input).unwrap());
         toast.promise(promise, {
-            loading: "Creando categoría...",
-            success: "Categoría creada con éxito",
+            loading: "Creando análisis de precios unitarios...",
+            success: "Análisis de precios unitarios creado con éxito",
             error: (err) => err.message,
         });
         return await promise;

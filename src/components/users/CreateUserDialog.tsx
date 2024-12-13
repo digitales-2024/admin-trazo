@@ -67,8 +67,8 @@ export function CreateUsersDialog() {
     }, [password, setValue, clearErrors]);
 
     const onSubmit = async (input: CreateUsersSchema) => {
-        startCreateTransition(async () => {
-            await onCreateUser(input);
+        startCreateTransition(() => {
+            onCreateUser(input);
         });
     };
 

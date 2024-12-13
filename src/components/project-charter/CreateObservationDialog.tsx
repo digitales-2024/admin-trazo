@@ -145,7 +145,7 @@ export function CreateObservationDialog({
 
     return (
         <Drawer open={open} onOpenChange={onOpenChange}>
-            <DrawerContent className="h-[90vh]">
+            <DrawerContent className="h-[50vh]">
                 <DrawerHeader>
                     <DrawerTitle>{dataForm.title}</DrawerTitle>
                     <DrawerDescription>

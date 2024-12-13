@@ -52,12 +52,14 @@ export function BusinessUpdateForm() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [business]);
     function onSubmit(values: UpdateBusinessSchema) {
-        startCreateTransition(async () => {
-            if (business?.length === 1) {
-                await onUpdateBusiness({ id: business[0].id, ...values });
-            } else {
-                await onCreateBusiness(values);
-            }
+        startCreateTransition(() => {
+            (async () => {
+                if (business?.length === 1) {
+                    await onUpdateBusiness({ id: business[0].id, ...values });
+                } else {
+                    await onCreateBusiness(values);
+                }
+            })();
         });
     }
     return (

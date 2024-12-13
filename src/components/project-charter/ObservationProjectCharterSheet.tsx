@@ -231,6 +231,7 @@ export function ObservationProjectCharterSheet({
                                                     <div className="flex flex-col items-center justify-end space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0">
                                                         <Button
                                                             type="button"
+                                                            size="sm"
                                                             variant="outline"
                                                             onClick={
                                                                 cancelEditing
@@ -238,7 +239,10 @@ export function ObservationProjectCharterSheet({
                                                         >
                                                             Cancelar
                                                         </Button>
-                                                        <Button type="submit">
+                                                        <Button
+                                                            size="sm"
+                                                            type="submit"
+                                                        >
                                                             Guardar
                                                         </Button>
                                                     </div>
@@ -252,9 +256,6 @@ export function ObservationProjectCharterSheet({
                                                         projectCharter.id,
                                                 }}
                                                 projectCharter={projectCharter}
-                                                expandido={
-                                                    expandedId === obs.id
-                                                }
                                                 handleToggle={() =>
                                                     handleToggle(obs.id)
                                                 }

@@ -53,24 +53,12 @@ export function CreateSubWorkItemDialog({
 }
 
 const withApuSchema = z.object({
-    name: z
-        .string()
-        .min(2, {
-            message: "El nombre de la partida debe tener al menos 2 caracteres",
-        })
-        .max(50, {
-            message:
-                "El nombre de la partida debe tener un máximo de 50 caracteres",
-        }),
-    unit: z
-        .string()
-        .min(1, {
-            message: "La unidad de la partida debe tener al menos 1 caracter",
-        })
-        .max(50, {
-            message:
-                "El nombre de la partida debe tener un máximo de 50 caracteres",
-        }),
+    name: z.string().min(2, {
+        message: "El nombre de la partida debe tener al menos 2 caracteres",
+    }),
+    unit: z.string().min(1, {
+        message: "La unidad de la partida debe tener al menos 1 caracter",
+    }),
     apuPerformance: z.coerce
         .number({
             message: "El rendimiento debe ser un número",

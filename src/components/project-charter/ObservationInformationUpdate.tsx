@@ -10,7 +10,6 @@ import { cn } from "@/lib/utils";
 interface ObservationInformationUpdateProps {
     obs: Observation;
     projectCharter: ProjectCharter;
-    expandido: boolean;
     handleToggle: () => void;
     startEditing: (obs: Observation) => void;
     deleteObservation: (obs: Observation) => void;
@@ -19,7 +18,6 @@ interface ObservationInformationUpdateProps {
 export function ObservationInformationUpdate({
     obs,
     projectCharter,
-    expandido,
     handleToggle,
     startEditing,
     deleteObservation,
@@ -29,8 +27,7 @@ export function ObservationInformationUpdate({
             <div className="">
                 <div
                     className={cn(
-                        "cursor-pointer overflow-hidden truncate text-ellipsis",
-                        expandido ? "whitespace-normal" : "whitespace-nowrap",
+                        "cursor-default whitespace-normal break-words text-justify",
                     )}
                     onClick={handleToggle}
                 >
