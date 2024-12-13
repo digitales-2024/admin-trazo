@@ -5,7 +5,7 @@ import { useProjectCharter } from "@/hooks/use-project-charter";
 import { UpdateObservationSchema, updateObservationSchema } from "@/schemas";
 import { Observation, ProjectCharter } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { parse, format } from "date-fns";
+import { parseISO as parse, format } from "date-fns";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -180,8 +180,6 @@ export function ObservationProjectCharterSheet({
                                                                             field.value
                                                                                 ? parse(
                                                                                       field.value,
-                                                                                      "yyyy-MM-dd",
-                                                                                      new Date(),
                                                                                   )
                                                                                 : undefined
                                                                         }

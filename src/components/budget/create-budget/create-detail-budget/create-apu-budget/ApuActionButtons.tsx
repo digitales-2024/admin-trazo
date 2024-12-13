@@ -88,7 +88,7 @@ const ApuActionButtons: React.FC<ApuActionButtonsProps> = ({
                 resources: transformResources(newResources),
             };
             const result = await updateApu(payload);
-            fullCategoryRefetch();
+            await fullCategoryRefetch();
             onOpenChange(false);
             onSuccess(result.data.id, result.data.unitCost);
             return;
