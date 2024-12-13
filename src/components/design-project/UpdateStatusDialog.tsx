@@ -109,7 +109,7 @@ type PropsT = {
     updateStatus: (data: {
         body: DesignProjectStatusUpdate;
         id: string;
-    }) => Promise<string | number>;
+    }) => Promise<string | number | { unwrap: () => Promise<unknown> }>;
     loading: boolean;
     success: boolean;
 };
