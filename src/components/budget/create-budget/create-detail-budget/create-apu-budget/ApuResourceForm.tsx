@@ -64,7 +64,7 @@ export default function ApuResourceForm({
     };
 
     const resourceNameToType: { [key: string]: ResourceType } = {
-        Equipos: ResourceType.TOOLS,
+        Herramientas: ResourceType.TOOLS,
         "Mano de Obra": ResourceType.LABOR,
         Insumos: ResourceType.SUPPLIES,
         Servicios: ResourceType.SERVICES,
