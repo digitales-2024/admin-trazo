@@ -64,7 +64,7 @@ const WorkItemRow: React.FC<WorkItemRowProps> = ({
                 <TableCell className="pl-12">
                     <div className="flex items-center">
                         <FileText
-                            className="mr-2 h-4 w-4 text-yellow-500"
+                            className="mr-2 h-4 w-4 flex-shrink-0 text-yellow-500"
                             strokeWidth={1.5}
                         />
                         <span className="text-sm font-light capitalize">

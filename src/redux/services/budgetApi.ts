@@ -80,6 +80,15 @@ export const budgetsApi = createApi({
                 credentials: "include",
             }),
         }),
+        // Obtener presupuestos para crear
+        getCreatableBudgets: build.query<Array<BudgetSummary>, void>({
+            query: () => ({
+                url: "/budget/approved/budgets",
+                method: "GET",
+                credentials: "include",
+            }),
+            providesTags: ["Budget"],
+        }),
     }),
 });
 
@@ -90,4 +99,5 @@ export const {
     useGetBudgetByIdQuery,
     useUpdateBudgetMutation,
     useGenPdfBudgetMutation,
+    useGetCreatableBudgetsQuery,
 } = budgetsApi;

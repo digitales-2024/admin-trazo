@@ -103,9 +103,11 @@ export function getMenuList(pathname: string): Group[] {
                             icon: LayoutList,
                         },
                         {
-                            href: "/execution-project/projects",
+                            href: "/execution-project/execution",
                             label: "Proyectos",
-                            active: pathname.includes("/projects"),
+                            active: pathname.includes(
+                                "/execution-project/execution",
+                            ),
                             icon: FolderRoot,
                         },
                         {

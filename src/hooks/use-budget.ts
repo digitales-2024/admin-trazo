@@ -3,6 +3,7 @@ import {
     useGenPdfBudgetMutation,
     useGetAllBudgetsQuery,
     useGetBudgetByIdQuery,
+    useGetCreatableBudgetsQuery,
     useUpdateBudgetMutation,
     useUpdateStatusBudgetMutation,
 } from "@/redux/services/budgetApi";
@@ -24,6 +25,15 @@ export const useBudgets = (options: UseBudgetsProps = {}) => {
         isSuccess,
         refetch,
     } = useGetAllBudgetsQuery();
+
+    const {
+        data: dataBudgetCreatableAll,
+        error: errorBudgetCreatableAll,
+        isLoading: isLoadingBudgetCreatableAll,
+        isSuccess: isSuccessBudgetCreatableAll,
+        refetch: refetchBudgetCreatableAll,
+        isError: isErrorBudgetCreatableAll,
+    } = useGetCreatableBudgetsQuery();
 
     const { data: budgetById, refetch: refetchBudgetsById } =
         useGetBudgetByIdQuery(
@@ -225,5 +235,11 @@ export const useBudgets = (options: UseBudgetsProps = {}) => {
         isSuccessUpdateBudget,
         isLoadingUpdateBudget,
         generateBudgetPdf,
+        dataBudgetCreatableAll,
+        errorBudgetCreatableAll,
+        isLoadingBudgetCreatableAll,
+        isSuccessBudgetCreatableAll,
+        refetchBudgetCreatableAll,
+        isErrorBudgetCreatableAll,
     };
 };
