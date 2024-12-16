@@ -32,7 +32,7 @@ const contractSchema = z.object({
     }),
 });
 
-export function GenerateContractForm(props: {
+export function GenerateContractExecutionProjectForm(props: {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     id: string;
