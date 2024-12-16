@@ -52,3 +52,7 @@ export type {
 export type { FullWorkItem, ResourceExpandedApu } from "./workitem";
 export type { Subcategory } from "./subcategory";
 export type { ApuBudget } from "./apuBudget";
+export {
+    ExecutionProjectStatusType,
+    type ExecutionProject,
+} from "./executionProject";
