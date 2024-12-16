@@ -32,6 +32,7 @@ export const useBudgets = (options: UseBudgetsProps = {}) => {
         isLoading: isLoadingBudgetCreatableAll,
         isSuccess: isSuccessBudgetCreatableAll,
         refetch: refetchBudgetCreatableAll,
+        isError: isErrorBudgetCreatableAll,
     } = useGetCreatableBudgetsQuery();
 
     const { data: budgetById, refetch: refetchBudgetsById } =
@@ -239,5 +240,6 @@ export const useBudgets = (options: UseBudgetsProps = {}) => {
         isLoadingBudgetCreatableAll,
         isSuccessBudgetCreatableAll,
         refetchBudgetCreatableAll,
+        isErrorBudgetCreatableAll,
     };
 };
