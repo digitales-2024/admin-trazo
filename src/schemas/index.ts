@@ -33,3 +33,8 @@ export {
     createBudgetSchema,
     type CreateBudgetSchema,
 } from "./budgets/createBudgetSchema";
+
+export {
+    executionProjectSchema,
+    type CreateExecutionProjectSchema,
+} from "./execution-project/createExecutionProjectSchema";
