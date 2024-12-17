@@ -136,13 +136,13 @@ export const CreateExecutionProjectForm = ({
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel htmlFor="budgetId">
-                                    Proyecto de Diseño
+                                    Presupuesto
                                 </FormLabel>
                                 <FormControl>
                                     <AutoComplete
                                         options={budgetOptions}
-                                        placeholder="Selecciona un proyecto de ejecución"
-                                        emptyMessage="No se encontraron proyectos"
+                                        placeholder="Selecciona un presupuesto"
+                                        emptyMessage="No se encontraron presupuestos"
                                         value={
                                             budgetOptions.find(
                                                 (option) =>
@@ -158,6 +158,7 @@ export const CreateExecutionProjectForm = ({
                                                 );
                                             }
                                         }}
+                                        className="z-50"
                                     />
                                 </FormControl>
                                 <FormMessage />
@@ -264,8 +265,8 @@ export const CreateExecutionProjectForm = ({
                                 <FormControl>
                                     <AutoComplete
                                         options={usersOptions}
-                                        placeholder="Selecciona un diseñador"
-                                        emptyMessage="No se encontraron diseñadores"
+                                        placeholder="Selecciona un residente"
+                                        emptyMessage="No se encontraron residentes"
                                         value={
                                             usersOptions.find(
                                                 (option) =>
