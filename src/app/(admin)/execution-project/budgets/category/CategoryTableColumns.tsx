@@ -212,6 +212,7 @@ export const categoryTableColumns = (
                     />
                     <Button
                         onClick={() => setOpen(true)}
+                        size="sm"
                         disabled={!data.isActive}
                     >
                         APU
