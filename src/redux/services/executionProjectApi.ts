@@ -56,6 +56,16 @@ export const executionProjectApi = createApi({
             }),
             invalidatesTags: ["Execution Projects"],
         }),
+        //Eliminar proyectos de ejecución
+        deleteExecutionProjects: build.mutation<void, { ids: string[] }>({
+            query: (ids) => ({
+                url: `/execution-project/remove`,
+                method: "DELETE",
+                body: ids,
+                credentials: "include",
+            }),
+            invalidatesTags: ["Execution Projects"],
+        }),
     }),
 });
 
@@ -64,4 +74,5 @@ export const {
     useGetAllExecutionProjectsQuery,
     useUpdateStatusExecutionProjectMutation,
     useUpdateExecutionProjectMutation,
+    useDeleteExecutionProjectsMutation,
 } = executionProjectApi;
