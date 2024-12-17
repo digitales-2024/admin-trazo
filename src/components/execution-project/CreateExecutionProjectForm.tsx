@@ -6,6 +6,7 @@ import { useUsers } from "@/hooks/use-users";
 import { CreateExecutionProjectSchema } from "@/schemas";
 import { BudgetSummary, City } from "@/types";
 import { format, parse } from "date-fns";
+import { MapPinIcon } from "lucide-react";
 import { useCallback, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 
@@ -175,11 +176,15 @@ export const CreateExecutionProjectForm = ({
                                     Dirección
                                 </FormLabel>
                                 <FormControl>
-                                    <Input
-                                        id="ubicationProject"
-                                        placeholder="Dirección del proyecto"
-                                        {...field}
-                                    />
+                                    <div className="relative">
+                                        <MapPinIcon className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
+                                        <Input
+                                            id="ubicationProject"
+                                            placeholder="Ingrese la ubicación del proyecto"
+                                            {...field}
+                                            className="pl-8"
+                                        />
+                                    </div>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
