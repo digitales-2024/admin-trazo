@@ -138,6 +138,10 @@ const errorTranslations = {
         "Se debe definir la información del negocio primero",
     "category\\.(\\d+)\\.subcategory\\.(\\d+)\\.workItem should not be empty":
         "Debe seleccionar una partida para la subcategoria",
+    "Projects were not found. Ensure all IDs are valid.":
+        "Proyectos no encontrados. Asegúrate de que sean válidos.",
+    "You cannot delete projects in execution or completed status":
+        "No se puede eliminar proyectos en estado de ejecución o completados",
 };
 
 export default errorTranslations;
