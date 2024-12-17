@@ -6,9 +6,9 @@ import { ProjectCharter } from "@/types";
 import { DesignProjectStatus } from "@/types/designProject";
 import { type ColumnDef } from "@tanstack/react-table";
 import {
+    Briefcase,
     CircleCheck,
     CircleX,
-    Contact,
     DraftingCompass,
     Ellipsis,
     FileDown,
@@ -101,14 +101,14 @@ export const projectsChartersColumns = (
                     <div className="flex items-center">
                         <Badge
                             variant="outline"
-                            className="truncate border-gray-500 capitalize text-gray-700"
+                            className="border-slate-400 px-2 py-1 capitalize dark:bg-slate-800/40"
                         >
-                            <Contact
+                            <Briefcase
                                 size={14}
-                                className="mr-2"
+                                className="mr-2 text-slate-600 dark:text-slate-400"
                                 strokeWidth={1.5}
                             />
-                            <span className="text-xs font-light">
+                            <span className="max-w-[150px] truncate text-xs font-normal text-slate-700 dark:text-slate-300">
                                 {clientName}
                             </span>
                         </Badge>

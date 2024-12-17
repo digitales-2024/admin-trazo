@@ -9,6 +9,7 @@ import {
     ChevronDown,
     ChevronRight,
     Ellipsis,
+    Pencil,
     RefreshCcwDot,
     Trash,
 } from "lucide-react";
@@ -22,10 +23,10 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
+    DropdownMenuSeparator,
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Separator } from "@/components/ui/separator";
 
 import { DeleteCategoryDialog } from "./_category/DeleteCategoryDialog";
 import { EditCategorySheet } from "./_category/EditCategorySheet";
@@ -82,7 +83,7 @@ export const categoryTableColumns = (
             }
             return (
                 <div className="flex h-16 items-center">
-                    <div className={`h-16 bg-slate-100 ${indentationClass}`} />
+                    <div className={`h-16 bg-gray-100 ${indentationClass}`} />
                     {row.getCanExpand() ? (
                         <button
                             className="inline-block h-16 w-9 px-2"
@@ -327,9 +328,12 @@ function CategoryActions({
                     <DropdownMenuItem onSelect={() => setShowCreate(true)}>
                         Crear Subcategoría
                     </DropdownMenuItem>
-                    <Separator />
+                    <DropdownMenuSeparator />
                     <DropdownMenuItem onSelect={() => setShowEdit(true)}>
                         Editar
+                        <DropdownMenuShortcut>
+                            <Pencil className="size-4" aria-hidden="true" />
+                        </DropdownMenuShortcut>
                     </DropdownMenuItem>
                     {isSuperAdmin && (
                         <DropdownMenuItem
@@ -417,9 +421,12 @@ function SubCategoryActions({
                     >
                         Crear Partida
                     </DropdownMenuItem>
-                    <Separator />
+                    <DropdownMenuSeparator />
                     <DropdownMenuItem onSelect={() => setShowEdit(true)}>
                         Editar
+                        <DropdownMenuShortcut>
+                            <Pencil className="size-4" aria-hidden="true" />
+                        </DropdownMenuShortcut>
                     </DropdownMenuItem>
                     {isSuperAdmin && (
                         <DropdownMenuItem
@@ -512,13 +519,28 @@ function WorkItemActions({
                                 Crear Subpartida
                             </DropdownMenuItem>
 
-                            <Separator />
+                            <DropdownMenuSeparator />
                         </>
                     )}
 
                     <DropdownMenuItem onSelect={() => setShowEditSheet(true)}>
                         Editar
+                        {!hasApu && (
+                            <>
+                                <DropdownMenuShortcut>
+                                    <Pencil
+                                        className="size-4"
+                                        aria-hidden="true"
+                                    />
+                                </DropdownMenuShortcut>
+                            </>
+                        )}
                     </DropdownMenuItem>
+                    {hasApu && (
+                        <>
+                            <DropdownMenuSeparator />
+                        </>
+                    )}
                     {isSuperAdmin && (
                         <DropdownMenuItem
                             onSelect={() => setShowReactivateDialog(true)}
@@ -595,6 +617,8 @@ function SubWorkItemActions({
                     <DropdownMenuItem onSelect={() => setShowEditSheet(true)}>
                         Editar
                     </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+
                     {isSuperAdmin && (
                         <DropdownMenuItem
                             onSelect={() => setShowReactivateDialog(true)}
