@@ -16,7 +16,7 @@ interface Props {
     onOpenChange: (open: boolean) => void;
 }
 
-export function DeleteProjectDialog({ open, onOpenChange }: Props) {
+export function DeleteExecutionProjectDialog({ open, onOpenChange }: Props) {
     const deleteDialog = () => {
         console.log("deleting...");
     };
