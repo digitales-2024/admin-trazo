@@ -18,7 +18,7 @@ export type ExecutionProject = {
     };
     budget: {
         id: string;
-        name: string;
+        code: string;
     };
 };
 
