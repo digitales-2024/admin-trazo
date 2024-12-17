@@ -12,7 +12,7 @@ import {
 import { City, ExecutionProject } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, parse } from "date-fns";
-import { RefreshCcw } from "lucide-react";
+import { MapPinIcon, RefreshCcw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -263,11 +263,15 @@ export function UpdateExecutionProjectSheet({
                                             Dirección
                                         </FormLabel>
                                         <FormControl>
-                                            <Input
-                                                id="ubicationProject"
-                                                placeholder="Dirección del proyecto"
-                                                {...field}
-                                            />
+                                            <div className="relative">
+                                                <MapPinIcon className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
+                                                <Input
+                                                    id="ubicationProject"
+                                                    placeholder="Ingrese la ubicación del proyecto"
+                                                    {...field}
+                                                    className="pl-8"
+                                                />
+                                            </div>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
