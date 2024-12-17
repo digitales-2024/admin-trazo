@@ -77,7 +77,9 @@ export function UpdateExecutionProjectSheet({
 
     const { data: usersDataUnfiltered } = useUsers();
     const { dataClientsAll } = useClients();
-    const { dataBudgetCreatableAll } = useBudgets();
+    const { dataBudgetCreatableAll } = useBudgets({
+        projectExecutionId: project.id,
+    });
 
     // Obtener opciones de cliente
     const clientOptions: Option[] = (dataClientsAll ?? []).map((client) => ({
@@ -88,7 +90,7 @@ export function UpdateExecutionProjectSheet({
     // Obtener opciones de cliente
     const budgetOptions: Option[] = (dataBudgetCreatableAll ?? []).map(
         (budget) => ({
-            value: budget.id.toString(),
+            value: budget.id,
             label: budget.code,
         }),
     );
@@ -144,7 +146,7 @@ export function UpdateExecutionProjectSheet({
                 province: project.province ?? "",
                 department: project.department ?? "",
                 clientId: project.client.id ?? "",
-                budgetId: project.budget.id ?? "",
+                budgetId: project.budget?.id ?? "",
                 residentId: project.resident.id ?? "",
                 startProjectDate: project.startProjectDate ?? "",
                 executionTime: project.executionTime ?? "",
@@ -189,6 +191,9 @@ export function UpdateExecutionProjectSheet({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSuccessUpdateExecutionProject, onOpenChange]);
 
+    console.log("Project budget ID:", project.budget?.id);
+    console.log("Default budget ID:", form.getValues("budgetId"));
+
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
             <SheetContent
@@ -226,6 +231,14 @@ export function UpdateExecutionProjectSheet({
                                                 options={budgetOptions}
                                                 placeholder="Selecciona un presupuesto"
                                                 emptyMessage="No se encontraron presupuestos"
+                                                onValueChange={(
+                                                    selectedOption,
+                                                ) => {
+                                                    field.onChange(
+                                                        selectedOption?.value ||
+                                                            "",
+                                                    );
+                                                }}
                                                 value={
                                                     budgetOptions.find(
                                                         (option) =>
@@ -233,11 +246,7 @@ export function UpdateExecutionProjectSheet({
                                                             field.value,
                                                     ) || undefined
                                                 }
-                                                onValueChange={(option) => {
-                                                    field.onChange(
-                                                        option?.value || "",
-                                                    );
-                                                }}
+                                                className="z-50"
                                             />
                                         </FormControl>
                                         <FormMessage />
