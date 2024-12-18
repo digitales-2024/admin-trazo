@@ -104,7 +104,6 @@ export function UpdateExecutionProjectSheet({
         label: user.name,
     }));
 
-    console.log(JSON.stringify(project, null, 2));
     const form = useForm<CreateExecutionProjectSchema>({
         resolver: zodResolver(executionProjectSchema),
         defaultValues: {
@@ -190,9 +189,6 @@ export function UpdateExecutionProjectSheet({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSuccessUpdateExecutionProject, onOpenChange]);
-
-    console.log("Project budget ID:", project.budget?.id);
-    console.log("Default budget ID:", form.getValues("budgetId"));
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
