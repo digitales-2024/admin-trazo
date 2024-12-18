@@ -6,6 +6,7 @@ import { useUsers } from "@/hooks/use-users";
 import { CreateExecutionProjectSchema } from "@/schemas";
 import { BudgetSummary, City } from "@/types";
 import { format, parse } from "date-fns";
+import { MapPinIcon } from "lucide-react";
 import { useCallback, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 
@@ -136,13 +137,13 @@ export const CreateExecutionProjectForm = ({
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel htmlFor="budgetId">
-                                    Proyecto de Diseño
+                                    Presupuesto
                                 </FormLabel>
                                 <FormControl>
                                     <AutoComplete
                                         options={budgetOptions}
-                                        placeholder="Selecciona un proyecto de ejecución"
-                                        emptyMessage="No se encontraron proyectos"
+                                        placeholder="Selecciona un presupuesto"
+                                        emptyMessage="No se encontraron presupuestos"
                                         value={
                                             budgetOptions.find(
                                                 (option) =>
@@ -158,6 +159,7 @@ export const CreateExecutionProjectForm = ({
                                                 );
                                             }
                                         }}
+                                        className="z-50"
                                     />
                                 </FormControl>
                                 <FormMessage />
@@ -174,11 +176,15 @@ export const CreateExecutionProjectForm = ({
                                     Dirección
                                 </FormLabel>
                                 <FormControl>
-                                    <Input
-                                        id="ubicationProject"
-                                        placeholder="Dirección del proyecto"
-                                        {...field}
-                                    />
+                                    <div className="relative">
+                                        <MapPinIcon className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
+                                        <Input
+                                            id="ubicationProject"
+                                            placeholder="Ingrese la ubicación del proyecto"
+                                            {...field}
+                                            className="pl-8"
+                                        />
+                                    </div>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -264,8 +270,8 @@ export const CreateExecutionProjectForm = ({
                                 <FormControl>
                                     <AutoComplete
                                         options={usersOptions}
-                                        placeholder="Selecciona un diseñador"
-                                        emptyMessage="No se encontraron diseñadores"
+                                        placeholder="Selecciona un residente"
+                                        emptyMessage="No se encontraron residentes"
                                         value={
                                             usersOptions.find(
                                                 (option) =>

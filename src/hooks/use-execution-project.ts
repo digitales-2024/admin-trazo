@@ -1,5 +1,6 @@
 import {
     useCreateExecutionProjectMutation,
+    useDeleteExecutionProjectsMutation,
     useGetAllExecutionProjectsQuery,
     useUpdateExecutionProjectMutation,
     useUpdateStatusExecutionProjectMutation,
@@ -45,6 +46,11 @@ export const useExecutionProject = (options: UseExecutionProjectProps = {}) => {
         },
     ] = useUpdateExecutionProjectMutation();
 
+    const [
+        deleteExecutionProjects,
+        { isSuccess: isSuccessDeleteExecutionProjects },
+    ] = useDeleteExecutionProjectsMutation();
+
     const onCreateExecutionProject = async (
         input: Partial<ExecutionProject>,
     ) => {
@@ -83,14 +89,17 @@ export const useExecutionProject = (options: UseExecutionProjectProps = {}) => {
         });
     };
 
-    const onUpdateExecutionProjectStatus = async (data: {
-        body: ExecutionProjectStatusType;
-        id: string;
-    }) => {
+    const onUpdateExecutionProjectStatus = async (
+        id: string,
+        newStatus: ExecutionProjectStatusType,
+    ) => {
         const promise = () =>
             new Promise(async (resolve, reject) => {
                 try {
-                    const result = await updateExecutionProjectStatus(data);
+                    const result = await updateExecutionProjectStatus({
+                        id,
+                        newStatus,
+                    });
                     if (result.error) {
                         if (
                             typeof result.error === "object" &&
@@ -160,6 +169,47 @@ export const useExecutionProject = (options: UseExecutionProjectProps = {}) => {
             },
         });
     };
+    const onDeleteExecutionProjects = async (ids: ExecutionProject[]) => {
+        const onlyIds = ids.map((project) => project.id);
+        const idsString = {
+            ids: onlyIds,
+        };
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                try {
+                    const result = await deleteExecutionProjects(idsString);
+                    if (
+                        result.error &&
+                        typeof result.error === "object" &&
+                        result.error !== null &&
+                        "data" in result.error
+                    ) {
+                        const error = (result.error.data as CustomErrorData)
+                            .message;
+                        const message = translateError(error as string);
+                        reject(new Error(message));
+                    } else if (result.error) {
+                        reject(
+                            new Error(
+                                "Ocurrió un error inesperado, por favor intenta de nuevo",
+                            ),
+                        );
+                    } else {
+                        resolve(result);
+                    }
+                } catch (error) {
+                    reject(error);
+                }
+            });
+
+        toast.promise(promise(), {
+            loading: "Eliminando proyectos de ejecución...",
+            success: "Proyectos eliminados con éxito",
+            error: (error) => {
+                return error.message;
+            },
+        });
+    };
 
     return {
         dataExecutionProjectsAll,
@@ -174,5 +224,7 @@ export const useExecutionProject = (options: UseExecutionProjectProps = {}) => {
         isSuccessUpdateExecutionProjectStatus,
         isSuccessUpdateExecutionProject,
         isLoadingUpdateExecutionProject,
+        onDeleteExecutionProjects,
+        isSuccessDeleteExecutionProjects,
     };
 };

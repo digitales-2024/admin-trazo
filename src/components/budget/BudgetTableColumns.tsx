@@ -2,7 +2,13 @@
 
 import { BudgetStatusType, BudgetSummary } from "@/types";
 import { type ColumnDef } from "@tanstack/react-table";
-import { Contact, Ellipsis, FileDown, MonitorCog } from "lucide-react";
+import {
+    Briefcase,
+    Ellipsis,
+    FileDown,
+    MonitorCog,
+    Pencil,
+} from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -105,14 +111,14 @@ export const budgetsColumns = (
                     <div className="flex items-center">
                         <Badge
                             variant="outline"
-                            className="truncate border-gray-500 capitalize text-gray-700"
+                            className="border-slate-400 px-2 py-1 capitalize dark:bg-slate-800/40"
                         >
-                            <Contact
+                            <Briefcase
                                 size={14}
-                                className="mr-2"
+                                className="mr-2 text-slate-600 dark:text-slate-400"
                                 strokeWidth={1.5}
                             />
-                            <span className="text-xs font-light">
+                            <span className="max-w-[150px] truncate text-xs font-normal text-slate-700 dark:text-slate-300">
                                 {clientName}
                             </span>
                         </Badge>
@@ -214,6 +220,7 @@ export const budgetsColumns = (
                                 >
                                     Ver
                                 </DropdownMenuItem>
+                                <DropdownMenuSeparator />
                                 <DropdownMenuItem
                                     onSelect={() => handleEditClick(id)}
                                     disabled={
@@ -221,9 +228,13 @@ export const budgetsColumns = (
                                     }
                                 >
                                     Editar
+                                    <DropdownMenuShortcut>
+                                        <Pencil
+                                            className="size-4"
+                                            aria-hidden="true"
+                                        />
+                                    </DropdownMenuShortcut>
                                 </DropdownMenuItem>
-
-                                <DropdownMenuSeparator />
                                 <DropdownMenuItem
                                     onSelect={() =>
                                         setShowUpdateStatusDialog(true)

@@ -45,7 +45,7 @@ export function DeleteObservationDialog({
 
     const { onDeleteObservation } = useObservation();
 
-    const onDeleteClientsHandler = () => {
+    const onDeleteObservationsHandler = () => {
         onDeleteObservation([observation]);
         props.onOpenChange?.(false);
         onSuccess?.();
@@ -69,7 +69,7 @@ export function DeleteObservationDialog({
                         </AlertDialogCancel>
                         <AlertDialogAction
                             aria-label="Delete selected rows"
-                            onClick={onDeleteClientsHandler}
+                            onClick={onDeleteObservationsHandler}
                             disabled={isDeletePending}
                         >
                             {isDeletePending && (
@@ -98,7 +98,7 @@ export function DeleteObservationDialog({
                 <DrawerFooter className="gap-2 sm:space-x-0">
                     <Button
                         aria-label="Delete selected rows"
-                        onClick={onDeleteClientsHandler}
+                        onClick={onDeleteObservationsHandler}
                         disabled={isDeletePending}
                     >
                         {isDeletePending && (

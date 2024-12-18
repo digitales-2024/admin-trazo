@@ -37,6 +37,7 @@ interface ApuDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     onSuccess: (apuId: string, totalCost: number) => void;
+    apuBudgetId?: string;
     apuId?: string;
     /** true si el APU ID pasado es de un apu plantilla, false si es apu presupesto */
     isBlueprint?: boolean;
@@ -48,14 +49,15 @@ export function ApuDialog({
     open,
     onOpenChange,
     onSuccess,
+    apuBudgetId,
     apuId,
     isBlueprint = false,
 }: ApuDialogProps) {
     const { workItemById } = useWorkItem({ id: idWorkItem });
     const { apuBudgetById: apuBudgetByIdTemp } = useApuBudget({
-        id: apuId || "",
+        id: apuBudgetId,
     });
-    const { apuById, refetchApuById } = useApu({ id: apuId || "" });
+    const { apuById, refetchApuById } = useApu({ id: apuId });
     const { subWorkItemById } = useSubWorkItem({ id: idSubWorkItem });
 
     const apuBudgetById = isBlueprint ? apuById : apuBudgetByIdTemp;

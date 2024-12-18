@@ -123,7 +123,7 @@ const SubWorkItemRow: React.FC<SubWorkItemRowProps> = ({
                         onOpenChange={setShowApuDialog}
                         idSubWorkItem={subItem.id}
                         onSuccess={handleApuSuccess}
-                        apuId={subItem.apuId}
+                        apuBudgetId={subItem.apuId}
                     />
                     <Button
                         type="button"

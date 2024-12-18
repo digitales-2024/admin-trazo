@@ -32,13 +32,13 @@ export const executionProjectApi = createApi({
         }),
         // Actualizar el estado de un proyecto de ejecución
         updateStatusExecutionProject: build.mutation<
-            void,
-            { body: ExecutionProjectStatusType; id: string }
+            ExecutionProject,
+            { id: string; newStatus: ExecutionProjectStatusType }
         >({
-            query: ({ body, id }) => ({
+            query: ({ id, newStatus }) => ({
                 url: `/execution-project/${id}/status`,
                 method: "PATCH",
-                body,
+                body: { newStatus },
                 credentials: "include",
             }),
             invalidatesTags: ["Execution Projects"],
@@ -56,6 +56,16 @@ export const executionProjectApi = createApi({
             }),
             invalidatesTags: ["Execution Projects"],
         }),
+        //Eliminar proyectos de ejecución
+        deleteExecutionProjects: build.mutation<void, { ids: string[] }>({
+            query: (ids) => ({
+                url: `/execution-project/remove`,
+                method: "DELETE",
+                body: ids,
+                credentials: "include",
+            }),
+            invalidatesTags: ["Execution Projects"],
+        }),
     }),
 });
 
@@ -64,4 +74,5 @@ export const {
     useGetAllExecutionProjectsQuery,
     useUpdateStatusExecutionProjectMutation,
     useUpdateExecutionProjectMutation,
+    useDeleteExecutionProjectsMutation,
 } = executionProjectApi;

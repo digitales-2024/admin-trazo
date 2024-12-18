@@ -2,11 +2,18 @@ import { runAndHandleError } from "@/redux/baseQuery";
 import { useApuByIdQuery, useUpdateApuMutation } from "@/redux/services/apuApi";
 import { toast } from "sonner";
 
-export const useApu = (options?: { id: string }) => {
-    const id = options?.id;
+interface UseApuProps {
+    id?: string;
+}
+
+export const useApu = (options: UseApuProps = {}) => {
+    const { id } = options;
+
     const { data: apuById, refetch: refetchApuById } = useApuByIdQuery(
-        id ?? "",
-        { skip: !id },
+        { id: id as string },
+        {
+            skip: !id, // Evita hacer la query si no hay id
+        },
     );
 
     const [updateApuFn] = useUpdateApuMutation();
