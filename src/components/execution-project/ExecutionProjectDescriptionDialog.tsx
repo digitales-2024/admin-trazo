@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/drawer";
 
 import { Card, CardContent } from "../ui/card";
-import { StatusBadge } from "./Badges";
+import { ExecutionProjectStatusBadge } from "./ExecutionProjectBadges";
 
 interface Props {
     project: ExecutionProject;
@@ -63,7 +63,7 @@ export function ExecutionProjectDescriptionDialog({
                         <Title className="mb-2 flex flex-col items-start">
                             Detalles del Proyecto de Ejecución
                         </Title>
-                        <StatusBadge status={project?.status} />
+                        <ExecutionProjectStatusBadge status={project?.status} />
                     </div>
                     <div>
                         <Description>
