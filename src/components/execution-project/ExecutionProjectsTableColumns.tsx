@@ -8,6 +8,7 @@ import {
     Ellipsis,
     FileDown,
     HardHat,
+    MonitorCog,
     Pencil,
     Trash,
 } from "lucide-react";
@@ -30,6 +31,7 @@ import { DeleteExecutionProjectDialog } from "./DeleteExecutionProjectDialog";
 import { ExecutionProjectDescriptionDialog } from "./ExecutionProjectDescriptionDialog";
 import { GenerateContractExecutionProjectForm } from "./GenerateContractExecutionForm";
 import { UpdateExecutionProjectSheet } from "./UpdateExecutionProjectSheet";
+import UpdateStatusExecutionProjectDialog from "./UpdateStatusExecutionProjectDialog";
 
 export const executionProjectColumns = (
     isSuperAdmin: boolean,
@@ -248,6 +250,8 @@ export const executionProjectColumns = (
                 const [showDescriptionDialog, setShowDescriptionDialog] =
                     useState(false);
                 const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+                const [showUpdateStatusDialog, setShowUpdateStatusDialog] =
+                    useState(false);
 
                 const status = row.original.status;
 
@@ -277,6 +281,15 @@ export const executionProjectColumns = (
                                 showTrigger={false}
                                 onSuccess={() => {
                                     row.toggleSelected(false);
+                                }}
+                            />
+                            <UpdateStatusExecutionProjectDialog
+                                open={showUpdateStatusDialog}
+                                onOpenChange={setShowUpdateStatusDialog}
+                                project={row?.original}
+                                showTrigger={false}
+                                onSuccess={() => {
+                                    setShowUpdateStatusDialog(false);
                                 }}
                             />
                         </div>
@@ -309,6 +322,24 @@ export const executionProjectColumns = (
                                     Editar
                                     <DropdownMenuShortcut>
                                         <Pencil
+                                            className="size-4"
+                                            aria-hidden="true"
+                                        />
+                                    </DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onSelect={() =>
+                                        setShowUpdateStatusDialog(true)
+                                    }
+                                    disabled={
+                                        status ===
+                                            ExecutionProjectStatusType.COMPLETED ||
+                                        !isSuperAdmin
+                                    }
+                                >
+                                    Actualizar
+                                    <DropdownMenuShortcut>
+                                        <MonitorCog
                                             className="size-4"
                                             aria-hidden="true"
                                         />
