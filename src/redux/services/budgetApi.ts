@@ -81,9 +81,12 @@ export const budgetsApi = createApi({
             }),
         }),
         // Obtener presupuestos para crear
-        getCreatableBudgets: build.query<Array<BudgetSummary>, void>({
-            query: () => ({
-                url: "/budget/approved/budgets",
+        getCreatableBudgets: build.query<
+            Array<BudgetSummary>,
+            { projectExecutionId?: string }
+        >({
+            query: ({ projectExecutionId }) => ({
+                url: `/budget/approved/budgets${projectExecutionId ? `?projectExecutionId=${projectExecutionId}` : ""}`,
                 method: "GET",
                 credentials: "include",
             }),

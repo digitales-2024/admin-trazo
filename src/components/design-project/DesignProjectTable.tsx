@@ -5,7 +5,15 @@ import {
     DesignProjectStatus,
 } from "@/types/designProject";
 import { ColumnDef } from "@tanstack/react-table";
-import { Contact, Ellipsis, FileDown, MonitorCog, Trash } from "lucide-react";
+import {
+    Briefcase,
+    Contact,
+    Ellipsis,
+    FileDown,
+    MonitorCog,
+    Pencil,
+    Trash,
+} from "lucide-react";
 import { useState } from "react";
 
 import { DataTable } from "@/components/data-table/DataTable";
@@ -85,14 +93,14 @@ export function DesignProjectTable({
                     <div className="flex items-center">
                         <Badge
                             variant="outline"
-                            className="truncate capitalize"
+                            className="border-slate-400 px-2 py-1 capitalize dark:bg-slate-800/40"
                         >
-                            <Contact
+                            <Briefcase
                                 size={14}
-                                className="mr-2"
+                                className="mr-2 text-slate-600 dark:text-slate-400"
                                 strokeWidth={1.5}
                             />
-                            <span className="text-xs font-light">
+                            <span className="max-w-[150px] truncate text-xs font-normal text-slate-700 dark:text-slate-300">
                                 {clientName}
                             </span>
                         </Badge>
@@ -257,12 +265,18 @@ export function DesignProjectTable({
                                 >
                                     Ver
                                 </DropdownMenuItem>
+                                <DropdownMenuSeparator />
                                 <DropdownMenuItem
                                     onSelect={() => setShowEditSheet(true)}
                                 >
                                     Editar
+                                    <DropdownMenuShortcut>
+                                        <Pencil
+                                            className="size-4"
+                                            aria-hidden="true"
+                                        />
+                                    </DropdownMenuShortcut>
                                 </DropdownMenuItem>
-                                <DropdownMenuSeparator />
 
                                 <DropdownMenuItem
                                     onSelect={() =>

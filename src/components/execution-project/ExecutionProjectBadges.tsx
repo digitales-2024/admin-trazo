@@ -2,7 +2,9 @@ import { ExecutionProjectStatusType } from "@/types";
 
 import { Badge } from "../ui/badge";
 
-export function StatusBadge(props: { status: ExecutionProjectStatusType }) {
+export function ExecutionProjectStatusBadge(props: {
+    status: ExecutionProjectStatusType;
+}) {
     let badge = <></>;
     switch (props.status) {
         case "COMPLETED":
@@ -11,7 +13,7 @@ export function StatusBadge(props: { status: ExecutionProjectStatusType }) {
                     variant="secondary"
                     className="bg-emerald-100 text-emerald-500"
                 >
-                    Completado
+                    <span className="truncate">Completado</span>
                 </Badge>
             );
             break;
@@ -31,7 +33,7 @@ export function StatusBadge(props: { status: ExecutionProjectStatusType }) {
                     variant="secondary"
                     className="bg-blue-200 text-blue-600"
                 >
-                    En ejecución
+                    <span>En ejecución</span>
                 </Badge>
             );
             break;

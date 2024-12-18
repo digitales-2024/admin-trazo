@@ -219,7 +219,7 @@ export const HeadBudget = ({
                             <FormLabel>Ubicación</FormLabel>
                             <FormControl>
                                 <div className="relative">
-                                    <MapPinIcon className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                                    <MapPinIcon className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
                                     <Input
                                         placeholder="Ingrese la ubicación del proyecto"
                                         className="pl-8"

@@ -192,6 +192,7 @@ export default function UpdateBudget({ budgetById }: UpdateBudgetProps) {
             overhead: overhead,
             utility: utility,
             igv: budget.taxPercentage,
+            discount: budget.commercialDiscount,
             percentageOverhead: budget.overheadPercentage,
             percentageUtility: budget.profitPercentage,
             totalCost: totalCost,

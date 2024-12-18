@@ -1,6 +1,17 @@
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { ExecutionProject } from "@/types";
-import { Calendar, Home, MapPin, Paintbrush, User } from "lucide-react";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
+import {
+    Calendar,
+    MapPin,
+    User,
+    FileText,
+    Clock,
+    Wallet,
+    BarChart2,
+    HardHat,
+} from "lucide-react";
 
 import {
     Dialog,
@@ -18,7 +29,7 @@ import {
 } from "@/components/ui/drawer";
 
 import { Card, CardContent } from "../ui/card";
-import { StatusBadge } from "./Badges";
+import { ExecutionProjectStatusBadge } from "./ExecutionProjectBadges";
 
 interface Props {
     project: ExecutionProject;
@@ -46,19 +57,18 @@ export function ExecutionProjectDescriptionDialog({
 
     return (
         <Container open={open} onOpenChange={onOpenChange}>
-            <ContentComponent className="w-full max-w-3xl p-4">
+            <ContentComponent className="w-full max-w-3xl p-6">
                 <Header className="text-left">
                     <div>
-                        <Title className="flex flex-col items-start">
-                            Detalles del Proyecto de Diseño
+                        <Title className="mb-2 flex flex-col items-start">
+                            Detalles del Proyecto de Ejecución
                         </Title>
+                        <ExecutionProjectStatusBadge status={project?.status} />
                     </div>
                     <div>
                         <Description>
-                            Información detallada del projecto{" "}
-                            <span>{project.code}</span>
+                            Información detallada del projecto
                         </Description>
-                        <StatusBadge status={project?.status} />
                     </div>
                 </Header>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -78,6 +88,17 @@ export function ExecutionProjectDescriptionDialog({
                     </Card>
                     <Card>
                         <CardContent className="pt-6">
+                            <div className="mb-2 flex items-center gap-2">
+                                <FileText className="text-indigo-500" />
+                                <span className="font-semibold">
+                                    Nombre del Proyecto:
+                                </span>
+                            </div>
+                            <span className="pl-8">{project.name}</span>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardContent className="pt-6">
                             <div className="flex flex-col space-y-2">
                                 <div className="flex items-center space-x-2">
                                     <Calendar className="text-green-500" />
@@ -86,20 +107,12 @@ export function ExecutionProjectDescriptionDialog({
                                     </span>
                                 </div>
                                 <span className="pl-8">
-                                    {project?.startProjectDate}
+                                    {format(
+                                        new Date(project.startProjectDate),
+                                        "d 'de' MMMM 'de' yyyy",
+                                        { locale: es },
+                                    )}
                                 </span>
-                            </div>
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardContent className="pt-6">
-                            <div className="flex flex-col space-y-2">
-                                <div className="flex items-center space-x-2">
-                                    <Home className="text-purple-500" />
-                                    <span className="font-semibold">
-                                        Fechas de Especialidades:
-                                    </span>
-                                </div>
                             </div>
                         </CardContent>
                     </Card>
@@ -107,7 +120,7 @@ export function ExecutionProjectDescriptionDialog({
                         <CardContent className="pt-6">
                             <div className="mb-2 flex items-center gap-2">
                                 <User className="text-red-500" />
-                                <span className="font-semibold">Cliente</span>
+                                <span className="font-semibold">Cliente:</span>
                             </div>
                             <span className="pl-8 capitalize">
                                 {project.client.name}
@@ -117,14 +130,49 @@ export function ExecutionProjectDescriptionDialog({
                     <Card>
                         <CardContent className="pt-6">
                             <div className="mb-2 flex items-center gap-2">
-                                <Paintbrush className="text-yellow-500" />
+                                <HardHat className="text-yellow-500" />
                                 <span className="font-semibold">
-                                    Diseñador:
+                                    Residente:
                                 </span>
                             </div>
                             <span className="pl-8 capitalize">
                                 {project.resident.name}
                             </span>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardContent className="pt-6">
+                            <div className="mb-2 flex items-center gap-2">
+                                <Clock className="text-orange-500" />
+                                <span className="font-semibold">
+                                    Tiempo de Ejecución:
+                                </span>
+                            </div>
+                            <span className="pl-8">
+                                {project.executionTime} días hábiles
+                            </span>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardContent className="pt-6">
+                            <div className="mb-2 flex items-center gap-2">
+                                <Wallet className="text-teal-500" />
+                                <span className="font-semibold">
+                                    Código de Presupuesto:
+                                </span>
+                            </div>
+                            <span className="pl-8">{project.budget.code}</span>
+                        </CardContent>
+                    </Card>
+                    <Card className="col-span-1 md:col-span-2">
+                        <CardContent className="pt-6">
+                            <div className="flex flex-col space-y-2 sm:flex-row sm:items-center sm:space-x-2 sm:space-y-0">
+                                <BarChart2 className="text-cyan-500" />
+                                <span className="font-semibold">
+                                    Avance del Proyecto:
+                                </span>
+                                <span>{project.projectProgress} m²</span>
+                            </div>
                         </CardContent>
                     </Card>
                 </div>

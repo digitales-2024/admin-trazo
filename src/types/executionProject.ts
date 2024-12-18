@@ -8,6 +8,7 @@ export type ExecutionProject = {
     department: string;
     startProjectDate: string;
     executionTime: string;
+    projectProgress: number;
     client: {
         id: string;
         name: string;
@@ -18,7 +19,7 @@ export type ExecutionProject = {
     };
     budget: {
         id: string;
-        name: string;
+        code: string;
     };
 };
 

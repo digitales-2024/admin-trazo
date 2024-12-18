@@ -2,11 +2,22 @@
 
 import { ExecutionProject, ExecutionProjectStatusType } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
-import { Contact } from "lucide-react";
+import {
+    BarChart2,
+    Briefcase,
+    Ellipsis,
+    FileDown,
+    HardHat,
+    MonitorCog,
+    Pencil,
+    Trash,
+} from "lucide-react";
+import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-/* import {
+import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
@@ -14,21 +25,17 @@ import { Checkbox } from "@/components/ui/checkbox";
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
- import { Button } from "@/components/ui/button";
 
- import { useState } from "react";
- import { Contact, Ellipsis, FileDown, MonitorCog, Trash } from "lucide-react";
-
-import { DeleteProjectDialog } from "./DeleteProjectDialog";
-import { DesignProjectDescriptionDialog } from "./DesignProjectDescriptionDialog";
-import { EditDesignProjectSheet } from "./EditDesignProjectSheet";
-import { GenerateContractForm } from "./GenerateContractForm";
-import { UpdateStatusDialog } from "./UpdateStatusDialog"; */
+import { DataTableColumnHeader } from "../data-table/DataTableColumnHeader";
+import { DeleteExecutionProjectDialog } from "./DeleteExecutionProjectDialog";
+import { ExecutionProjectDescriptionDialog } from "./ExecutionProjectDescriptionDialog";
+import { GenerateContractExecutionProjectForm } from "./GenerateContractExecutionForm";
+import { UpdateExecutionProjectSheet } from "./UpdateExecutionProjectSheet";
+import UpdateStatusExecutionProjectDialog from "./UpdateStatusExecutionProjectDialog";
 
 export const executionProjectColumns = (
     isSuperAdmin: boolean,
 ): ColumnDef<ExecutionProject>[] => {
-    console.log(isSuperAdmin);
     const columns: ColumnDef<ExecutionProject>[] = [
         {
             id: "select",
@@ -64,32 +71,54 @@ export const executionProjectColumns = (
             enablePinning: true,
         },
         {
+            id: "Código",
             accessorKey: "code",
-            header: "Código",
+            header: ({ column }) => (
+                <DataTableColumnHeader column={column} title="Código" />
+            ),
+            cell: ({ row }) => (
+                <div className="min-w-20 truncate capitalize">
+                    <span className="text-xs">
+                        {row.getValue("Código") as string}
+                    </span>
+                </div>
+            ),
         },
         {
+            id: "nombre",
             accessorKey: "name",
-            header: "Nombre",
+            header: ({ column }) => (
+                <DataTableColumnHeader column={column} title="Nombre" />
+            ),
+            cell: ({ row }) => (
+                <div className="min-w-20 truncate capitalize">
+                    <span className="text-xs">
+                        {row.getValue("nombre") as string}
+                    </span>
+                </div>
+            ),
         },
         {
             id: "cliente",
             accessorKey: "client.name",
-            header: "Cliente",
+            header: ({ column }) => (
+                <DataTableColumnHeader column={column} title="Cliente" />
+            ),
             cell: ({ row }) => {
-                const clientName = row.getValue("cliente") as string;
+                const client = row.original.client;
                 return (
-                    <div className="flex items-center">
+                    <div className="flex items-center space-x-2">
                         <Badge
                             variant="outline"
-                            className="truncate capitalize"
+                            className="border-slate-400 px-2 py-1 capitalize dark:bg-slate-800/40"
                         >
-                            <Contact
+                            <Briefcase
                                 size={14}
-                                className="mr-2"
+                                className="mr-2 text-slate-600 dark:text-slate-400"
                                 strokeWidth={1.5}
                             />
-                            <span className="text-xs font-light">
-                                {clientName}
+                            <span className="max-w-[150px] truncate text-xs font-normal text-slate-700 dark:text-slate-300">
+                                {client.name}
                             </span>
                         </Badge>
                     </div>
@@ -99,32 +128,68 @@ export const executionProjectColumns = (
         {
             id: "resident",
             accessorKey: "resident.name",
-            header: "Residente",
+            header: ({ column }) => (
+                <DataTableColumnHeader column={column} title="Residente" />
+            ),
             cell: ({ row }) => {
-                const designerName = row.getValue("resident") as string;
+                const resident = row.original.resident;
                 return (
-                    <div className="flex items-center">
+                    <div className="flex items-center space-x-2">
                         <Badge
                             variant="outline"
-                            className="truncate capitalize"
+                            className="border-amber-600 bg-amber-50 px-2 py-1 dark:bg-amber-900/20"
                         >
-                            <Contact
+                            <HardHat
                                 size={14}
-                                className="mr-2"
+                                className="mr-2 text-amber-600"
                                 strokeWidth={1.5}
                             />
-                            <span className="text-xs font-light">
-                                {designerName}
+                            <span className="truncate text-xs font-normal capitalize text-amber-700 dark:text-amber-300">
+                                {resident.name}
                             </span>
                         </Badge>
                     </div>
                 );
             },
         },
+
+        {
+            id: "projectProgress",
+            accessorKey: "projectProgress",
+            header: ({ column }) => (
+                <DataTableColumnHeader column={column} title="Avance" />
+            ),
+            cell: ({ row }) => {
+                const projectProgress = parseFloat(
+                    row.getValue("projectProgress"),
+                );
+
+                return (
+                    <div className="flex items-center space-x-2">
+                        <Badge
+                            variant="outline"
+                            className="border-emerald-600 bg-emerald-50 px-2 py-1 dark:bg-emerald-900/20"
+                        >
+                            <BarChart2
+                                size={14}
+                                className="mr-2 text-emerald-600"
+                                strokeWidth={1.5}
+                            />
+                            <span className="text-xs font-normal text-emerald-700 dark:text-emerald-300">
+                                {projectProgress} m²
+                            </span>
+                        </Badge>
+                    </div>
+                );
+            },
+        },
+
         {
             id: "estado",
             accessorKey: "status",
-            header: "Estado",
+            header: ({ column }) => (
+                <DataTableColumnHeader column={column} title="Estado" />
+            ),
             cell: ({ row }) => {
                 const estado: ExecutionProjectStatusType =
                     row.getValue("estado");
@@ -175,50 +240,51 @@ export const executionProjectColumns = (
                 return <div>{badge}</div>;
             },
         },
-        /* {
+        {
             id: "actions",
             size: 5,
             cell: function Cell({ row }) {
                 const [showContractForm, setShowContractForm] = useState(false);
                 const [showEditSheet, setShowEditSheet] = useState(false);
-                const [showUpdateStatusDialog, setShowUpdateStatusDialog] =
-                    useState(false);
                 const [showDescriptionDialog, setShowDescriptionDialog] =
                     useState(false);
                 const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+                const [showUpdateStatusDialog, setShowUpdateStatusDialog] =
+                    useState(false);
 
                 const status = row.original.status;
 
                 return (
                     <div>
                         <div>
-                            <DesignProjectDescriptionDialog
+                            <ExecutionProjectDescriptionDialog
                                 open={showDescriptionDialog}
                                 onOpenChange={setShowDescriptionDialog}
                                 project={row?.original}
                             />
-                            <GenerateContractForm
+                            <GenerateContractExecutionProjectForm
                                 id={row.original.id}
                                 publicCode={row.original.code}
                                 open={showContractForm}
                                 onOpenChange={setShowContractForm}
                             />
-                            <EditDesignProjectSheet
-                                id={row.original.id}
+                            <UpdateExecutionProjectSheet
                                 open={showEditSheet}
                                 onOpenChange={setShowEditSheet}
                                 project={row?.original}
                             />
-                            <UpdateStatusDialog
-                                id={row?.original?.id ?? -1}
-                                open={showUpdateStatusDialog}
-                                onOpenChange={setShowUpdateStatusDialog}
-                                project={row?.original}
-                            />
-                            <DeleteProjectDialog
-                                id={row?.original?.id ?? -1}
+                            <DeleteExecutionProjectDialog
                                 open={showDeleteDialog}
                                 onOpenChange={setShowDeleteDialog}
+                                projects={[row?.original]}
+                                showTrigger={false}
+                                onSuccess={() => {
+                                    row.toggleSelected(false);
+                                }}
+                            />
+                            <UpdateStatusExecutionProjectDialog
+                                open={showUpdateStatusDialog}
+                                onOpenChange={setShowUpdateStatusDialog}
                                 project={row?.original}
                             />
                         </div>
@@ -243,18 +309,28 @@ export const executionProjectColumns = (
                                 >
                                     Ver
                                 </DropdownMenuItem>
+
+                                <DropdownMenuSeparator />
                                 <DropdownMenuItem
                                     onSelect={() => setShowEditSheet(true)}
                                 >
                                     Editar
+                                    <DropdownMenuShortcut>
+                                        <Pencil
+                                            className="size-4"
+                                            aria-hidden="true"
+                                        />
+                                    </DropdownMenuShortcut>
                                 </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-
                                 <DropdownMenuItem
                                     onSelect={() =>
                                         setShowUpdateStatusDialog(true)
                                     }
-                                    disabled={status === "COMPLETED"}
+                                    disabled={
+                                        status ===
+                                            ExecutionProjectStatusType.COMPLETED ||
+                                        !isSuperAdmin
+                                    }
                                 >
                                     Actualizar
                                     <DropdownMenuShortcut>
@@ -264,6 +340,7 @@ export const executionProjectColumns = (
                                         />
                                     </DropdownMenuShortcut>
                                 </DropdownMenuItem>
+
                                 <DropdownMenuItem
                                     onSelect={() => setShowContractForm(true)}
                                     disabled={status !== "COMPLETED"}
@@ -294,7 +371,7 @@ export const executionProjectColumns = (
                 );
             },
             enablePinning: true,
-        }, */
+        },
     ];
     return columns;
 };

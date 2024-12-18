@@ -14,10 +14,11 @@ import { toast } from "sonner";
 
 interface UseBudgetsProps {
     id?: string;
+    projectExecutionId?: string;
 }
 
 export const useBudgets = (options: UseBudgetsProps = {}) => {
-    const { id } = options;
+    const { id, projectExecutionId } = options;
     const {
         data: dataBudgetsAll,
         error,
@@ -33,7 +34,7 @@ export const useBudgets = (options: UseBudgetsProps = {}) => {
         isSuccess: isSuccessBudgetCreatableAll,
         refetch: refetchBudgetCreatableAll,
         isError: isErrorBudgetCreatableAll,
-    } = useGetCreatableBudgetsQuery();
+    } = useGetCreatableBudgetsQuery({ projectExecutionId });
 
     const { data: budgetById, refetch: refetchBudgetsById } =
         useGetBudgetByIdQuery(

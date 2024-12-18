@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { exportTableToCSV } from "@/lib/export";
 
 import { CreateExecutionProjectDialog } from "./CreateExecutionProjectDialog";
+import { DeleteExecutionProjectDialog } from "./DeleteExecutionProjectDialog";
 
 export interface ExecutionProjectsTableToolbarActionsProps {
     table?: Table<ExecutionProject>;
@@ -25,7 +26,14 @@ export function ExecutionProjectsTableToolbarActions({
     return (
         <div className="flex w-fit flex-wrap items-center gap-2">
             {table && table.getFilteredSelectedRowModel().rows.length > 0 ? (
-                <></>
+                <>
+                    <DeleteExecutionProjectDialog
+                        projects={table
+                            .getFilteredSelectedRowModel()
+                            .rows.map((row) => row.original)}
+                        onSuccess={() => table.toggleAllRowsSelected(false)}
+                    />
+                </>
             ) : null}
             <CreateExecutionProjectDialog />
             {exportFile ||
