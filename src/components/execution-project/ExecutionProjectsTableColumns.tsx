@@ -36,7 +36,6 @@ import UpdateStatusExecutionProjectDialog from "./UpdateStatusExecutionProjectDi
 export const executionProjectColumns = (
     isSuperAdmin: boolean,
 ): ColumnDef<ExecutionProject>[] => {
-    console.log(isSuperAdmin);
     const columns: ColumnDef<ExecutionProject>[] = [
         {
             id: "select",
@@ -287,10 +286,6 @@ export const executionProjectColumns = (
                                 open={showUpdateStatusDialog}
                                 onOpenChange={setShowUpdateStatusDialog}
                                 project={row?.original}
-                                showTrigger={false}
-                                onSuccess={() => {
-                                    setShowUpdateStatusDialog(false);
-                                }}
                             />
                         </div>
                         <DropdownMenu>
