@@ -89,14 +89,17 @@ export const useExecutionProject = (options: UseExecutionProjectProps = {}) => {
         });
     };
 
-    const onUpdateExecutionProjectStatus = async (data: {
-        body: ExecutionProjectStatusType;
-        id: string;
-    }) => {
+    const onUpdateExecutionProjectStatus = async (
+        id: string,
+        newStatus: ExecutionProjectStatusType,
+    ) => {
         const promise = () =>
             new Promise(async (resolve, reject) => {
                 try {
-                    const result = await updateExecutionProjectStatus(data);
+                    const result = await updateExecutionProjectStatus({
+                        id,
+                        newStatus,
+                    });
                     if (result.error) {
                         if (
                             typeof result.error === "object" &&
