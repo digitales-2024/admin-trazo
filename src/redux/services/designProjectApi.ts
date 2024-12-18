@@ -99,12 +99,12 @@ export const designProjectApi = createApi({
             invalidatesTags: ["DesignProject"],
         }),
         // Generar Pdf del contrato
-        genPdfContract: build.mutation<
+        genDocxContract: build.mutation<
             Blob,
             { id: string; signingDate: string }
         >({
             query: ({ id, signingDate }) => ({
-                url: `/design-project/${id}/pdf`,
+                url: `/design-project/${id}/docx`,
                 method: "POST",
                 body: {
                     signingDate,
@@ -121,7 +121,7 @@ export const {
     useGetDesignProjectsCompletedQuery,
     useGetDesignProjectByIdQuery,
     useCreateDesignProjectMutation,
-    useGenPdfContractMutation,
+    useGenDocxContractMutation,
     useEditDesignProjectMutation,
     useEditDesignProjectStatusMutation,
     useEditProjectChecklistMutation,

@@ -3,7 +3,7 @@ import {
     useEditDesignProjectMutation,
     useEditDesignProjectStatusMutation,
     useEditProjectChecklistMutation,
-    useGenPdfContractMutation,
+    useGenDocxContractMutation,
     useGetDesignProjectByIdQuery,
     useGetDesignProjectsCompletedQuery,
     useGetDesignProjectsQuery,
@@ -59,7 +59,7 @@ export const useDesignProject = (options: UseDesignProjectOptions = {}) => {
         skip: !id, // Evita hacer la query si no hay id
     });
 
-    const [genPdfContract] = useGenPdfContractMutation();
+    const [genPdfContract] = useGenDocxContractMutation();
 
     const onCreateProject = async (input: DesignProjectCreate) => {
         const promise = () =>
@@ -214,7 +214,7 @@ export const useDesignProject = (options: UseDesignProjectOptions = {}) => {
         });
     };
 
-    const generateContractPdf = async (
+    const generateContractDocx = async (
         id: string,
         publicCode: string,
         signingDate: string,
@@ -232,7 +232,7 @@ export const useDesignProject = (options: UseDesignProjectOptions = {}) => {
                 link.href = url;
                 link.setAttribute(
                     "download",
-                    `${publicCode}-${format(new Date(), "yyyy-MM-dd")}.pdf`,
+                    `${publicCode}-${format(new Date(), "yyyy-MM-dd")}.docx`,
                 );
 
                 // Añadir el enlace al DOM y disparar la descarga
@@ -274,7 +274,7 @@ export const useDesignProject = (options: UseDesignProjectOptions = {}) => {
         onEditProject,
         editLoading,
         editSuccess,
-        generateContractPdf,
+        generateContractDocx,
         designProjectById,
         designProjectByIdLoading,
         refetchDesignProjectById,

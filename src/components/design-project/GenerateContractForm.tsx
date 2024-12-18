@@ -44,7 +44,7 @@ export function GenerateContractForm(props: {
             contractDate: "",
         },
     });
-    const { generateContractPdf } = useDesignProject();
+    const { generateContractDocx: generateContractPdf } = useDesignProject();
 
     function onSubmit(values: z.infer<typeof contractSchema>) {
         generateContractPdf(props.id, props.publicCode, values.contractDate);
