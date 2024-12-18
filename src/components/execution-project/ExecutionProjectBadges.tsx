@@ -2,7 +2,9 @@ import { ExecutionProjectStatusType } from "@/types";
 
 import { Badge } from "../ui/badge";
 
-export function StatusBadge(props: { status: ExecutionProjectStatusType }) {
+export function ExecutionProjectStatusBadge(props: {
+    status: ExecutionProjectStatusType;
+}) {
     let badge = <></>;
     switch (props.status) {
         case "COMPLETED":
