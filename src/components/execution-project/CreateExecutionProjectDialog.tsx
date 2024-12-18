@@ -76,7 +76,6 @@ export function CreateExecutionProjectDialog() {
 
     const onSubmit = async (input: CreateExecutionProjectSchema) => {
         try {
-            console.log(input);
             startCreateTransition(() => {
                 onCreateExecutionProject({
                     ...input,
